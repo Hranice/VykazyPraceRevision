@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "b+nvQmG6Txs=",
+  "dgSpecHash": "Svs8oUbHk7M=",
   "success": true,
   "projectFilePath": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\VykazyPrace.Core.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\jprochazka\\.nuget\\packages\\sqlite\\3.13.0\\sqlite.3.13.0.nupkg.sha512"
+  ],
   "logs": []
 }

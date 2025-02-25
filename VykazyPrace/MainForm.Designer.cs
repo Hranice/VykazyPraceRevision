@@ -36,6 +36,7 @@
             správaUživatelůToolStripMenuItem = new ToolStripMenuItem();
             projektyToolStripMenuItem = new ToolStripMenuItem();
             archivToolStripMenuItem = new ToolStripMenuItem();
+            panelCalendarContainer = new Panel();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -44,7 +45,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { dataToolStripMenuItem, uživateléToolStripMenuItem, projektyToolStripMenuItem, archivToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1029, 24);
+            menuStrip1.Size = new Size(752, 24);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -77,7 +78,7 @@
             // správaUživatelůToolStripMenuItem
             // 
             správaUživatelůToolStripMenuItem.Name = "správaUživatelůToolStripMenuItem";
-            správaUživatelůToolStripMenuItem.Size = new Size(180, 22);
+            správaUživatelůToolStripMenuItem.Size = new Size(159, 22);
             správaUživatelůToolStripMenuItem.Text = "Správa uživatelů";
             správaUživatelůToolStripMenuItem.Click += správaUživatelůToolStripMenuItem_Click;
             // 
@@ -93,17 +94,27 @@
             archivToolStripMenuItem.Size = new Size(53, 20);
             archivToolStripMenuItem.Text = "Archiv";
             // 
+            // panelCalendarContainer
+            // 
+            panelCalendarContainer.Location = new Point(10, 34);
+            panelCalendarContainer.Name = "panelCalendarContainer";
+            panelCalendarContainer.Size = new Size(734, 480);
+            panelCalendarContainer.TabIndex = 1;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1029, 750);
+            BackColor = Color.White;
+            ClientSize = new Size(752, 521);
+            Controls.Add(panelCalendarContainer);
             Controls.Add(menuStrip1);
             Font = new Font("Reddit Sans", 12F);
             MainMenuStrip = menuStrip1;
             Margin = new Padding(4, 5, 4, 5);
             Name = "MainForm";
             Text = "Výkazy práce";
+            Load += MainForm_Load;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ResumeLayout(false);
@@ -120,5 +131,6 @@
         private ToolStripMenuItem projektyToolStripMenuItem;
         private ToolStripMenuItem archivToolStripMenuItem;
         private ToolStripMenuItem správaUživatelůToolStripMenuItem;
+        private Panel panelCalendarContainer;
     }
 }

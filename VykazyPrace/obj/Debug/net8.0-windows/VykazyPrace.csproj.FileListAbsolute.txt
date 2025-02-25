@@ -68,3 +68,6 @@ C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-window
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\VykazyPrace.Core.dll
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\VykazyPrace.Core.pdb
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.UserControls.LoadingUC.resources
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.UserControls.Calendar.CalendarUC.resources
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.UserControls.Calendar.DayUC.resources
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.Dialogs.TimeEntryDialog.resources

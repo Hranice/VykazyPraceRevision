@@ -15,15 +15,15 @@
       "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\dialogs\\timeentrydialog.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\usercontrols\\calendar\\dayuc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\vykazyprace\\usercontrols\\calendar\\dayuc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\usercontrols\\calendar\\dayuc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\usercontrols\\calendar\\calendaruc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\vykazyprace\\usercontrols\\calendar\\calendaruc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\usercontrols\\calendar\\calendaruc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
@@ -55,7 +55,7 @@
       "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\dialogs\\usermanagementdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\dialogs\\usermanagementdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\vykazyprace\\dialogs\\usermanagementdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\dialogs\\usermanagementdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
@@ -94,8 +94,8 @@
               "Title": "TimeEntryDialog.Designer.cs",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\TimeEntryDialog.Designer.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\Dialogs\\TimeEntryDialog.Designer.cs",
-              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\TimeEntryDialog.Designer.cs",
-              "RelativeToolTip": "VykazyPrace\\Dialogs\\TimeEntryDialog.Designer.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\TimeEntryDialog.Designer.cs*",
+              "RelativeToolTip": "VykazyPrace\\Dialogs\\TimeEntryDialog.Designer.cs*",
               "ViewState": "AQIAAFYAAAAAAAAAAAASwHAAAAAyAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-25T16:27:49.796Z",
@@ -107,8 +107,8 @@
               "Title": "TimeEntryDialog.cs",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\TimeEntryDialog.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\Dialogs\\TimeEntryDialog.cs",
-              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\TimeEntryDialog.cs",
-              "RelativeToolTip": "VykazyPrace\\Dialogs\\TimeEntryDialog.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\TimeEntryDialog.cs*",
+              "RelativeToolTip": "VykazyPrace\\Dialogs\\TimeEntryDialog.cs*",
               "ViewState": "AQIAAAgAAAAAAAAAAADwvxQAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-25T15:30:25.905Z",
@@ -120,8 +120,8 @@
               "Title": "TimeEntryDialog.cs [N\u00E1vrh]",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\TimeEntryDialog.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\Dialogs\\TimeEntryDialog.cs",
-              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\TimeEntryDialog.cs [N\u00E1vrh]",
-              "RelativeToolTip": "VykazyPrace\\Dialogs\\TimeEntryDialog.cs [N\u00E1vrh]",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\TimeEntryDialog.cs [N\u00E1vrh]*",
+              "RelativeToolTip": "VykazyPrace\\Dialogs\\TimeEntryDialog.cs [N\u00E1vrh]*",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-25T15:26:38.995Z",
               "EditorCaption": " [N\u00E1vrh]"
@@ -135,8 +135,7 @@
               "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\Calendar\\DayUC.cs [N\u00E1vrh]",
               "RelativeToolTip": "VykazyPrace\\UserControls\\Calendar\\DayUC.cs [N\u00E1vrh]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T14:36:45.384Z",
-              "EditorCaption": " [N\u00E1vrh]"
+              "WhenOpened": "2025-02-25T14:36:45.384Z"
             },
             {
               "$type": "Document",
@@ -161,8 +160,7 @@
               "RelativeToolTip": "VykazyPrace.Core\\Database\\Repositories\\ProjectRepository.cs",
               "ViewState": "AQIAADoAAAAAAAAAAAAcwEYAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T12:41:24.709Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-25T12:41:24.709Z"
             },
             {
               "$type": "Document",
@@ -174,8 +172,7 @@
               "RelativeToolTip": "VykazyPrace.Core\\Database\\Repositories\\UserRepository.cs",
               "ViewState": "AQIAABMAAAAAAAAAAAAswCIAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T12:44:44.82Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-25T12:44:44.82Z"
             },
             {
               "$type": "Document",
@@ -186,8 +183,7 @@
               "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\MainForm.cs [N\u00E1vrh]",
               "RelativeToolTip": "VykazyPrace\\MainForm.cs [N\u00E1vrh]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T12:57:58.566Z",
-              "EditorCaption": " [N\u00E1vrh]"
+              "WhenOpened": "2025-02-25T12:57:58.566Z"
             },
             {
               "$type": "Document",
@@ -199,8 +195,7 @@
               "RelativeToolTip": "VykazyPrace\\MainForm.cs",
               "ViewState": "AQIAAAQAAAAAAAAAAAAWwBMAAACIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T14:42:25.022Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-25T14:42:25.022Z"
             },
             {
               "$type": "Document",
@@ -211,8 +206,7 @@
               "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\Calendar\\CalendarUC.cs [N\u00E1vrh]",
               "RelativeToolTip": "VykazyPrace\\UserControls\\Calendar\\CalendarUC.cs [N\u00E1vrh]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T13:22:51.376Z",
-              "EditorCaption": " [N\u00E1vrh]"
+              "WhenOpened": "2025-02-25T13:22:51.376Z"
             },
             {
               "$type": "Document",
@@ -224,8 +218,7 @@
               "RelativeToolTip": "VykazyPrace.Core\\Database\\Models\\VykazyPraceContext.cs",
               "ViewState": "AQIAAAUAAAAAAAAAAAAAABAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T12:13:08.854Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-25T12:13:08.854Z"
             },
             {
               "$type": "Document",
@@ -237,8 +230,7 @@
               "RelativeToolTip": "VykazyPrace.Core\\Database\\Models\\User.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABcAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T12:13:01.211Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-25T12:13:01.211Z"
             },
             {
               "$type": "Document",
@@ -249,8 +241,7 @@
               "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\UserManagementDialog.cs [N\u00E1vrh]",
               "RelativeToolTip": "VykazyPrace\\Dialogs\\UserManagementDialog.cs [N\u00E1vrh]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T12:59:04.943Z",
-              "EditorCaption": " [N\u00E1vrh]"
+              "WhenOpened": "2025-02-25T12:59:04.943Z"
             },
             {
               "$type": "Document",
@@ -262,8 +253,7 @@
               "RelativeToolTip": "VykazyPrace\\Dialogs\\UserManagementDialog.cs",
               "ViewState": "AQIAADEAAAAAAAAAAAAuwEEAAABEAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T12:59:07.644Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-25T12:59:07.644Z"
             },
             {
               "$type": "Document",
@@ -275,8 +265,7 @@
               "RelativeToolTip": "VykazyPrace.Core\\Database\\Models\\TimeEntry.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABcAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T12:12:05.048Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-25T12:12:05.048Z"
             },
             {
               "$type": "Document",
@@ -288,8 +277,7 @@
               "RelativeToolTip": "VykazyPrace.Core\\Database\\Models\\Project.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABcAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T12:11:53.66Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-25T12:11:53.66Z"
             },
             {
               "$type": "Document",

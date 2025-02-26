@@ -115,12 +115,13 @@
             // 
             // listBox1
             // 
+            listBox1.BorderStyle = BorderStyle.FixedSingle;
             listBox1.FormattingEnabled = true;
             listBox1.ItemHeight = 25;
             listBox1.Items.AddRange(new object[] { "7,5h\t0230I24 - Automatické balení po pecích a UV", "tes", "test", "test", "test", "tes" });
             listBox1.Location = new Point(12, 83);
             listBox1.Name = "listBox1";
-            listBox1.Size = new Size(485, 79);
+            listBox1.Size = new Size(485, 77);
             listBox1.TabIndex = 9;
             // 
             // groupBox1

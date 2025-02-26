@@ -47,6 +47,9 @@
             button3 = new Button();
             panel2 = new Panel();
             label6 = new Label();
+            label7 = new Label();
+            textBox3 = new TextBox();
+            label8 = new Label();
             groupBox1.SuspendLayout();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -105,7 +108,7 @@
             comboBox1.FormattingEnabled = true;
             comboBox1.IntegralHeight = false;
             comboBox1.ItemHeight = 25;
-            comboBox1.Location = new Point(11, 71);
+            comboBox1.Location = new Point(10, 96);
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(467, 33);
             comboBox1.TabIndex = 5;
@@ -126,6 +129,9 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(label8);
+            groupBox1.Controls.Add(label7);
+            groupBox1.Controls.Add(textBox3);
             groupBox1.Controls.Add(label4);
             groupBox1.Controls.Add(button7);
             groupBox1.Controls.Add(button8);
@@ -135,23 +141,23 @@
             groupBox1.Controls.Add(comboBox1);
             groupBox1.Location = new Point(12, 204);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(485, 163);
+            groupBox1.Size = new Size(485, 299);
             groupBox1.TabIndex = 10;
             groupBox1.TabStop = false;
             groupBox1.Text = "Zápis hodin";
             // 
             // label4
             // 
-            label4.Location = new Point(203, 110);
+            label4.Location = new Point(202, 245);
             label4.Name = "label4";
             label4.Size = new Size(84, 43);
             label4.TabIndex = 14;
-            label4.Text = "4 h";
+            label4.Text = "0 h";
             label4.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // button7
             // 
-            button7.Location = new Point(293, 110);
+            button7.Location = new Point(292, 245);
             button7.Name = "button7";
             button7.Size = new Size(90, 43);
             button7.TabIndex = 13;
@@ -160,7 +166,7 @@
             // 
             // button8
             // 
-            button8.Location = new Point(389, 110);
+            button8.Location = new Point(388, 245);
             button8.Name = "button8";
             button8.Size = new Size(90, 43);
             button8.TabIndex = 12;
@@ -169,7 +175,7 @@
             // 
             // button6
             // 
-            button6.Location = new Point(107, 110);
+            button6.Location = new Point(106, 245);
             button6.Name = "button6";
             button6.Size = new Size(90, 43);
             button6.TabIndex = 11;
@@ -178,7 +184,7 @@
             // 
             // button5
             // 
-            button5.Location = new Point(11, 110);
+            button5.Location = new Point(10, 245);
             button5.Name = "button5";
             button5.Size = new Size(90, 43);
             button5.TabIndex = 10;
@@ -217,7 +223,7 @@
             // 
             // button4
             // 
-            button4.Location = new Point(344, 373);
+            button4.Location = new Point(344, 509);
             button4.Name = "button4";
             button4.Size = new Size(153, 43);
             button4.TabIndex = 14;
@@ -226,7 +232,7 @@
             // 
             // button3
             // 
-            button3.Location = new Point(12, 373);
+            button3.Location = new Point(12, 509);
             button3.Name = "button3";
             button3.Size = new Size(326, 43);
             button3.TabIndex = 13;
@@ -251,12 +257,43 @@
             label6.TabIndex = 16;
             label6.Text = "Zapsané hodiny:";
             // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label7.Location = new Point(11, 132);
+            label7.Margin = new Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(55, 21);
+            label7.TabIndex = 20;
+            label7.Text = "Činnost";
+            // 
+            // textBox3
+            // 
+            textBox3.Location = new Point(11, 157);
+            textBox3.Margin = new Padding(5, 8, 5, 8);
+            textBox3.Multiline = true;
+            textBox3.Name = "textBox3";
+            textBox3.Size = new Size(466, 84);
+            textBox3.TabIndex = 19;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label8.Location = new Point(7, 72);
+            label8.Margin = new Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(57, 21);
+            label8.TabIndex = 21;
+            label8.Text = "Projekt*";
+            // 
             // TimeEntryDialog
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(509, 428);
+            ClientSize = new Size(509, 564);
             Controls.Add(label6);
             Controls.Add(panel2);
             Controls.Add(button4);
@@ -270,9 +307,10 @@
             Font = new Font("Reddit Sans", 12F);
             Margin = new Padding(4, 5, 4, 5);
             Name = "TimeEntryDialog";
-            Text = "TimeEntryDialog";
+            Text = "Zápis hodin";
             Load += TimeEntryDialog_Load;
             groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
             panel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -299,5 +337,8 @@
         private Button button3;
         private Panel panel2;
         private Label label6;
+        private Label label8;
+        private Label label7;
+        private TextBox textBox3;
     }
 }

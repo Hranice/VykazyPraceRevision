@@ -77,5 +77,10 @@ namespace VykazyPrace.Dialogs
             await _userRepo.CreateUserAsync(newUser);
             MessageBox.Show("Uživatel přidán!");
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

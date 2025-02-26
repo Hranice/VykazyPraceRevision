@@ -37,6 +37,7 @@
             projektyToolStripMenuItem = new ToolStripMenuItem();
             archivToolStripMenuItem = new ToolStripMenuItem();
             panelCalendarContainer = new Panel();
+            správaProjektůToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -78,12 +79,13 @@
             // správaUživatelůToolStripMenuItem
             // 
             správaUživatelůToolStripMenuItem.Name = "správaUživatelůToolStripMenuItem";
-            správaUživatelůToolStripMenuItem.Size = new Size(159, 22);
+            správaUživatelůToolStripMenuItem.Size = new Size(180, 22);
             správaUživatelůToolStripMenuItem.Text = "Správa uživatelů";
             správaUživatelůToolStripMenuItem.Click += správaUživatelůToolStripMenuItem_Click;
             // 
             // projektyToolStripMenuItem
             // 
+            projektyToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { správaProjektůToolStripMenuItem });
             projektyToolStripMenuItem.Name = "projektyToolStripMenuItem";
             projektyToolStripMenuItem.Size = new Size(62, 20);
             projektyToolStripMenuItem.Text = "Projekty";
@@ -100,6 +102,12 @@
             panelCalendarContainer.Name = "panelCalendarContainer";
             panelCalendarContainer.Size = new Size(734, 480);
             panelCalendarContainer.TabIndex = 1;
+            // 
+            // správaProjektůToolStripMenuItem
+            // 
+            správaProjektůToolStripMenuItem.Name = "správaProjektůToolStripMenuItem";
+            správaProjektůToolStripMenuItem.Size = new Size(180, 22);
+            správaProjektůToolStripMenuItem.Text = "Správa projektů";
             // 
             // MainForm
             // 
@@ -132,5 +140,6 @@
         private ToolStripMenuItem archivToolStripMenuItem;
         private ToolStripMenuItem správaUživatelůToolStripMenuItem;
         private Panel panelCalendarContainer;
+        private ToolStripMenuItem správaProjektůToolStripMenuItem;
     }
 }

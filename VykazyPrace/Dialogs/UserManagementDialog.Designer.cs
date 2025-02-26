@@ -97,6 +97,7 @@
             listBoxUsers.Name = "listBoxUsers";
             listBoxUsers.Size = new Size(275, 77);
             listBoxUsers.TabIndex = 27;
+            listBoxUsers.SelectedIndexChanged += listBoxUsers_SelectedIndexChanged;
             // 
             // groupBox1
             // 

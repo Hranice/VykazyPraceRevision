@@ -35,13 +35,13 @@
             buttonProject = new Button();
             buttonContract = new Button();
             groupBox1 = new GroupBox();
-            label6 = new Label();
-            listBoxProjectContract = new ListBox();
+            buttonRemove = new Button();
+            label5 = new Label();
+            textBoxProjectContractNote = new TextBox();
             label1 = new Label();
             textBoxProjectContractTitle = new TextBox();
-            textBoxProjectContractNote = new TextBox();
-            label5 = new Label();
-            buttonRemove = new Button();
+            label6 = new Label();
+            listBoxProjectContract = new ListBox();
             panel1.SuspendLayout();
             groupBox1.SuspendLayout();
             SuspendLayout();
@@ -98,6 +98,7 @@
             buttonProject.TabIndex = 3;
             buttonProject.Text = "PROJEKT";
             buttonProject.UseVisualStyleBackColor = false;
+            buttonProject.Click += buttonProject_Click;
             // 
             // buttonContract
             // 
@@ -112,6 +113,7 @@
             buttonContract.TabIndex = 4;
             buttonContract.Text = "ZAKÁZKA";
             buttonContract.UseVisualStyleBackColor = false;
+            buttonContract.Click += buttonContract_Click;
             // 
             // groupBox1
             // 
@@ -129,6 +131,55 @@
             groupBox1.TabIndex = 22;
             groupBox1.TabStop = false;
             groupBox1.Text = "Přidání projektu";
+            // 
+            // buttonRemove
+            // 
+            buttonRemove.Location = new Point(255, 219);
+            buttonRemove.Margin = new Padding(4, 5, 4, 5);
+            buttonRemove.Name = "buttonRemove";
+            buttonRemove.Size = new Size(128, 36);
+            buttonRemove.TabIndex = 20;
+            buttonRemove.Text = "Odstranit";
+            buttonRemove.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label5.Location = new Point(12, 97);
+            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(69, 21);
+            label5.TabIndex = 18;
+            label5.Text = "Poznámka";
+            // 
+            // textBoxProjectContractNote
+            // 
+            textBoxProjectContractNote.Location = new Point(12, 122);
+            textBoxProjectContractNote.Margin = new Padding(5, 8, 5, 8);
+            textBoxProjectContractNote.Multiline = true;
+            textBoxProjectContractNote.Name = "textBoxProjectContractNote";
+            textBoxProjectContractNote.Size = new Size(371, 84);
+            textBoxProjectContractNote.TabIndex = 17;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label1.Location = new Point(143, 36);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(104, 21);
+            label1.TabIndex = 16;
+            label1.Text = "Název projektu*";
+            // 
+            // textBoxProjectContractTitle
+            // 
+            textBoxProjectContractTitle.Location = new Point(143, 61);
+            textBoxProjectContractTitle.Margin = new Padding(5, 8, 5, 8);
+            textBoxProjectContractTitle.Name = "textBoxProjectContractTitle";
+            textBoxProjectContractTitle.Size = new Size(240, 28);
+            textBoxProjectContractTitle.TabIndex = 15;
             // 
             // label6
             // 
@@ -151,55 +202,6 @@
             listBoxProjectContract.Size = new Size(399, 77);
             listBoxProjectContract.TabIndex = 23;
             // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label1.Location = new Point(143, 36);
-            label1.Margin = new Padding(4, 0, 4, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(104, 21);
-            label1.TabIndex = 16;
-            label1.Text = "Název projektu*";
-            // 
-            // textBoxProjectContractTitle
-            // 
-            textBoxProjectContractTitle.Location = new Point(143, 61);
-            textBoxProjectContractTitle.Margin = new Padding(5, 8, 5, 8);
-            textBoxProjectContractTitle.Name = "textBoxProjectContractTitle";
-            textBoxProjectContractTitle.Size = new Size(240, 28);
-            textBoxProjectContractTitle.TabIndex = 15;
-            // 
-            // textBoxProjectContractNote
-            // 
-            textBoxProjectContractNote.Location = new Point(12, 122);
-            textBoxProjectContractNote.Margin = new Padding(5, 8, 5, 8);
-            textBoxProjectContractNote.Multiline = true;
-            textBoxProjectContractNote.Name = "textBoxProjectContractNote";
-            textBoxProjectContractNote.Size = new Size(371, 84);
-            textBoxProjectContractNote.TabIndex = 17;
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label5.Location = new Point(12, 97);
-            label5.Margin = new Padding(4, 0, 4, 0);
-            label5.Name = "label5";
-            label5.Size = new Size(69, 21);
-            label5.TabIndex = 18;
-            label5.Text = "Poznámka";
-            // 
-            // buttonRemove
-            // 
-            buttonRemove.Location = new Point(255, 219);
-            buttonRemove.Margin = new Padding(4, 5, 4, 5);
-            buttonRemove.Name = "buttonRemove";
-            buttonRemove.Size = new Size(128, 36);
-            buttonRemove.TabIndex = 20;
-            buttonRemove.Text = "Odstranit";
-            buttonRemove.UseVisualStyleBackColor = true;
-            // 
             // ProjectManagementDialog
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
@@ -214,6 +216,7 @@
             Name = "ProjectManagementDialog";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Správa projektů";
+            Load += ProjectManagementDialog_Load;
             panel1.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();

@@ -12,9 +12,9 @@ namespace VykazyPrace.Core.Database.Repositories
     {
         private readonly VykazyPraceContext _context;
 
-        public ProjectRepository(VykazyPraceContext context)
+        public ProjectRepository()
         {
-            _context = context;
+            _context = new VykazyPraceContext();
         }
 
         /// <summary>
@@ -28,12 +28,35 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
+        /// Získání všech projektů i zakázek.
+        /// </summary>
+        public async Task<List<Project>> GetAllProjectsAndContractsAsync()
+        {
+            return await _context.Projects.Include(p => p.CreatedByNavigation).ToListAsync();
+        }
+
+        /// <summary>
         /// Získání všech projektů.
         /// </summary>
         public async Task<List<Project>> GetAllProjectsAsync()
         {
-            return await _context.Projects.Include(p => p.CreatedByNavigation).ToListAsync();
+            return await _context.Projects
+                .Where(p => p.ProjectType == 0)
+                .Include(p => p.CreatedByNavigation)
+                .ToListAsync();
         }
+
+        /// <summary>
+        /// Získání všech zakázek.
+        /// </summary>
+        public async Task<List<Project>> GetAllContractsAsync()
+        {
+            return await _context.Projects
+                .Where(p => p.ProjectType == 1)
+                .Include(p => p.CreatedByNavigation)
+                .ToListAsync();
+        }
+
 
         /// <summary>
         /// Získání projektu podle ID.

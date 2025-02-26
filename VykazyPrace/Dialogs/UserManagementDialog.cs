@@ -57,55 +57,107 @@ namespace VykazyPrace.Dialogs
 
         private async void buttonAdd_Click(object sender, EventArgs e)
         {
-            var newUser = new User
+            if (buttonAdd.Text == "Konec prohlížení")
             {
-                FirstName = textBoxFirstName.Text,
-                Surname = textBoxSurname.Text,
-                PersonalNumber = Int32.Parse(maskedTextBoxPersonalNumber.Text),
-                WindowsUsername = textBoxWindowsUsername.Text,
-                LevelOfAccess = (int)numericUpDownLevelOfAccess.Value
-            };
-
-            var addedUser = await _userRepo.CreateUserAsync(newUser);
-            if (addedUser is not null)
-            {
-                AppLogger.Information($"Uživatel {FormatUserToString(addedUser)} byl přidán do databáze.", true);
+                groupBox1.Text = $"Přidání uživatele";
+                textBoxFirstName.Enabled = true;
+                textBoxSurname.Enabled = true;
+                textBoxWindowsUsername.Enabled = true;
+                maskedTextBoxPersonalNumber.Enabled = true;
+                numericUpDownLevelOfAccess.Enabled = true;
+                ClearFields();
+                buttonAdd.Text = "Přidat";
             }
 
             else
             {
-                AppLogger.Error($"Uživatel {FormatUserToString(newUser)} nebyl přidán do databáze.");
-            }
+                var dataCheck = CheckForEmptyOrIncorrectFields();
 
-            await LoadUsersAsync();
-        }
-
-        private async void buttonRemove_Click(object sender, EventArgs e)
-        {
-            if (listBoxUsers.SelectedItem != null)
-            {
-                string? selectedItem = listBoxUsers.SelectedItem.ToString();
-                string? idString = selectedItem?.Split(' ')[0];
-                if (int.TryParse(idString, out int userId))
+                if (dataCheck.Item1)
                 {
-                    if (await _userRepo.DeleteUserAsync(userId))
+                    var newUser = new User
                     {
-                        AppLogger.Information($"Uživatel {selectedItem} byl smazán z databáze.", true);
+                        FirstName = textBoxFirstName.Text,
+                        Surname = textBoxSurname.Text,
+                        PersonalNumber = Int32.Parse(maskedTextBoxPersonalNumber.Text),
+                        WindowsUsername = textBoxWindowsUsername.Text,
+                        LevelOfAccess = (int)numericUpDownLevelOfAccess.Value
+                    };
+
+                    var addedUser = await _userRepo.CreateUserAsync(newUser);
+                    if (addedUser is not null)
+                    {
+                        AppLogger.Information($"Uživatel {FormatUserToString(addedUser)} byl přidán do databáze.", true);
+                        ClearFields();
                     }
 
                     else
                     {
-                        AppLogger.Error($"Nepodařilo se smazat uživatele {selectedItem} z databáze.");
+                        AppLogger.Error($"Uživatel {FormatUserToString(newUser)} nebyl přidán do databáze.");
                     }
+
+                    await LoadUsersAsync();
                 }
 
                 else
                 {
-                    AppLogger.Error($"Nepodařilo se smazat uživatele {selectedItem} z databáze, id '{idString}' je neplatné.");
+                    AppLogger.Error($"Je třeba správně vyplnit všechna potřebná data! Chybný parametr: {dataCheck.Item2}");
+                }
+            }
+        }
+
+        private async void buttonRemove_Click(object sender, EventArgs e)
+        {
+            var user = GetUserBySelectedItem().Result;
+
+            if (user != null)
+            {
+                var dialogResult = MessageBox.Show($"Smazat uživatele {FormatUserToString(user)}?", "Smazat?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+
+                if (dialogResult == DialogResult.Yes)
+                {
+                    if (await _userRepo.DeleteUserAsync(user.Id))
+                    {
+                        AppLogger.Information($"Uživatel {FormatUserToString(user)} byl smazán z databáze.", true);
+                        ClearFields();
+                    }
+
+                    else
+                    {
+                        AppLogger.Error($"Nepodařilo se smazat uživatele {FormatUserToString(user)} z databáze.");
+                    }
+
+                    await LoadUsersAsync();
+                }
+            }
+        }
+
+        private async Task<User?> GetUserBySelectedItem()
+        {
+            User? user = new User();
+
+            if (listBoxUsers.SelectedItem != null)
+            {
+                string? selectedItem = listBoxUsers.SelectedItem?.ToString();
+                string? idString = selectedItem?.Split(' ')[0];
+
+                if (int.TryParse(idString, out int userId))
+                {
+                    user = await _userRepo.GetUserByIdAsync(userId);
                 }
 
-                await LoadUsersAsync();
+                else
+                {
+                    AppLogger.Error($"Nepodařilo se získat uživatele {selectedItem} z databáze, id '{idString}' je neplatné.");
+                }
+
+                if (user == null)
+                {
+                    AppLogger.Error($"Nepodařilo se získat uživatele {selectedItem} z databáze.");
+                }
             }
+
+            return user;
         }
 
         private string FormatUserToString(User user)
@@ -153,6 +205,53 @@ namespace VykazyPrace.Dialogs
         private void buttonGenerateWindowsUsername_Click(object sender, EventArgs e)
         {
             GenerateWindowsUsername();
+        }
+
+        private void listBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(listBoxUsers.SelectedIndex >= listBoxUsers.Items.Count - 1)
+            {
+                var user = GetUserBySelectedItem().Result;
+
+                if (user != null)
+                {
+                    groupBox1.Text = $"Zobrazení uživatele ({user.Id})";
+                    textBoxFirstName.Text = user.FirstName;
+                    textBoxFirstName.Enabled = false;
+                    textBoxSurname.Text = user.Surname;
+                    textBoxSurname.Enabled = false;
+                    textBoxWindowsUsername.Text = user.WindowsUsername;
+                    textBoxWindowsUsername.Enabled = false;
+                    maskedTextBoxPersonalNumber.Text = user.PersonalNumber.ToString();
+                    maskedTextBoxPersonalNumber.Enabled = false;
+                    numericUpDownLevelOfAccess.Value = user.LevelOfAccess;
+                    numericUpDownLevelOfAccess.Enabled = false;
+
+                    buttonAdd.Text = "Konec prohlížení";
+                }
+            }
+        }
+
+        private (bool,string) CheckForEmptyOrIncorrectFields()
+        {
+            bool pass = true;
+            string? reason = "";
+            if (string.IsNullOrEmpty(textBoxFirstName.Text)) pass = false; reason = "Jméno";
+            if (string.IsNullOrEmpty(textBoxSurname.Text)) pass = false; reason = "Příjmení";
+            if (string.IsNullOrEmpty(textBoxWindowsUsername.Text)) pass = false; reason = "Windows login";
+            if (string.IsNullOrEmpty(maskedTextBoxPersonalNumber.Text)) pass = false; reason = "Osobní číslo";
+            if (!int.TryParse(maskedTextBoxPersonalNumber.Text, out int _)) pass = false; reason = "Osobní číslo";
+
+            return (pass, reason);
+        }
+
+        private void ClearFields()
+        {
+            textBoxFirstName.Text = "";
+            textBoxSurname.Text = "";
+            textBoxWindowsUsername.Text = "";
+            maskedTextBoxPersonalNumber.Text = "";
+            numericUpDownLevelOfAccess.Value = 0;
         }
     }
 }

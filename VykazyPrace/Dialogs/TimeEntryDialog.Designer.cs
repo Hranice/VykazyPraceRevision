@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            label1 = new Label();
+            labelCurrentDate = new Label();
             label3 = new Label();
             button1 = new Button();
             button2 = new Button();
@@ -54,15 +54,15 @@
             panel1.SuspendLayout();
             SuspendLayout();
             // 
-            // label1
+            // labelCurrentDate
             // 
-            label1.Font = new Font("Reddit Sans", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label1.Location = new Point(188, 9);
-            label1.Name = "label1";
-            label1.Size = new Size(150, 35);
-            label1.TabIndex = 0;
-            label1.Text = "25.02.2025";
-            label1.TextAlign = ContentAlignment.TopCenter;
+            labelCurrentDate.Font = new Font("Reddit Sans", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            labelCurrentDate.Location = new Point(188, 9);
+            labelCurrentDate.Name = "labelCurrentDate";
+            labelCurrentDate.Size = new Size(150, 35);
+            labelCurrentDate.TabIndex = 0;
+            labelCurrentDate.Text = "25.02.2025";
+            labelCurrentDate.TextAlign = ContentAlignment.TopCenter;
             // 
             // label3
             // 
@@ -303,7 +303,7 @@
             Controls.Add(groupBox1);
             Controls.Add(listBox1);
             Controls.Add(label3);
-            Controls.Add(label1);
+            Controls.Add(labelCurrentDate);
             Font = new Font("Reddit Sans", 12F);
             Margin = new Padding(4, 5, 4, 5);
             Name = "TimeEntryDialog";
@@ -318,7 +318,7 @@
 
         #endregion
 
-        private Label label1;
+        private Label labelCurrentDate;
         private Label label3;
         private Button button1;
         private Button button2;

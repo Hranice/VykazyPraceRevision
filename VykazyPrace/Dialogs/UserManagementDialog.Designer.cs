@@ -28,31 +28,36 @@
         /// </summary>
         private void InitializeComponent()
         {
-            button2 = new Button();
+            buttonAdd = new Button();
             label5 = new Label();
-            textBox3 = new TextBox();
+            textBoxFirstName = new TextBox();
             label6 = new Label();
-            listBox1 = new ListBox();
+            listBoxUsers = new ListBox();
             groupBox1 = new GroupBox();
-            button5 = new Button();
-            label8 = new Label();
-            textBox6 = new TextBox();
+            buttonGenerateWindowsUsername = new Button();
+            label1 = new Label();
+            numericUpDownLevelOfAccess = new NumericUpDown();
+            maskedTextBoxPersonalNumber = new MaskedTextBox();
             label7 = new Label();
-            textBox5 = new TextBox();
+            textBoxWindowsUsername = new TextBox();
             label9 = new Label();
-            textBox7 = new TextBox();
+            buttonRemove = new Button();
+            label8 = new Label();
+            textBoxSurname = new TextBox();
             groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownLevelOfAccess).BeginInit();
             SuspendLayout();
             // 
-            // button2
+            // buttonAdd
             // 
-            button2.Location = new Point(12, 163);
-            button2.Margin = new Padding(4, 5, 4, 5);
-            button2.Name = "button2";
-            button2.Size = new Size(147, 36);
-            button2.TabIndex = 19;
-            button2.Text = "Přidat";
-            button2.UseVisualStyleBackColor = true;
+            buttonAdd.Location = new Point(12, 163);
+            buttonAdd.Margin = new Padding(4, 5, 4, 5);
+            buttonAdd.Name = "buttonAdd";
+            buttonAdd.Size = new Size(147, 36);
+            buttonAdd.TabIndex = 19;
+            buttonAdd.Text = "Přidat";
+            buttonAdd.UseVisualStyleBackColor = true;
+            buttonAdd.Click += buttonAdd_Click;
             // 
             // label5
             // 
@@ -65,13 +70,13 @@
             label5.TabIndex = 14;
             label5.Text = "Jméno*";
             // 
-            // textBox3
+            // textBoxFirstName
             // 
-            textBox3.Location = new Point(12, 61);
-            textBox3.Margin = new Padding(5, 8, 5, 8);
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(121, 28);
-            textBox3.TabIndex = 13;
+            textBoxFirstName.Location = new Point(12, 61);
+            textBoxFirstName.Margin = new Padding(5, 8, 5, 8);
+            textBoxFirstName.Name = "textBoxFirstName";
+            textBoxFirstName.Size = new Size(121, 28);
+            textBoxFirstName.TabIndex = 13;
             // 
             // label6
             // 
@@ -83,29 +88,31 @@
             label6.TabIndex = 28;
             label6.Text = "Seznam uživatelů:";
             // 
-            // listBox1
+            // listBoxUsers
             // 
-            listBox1.BorderStyle = BorderStyle.FixedSingle;
-            listBox1.FormattingEnabled = true;
-            listBox1.ItemHeight = 25;
-            listBox1.Items.AddRange(new object[] { "Jan Procházka" });
-            listBox1.Location = new Point(14, 29);
-            listBox1.Name = "listBox1";
-            listBox1.Size = new Size(275, 77);
-            listBox1.TabIndex = 27;
+            listBoxUsers.BorderStyle = BorderStyle.FixedSingle;
+            listBoxUsers.FormattingEnabled = true;
+            listBoxUsers.ItemHeight = 25;
+            listBoxUsers.Location = new Point(14, 29);
+            listBoxUsers.Name = "listBoxUsers";
+            listBoxUsers.Size = new Size(275, 77);
+            listBoxUsers.TabIndex = 27;
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(buttonGenerateWindowsUsername);
+            groupBox1.Controls.Add(label1);
+            groupBox1.Controls.Add(numericUpDownLevelOfAccess);
+            groupBox1.Controls.Add(maskedTextBoxPersonalNumber);
             groupBox1.Controls.Add(label7);
-            groupBox1.Controls.Add(textBox5);
+            groupBox1.Controls.Add(textBoxWindowsUsername);
             groupBox1.Controls.Add(label9);
-            groupBox1.Controls.Add(textBox7);
-            groupBox1.Controls.Add(button5);
+            groupBox1.Controls.Add(buttonRemove);
             groupBox1.Controls.Add(label8);
-            groupBox1.Controls.Add(textBox6);
-            groupBox1.Controls.Add(button2);
+            groupBox1.Controls.Add(textBoxSurname);
+            groupBox1.Controls.Add(buttonAdd);
             groupBox1.Controls.Add(label5);
-            groupBox1.Controls.Add(textBox3);
+            groupBox1.Controls.Add(textBoxFirstName);
             groupBox1.Location = new Point(14, 112);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(277, 206);
@@ -113,54 +120,67 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Přidání uživatele";
             // 
-            // button5
+            // buttonGenerateWindowsUsername
             // 
-            button5.Location = new Point(167, 162);
-            button5.Margin = new Padding(4, 5, 4, 5);
-            button5.Name = "button5";
-            button5.Size = new Size(97, 36);
-            button5.TabIndex = 20;
-            button5.Text = "Odstranit";
-            button5.UseVisualStyleBackColor = true;
-            button5.Click += button5_Click;
+            buttonGenerateWindowsUsername.FlatAppearance.BorderColor = Color.FromArgb(122, 122, 122);
+            buttonGenerateWindowsUsername.FlatStyle = FlatStyle.Flat;
+            buttonGenerateWindowsUsername.Font = new Font("Roboto", 12F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            buttonGenerateWindowsUsername.Location = new Point(175, 121);
+            buttonGenerateWindowsUsername.Margin = new Padding(0);
+            buttonGenerateWindowsUsername.Name = "buttonGenerateWindowsUsername";
+            buttonGenerateWindowsUsername.Size = new Size(28, 28);
+            buttonGenerateWindowsUsername.TabIndex = 28;
+            buttonGenerateWindowsUsername.Text = "↻";
+            buttonGenerateWindowsUsername.UseVisualStyleBackColor = true;
+            buttonGenerateWindowsUsername.Click += buttonGenerateWindowsUsername_Click;
             // 
-            // label8
+            // label1
             // 
-            label8.AutoSize = true;
-            label8.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label8.Location = new Point(143, 36);
-            label8.Margin = new Padding(4, 0, 4, 0);
-            label8.Name = "label8";
-            label8.Size = new Size(61, 21);
-            label8.TabIndex = 16;
-            label8.Text = "Příjmení*";
+            label1.AutoSize = true;
+            label1.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label1.Location = new Point(218, 96);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(55, 21);
+            label1.TabIndex = 27;
+            label1.Text = "Přístup*";
             // 
-            // textBox6
+            // numericUpDownLevelOfAccess
             // 
-            textBox6.Location = new Point(143, 60);
-            textBox6.Margin = new Padding(5, 8, 5, 8);
-            textBox6.Name = "textBox6";
-            textBox6.Size = new Size(121, 28);
-            textBox6.TabIndex = 15;
+            numericUpDownLevelOfAccess.Location = new Point(218, 121);
+            numericUpDownLevelOfAccess.Maximum = new decimal(new int[] { 3, 0, 0, 0 });
+            numericUpDownLevelOfAccess.Name = "numericUpDownLevelOfAccess";
+            numericUpDownLevelOfAccess.Size = new Size(40, 28);
+            numericUpDownLevelOfAccess.TabIndex = 26;
+            numericUpDownLevelOfAccess.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            // 
+            // maskedTextBoxPersonalNumber
+            // 
+            maskedTextBoxPersonalNumber.Location = new Point(12, 121);
+            maskedTextBoxPersonalNumber.Mask = "0000";
+            maskedTextBoxPersonalNumber.Name = "maskedTextBoxPersonalNumber";
+            maskedTextBoxPersonalNumber.Size = new Size(53, 28);
+            maskedTextBoxPersonalNumber.TabIndex = 25;
+            maskedTextBoxPersonalNumber.ValidatingType = typeof(int);
             // 
             // label7
             // 
             label7.AutoSize = true;
             label7.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label7.Location = new Point(143, 97);
+            label7.Location = new Point(82, 97);
             label7.Margin = new Padding(4, 0, 4, 0);
             label7.Name = "label7";
-            label7.Size = new Size(126, 21);
+            label7.Size = new Size(100, 21);
             label7.TabIndex = 24;
-            label7.Text = "Windows už. jméno*";
+            label7.Text = "Windows login*";
             // 
-            // textBox5
+            // textBoxWindowsUsername
             // 
-            textBox5.Location = new Point(143, 121);
-            textBox5.Margin = new Padding(5, 8, 5, 8);
-            textBox5.Name = "textBox5";
-            textBox5.Size = new Size(121, 28);
-            textBox5.TabIndex = 23;
+            textBoxWindowsUsername.Location = new Point(82, 121);
+            textBoxWindowsUsername.Margin = new Padding(5, 8, 5, 8);
+            textBoxWindowsUsername.Name = "textBoxWindowsUsername";
+            textBoxWindowsUsername.Size = new Size(94, 28);
+            textBoxWindowsUsername.TabIndex = 23;
             // 
             // label9
             // 
@@ -173,21 +193,43 @@
             label9.TabIndex = 22;
             label9.Text = "Os. číslo*";
             // 
-            // textBox7
+            // buttonRemove
             // 
-            textBox7.Location = new Point(12, 122);
-            textBox7.Margin = new Padding(5, 8, 5, 8);
-            textBox7.Name = "textBox7";
-            textBox7.Size = new Size(121, 28);
-            textBox7.TabIndex = 21;
+            buttonRemove.Location = new Point(167, 162);
+            buttonRemove.Margin = new Padding(4, 5, 4, 5);
+            buttonRemove.Name = "buttonRemove";
+            buttonRemove.Size = new Size(97, 36);
+            buttonRemove.TabIndex = 20;
+            buttonRemove.Text = "Odstranit";
+            buttonRemove.UseVisualStyleBackColor = true;
+            buttonRemove.Click += buttonRemove_Click;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label8.Location = new Point(143, 36);
+            label8.Margin = new Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(61, 21);
+            label8.TabIndex = 16;
+            label8.Text = "Příjmení*";
+            // 
+            // textBoxSurname
+            // 
+            textBoxSurname.Location = new Point(143, 60);
+            textBoxSurname.Margin = new Padding(5, 8, 5, 8);
+            textBoxSurname.Name = "textBoxSurname";
+            textBoxSurname.Size = new Size(121, 28);
+            textBoxSurname.TabIndex = 15;
             // 
             // UserManagementDialog
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(304, 329);
+            ClientSize = new Size(304, 323);
             Controls.Add(label6);
-            Controls.Add(listBox1);
+            Controls.Add(listBoxUsers);
             Controls.Add(groupBox1);
             Font = new Font("Reddit Sans", 12F);
             Margin = new Padding(4, 5, 4, 5);
@@ -197,23 +239,27 @@
             Load += UserManagementDialog_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownLevelOfAccess).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-        private Button button2;
+        private Button buttonAdd;
         private Label label5;
-        private TextBox textBox3;
+        private TextBox textBoxFirstName;
         private Label label6;
-        private ListBox listBox1;
+        private ListBox listBoxUsers;
         private GroupBox groupBox1;
-        private Button button5;
+        private Button buttonRemove;
         private Label label8;
-        private TextBox textBox6;
+        private TextBox textBoxSurname;
         private Label label7;
-        private TextBox textBox5;
+        private TextBox textBoxWindowsUsername;
         private Label label9;
-        private TextBox textBox7;
+        private MaskedTextBox maskedTextBoxPersonalNumber;
+        private Label label1;
+        private NumericUpDown numericUpDownLevelOfAccess;
+        private Button buttonGenerateWindowsUsername;
     }
 }

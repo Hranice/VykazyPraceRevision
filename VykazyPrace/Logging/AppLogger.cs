@@ -15,28 +15,42 @@ namespace VykazyPrace.Logging
                 .CreateLogger();
         }
 
-        public static void Information(string message)
+        public static void Information(string message, bool showDialog = false)
         {
             Logger.Information(message);
+            if (showDialog)
+            {
+                ShowInformationPopup(message);
+            }
         }
 
         public static void Error(string message, Exception ex)
         {
             Logger.Error(ex, message);
-
-            // **Zobrazit popup okno při chybě**
             ShowErrorPopup(message, ex);
+        }
+
+        public static void Error(string message)
+        {
+            Logger.Error(message);
+            ShowErrorPopup(message);
         }
 
         private static void ShowErrorPopup(string message, Exception ex)
         {
             string errorMessage = $"Došlo k chybě:\n{message}\n\n{ex.Message}";
-
-            // Pro WinForms:
             MessageBox.Show(errorMessage, "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
 
-            // Pro WPF:
-            // System.Windows.MessageBox.Show(errorMessage, "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+        private static void ShowErrorPopup(string message)
+        {
+            string errorMessage = $"Došlo k chybě:\n{message}";
+            MessageBox.Show(errorMessage, "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private static void ShowInformationPopup(string message)
+        {
+            MessageBox.Show(message, "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 

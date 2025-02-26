@@ -11,8 +11,7 @@ namespace VykazyPrace
 
         private void správaUživatelùToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var userMgmt = new Dialogs.UserManagementDialog();
-            userMgmt.ShowDialog();
+            new Dialogs.UserManagementDialog().ShowDialog();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -22,6 +21,11 @@ namespace VykazyPrace
                 Dock = DockStyle.Fill
             });
 
+        }
+
+        private void správaProjektùToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new Dialogs.ProjectManagementDialog().ShowDialog();
         }
     }
 }

@@ -1,0 +1,7 @@
+2025-02-26 13:38:55.066 +01:00 [INF] Uživatel {FormatUserToString(addedUser)} byl přidán do databáze.
+2025-02-26 13:39:35.580 +01:00 [INF] Uživatel  byl smazán z databáze.
+2025-02-26 13:39:37.932 +01:00 [INF] Uživatel  byl smazán z databáze.
+2025-02-26 13:40:35.156 +01:00 [INF] Uživatel 3: Jan Procházka byl přidán do databáze.
+2025-02-26 13:43:36.291 +01:00 [ERR] Nepodařilo se smazat uživatele z databáze, id '3 (1250)' je neplatné.
+2025-02-26 13:43:58.164 +01:00 [INF] Uživatel  byl smazán z databáze.
+2025-02-26 13:54:57.510 +01:00 [INF] Uživatel 4 (1250): Jan Procházka byl přidán do databáze.

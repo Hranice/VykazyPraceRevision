@@ -35,9 +35,9 @@
             uživateléToolStripMenuItem = new ToolStripMenuItem();
             správaUživatelůToolStripMenuItem = new ToolStripMenuItem();
             projektyToolStripMenuItem = new ToolStripMenuItem();
+            správaProjektůToolStripMenuItem = new ToolStripMenuItem();
             archivToolStripMenuItem = new ToolStripMenuItem();
             panelCalendarContainer = new Panel();
-            správaProjektůToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -90,6 +90,13 @@
             projektyToolStripMenuItem.Size = new Size(62, 20);
             projektyToolStripMenuItem.Text = "Projekty";
             // 
+            // správaProjektůToolStripMenuItem
+            // 
+            správaProjektůToolStripMenuItem.Name = "správaProjektůToolStripMenuItem";
+            správaProjektůToolStripMenuItem.Size = new Size(180, 22);
+            správaProjektůToolStripMenuItem.Text = "Správa projektů";
+            správaProjektůToolStripMenuItem.Click += správaProjektůToolStripMenuItem_Click;
+            // 
             // archivToolStripMenuItem
             // 
             archivToolStripMenuItem.Name = "archivToolStripMenuItem";
@@ -102,12 +109,6 @@
             panelCalendarContainer.Name = "panelCalendarContainer";
             panelCalendarContainer.Size = new Size(734, 480);
             panelCalendarContainer.TabIndex = 1;
-            // 
-            // správaProjektůToolStripMenuItem
-            // 
-            správaProjektůToolStripMenuItem.Name = "správaProjektůToolStripMenuItem";
-            správaProjektůToolStripMenuItem.Size = new Size(180, 22);
-            správaProjektůToolStripMenuItem.Text = "Správa projektů";
             // 
             // MainForm
             // 

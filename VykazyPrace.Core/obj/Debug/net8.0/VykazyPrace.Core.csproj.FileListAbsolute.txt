@@ -1,0 +1,15 @@
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\bin\Debug\net8.0\VykazyPrace.Core.deps.json
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\bin\Debug\net8.0\VykazyPrace.Core.runtimeconfig.json
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\bin\Debug\net8.0\VykazyPrace.Core.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\bin\Debug\net8.0\VykazyPrace.Core.pdb
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Debug\net8.0\VykazyPrace.Core.csproj.AssemblyReference.cache
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Debug\net8.0\VykazyPrace.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Debug\net8.0\VykazyPrace.Core.AssemblyInfoInputs.cache
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Debug\net8.0\VykazyPrace.Core.AssemblyInfo.cs
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Debug\net8.0\VykazyPrace.Core.csproj.CoreCompileInputs.cache
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Debug\net8.0\VykazyPrace.Core.sourcelink.json
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Debug\net8.0\VykazyPrace.Core.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Debug\net8.0\refint\VykazyPrace.Core.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Debug\net8.0\VykazyPrace.Core.pdb
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Debug\net8.0\VykazyPrace.Core.genruntimeconfig.cache
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Debug\net8.0\ref\VykazyPrace.Core.dll

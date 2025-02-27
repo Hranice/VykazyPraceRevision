@@ -22,6 +22,14 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<Project> CreateProjectAsync(Project project)
         {
+            var user = await _context.Users.FindAsync(project.CreatedBy);
+            if (user == null)
+            {
+                throw new Exception($"Uživatel s ID {project.CreatedBy} neexistuje.");
+            }
+
+            project.CreatedByNavigation = user;
+
             _context.Projects.Add(project);
             await _context.SaveChangesAsync();
             return project;

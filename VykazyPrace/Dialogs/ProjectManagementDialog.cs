@@ -9,7 +9,9 @@ namespace VykazyPrace.Dialogs
     {
         private int _projectType = 0;
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
+        private readonly UserRepository _userRepo = new UserRepository();
         private readonly LoadingUC _loadingUC = new LoadingUC();
+        private User? _currentUser = new User();
 
         public ProjectManagementDialog()
         {
@@ -25,27 +27,25 @@ namespace VykazyPrace.Dialogs
             this.Controls.Add(_loadingUC);
             _loadingUC.BringToFront();
 
+            Task.Run(() => LoadCurrentDomainUser());
             Task.Run(() => LoadProjectsContractsAsync());
+        }
+
+        private async Task LoadCurrentDomainUser()
+        {
+            _currentUser = await _userRepo.GetUserByWindowsUsernameAsync(Environment.UserName);
         }
 
         private async Task LoadProjectsContractsAsync()
         {
-            List<Project> projects = new List<Project>();
-
             try
             {
-                switch (_projectType)
+                List<Project> projects = _projectType switch
                 {
-                    case 0:
-                        projects = await _projectRepo.GetAllProjectsAsync();
-                        break;
-                    case 1:
-                        projects = await _projectRepo.GetAllContractsAsync();
-                        break;
-                    default:
-                        projects = await _projectRepo.GetAllProjectsAndContractsAsync();
-                        break;
-                }
+                    0 => await _projectRepo.GetAllProjectsAsync(),
+                    1 => await _projectRepo.GetAllContractsAsync(),
+                    _ => await _projectRepo.GetAllProjectsAndContractsAsync()
+                };
 
                 Invoke(new Action(() =>
                 {
@@ -61,75 +61,110 @@ namespace VykazyPrace.Dialogs
             {
                 Invoke(new Action(() =>
                 {
-                    AppLogger.Error($"Chyba při načítání projektů.", ex);
+                    AppLogger.Error("Chyba při načítání projektů.", ex);
                     _loadingUC.Visible = false;
                 }));
             }
         }
+
 
         private string FormatProjectToString(Project project)
         {
             return $"{project.Id} ({project.ProjectDescription}): {project.ProjectTitle}";
         }
 
+        private void VisualiseSelectedProjectOrContract()
+        {
+            switch (_projectType)
+            {
+                case 0:
+                    buttonProject.BackColor = Color.White;
+                    buttonProject.Font = new Font(buttonProject.Font, FontStyle.Bold);
+                    buttonContract.BackColor = Color.FromKnownColor(KnownColor.AppWorkspace);
+                    buttonContract.Font = new Font(buttonContract.Font, FontStyle.Regular);
+                    label6.Text = "Seznam projektů:";
+                    label2.Text = "Označení projektu:";
+                    label1.Text = "Název projektu:";
+                    groupBox1.Text = "Přidání projektu";
+                    this.Text = "Správa projektů";
+                    break;
+                case 1:
+                    buttonContract.BackColor = Color.White;
+                    buttonContract.Font = new Font(buttonContract.Font, FontStyle.Bold);
+                    buttonProject.BackColor = Color.FromKnownColor(KnownColor.AppWorkspace);
+                    buttonProject.Font = new Font(buttonProject.Font, FontStyle.Regular);
+                    label6.Text = "Seznam zakázek:";
+                    label2.Text = "Označení zakázky:";
+                    label1.Text = "Název zakázky:";
+                    groupBox1.Text = "Přidání zakázky";
+                    this.Text = "Správa zakázek";
+                    break;
+            }
+        }
+
         private async void buttonProject_Click(object sender, EventArgs e)
         {
             _projectType = 0;
+            VisualiseSelectedProjectOrContract();
             await LoadProjectsContractsAsync();
         }
 
         private async void buttonContract_Click(object sender, EventArgs e)
         {
             _projectType = 1;
+            VisualiseSelectedProjectOrContract();
             await LoadProjectsContractsAsync();
         }
 
         private async void buttonAdd_Click(object sender, EventArgs e)
         {
+            if (_currentUser == null)
+            {
+                AppLogger.Error("Nepodařilo se načíst aktuálního uživatele, nelze přidat projekt do databáze.");
+                return;
+            }
+
             if (buttonAdd.Text == "Konec prohlížení")
             {
-                groupBox1.Text = $"Přidání projektu";
+                groupBox1.Text = "Přidání projektu";
                 textBoxProjectContractDescription.Enabled = true;
                 textBoxProjectContractNote.Enabled = true;
                 textBoxProjectContractTitle.Enabled = true;
                 ClearFields();
                 buttonAdd.Text = "Přidat";
             }
-
             else
             {
-                var dataCheck = CheckForEmptyOrIncorrectFields();
-
-                if (dataCheck.Item1)
+                var (valid, reason) = CheckForEmptyOrIncorrectFields();
+                if (!valid)
                 {
-                    var newProject = new Project
-                    {
-                        ProjectDescription = textBoxProjectContractDescription.Text,
-                        ProjectTitle = textBoxProjectContractTitle.Text,
-                        Note = textBoxProjectContractNote.Text
-                    };
-
-                    var addedProject = await _projectRepo.CreateProjectAsync(newProject);
-                    if (addedProject is not null)
-                    {
-                        AppLogger.Information($"Uživatel {FormatProjectToString(addedProject)} byl přidán do databáze.", true);
-                        ClearFields();
-                    }
-
-                    else
-                    {
-                        AppLogger.Error($"Uživatel {FormatProjectToString(newProject)} nebyl přidán do databáze.");
-                    }
-
-                    await LoadProjectsContractsAsync();
+                    AppLogger.Error($"Je třeba správně vyplnit všechna potřebná data! Chybný parametr: {reason}");
+                    return;
                 }
 
+                var newProject = new Project
+                {
+                    ProjectDescription = textBoxProjectContractDescription.Text,
+                    ProjectTitle = textBoxProjectContractTitle.Text,
+                    Note = textBoxProjectContractNote.Text,
+                    CreatedBy = _currentUser.Id
+                };
+
+                var addedProject = await _projectRepo.CreateProjectAsync(newProject);
+                if (addedProject is not null)
+                {
+                    AppLogger.Information($"Projekt {FormatProjectToString(addedProject)} byl úspěšně přidán.", true);
+                    ClearFields();
+                }
                 else
                 {
-                    AppLogger.Error($"Je třeba správně vyplnit všechna potřebná data! Chybný parametr: {dataCheck.Item2}");
+                    AppLogger.Error($"Projekt {FormatProjectToString(newProject)} nebyl přidán.");
                 }
+
+                await LoadProjectsContractsAsync();
             }
         }
+
 
         private async void buttonRemove_Click(object sender, EventArgs e)
         {
@@ -166,13 +201,12 @@ namespace VykazyPrace.Dialogs
 
         private (bool, string) CheckForEmptyOrIncorrectFields()
         {
-            bool pass = true;
-            string? reason = "";
-            if (string.IsNullOrEmpty(textBoxProjectContractDescription.Text)) pass = false; reason = "Popis";
-            if (string.IsNullOrEmpty(textBoxProjectContractTitle.Text)) pass = false; reason = "Název";
+            if (string.IsNullOrEmpty(textBoxProjectContractDescription.Text)) return (false, "Popis");
+            if (string.IsNullOrEmpty(textBoxProjectContractTitle.Text)) return (false, "Název");
 
-            return (pass, reason);
+            return (true, "");
         }
+
 
         private async Task<Project?> GetProjectBySelectedItem()
         {

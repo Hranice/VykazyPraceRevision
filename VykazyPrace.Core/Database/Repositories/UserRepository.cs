@@ -46,6 +46,17 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
+        /// Získání uživatele podle přihlašovacího jména do Windows.
+        /// </summary>
+        public async Task<User?> GetUserByWindowsUsernameAsync(string windowsUsername)
+        {
+            return await _context.Users
+                .Include(u => u.Projects)
+                .Include(u => u.TimeEntries)
+                .FirstOrDefaultAsync(u => u.WindowsUsername == windowsUsername);
+        }
+
+        /// <summary>
         /// Aktualizace uživatele.
         /// </summary>
         public async Task<bool> UpdateUserAsync(User user)

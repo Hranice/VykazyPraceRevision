@@ -88,7 +88,7 @@
             // 
             // buttonProject
             // 
-            buttonProject.BackColor = Color.White;
+            buttonProject.BackColor = SystemColors.Window;
             buttonProject.Dock = DockStyle.Left;
             buttonProject.FlatAppearance.BorderSize = 0;
             buttonProject.FlatStyle = FlatStyle.Flat;

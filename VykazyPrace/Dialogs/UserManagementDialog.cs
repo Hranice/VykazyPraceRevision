@@ -209,7 +209,7 @@ namespace VykazyPrace.Dialogs
 
         private async void listBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(listBoxUsers.SelectedIndex >= listBoxUsers.Items.Count - 1)
+            if (listBoxUsers.SelectedIndex >= listBoxUsers.Items.Count - 1)
             {
                 var user = await GetUserBySelectedItem();
 
@@ -232,17 +232,14 @@ namespace VykazyPrace.Dialogs
             }
         }
 
-        private (bool,string) CheckForEmptyOrIncorrectFields()
+        private (bool, string) CheckForEmptyOrIncorrectFields()
         {
-            bool pass = true;
-            string? reason = "";
-            if (string.IsNullOrEmpty(textBoxFirstName.Text)) pass = false; reason = "Jméno";
-            if (string.IsNullOrEmpty(textBoxSurname.Text)) pass = false; reason = "Příjmení";
-            if (string.IsNullOrEmpty(textBoxWindowsUsername.Text)) pass = false; reason = "Windows login";
-            if (string.IsNullOrEmpty(maskedTextBoxPersonalNumber.Text)) pass = false; reason = "Osobní číslo";
-            if (!int.TryParse(maskedTextBoxPersonalNumber.Text, out int _)) pass = false; reason = "Osobní číslo";
+            if (string.IsNullOrEmpty(textBoxFirstName.Text)) return (false, "Jméno");
+            if (string.IsNullOrEmpty(textBoxSurname.Text)) return (false, "Příjmení");
+            if (string.IsNullOrEmpty(textBoxWindowsUsername.Text)) return (false, "Windows login");
+            if (string.IsNullOrEmpty(maskedTextBoxPersonalNumber.Text)) return (false, "Osobní číslo");
 
-            return (pass, reason);
+            return (true, "");
         }
 
         private void ClearFields()

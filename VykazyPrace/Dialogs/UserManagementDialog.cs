@@ -209,7 +209,7 @@ namespace VykazyPrace.Dialogs
 
         private async void listBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listBoxUsers.SelectedIndex >= listBoxUsers.Items.Count - 1)
+            if (listBoxUsers.SelectedItem is not null)
             {
                 var user = await GetUserBySelectedItem();
 

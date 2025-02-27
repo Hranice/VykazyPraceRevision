@@ -40,12 +40,7 @@ namespace VykazyPrace.Dialogs
         {
             try
             {
-                List<Project> projects = _projectType switch
-                {
-                    0 => await _projectRepo.GetAllProjectsAsync(),
-                    1 => await _projectRepo.GetAllContractsAsync(),
-                    _ => await _projectRepo.GetAllProjectsAndContractsAsync()
-                };
+                List<Project> projects = await _projectRepo.GetAllProjectsAndContractsAsync(_projectType);
 
                 Invoke(new Action(() =>
                 {
@@ -144,6 +139,7 @@ namespace VykazyPrace.Dialogs
 
                 var newProject = new Project
                 {
+                    ProjectType = _projectType,
                     ProjectDescription = textBoxProjectContractDescription.Text,
                     ProjectTitle = textBoxProjectContractTitle.Text,
                     Note = textBoxProjectContractNote.Text,
@@ -238,7 +234,7 @@ namespace VykazyPrace.Dialogs
 
         private async void listBoxProjectContract_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listBoxProjectContract.SelectedIndex >= listBoxProjectContract.Items.Count - 1)
+            if (listBoxProjectContract.SelectedItem is not null)
             {
                 var project = await GetProjectBySelectedItem();
 

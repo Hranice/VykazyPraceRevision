@@ -44,27 +44,15 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
-        /// Získání všech projektů.
+        /// Získání všech projektů i zakázek.
         /// </summary>
-        public async Task<List<Project>> GetAllProjectsAsync()
+        public async Task<List<Project>> GetAllProjectsAndContractsAsync(int projectType)
         {
             return await _context.Projects
-                .Where(p => p.ProjectType == 0)
-                .Include(p => p.CreatedByNavigation)
-                .ToListAsync();
+                          .Where(p => p.ProjectType == projectType)
+                          .Include(p => p.CreatedByNavigation)
+                          .ToListAsync();
         }
-
-        /// <summary>
-        /// Získání všech zakázek.
-        /// </summary>
-        public async Task<List<Project>> GetAllContractsAsync()
-        {
-            return await _context.Projects
-                .Where(p => p.ProjectType == 1)
-                .Include(p => p.CreatedByNavigation)
-                .ToListAsync();
-        }
-
 
         /// <summary>
         /// Získání projektu podle ID.

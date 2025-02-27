@@ -35,6 +35,30 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
+        /// Získání všech časových záznamů pro konkrétního uživatele.
+        /// </summary>
+        public async Task<List<TimeEntry>> GetAllTimeEntriesByUserAsync(User user)
+        {
+            return await _context.TimeEntries
+                .Where(te => te.UserId == user.Id)
+                .Include(te => te.Project)
+                .ToListAsync();
+        }
+
+        /// <summary>
+        /// Získání všech časových záznamů pro konkrétního uživatele podle zakázky/projektu.
+        /// </summary>
+        public async Task<List<TimeEntry>> GetAllTimeEntriesByUserAsync(User user, int projectType)
+        {
+            return await _context.TimeEntries
+                .Where(te => te.UserId == user.Id && te.Project != null && te.Project.ProjectType == projectType)
+                .Include(te => te.Project)
+                .ToListAsync();
+        }
+
+
+
+        /// <summary>
         /// Získání časového záznamu podle ID.
         /// </summary>
         public async Task<TimeEntry?> GetTimeEntryByIdAsync(int id)

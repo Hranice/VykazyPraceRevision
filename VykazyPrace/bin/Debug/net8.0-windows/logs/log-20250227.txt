@@ -1,1 +1,16 @@
 2025-02-27 10:19:10.765 +01:00 [INF] Uživatel 1 (test): test byl přidán do databáze.
+2025-02-27 13:57:04.893 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Počet hodin
+2025-02-27 13:57:46.624 +01:00 [INF] Zápis hodin 1 (): 1 byl úspěšně proveden.
+2025-02-27 14:07:21.376 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Počet hodin
+2025-02-27 14:07:30.626 +01:00 [INF] Zápis hodin 2 (test): 2 byl úspěšně proveden.
+2025-02-27 14:08:52.022 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Počet hodin
+2025-02-27 14:09:58.924 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Počet hodin
+2025-02-27 14:11:41.949 +01:00 [INF] Zápis hodin 3 (test): 2 byl úspěšně proveden.
+2025-02-27 14:12:08.264 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Projekt
+2025-02-27 14:12:29.870 +01:00 [INF] Zápis hodin 4 (test): 2 byl úspěšně proveden.
+2025-02-27 14:14:12.909 +01:00 [INF] Zápis hodin 5 (test): 0 h - šlofíček byl úspěšně proveden.
+2025-02-27 14:20:48.436 +01:00 [INF] Projekt 2 (0230I24): Automatické balení po pecích a UV byl úspěšně přidán.
+2025-02-27 14:21:02.021 +01:00 [INF] Projekt 3 (000015): Přejezd artiklu-výstup byl úspěšně přidán.
+2025-02-27 14:22:44.367 +01:00 [INF] Projekt 3 (000015): Přejezd artiklu-výstup byl smazán z databáze.
+2025-02-27 14:22:59.538 +01:00 [INF] Projekt 4 (000015): Přejezd artiklu-výstup byl úspěšně přidán.
+2025-02-27 14:30:45.543 +01:00 [INF] Zápis hodin 6 (): 0,5 h - jajaaaaaaaaaa byl úspěšně proveden.

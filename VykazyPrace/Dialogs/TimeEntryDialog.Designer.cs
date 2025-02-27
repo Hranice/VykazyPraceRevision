@@ -29,27 +29,27 @@
         private void InitializeComponent()
         {
             labelCurrentDate = new Label();
-            label3 = new Label();
-            button1 = new Button();
-            button2 = new Button();
-            comboBox1 = new ComboBox();
-            listBox1 = new ListBox();
+            labelNextDate = new Label();
+            buttonProject = new Button();
+            buttonContract = new Button();
+            comboBoxProjectsContracts = new ComboBox();
+            listBoxTimeEntries = new ListBox();
             groupBox1 = new GroupBox();
-            label4 = new Label();
-            button7 = new Button();
-            button8 = new Button();
-            button6 = new Button();
-            button5 = new Button();
+            label8 = new Label();
+            label7 = new Label();
+            textBoxDescription = new TextBox();
+            labelHours = new Label();
+            buttonAddHalfHour = new Button();
+            buttonAddHour = new Button();
+            buttonSubtractHalfHour = new Button();
+            buttonSubtractHour = new Button();
             panel1 = new Panel();
-            label2 = new Label();
-            label5 = new Label();
-            button4 = new Button();
-            button3 = new Button();
+            labelPreviousDate = new Label();
+            labelFinishedHours = new Label();
+            buttonRemove = new Button();
+            buttonWrite = new Button();
             panel2 = new Panel();
             label6 = new Label();
-            label7 = new Label();
-            textBox3 = new TextBox();
-            label8 = new Label();
             groupBox1.SuspendLayout();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -64,81 +64,82 @@
             labelCurrentDate.Text = "25.02.2025";
             labelCurrentDate.TextAlign = ContentAlignment.TopCenter;
             // 
-            // label3
+            // labelNextDate
             // 
-            label3.Font = new Font("Reddit Sans", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label3.ForeColor = SystemColors.ControlDarkDark;
-            label3.Location = new Point(344, 12);
-            label3.Name = "label3";
-            label3.Size = new Size(125, 25);
-            label3.TabIndex = 2;
-            label3.Text = "26.02.2025";
-            label3.TextAlign = ContentAlignment.TopCenter;
+            labelNextDate.Font = new Font("Reddit Sans", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            labelNextDate.ForeColor = SystemColors.ControlDarkDark;
+            labelNextDate.Location = new Point(344, 12);
+            labelNextDate.Name = "labelNextDate";
+            labelNextDate.Size = new Size(125, 25);
+            labelNextDate.TabIndex = 2;
+            labelNextDate.Text = "26.02.2025";
+            labelNextDate.TextAlign = ContentAlignment.TopCenter;
             // 
-            // button1
+            // buttonProject
             // 
-            button1.BackColor = Color.White;
-            button1.Dock = DockStyle.Left;
-            button1.FlatAppearance.BorderSize = 0;
-            button1.FlatStyle = FlatStyle.Flat;
-            button1.Font = new Font("Reddit Sans", 10F, FontStyle.Bold);
-            button1.Location = new Point(0, 0);
-            button1.Name = "button1";
-            button1.Size = new Size(234, 31);
-            button1.TabIndex = 3;
-            button1.Text = "PROJEKT";
-            button1.UseVisualStyleBackColor = false;
+            buttonProject.BackColor = Color.White;
+            buttonProject.Dock = DockStyle.Left;
+            buttonProject.FlatAppearance.BorderSize = 0;
+            buttonProject.FlatStyle = FlatStyle.Flat;
+            buttonProject.Font = new Font("Reddit Sans", 10F, FontStyle.Bold);
+            buttonProject.Location = new Point(0, 0);
+            buttonProject.Name = "buttonProject";
+            buttonProject.Size = new Size(234, 31);
+            buttonProject.TabIndex = 3;
+            buttonProject.Text = "PROJEKT";
+            buttonProject.UseVisualStyleBackColor = false;
+            buttonProject.Click += buttonProject_Click;
             // 
-            // button2
+            // buttonContract
             // 
-            button2.BackColor = SystemColors.AppWorkspace;
-            button2.Dock = DockStyle.Right;
-            button2.FlatAppearance.BorderSize = 0;
-            button2.FlatStyle = FlatStyle.Flat;
-            button2.Font = new Font("Reddit Sans", 10F);
-            button2.Location = new Point(232, 0);
-            button2.Name = "button2";
-            button2.Size = new Size(234, 31);
-            button2.TabIndex = 4;
-            button2.Text = "ZAKÁZKA";
-            button2.UseVisualStyleBackColor = false;
+            buttonContract.BackColor = SystemColors.AppWorkspace;
+            buttonContract.Dock = DockStyle.Right;
+            buttonContract.FlatAppearance.BorderSize = 0;
+            buttonContract.FlatStyle = FlatStyle.Flat;
+            buttonContract.Font = new Font("Reddit Sans", 10F);
+            buttonContract.Location = new Point(232, 0);
+            buttonContract.Name = "buttonContract";
+            buttonContract.Size = new Size(234, 31);
+            buttonContract.TabIndex = 4;
+            buttonContract.Text = "ZAKÁZKA";
+            buttonContract.UseVisualStyleBackColor = false;
+            buttonContract.Click += buttonContract_Click;
             // 
-            // comboBox1
+            // comboBoxProjectsContracts
             // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.IntegralHeight = false;
-            comboBox1.ItemHeight = 25;
-            comboBox1.Location = new Point(10, 96);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(467, 33);
-            comboBox1.TabIndex = 5;
-            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
-            comboBox1.SelectionChangeCommitted += comboBox1_SelectionChangeCommitted;
-            comboBox1.TextChanged += comboBox1_TextChanged;
+            comboBoxProjectsContracts.FormattingEnabled = true;
+            comboBoxProjectsContracts.IntegralHeight = false;
+            comboBoxProjectsContracts.ItemHeight = 25;
+            comboBoxProjectsContracts.Location = new Point(10, 96);
+            comboBoxProjectsContracts.Name = "comboBoxProjectsContracts";
+            comboBoxProjectsContracts.Size = new Size(467, 33);
+            comboBoxProjectsContracts.TabIndex = 5;
+            comboBoxProjectsContracts.SelectionChangeCommitted += comboBoxProjectsContracts_SelectionChangeCommitted;
+            comboBoxProjectsContracts.TextChanged += comboBoxProjectsContracts_TextChanged;
             // 
-            // listBox1
+            // listBoxTimeEntries
             // 
-            listBox1.BorderStyle = BorderStyle.FixedSingle;
-            listBox1.FormattingEnabled = true;
-            listBox1.ItemHeight = 25;
-            listBox1.Items.AddRange(new object[] { "7,5h\t0230I24 - Automatické balení po pecích a UV", "tes", "test", "test", "test", "tes" });
-            listBox1.Location = new Point(12, 83);
-            listBox1.Name = "listBox1";
-            listBox1.Size = new Size(485, 77);
-            listBox1.TabIndex = 9;
+            listBoxTimeEntries.BorderStyle = BorderStyle.FixedSingle;
+            listBoxTimeEntries.FormattingEnabled = true;
+            listBoxTimeEntries.ItemHeight = 25;
+            listBoxTimeEntries.Location = new Point(12, 83);
+            listBoxTimeEntries.Name = "listBoxTimeEntries";
+            listBoxTimeEntries.Size = new Size(485, 77);
+            listBoxTimeEntries.TabIndex = 9;
+            listBoxTimeEntries.SelectedIndexChanged += listBoxTimeEntries_SelectedIndexChanged;
             // 
             // groupBox1
             // 
             groupBox1.Controls.Add(label8);
             groupBox1.Controls.Add(label7);
-            groupBox1.Controls.Add(textBox3);
-            groupBox1.Controls.Add(label4);
-            groupBox1.Controls.Add(button7);
-            groupBox1.Controls.Add(button8);
-            groupBox1.Controls.Add(button6);
-            groupBox1.Controls.Add(button5);
+            groupBox1.Controls.Add(textBoxDescription);
+            groupBox1.Controls.Add(labelHours);
+            groupBox1.Controls.Add(buttonAddHalfHour);
+            groupBox1.Controls.Add(buttonAddHour);
+            groupBox1.Controls.Add(buttonSubtractHalfHour);
+            groupBox1.Controls.Add(buttonSubtractHour);
             groupBox1.Controls.Add(panel1);
-            groupBox1.Controls.Add(comboBox1);
+            groupBox1.Controls.Add(comboBoxProjectsContracts);
             groupBox1.Location = new Point(12, 204);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(485, 299);
@@ -146,98 +147,135 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Zápis hodin";
             // 
-            // label4
+            // label8
             // 
-            label4.Location = new Point(202, 245);
-            label4.Name = "label4";
-            label4.Size = new Size(84, 43);
-            label4.TabIndex = 14;
-            label4.Text = "0 h";
-            label4.TextAlign = ContentAlignment.MiddleCenter;
+            label8.AutoSize = true;
+            label8.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label8.Location = new Point(7, 72);
+            label8.Margin = new Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(57, 21);
+            label8.TabIndex = 21;
+            label8.Text = "Projekt*";
             // 
-            // button7
+            // label7
             // 
-            button7.Location = new Point(292, 245);
-            button7.Name = "button7";
-            button7.Size = new Size(90, 43);
-            button7.TabIndex = 13;
-            button7.Text = "+ 0,5 h";
-            button7.UseVisualStyleBackColor = true;
+            label7.AutoSize = true;
+            label7.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label7.Location = new Point(11, 132);
+            label7.Margin = new Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(55, 21);
+            label7.TabIndex = 20;
+            label7.Text = "Činnost";
             // 
-            // button8
+            // textBoxDescription
             // 
-            button8.Location = new Point(388, 245);
-            button8.Name = "button8";
-            button8.Size = new Size(90, 43);
-            button8.TabIndex = 12;
-            button8.Text = "+ 1 h";
-            button8.UseVisualStyleBackColor = true;
+            textBoxDescription.Location = new Point(11, 157);
+            textBoxDescription.Margin = new Padding(5, 8, 5, 8);
+            textBoxDescription.Multiline = true;
+            textBoxDescription.Name = "textBoxDescription";
+            textBoxDescription.Size = new Size(466, 84);
+            textBoxDescription.TabIndex = 19;
             // 
-            // button6
+            // labelHours
             // 
-            button6.Location = new Point(106, 245);
-            button6.Name = "button6";
-            button6.Size = new Size(90, 43);
-            button6.TabIndex = 11;
-            button6.Text = "- 0,5 h";
-            button6.UseVisualStyleBackColor = true;
+            labelHours.Location = new Point(202, 245);
+            labelHours.Name = "labelHours";
+            labelHours.Size = new Size(84, 43);
+            labelHours.TabIndex = 14;
+            labelHours.Text = "0 h";
+            labelHours.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // button5
+            // buttonAddHalfHour
             // 
-            button5.Location = new Point(10, 245);
-            button5.Name = "button5";
-            button5.Size = new Size(90, 43);
-            button5.TabIndex = 10;
-            button5.Text = "- 1 h";
-            button5.UseVisualStyleBackColor = true;
+            buttonAddHalfHour.Location = new Point(292, 245);
+            buttonAddHalfHour.Name = "buttonAddHalfHour";
+            buttonAddHalfHour.Size = new Size(90, 43);
+            buttonAddHalfHour.TabIndex = 13;
+            buttonAddHalfHour.Text = "+ 0,5 h";
+            buttonAddHalfHour.UseVisualStyleBackColor = true;
+            buttonAddHalfHour.Click += buttonAddHalfHour_Click;
+            // 
+            // buttonAddHour
+            // 
+            buttonAddHour.Location = new Point(388, 245);
+            buttonAddHour.Name = "buttonAddHour";
+            buttonAddHour.Size = new Size(90, 43);
+            buttonAddHour.TabIndex = 12;
+            buttonAddHour.Text = "+ 1 h";
+            buttonAddHour.UseVisualStyleBackColor = true;
+            buttonAddHour.Click += buttonAddHour_Click;
+            // 
+            // buttonSubtractHalfHour
+            // 
+            buttonSubtractHalfHour.Location = new Point(106, 245);
+            buttonSubtractHalfHour.Name = "buttonSubtractHalfHour";
+            buttonSubtractHalfHour.Size = new Size(90, 43);
+            buttonSubtractHalfHour.TabIndex = 11;
+            buttonSubtractHalfHour.Text = "- 0,5 h";
+            buttonSubtractHalfHour.UseVisualStyleBackColor = true;
+            buttonSubtractHalfHour.Click += buttonSubtractHalfHour_Click;
+            // 
+            // buttonSubtractHour
+            // 
+            buttonSubtractHour.Location = new Point(10, 245);
+            buttonSubtractHour.Name = "buttonSubtractHour";
+            buttonSubtractHour.Size = new Size(90, 43);
+            buttonSubtractHour.TabIndex = 10;
+            buttonSubtractHour.Text = "- 1 h";
+            buttonSubtractHour.UseVisualStyleBackColor = true;
+            buttonSubtractHour.Click += buttonSubtractHour_Click;
             // 
             // panel1
             // 
             panel1.BorderStyle = BorderStyle.FixedSingle;
-            panel1.Controls.Add(button1);
-            panel1.Controls.Add(button2);
+            panel1.Controls.Add(buttonProject);
+            panel1.Controls.Add(buttonContract);
             panel1.Location = new Point(11, 32);
             panel1.Name = "panel1";
             panel1.Size = new Size(468, 33);
             panel1.TabIndex = 9;
             // 
-            // label2
+            // labelPreviousDate
             // 
-            label2.Font = new Font("Reddit Sans", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label2.ForeColor = SystemColors.ControlDarkDark;
-            label2.Location = new Point(57, 12);
-            label2.Name = "label2";
-            label2.Size = new Size(125, 25);
-            label2.TabIndex = 11;
-            label2.Text = "24.02.2025";
-            label2.TextAlign = ContentAlignment.TopCenter;
+            labelPreviousDate.Font = new Font("Reddit Sans", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            labelPreviousDate.ForeColor = SystemColors.ControlDarkDark;
+            labelPreviousDate.Location = new Point(57, 12);
+            labelPreviousDate.Name = "labelPreviousDate";
+            labelPreviousDate.Size = new Size(125, 25);
+            labelPreviousDate.TabIndex = 11;
+            labelPreviousDate.Text = "24.02.2025";
+            labelPreviousDate.TextAlign = ContentAlignment.TopCenter;
             // 
-            // label5
+            // labelFinishedHours
             // 
-            label5.AutoSize = true;
-            label5.Location = new Point(9, 168);
-            label5.Name = "label5";
-            label5.Size = new Size(73, 25);
-            label5.TabIndex = 12;
-            label5.Text = "7,5 / 15 h";
+            labelFinishedHours.AutoSize = true;
+            labelFinishedHours.Location = new Point(9, 168);
+            labelFinishedHours.Name = "labelFinishedHours";
+            labelFinishedHours.Size = new Size(73, 25);
+            labelFinishedHours.TabIndex = 12;
+            labelFinishedHours.Text = "7,5 / 15 h";
             // 
-            // button4
+            // buttonRemove
             // 
-            button4.Location = new Point(344, 509);
-            button4.Name = "button4";
-            button4.Size = new Size(153, 43);
-            button4.TabIndex = 14;
-            button4.Text = "Zrušit";
-            button4.UseVisualStyleBackColor = true;
+            buttonRemove.Location = new Point(344, 509);
+            buttonRemove.Name = "buttonRemove";
+            buttonRemove.Size = new Size(153, 43);
+            buttonRemove.TabIndex = 14;
+            buttonRemove.Text = "Odstranit";
+            buttonRemove.UseVisualStyleBackColor = true;
+            buttonRemove.Click += buttonRemove_Click;
             // 
-            // button3
+            // buttonWrite
             // 
-            button3.Location = new Point(12, 509);
-            button3.Name = "button3";
-            button3.Size = new Size(326, 43);
-            button3.TabIndex = 13;
-            button3.Text = "Uložit";
-            button3.UseVisualStyleBackColor = true;
+            buttonWrite.Location = new Point(12, 509);
+            buttonWrite.Name = "buttonWrite";
+            buttonWrite.Size = new Size(326, 43);
+            buttonWrite.TabIndex = 13;
+            buttonWrite.Text = "Zapsat";
+            buttonWrite.UseVisualStyleBackColor = true;
+            buttonWrite.Click += buttonWrite_Click;
             // 
             // panel2
             // 
@@ -257,37 +295,6 @@
             label6.TabIndex = 16;
             label6.Text = "Zapsané hodiny:";
             // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label7.Location = new Point(11, 132);
-            label7.Margin = new Padding(4, 0, 4, 0);
-            label7.Name = "label7";
-            label7.Size = new Size(55, 21);
-            label7.TabIndex = 20;
-            label7.Text = "Činnost";
-            // 
-            // textBox3
-            // 
-            textBox3.Location = new Point(11, 157);
-            textBox3.Margin = new Padding(5, 8, 5, 8);
-            textBox3.Multiline = true;
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(466, 84);
-            textBox3.TabIndex = 19;
-            // 
-            // label8
-            // 
-            label8.AutoSize = true;
-            label8.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label8.Location = new Point(7, 72);
-            label8.Margin = new Padding(4, 0, 4, 0);
-            label8.Name = "label8";
-            label8.Size = new Size(57, 21);
-            label8.TabIndex = 21;
-            label8.Text = "Projekt*";
-            // 
             // TimeEntryDialog
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
@@ -296,13 +303,13 @@
             ClientSize = new Size(509, 564);
             Controls.Add(label6);
             Controls.Add(panel2);
-            Controls.Add(button4);
-            Controls.Add(button3);
-            Controls.Add(label5);
-            Controls.Add(label2);
+            Controls.Add(buttonRemove);
+            Controls.Add(buttonWrite);
+            Controls.Add(labelFinishedHours);
+            Controls.Add(labelPreviousDate);
             Controls.Add(groupBox1);
-            Controls.Add(listBox1);
-            Controls.Add(label3);
+            Controls.Add(listBoxTimeEntries);
+            Controls.Add(labelNextDate);
             Controls.Add(labelCurrentDate);
             Font = new Font("Reddit Sans", 12F);
             Margin = new Padding(4, 5, 4, 5);
@@ -319,26 +326,26 @@
         #endregion
 
         private Label labelCurrentDate;
-        private Label label3;
-        private Button button1;
-        private Button button2;
-        private ComboBox comboBox1;
-        private ListBox listBox1;
+        private Label labelNextDate;
+        private Button buttonProject;
+        private Button buttonContract;
+        private ComboBox comboBoxProjectsContracts;
+        private ListBox listBoxTimeEntries;
         private GroupBox groupBox1;
         private Panel panel1;
-        private Label label2;
-        private Button button7;
-        private Button button8;
-        private Button button6;
-        private Button button5;
-        private Label label5;
-        private Label label4;
-        private Button button4;
-        private Button button3;
+        private Label labelPreviousDate;
+        private Button buttonAddHalfHour;
+        private Button buttonAddHour;
+        private Button buttonSubtractHalfHour;
+        private Button buttonSubtractHour;
+        private Label labelFinishedHours;
+        private Label labelHours;
+        private Button buttonRemove;
+        private Button buttonWrite;
         private Panel panel2;
         private Label label6;
         private Label label8;
         private Label label7;
-        private TextBox textBox3;
+        private TextBox textBoxDescription;
     }
 }

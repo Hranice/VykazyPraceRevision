@@ -55,6 +55,7 @@
             buttonAdd.TabIndex = 19;
             buttonAdd.Text = "Přidat";
             buttonAdd.UseVisualStyleBackColor = true;
+            buttonAdd.Click += buttonAdd_Click;
             // 
             // label2
             // 
@@ -141,6 +142,7 @@
             buttonRemove.TabIndex = 20;
             buttonRemove.Text = "Odstranit";
             buttonRemove.UseVisualStyleBackColor = true;
+            buttonRemove.Click += buttonRemove_Click;
             // 
             // label5
             // 
@@ -196,11 +198,11 @@
             listBoxProjectContract.BorderStyle = BorderStyle.FixedSingle;
             listBoxProjectContract.FormattingEnabled = true;
             listBoxProjectContract.ItemHeight = 25;
-            listBoxProjectContract.Items.AddRange(new object[] { "0230I24 - Automatické balení po pecích a UV", "tes", "test", "test", "test", "tes" });
             listBoxProjectContract.Location = new Point(12, 75);
             listBoxProjectContract.Name = "listBoxProjectContract";
             listBoxProjectContract.Size = new Size(399, 77);
             listBoxProjectContract.TabIndex = 23;
+            listBoxProjectContract.SelectedIndexChanged += listBoxProjectContract_SelectedIndexChanged;
             // 
             // ProjectManagementDialog
             // 

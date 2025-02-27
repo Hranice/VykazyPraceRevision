@@ -108,7 +108,7 @@ namespace VykazyPrace.Dialogs
 
         private async void buttonRemove_Click(object sender, EventArgs e)
         {
-            var user = GetUserBySelectedItem().Result;
+            var user = await GetUserBySelectedItem();
 
             if (user != null)
             {
@@ -207,11 +207,11 @@ namespace VykazyPrace.Dialogs
             GenerateWindowsUsername();
         }
 
-        private void listBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
+        private async void listBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
         {
             if(listBoxUsers.SelectedIndex >= listBoxUsers.Items.Count - 1)
             {
-                var user = GetUserBySelectedItem().Result;
+                var user = await GetUserBySelectedItem();
 
                 if (user != null)
                 {

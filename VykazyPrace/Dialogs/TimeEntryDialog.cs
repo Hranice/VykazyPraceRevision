@@ -33,45 +33,35 @@ namespace VykazyPrace.Dialogs
 
         private async Task LoadData()
         {
-            Invoke(new Action(() =>
-            {
-                _loadingUC.BringToFront();
-            }));
+            Invoke(() => _loadingUC.BringToFront());
 
-            await LoadCurrentDomainUser();
-            await LoadProjectsContractsAsync();
-            await LoadTimeEntriesAsync();
+            var userTask = LoadCurrentDomainUser();
+            var projectsTask = LoadProjectsContractsAsync();
+            var timeEntriesTask = LoadTimeEntriesAsync();
 
-            Invoke(new Action(() =>
-            {
-                _loadingUC.Visible = false;
-            }));
+            await Task.WhenAll(userTask, projectsTask, timeEntriesTask);
+
+            Invoke(() => _loadingUC.Visible = false);
         }
 
         private async Task LoadTimeEntriesAsync()
         {
             try
             {
-                List<TimeEntry> timeEntries = await _timeEntryRepo.GetAllTimeEntriesByUserAsync(_currentUser, _projectType);
+                var timeEntries = await _timeEntryRepo.GetAllTimeEntriesByUserAsync(_currentUser, _projectType);
 
-                Invoke(new Action(() =>
+                Invoke(() =>
                 {
                     listBoxTimeEntries.Items.Clear();
-
-                    foreach (var timeEntry in timeEntries)
-                    {
-                        listBoxTimeEntries.Items.Add(FormatTimeEntryToString(timeEntry));
-                    }
-                }));
+                    listBoxTimeEntries.Items.AddRange(timeEntries.Select(FormatTimeEntryToString).ToArray());
+                });
             }
             catch (Exception ex)
             {
-                Invoke(new Action(() =>
-                {
-                    AppLogger.Error("Chyba při načítání sezamu zapsaných hodin.", ex);
-                }));
+                Invoke(() => AppLogger.Error("Chyba při načítání seznamu zapsaných hodin.", ex));
             }
         }
+
 
         private async Task LoadProjectsContractsAsync()
         {

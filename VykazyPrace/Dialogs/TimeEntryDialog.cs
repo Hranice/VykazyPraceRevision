@@ -56,7 +56,8 @@ namespace VykazyPrace.Dialogs
 
                 Invoke(new Action(() =>
                 {
-                    _projectsFormattedToString.Clear();
+                    listBoxTimeEntries.Items.Clear();
+
                     foreach (var timeEntry in timeEntries)
                     {
                         listBoxTimeEntries.Items.Add(FormatTimeEntryToString(timeEntry));
@@ -157,6 +158,9 @@ namespace VykazyPrace.Dialogs
             if (isUpdating)
                 return;
 
+            if (!comboBoxProjectsContracts.Enabled)
+                return;
+
             isUpdating = true;
             try
             {
@@ -177,6 +181,9 @@ namespace VykazyPrace.Dialogs
         private void comboBoxProjectsContracts_TextChanged(object sender, EventArgs e)
         {
             if (isUpdating)
+                return;
+
+            if (!comboBoxProjectsContracts.Enabled)
                 return;
 
             isUpdating = true;
@@ -241,6 +248,8 @@ namespace VykazyPrace.Dialogs
 
             if (buttonWrite.Text == "Konec prohlížení")
             {
+                ClearFields();
+
                 buttonProject.Enabled = true;
                 buttonContract.Enabled = true;
                 textBoxDescription.Enabled = true;
@@ -251,7 +260,6 @@ namespace VykazyPrace.Dialogs
                 buttonSubtractHour.Enabled = true;
 
                 buttonWrite.Text = "Zapsat";
-                ClearFields();
 
                 await LoadData();
             }

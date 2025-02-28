@@ -1,0 +1,2 @@
+2025-02-28 08:22:42.056 +01:00 [INF] Zápis hodin 7 (000015): 1 h - zakázníček byl úspěšně proveden.
+2025-02-28 08:23:13.358 +01:00 [INF] Zápis hodin 8 (000015): 5,5 h -  byl úspěšně proveden.

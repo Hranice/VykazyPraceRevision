@@ -60,7 +60,7 @@
             labelCurrentDate.Location = new Point(188, 9);
             labelCurrentDate.Name = "labelCurrentDate";
             labelCurrentDate.Size = new Size(150, 35);
-            labelCurrentDate.TabIndex = 0;
+            labelCurrentDate.TabIndex = 12;
             labelCurrentDate.Text = "25.02.2025";
             labelCurrentDate.TextAlign = ContentAlignment.TopCenter;
             // 
@@ -71,7 +71,7 @@
             labelNextDate.Location = new Point(344, 12);
             labelNextDate.Name = "labelNextDate";
             labelNextDate.Size = new Size(125, 25);
-            labelNextDate.TabIndex = 2;
+            labelNextDate.TabIndex = 13;
             labelNextDate.Text = "26.02.2025";
             labelNextDate.TextAlign = ContentAlignment.TopCenter;
             // 
@@ -85,7 +85,7 @@
             buttonProject.Location = new Point(0, 0);
             buttonProject.Name = "buttonProject";
             buttonProject.Size = new Size(234, 31);
-            buttonProject.TabIndex = 3;
+            buttonProject.TabIndex = 1;
             buttonProject.Text = "PROJEKT";
             buttonProject.UseVisualStyleBackColor = false;
             buttonProject.Click += buttonProject_Click;
@@ -100,7 +100,7 @@
             buttonContract.Location = new Point(232, 0);
             buttonContract.Name = "buttonContract";
             buttonContract.Size = new Size(234, 31);
-            buttonContract.TabIndex = 4;
+            buttonContract.TabIndex = 2;
             buttonContract.Text = "ZAKÁZKA";
             buttonContract.UseVisualStyleBackColor = false;
             buttonContract.Click += buttonContract_Click;
@@ -113,7 +113,7 @@
             comboBoxProjectsContracts.Location = new Point(10, 96);
             comboBoxProjectsContracts.Name = "comboBoxProjectsContracts";
             comboBoxProjectsContracts.Size = new Size(467, 33);
-            comboBoxProjectsContracts.TabIndex = 5;
+            comboBoxProjectsContracts.TabIndex = 3;
             comboBoxProjectsContracts.SelectionChangeCommitted += comboBoxProjectsContracts_SelectionChangeCommitted;
             comboBoxProjectsContracts.TextChanged += comboBoxProjectsContracts_TextChanged;
             // 
@@ -176,7 +176,7 @@
             textBoxDescription.Multiline = true;
             textBoxDescription.Name = "textBoxDescription";
             textBoxDescription.Size = new Size(466, 84);
-            textBoxDescription.TabIndex = 19;
+            textBoxDescription.TabIndex = 1;
             // 
             // labelHours
             // 
@@ -192,7 +192,7 @@
             buttonAddHalfHour.Location = new Point(292, 245);
             buttonAddHalfHour.Name = "buttonAddHalfHour";
             buttonAddHalfHour.Size = new Size(90, 43);
-            buttonAddHalfHour.TabIndex = 13;
+            buttonAddHalfHour.TabIndex = 6;
             buttonAddHalfHour.Text = "+ 0,5 h";
             buttonAddHalfHour.UseVisualStyleBackColor = true;
             buttonAddHalfHour.Click += buttonAddHalfHour_Click;
@@ -202,7 +202,7 @@
             buttonAddHour.Location = new Point(388, 245);
             buttonAddHour.Name = "buttonAddHour";
             buttonAddHour.Size = new Size(90, 43);
-            buttonAddHour.TabIndex = 12;
+            buttonAddHour.TabIndex = 7;
             buttonAddHour.Text = "+ 1 h";
             buttonAddHour.UseVisualStyleBackColor = true;
             buttonAddHour.Click += buttonAddHour_Click;
@@ -212,7 +212,7 @@
             buttonSubtractHalfHour.Location = new Point(106, 245);
             buttonSubtractHalfHour.Name = "buttonSubtractHalfHour";
             buttonSubtractHalfHour.Size = new Size(90, 43);
-            buttonSubtractHalfHour.TabIndex = 11;
+            buttonSubtractHalfHour.TabIndex = 5;
             buttonSubtractHalfHour.Text = "- 0,5 h";
             buttonSubtractHalfHour.UseVisualStyleBackColor = true;
             buttonSubtractHalfHour.Click += buttonSubtractHalfHour_Click;
@@ -222,7 +222,7 @@
             buttonSubtractHour.Location = new Point(10, 245);
             buttonSubtractHour.Name = "buttonSubtractHour";
             buttonSubtractHour.Size = new Size(90, 43);
-            buttonSubtractHour.TabIndex = 10;
+            buttonSubtractHour.TabIndex = 4;
             buttonSubtractHour.Text = "- 1 h";
             buttonSubtractHour.UseVisualStyleBackColor = true;
             buttonSubtractHour.Click += buttonSubtractHour_Click;
@@ -262,7 +262,7 @@
             buttonRemove.Location = new Point(344, 509);
             buttonRemove.Name = "buttonRemove";
             buttonRemove.Size = new Size(153, 43);
-            buttonRemove.TabIndex = 14;
+            buttonRemove.TabIndex = 10;
             buttonRemove.Text = "Odstranit";
             buttonRemove.UseVisualStyleBackColor = true;
             buttonRemove.Click += buttonRemove_Click;
@@ -272,7 +272,7 @@
             buttonWrite.Location = new Point(12, 509);
             buttonWrite.Name = "buttonWrite";
             buttonWrite.Size = new Size(326, 43);
-            buttonWrite.TabIndex = 13;
+            buttonWrite.TabIndex = 8;
             buttonWrite.Text = "Zapsat";
             buttonWrite.UseVisualStyleBackColor = true;
             buttonWrite.Click += buttonWrite_Click;

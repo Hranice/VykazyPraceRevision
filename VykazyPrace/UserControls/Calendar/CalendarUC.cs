@@ -1,30 +1,66 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Globalization;
+using VykazyPrace.Core.Database.Models;
+using VykazyPrace.Core.Database.Repositories;
 
 namespace VykazyPrace.UserControls.Calendar
 {
     public partial class CalendarUC : UserControl
     {
+        private int _currentMonth = DateTime.Now.Month;
+        private int _currentYear = DateTime.Now.Year;
+        private readonly LoadingUC _loadingUC = new LoadingUC();
+        private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
+        private readonly User _currentUser;
         private Dictionary<int, int> _minutesDict = new Dictionary<int, int>();
 
-        public CalendarUC(Dictionary<int, int> minutesDict)
+        public CalendarUC(User currentUser)
         {
             InitializeComponent();
+            _currentUser = currentUser;
+        }
 
-            _minutesDict = minutesDict;
+        private async Task LoadTimeEntriesAsync()
+        {
+            _minutesDict.Clear(); // Vyčistíme dictionary pro nový měsíc
+
+            var timeEntries = await _timeEntryRepo.GetAllTimeEntriesByUserAsync(_currentUser);
+
+            foreach (var entry in timeEntries)
+            {
+                if (entry.Timestamp.HasValue &&
+                    entry.Timestamp.Value.Year == _currentYear &&
+                    entry.Timestamp.Value.Month == _currentMonth)
+                {
+                    int day = entry.Timestamp.Value.Day;
+
+                    if (_minutesDict.ContainsKey(day))
+                    {
+                        _minutesDict[day] += entry.EntryMinutes;
+                    }
+                    else
+                    {
+                        _minutesDict[day] = entry.EntryMinutes;
+                    }
+                }
+            }
         }
 
         private void CalendarUC_Load(object sender, EventArgs e)
         {
-            GenerateCalendar(DateTime.Now.Year, DateTime.Now.Month);
+            _loadingUC.Size = this.Size;
+            this.Controls.Add(_loadingUC);
+
+            Task.Run(ReloadCalendar);
+        }
+
+        private async Task ReloadCalendar()
+        {
+            Invoke(() => _loadingUC.BringToFront());
+
+            await LoadTimeEntriesAsync();
+            Invoke(() => GenerateCalendar(_currentYear, _currentMonth));
+            
+            Invoke(() => _loadingUC.Visible = false);
         }
 
         private void AddWeekDaysHeader()
@@ -88,12 +124,10 @@ namespace VykazyPrace.UserControls.Calendar
                 dayCell.Margin = new Padding(2);
                 dayCell.Padding = new Padding(0);
 
-
-
                 if (i >= startDayIndex && dayCounter <= daysInMonth)
                 {
                     // Doplníme záznam hodin, pokud existuje
-                    if (_minutesDict.TryGetValue(i, out int minutes))
+                    if (_minutesDict.TryGetValue(dayCounter, out int minutes))
                     {
                         dayCell.labelHours.Text = $"{(minutes / 60.0).ToString("0.0")} h";
 
@@ -159,6 +193,32 @@ namespace VykazyPrace.UserControls.Calendar
                 int col = i % 7;
                 tableLayoutPanel1.Controls.Add(dayCell, col, row);
             }
+        }
+
+        private void labelPreviousMonth_Click(object sender, EventArgs e)
+        {
+            _currentMonth--;
+
+            if (_currentMonth < 1)
+            {
+                _currentMonth = 12;
+                _currentYear--;
+            }
+
+            Task.Run(ReloadCalendar);
+        }
+
+        private void labelNextMonth_Click(object sender, EventArgs e)
+        {
+            _currentMonth++;
+
+            if (_currentMonth > 12)
+            {
+                _currentMonth = 1;
+                _currentYear++;
+            }
+
+            Task.Run(ReloadCalendar);
         }
     }
 }

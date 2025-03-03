@@ -1,9 +1,15 @@
+using System.Runtime.CompilerServices;
+using VykazyPrace.Core.Database.Models;
+using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.UserControls.Calendar;
 
 namespace VykazyPrace
 {
     public partial class MainForm : Form
     {
+        private readonly UserRepository _userRepo = new UserRepository();
+        private User _selectedUser = new User();
+
         public MainForm()
         {
             InitializeComponent();
@@ -14,9 +20,11 @@ namespace VykazyPrace
             new Dialogs.UserManagementDialog().ShowDialog();
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private async void MainForm_Load(object sender, EventArgs e)
         {
-            panelCalendarContainer.Controls.Add(new CalendarUC(new Dictionary<int, int> { { 5, 360 }, { 24, 30 }, { 17, 90 }, { 8, 900 } })
+            _selectedUser = await _userRepo.GetUserByWindowsUsernameAsync(Environment.UserName);
+
+            panelCalendarContainer.Controls.Add(new CalendarUC(_selectedUser)
             {
                 Dock = DockStyle.Fill
             });

@@ -46,7 +46,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { dataToolStripMenuItem, uživateléToolStripMenuItem, projektyToolStripMenuItem, archivToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(752, 24);
+            menuStrip1.Size = new Size(679, 24);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -79,7 +79,7 @@
             // správaUživatelůToolStripMenuItem
             // 
             správaUživatelůToolStripMenuItem.Name = "správaUživatelůToolStripMenuItem";
-            správaUživatelůToolStripMenuItem.Size = new Size(180, 22);
+            správaUživatelůToolStripMenuItem.Size = new Size(159, 22);
             správaUživatelůToolStripMenuItem.Text = "Správa uživatelů";
             správaUživatelůToolStripMenuItem.Click += správaUživatelůToolStripMenuItem_Click;
             // 
@@ -93,7 +93,7 @@
             // správaProjektůToolStripMenuItem
             // 
             správaProjektůToolStripMenuItem.Name = "správaProjektůToolStripMenuItem";
-            správaProjektůToolStripMenuItem.Size = new Size(180, 22);
+            správaProjektůToolStripMenuItem.Size = new Size(156, 22);
             správaProjektůToolStripMenuItem.Text = "Správa projektů";
             správaProjektůToolStripMenuItem.Click += správaProjektůToolStripMenuItem_Click;
             // 
@@ -107,7 +107,7 @@
             // 
             panelCalendarContainer.Location = new Point(10, 34);
             panelCalendarContainer.Name = "panelCalendarContainer";
-            panelCalendarContainer.Size = new Size(734, 480);
+            panelCalendarContainer.Size = new Size(665, 563);
             panelCalendarContainer.TabIndex = 1;
             // 
             // MainForm
@@ -115,7 +115,7 @@
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(752, 521);
+            ClientSize = new Size(679, 604);
             Controls.Add(panelCalendarContainer);
             Controls.Add(menuStrip1);
             Font = new Font("Reddit Sans", 12F);

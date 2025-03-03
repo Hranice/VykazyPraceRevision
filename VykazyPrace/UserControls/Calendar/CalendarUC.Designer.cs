@@ -28,21 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            labelMonth = new Label();
             panelContainer = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
+            panel1 = new Panel();
+            labelNextMonth = new Label();
+            labelMonth = new Label();
+            labelPreviousMonth = new Label();
             panelContainer.SuspendLayout();
+            panel1.SuspendLayout();
             SuspendLayout();
-            // 
-            // labelMonth
-            // 
-            labelMonth.AutoSize = true;
-            labelMonth.Location = new Point(10, 10);
-            labelMonth.Margin = new Padding(4, 0, 4, 0);
-            labelMonth.Name = "labelMonth";
-            labelMonth.Size = new Size(52, 25);
-            labelMonth.TabIndex = 1;
-            labelMonth.Text = "label1";
             // 
             // panelContainer
             // 
@@ -80,12 +74,63 @@
             tableLayoutPanel1.Size = new Size(658, 514);
             tableLayoutPanel1.TabIndex = 2;
             // 
+            // panel1
+            // 
+            panel1.Controls.Add(labelNextMonth);
+            panel1.Controls.Add(labelMonth);
+            panel1.Controls.Add(labelPreviousMonth);
+            panel1.Dock = DockStyle.Top;
+            panel1.Font = new Font("Reddit Sans", 12F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            panel1.Location = new Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Padding = new Padding(10, 10, 0, 0);
+            panel1.Size = new Size(658, 45);
+            panel1.TabIndex = 4;
+            // 
+            // labelNextMonth
+            // 
+            labelNextMonth.AutoSize = true;
+            labelNextMonth.Dock = DockStyle.Left;
+            labelNextMonth.Location = new Point(200, 10);
+            labelNextMonth.Margin = new Padding(4, 0, 4, 0);
+            labelNextMonth.Name = "labelNextMonth";
+            labelNextMonth.Padding = new Padding(0, 0, 20, 0);
+            labelNextMonth.Size = new Size(40, 25);
+            labelNextMonth.TabIndex = 5;
+            labelNextMonth.Text = ">";
+            labelNextMonth.Click += labelNextMonth_Click;
+            // 
+            // labelMonth
+            // 
+            labelMonth.Dock = DockStyle.Left;
+            labelMonth.Location = new Point(50, 10);
+            labelMonth.Margin = new Padding(4, 0, 4, 0);
+            labelMonth.Name = "labelMonth";
+            labelMonth.Padding = new Padding(0, 0, 20, 0);
+            labelMonth.Size = new Size(150, 35);
+            labelMonth.TabIndex = 4;
+            labelMonth.Text = "labelMonth";
+            labelMonth.TextAlign = ContentAlignment.TopCenter;
+            // 
+            // labelPreviousMonth
+            // 
+            labelPreviousMonth.AutoSize = true;
+            labelPreviousMonth.Dock = DockStyle.Left;
+            labelPreviousMonth.Location = new Point(10, 10);
+            labelPreviousMonth.Margin = new Padding(4, 0, 4, 0);
+            labelPreviousMonth.Name = "labelPreviousMonth";
+            labelPreviousMonth.Padding = new Padding(0, 0, 20, 0);
+            labelPreviousMonth.Size = new Size(40, 25);
+            labelPreviousMonth.TabIndex = 2;
+            labelPreviousMonth.Text = "<";
+            labelPreviousMonth.Click += labelPreviousMonth_Click;
+            // 
             // CalendarUC
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(panel1);
             Controls.Add(panelContainer);
-            Controls.Add(labelMonth);
             Font = new Font("Reddit Sans", 12F);
             Margin = new Padding(4, 5, 4, 5);
             Name = "CalendarUC";
@@ -93,13 +138,17 @@
             Load += CalendarUC_Load;
             panelContainer.ResumeLayout(false);
             panelContainer.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
-        private Label labelMonth;
         private Panel panelContainer;
         private TableLayoutPanel tableLayoutPanel1;
+        private Panel panel1;
+        private Label labelMonth;
+        private Label labelPreviousMonth;
+        private Label labelNextMonth;
     }
 }

@@ -18,7 +18,7 @@ namespace VykazyPrace.Dialogs
         private User _currentUser = new User();
         private int _minutesCount = 0;
 
-        public TimeEntryDialog(Dat)
+        public TimeEntryDialog()
         {
             InitializeComponent();
         }

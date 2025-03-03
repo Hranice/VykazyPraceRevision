@@ -31,11 +31,11 @@
             dateTimePicker1 = new DateTimePicker();
             dateTimePicker2 = new DateTimePicker();
             label2 = new Label();
-            button1 = new Button();
+            buttonSaveAs = new Button();
             dataGridView1 = new DataGridView();
             button2 = new Button();
             comboBox1 = new ComboBox();
-            checkBox1 = new CheckBox();
+            checkBoxFillMissingHours = new CheckBox();
             comboBox2 = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
@@ -70,14 +70,15 @@
             label2.TabIndex = 5;
             label2.Text = "-";
             // 
-            // button1
+            // buttonSaveAs
             // 
-            button1.Location = new Point(196, 538);
-            button1.Name = "button1";
-            button1.Size = new Size(344, 40);
-            button1.TabIndex = 6;
-            button1.Text = "Uložit jako..";
-            button1.UseVisualStyleBackColor = true;
+            buttonSaveAs.Location = new Point(196, 538);
+            buttonSaveAs.Name = "buttonSaveAs";
+            buttonSaveAs.Size = new Size(344, 40);
+            buttonSaveAs.TabIndex = 6;
+            buttonSaveAs.Text = "Uložit jako..";
+            buttonSaveAs.UseVisualStyleBackColor = true;
+            buttonSaveAs.Click += buttonSaveAs_Click;
             // 
             // dataGridView1
             // 
@@ -113,17 +114,17 @@
             comboBox1.TabIndex = 9;
             comboBox1.Text = "Vše";
             // 
-            // checkBox1
+            // checkBoxFillMissingHours
             // 
-            checkBox1.AutoSize = true;
-            checkBox1.Checked = true;
-            checkBox1.CheckState = CheckState.Checked;
-            checkBox1.Location = new Point(10, 440);
-            checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(268, 29);
-            checkBox1.TabIndex = 10;
-            checkBox1.Text = "Doplnit prázdné hodiny <provoz>";
-            checkBox1.UseVisualStyleBackColor = true;
+            checkBoxFillMissingHours.AutoSize = true;
+            checkBoxFillMissingHours.Checked = true;
+            checkBoxFillMissingHours.CheckState = CheckState.Checked;
+            checkBoxFillMissingHours.Location = new Point(10, 440);
+            checkBoxFillMissingHours.Name = "checkBoxFillMissingHours";
+            checkBoxFillMissingHours.Size = new Size(268, 29);
+            checkBoxFillMissingHours.TabIndex = 10;
+            checkBoxFillMissingHours.Text = "Doplnit prázdné hodiny <provoz>";
+            checkBoxFillMissingHours.UseVisualStyleBackColor = true;
             // 
             // comboBox2
             // 
@@ -141,11 +142,11 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(549, 590);
             Controls.Add(comboBox2);
-            Controls.Add(checkBox1);
+            Controls.Add(checkBoxFillMissingHours);
             Controls.Add(comboBox1);
             Controls.Add(button2);
             Controls.Add(dataGridView1);
-            Controls.Add(button1);
+            Controls.Add(buttonSaveAs);
             Controls.Add(label2);
             Controls.Add(dateTimePicker2);
             Controls.Add(dateTimePicker1);
@@ -163,11 +164,11 @@
         private DateTimePicker dateTimePicker1;
         private DateTimePicker dateTimePicker2;
         private Label label2;
-        private Button button1;
+        private Button buttonSaveAs;
         private DataGridView dataGridView1;
         private Button button2;
         private ComboBox comboBox1;
-        private CheckBox checkBox1;
+        private CheckBox checkBoxFillMissingHours;
         private ComboBox comboBox2;
     }
 }

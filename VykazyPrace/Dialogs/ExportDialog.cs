@@ -1,6 +1,8 @@
 ﻿using System.Data;
+using System.Runtime.InteropServices;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
+using VykazyPrace.Logging;
 using VykazyPrace.UserControls;
 
 namespace VykazyPrace.Dialogs
@@ -80,6 +82,67 @@ namespace VykazyPrace.Dialogs
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
             Task.Run(() => LoadTimeEntriesSummary(dateTimePicker1.Value, dateTimePicker2.Value));
+        }
+
+        private void ExportToExcel(string filePath)
+        {
+            Microsoft.Office.Interop.Excel.Application excelApp = new Microsoft.Office.Interop.Excel.Application();
+            if (excelApp == null)
+            {
+                AppLogger.Error("Excel nebyl nalezen na tomto počítači.");
+                return;
+            }
+
+            Microsoft.Office.Interop.Excel.Workbook workbook = excelApp.Workbooks.Add();
+            Microsoft.Office.Interop.Excel.Worksheet worksheet = (Microsoft.Office.Interop.Excel.Worksheet)workbook.Sheets[1];
+
+            try
+            {
+                // Hlavičky
+                for (int i = 0; i < dataGridView1.Columns.Count; i++)
+                {
+                    worksheet.Cells[1, i + 1] = dataGridView1.Columns[i].HeaderText;
+                }
+
+                // Data
+                for (int i = 0; i < dataGridView1.Rows.Count; i++)
+                {
+                    for (int j = 0; j < dataGridView1.Columns.Count; j++)
+                    {
+                        worksheet.Cells[i + 2, j + 1] = dataGridView1.Rows[i].Cells[j].Value?.ToString() ?? "";
+                    }
+                }
+
+                workbook.SaveAs(filePath);
+                workbook.Close();
+                excelApp.Quit();
+
+                AppLogger.Information("Export do Excelu dokončen.", true);
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("Chyba při exportu do Excelu.", ex);
+            }
+            finally
+            {
+                Marshal.ReleaseComObject(worksheet);
+                Marshal.ReleaseComObject(workbook);
+                Marshal.ReleaseComObject(excelApp);
+            }
+        }
+
+        private void buttonSaveAs_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
+                sfd.Filter = "Excel Files|*.xlsx";
+                sfd.FileName = "Export.xlsx";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    ExportToExcel(sfd.FileName);
+                }
+            }
         }
     }
 }

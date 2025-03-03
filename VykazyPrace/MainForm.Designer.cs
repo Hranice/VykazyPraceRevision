@@ -119,6 +119,7 @@
             Controls.Add(panelCalendarContainer);
             Controls.Add(menuStrip1);
             Font = new Font("Reddit Sans", 12F);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             MainMenuStrip = menuStrip1;
             Margin = new Padding(4, 5, 4, 5);
             Name = "MainForm";

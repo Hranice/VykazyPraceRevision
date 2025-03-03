@@ -13,11 +13,31 @@ namespace VykazyPrace.UserControls.Calendar
         private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
         private readonly User _currentUser;
         private Dictionary<int, int> _minutesDict = new Dictionary<int, int>();
+        private List<DayUC> _dayCells = new List<DayUC>();
 
         public CalendarUC(User currentUser)
         {
             InitializeComponent();
             _currentUser = currentUser;
+            InitializeCalendarCells();
+        }
+
+        private void AddWeekDaysHeader()
+        {
+            string[] days = { "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota", "Neděle" };
+
+            for (int i = 0; i < 7; i++)
+            {
+                Label lbl = new Label
+                {
+                    Text = days[i],
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Dock = DockStyle.Fill,
+                    Margin = new Padding(0),
+                    Padding = new Padding(0),
+                };
+                tableLayoutPanel1.Controls.Add(lbl, i, 0);
+            }
         }
 
         private async Task LoadTimeEntriesAsync()
@@ -59,30 +79,12 @@ namespace VykazyPrace.UserControls.Calendar
             Invoke(() => _loadingUC.BringToFront());
 
             await LoadTimeEntriesAsync();
-            Invoke(() => GenerateCalendar(_currentYear, _currentMonth));
-            
+            Invoke(UpdateCalendarCells);
+
             Invoke(() => _loadingUC.Visible = false);
         }
 
-        private void AddWeekDaysHeader()
-        {
-            string[] days = { "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota", "Neděle" };
-
-            for (int i = 0; i < 7; i++)
-            {
-                Label lbl = new Label
-                {
-                    Text = days[i],
-                    TextAlign = ContentAlignment.MiddleCenter,
-                    Dock = DockStyle.Fill,
-                    Margin = new Padding(0),
-                    Padding = new Padding(0),
-                };
-                tableLayoutPanel1.Controls.Add(lbl, i, 0);
-            }
-        }
-
-        private void GenerateCalendar(int year, int month)
+        private void InitializeCalendarCells()
         {
             tableLayoutPanel1.Controls.Clear();
             tableLayoutPanel1.RowCount = 7;
@@ -103,85 +105,83 @@ namespace VykazyPrace.UserControls.Calendar
                 tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 16.66f));
             }
 
-            CultureInfo czechCulture = new CultureInfo("cs-CZ");
-            labelMonth.Text = czechCulture.DateTimeFormat.GetMonthName(month).ToUpper() + " " + year;
-
-            DateTime startOfTheMonth = new DateTime(year, month, 1);
-            int daysInMonth = DateTime.DaysInMonth(year, month);
-            int startDayIndex = ((int)startOfTheMonth.DayOfWeek + 6) % 7; // Pondělí jako první den
-
-            int totalCells = 42;
-            int dayCounter = 1;
-
             AddWeekDaysHeader();
 
-            DateTime today = DateTime.Now;
-
-            // Přidání dní do kalendáře
-            for (int i = 0; i < totalCells; i++)
+            for (int i = 0; i < 42; i++)
             {
                 DayUC dayCell = new DayUC();
                 dayCell.DoubleClick += DayCell_DoubleClick;
-                dayCell.labelDay.DoubleClick += DayCell_DoubleClick;
-                dayCell.labelHours.DoubleClick += DayCell_DoubleClick;
                 dayCell.Dock = DockStyle.Fill;
                 dayCell.Margin = new Padding(2);
                 dayCell.Padding = new Padding(0);
 
+                _dayCells.Add(dayCell);
+
+                int row = (i / 7) + 1; // +1 protože první řádek je hlavička
+                int col = i % 7;
+                tableLayoutPanel1.Controls.Add(dayCell, col, row);
+            }
+        }
+
+        private void UpdateCalendarCells()
+        {
+            CultureInfo czechCulture = new CultureInfo("cs-CZ");
+            labelMonth.Text = czechCulture.DateTimeFormat.GetMonthName(_currentMonth).ToUpper() + " " + _currentYear;
+
+            DateTime startOfTheMonth = new DateTime(_currentYear, _currentMonth, 1);
+            int daysInMonth = DateTime.DaysInMonth(_currentYear, _currentMonth);
+            int startDayIndex = ((int)startOfTheMonth.DayOfWeek + 6) % 7; // Pondělí jako první den
+
+            int dayCounter = 1;
+            DateTime today = DateTime.Now;
+
+            for (int i = 0; i < _dayCells.Count; i++)
+            {
+                DayUC dayCell = _dayCells[i];
+
                 if (i >= startDayIndex && dayCounter <= daysInMonth)
                 {
-                    // Doplníme záznam hodin, pokud existuje
-                    if (_minutesDict.TryGetValue(dayCounter, out int minutes))
-                    {
-                        dayCell.labelHours.Text = $"{(minutes / 60.0).ToString("0.0")} h";
+                    dayCell.labelDay.Text = dayCounter.ToString();
+                    dayCell.labelHours.Text = _minutesDict.TryGetValue(dayCounter, out int minutes) ? $"{(minutes / 60.0):0.0} h" : "";
 
-                        // Nastavíme barvy podle odpracovaných hodin
+                    DateTime currentDate = new DateTime(_currentYear, _currentMonth, dayCounter);
+                    DayOfWeek dayOfWeek = currentDate.DayOfWeek;
+
+                    // Pokud je den v budoucnosti a počet minut je 0, nastavíme barvu na Control
+                    if (currentDate > today && minutes == 0)
+                    {
+                        dayCell.BackColor = SystemColors.Control;
+                    }
+                    else
+                    {
                         dayCell.BackColor = Color.FromArgb(255, 230, 230);
 
                         if (minutes == 450)
                         {
                             dayCell.BackColor = Color.FromArgb(230, 255, 230);
                         }
-
                         else if (minutes > 450)
                         {
                             dayCell.BackColor = Color.FromArgb(230, 230, 255);
                         }
                     }
-                    else
-                    {
-                        dayCell.labelHours.Text = "";
-                    }
-
-                    dayCell.labelDay.Text = dayCounter.ToString();
-
-                    DateTime currentDate = new DateTime(year, month, dayCounter);
-                    DayOfWeek dayOfWeek = currentDate.DayOfWeek;
 
                     // Pokud je sobota nebo neděle, nastavíme červený text
                     if (dayOfWeek == DayOfWeek.Saturday || dayOfWeek == DayOfWeek.Sunday)
                     {
                         dayCell.labelDay.ForeColor = Color.Tomato;
                         dayCell.BackColor = Color.FromArgb(255, 240, 240);
-
-                        // Pokud někdo šel v neděli, obarvíme modře
-                        if (!String.IsNullOrEmpty(dayCell.labelHours.Text))
+                        if (!string.IsNullOrEmpty(dayCell.labelHours.Text))
                         {
                             dayCell.BackColor = Color.FromArgb(240, 240, 255);
                         }
                     }
 
-                    // Pokud je to dnešní den, nastavíme červený rámeček
-                    if (dayCounter == today.Day && month == today.Month && year == today.Year)
+                    // Zvýraznění dnešního dne
+                    dayCell.Paint -= HighlightToday;
+                    if (dayCounter == today.Day && _currentMonth == today.Month && _currentYear == today.Year)
                     {
-                        dayCell.Paint += (sender, e) =>
-                        {
-                            Control control = sender as Control;
-                            using (Pen pen = new Pen(Color.Tomato, 2))
-                            {
-                                e.Graphics.DrawRectangle(pen, 1, 1, control.Width - 3, control.Height - 3);
-                            }
-                        };
+                        dayCell.Paint += HighlightToday;
                     }
 
                     dayCounter++;
@@ -192,18 +192,26 @@ namespace VykazyPrace.UserControls.Calendar
                     dayCell.labelHours.Text = "";
                     dayCell.BackColor = Color.White;
                 }
-
-                int row = (i / 7) + 1; // +1 protože první řádek je hlavička
-                int col = i % 7;
-                tableLayoutPanel1.Controls.Add(dayCell, col, row);
             }
         }
+
+        private void HighlightToday(object sender, PaintEventArgs e)
+        {
+            Control control = sender as Control;
+            using (Pen pen = new Pen(Color.Tomato, 2))
+            {
+                e.Graphics.DrawRectangle(pen, 1, 1, control.Width - 3, control.Height - 3);
+            }
+        }
+
 
         private void DayCell_DoubleClick(object? sender, EventArgs e)
         {
             var dayCell = sender as DayUC;
-            int day = int.Parse(dayCell.labelDay.Text);
-            new TimeEntryDialog(_currentUser, new DateTime(_currentYear, _currentMonth, day)).ShowDialog();
+            if (int.TryParse(dayCell?.labelDay.Text, out int day))
+            {
+                new TimeEntryDialog(_currentUser, new DateTime(_currentYear, _currentMonth, day)).ShowDialog();
+            }
         }
 
         private void labelPreviousMonth_Click(object sender, EventArgs e)

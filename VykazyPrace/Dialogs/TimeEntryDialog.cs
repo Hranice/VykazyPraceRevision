@@ -18,7 +18,7 @@ namespace VykazyPrace.Dialogs
         private User _currentUser = new User();
         private int _minutesCount = 0;
 
-        public TimeEntryDialog()
+        public TimeEntryDialog(Dat)
         {
             InitializeComponent();
         }
@@ -301,9 +301,30 @@ namespace VykazyPrace.Dialogs
             UpdateHoursLabel();
         }
 
-        private void buttonRemove_Click(object sender, EventArgs e)
+        private async void buttonRemove_Click(object sender, EventArgs e)
         {
+            var timeEntry = await GetTimeEntryBySelectedItem();
 
+            if (timeEntry != null)
+            {
+                var dialogResult = MessageBox.Show($"Smazat záznam {FormatTimeEntryToString(timeEntry)}?", "Smazat?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+
+                if (dialogResult == DialogResult.Yes)
+                {
+                    if (await _timeEntryRepo.DeleteTimeEntryAsync(timeEntry.Id))
+                    {
+                        AppLogger.Information($"Záznam {FormatTimeEntryToString(timeEntry)} byl smazán z databáze.", true);
+                        ClearFields();
+                    }
+
+                    else
+                    {
+                        AppLogger.Error($"Nepodařilo se smazat záznam {FormatTimeEntryToString(timeEntry)} z databáze.");
+                    }
+
+                    await LoadTimeEntriesAsync();
+                }
+            }
         }
 
         private async void listBoxTimeEntries_SelectedIndexChanged(object sender, EventArgs e)

@@ -160,9 +160,5 @@ namespace VykazyPrace.UserControls.Calendar
                 tableLayoutPanel1.Controls.Add(dayCell, col, row);
             }
         }
-
-
-
-
     }
 }

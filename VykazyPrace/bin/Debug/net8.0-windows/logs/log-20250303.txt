@@ -1,0 +1,1 @@
+2025-03-03 12:36:40.290 +01:00 [INF] Záznam 2 (test): 2 h - kafíčko byl smazán z databáze.

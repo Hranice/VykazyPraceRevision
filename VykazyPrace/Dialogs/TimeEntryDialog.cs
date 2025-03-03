@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Diagnostics;
+using System.Windows.Forms;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Logging;
@@ -14,13 +15,16 @@ namespace VykazyPrace.Dialogs
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
         private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
         private List<string> _projectsFormattedToString = new List<string>();
-        private readonly UserRepository _userRepo = new UserRepository();
-        private User _currentUser = new User();
+        private readonly User _currentUser;
+        private DateTime _currentDate;
         private int _minutesCount = 0;
 
-        public TimeEntryDialog()
+        public TimeEntryDialog(User currentUser, DateTime currentDate)
         {
             InitializeComponent();
+
+            _currentUser = currentUser;
+            _currentDate = currentDate;
         }
 
         private void TimeEntryDialog_Load(object sender, EventArgs e)
@@ -35,11 +39,10 @@ namespace VykazyPrace.Dialogs
         {
             Invoke(() => _loadingUC.BringToFront());
 
-            var userTask = LoadCurrentDomainUser();
             var projectsTask = LoadProjectsContractsAsync();
             var timeEntriesTask = LoadTimeEntriesAsync();
 
-            await Task.WhenAll(userTask, projectsTask, timeEntriesTask);
+            await Task.WhenAll(projectsTask, timeEntriesTask);
 
             Invoke(() => _loadingUC.Visible = false);
         }
@@ -88,11 +91,6 @@ namespace VykazyPrace.Dialogs
                     AppLogger.Error("Chyba při načítání projektů.", ex);
                 }));
             }
-        }
-
-        private async Task LoadCurrentDomainUser()
-        {
-            _currentUser = await _userRepo.GetUserByWindowsUsernameAsync(Environment.UserName) ?? new User();
         }
 
         private async void VisualiseSelectedProjectOrContract()

@@ -11,11 +11,13 @@ namespace VykazyPrace.Dialogs
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
         private readonly UserRepository _userRepo = new UserRepository();
         private readonly LoadingUC _loadingUC = new LoadingUC();
-        private User? _currentUser = new User();
+        private readonly User _currentUser;
 
-        public ProjectManagementDialog()
+        public ProjectManagementDialog(User currentUser)
         {
             InitializeComponent();
+
+            _currentUser = currentUser;
         }
 
         private void ProjectManagementDialog_Load(object sender, EventArgs e)
@@ -25,19 +27,14 @@ namespace VykazyPrace.Dialogs
 
             _loadingUC.Size = this.Size;
             this.Controls.Add(_loadingUC);
-            _loadingUC.BringToFront();
 
-            Task.Run(() => LoadCurrentDomainUser());
             Task.Run(() => LoadProjectsContractsAsync());
-        }
-
-        private async Task LoadCurrentDomainUser()
-        {
-            _currentUser = await _userRepo.GetUserByWindowsUsernameAsync(Environment.UserName);
         }
 
         private async Task LoadProjectsContractsAsync()
         {
+            Invoke(() => _loadingUC.BringToFront());
+
             try
             {
                 List<Project> projects = await _projectRepo.GetAllProjectsAndContractsAsync(_projectType);
@@ -60,6 +57,8 @@ namespace VykazyPrace.Dialogs
                     _loadingUC.Visible = false;
                 }));
             }
+
+            Invoke(() => _loadingUC.Visible = false);
         }
 
 

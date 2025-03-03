@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
+using VykazyPrace.Dialogs;
 
 namespace VykazyPrace.UserControls.Calendar
 {
@@ -21,7 +22,7 @@ namespace VykazyPrace.UserControls.Calendar
 
         private async Task LoadTimeEntriesAsync()
         {
-            _minutesDict.Clear(); // Vyčistíme dictionary pro nový měsíc
+            _minutesDict.Clear();
 
             var timeEntries = await _timeEntryRepo.GetAllTimeEntriesByUserAsync(_currentUser);
 
@@ -120,6 +121,9 @@ namespace VykazyPrace.UserControls.Calendar
             for (int i = 0; i < totalCells; i++)
             {
                 DayUC dayCell = new DayUC();
+                dayCell.DoubleClick += DayCell_DoubleClick;
+                dayCell.labelDay.DoubleClick += DayCell_DoubleClick;
+                dayCell.labelHours.DoubleClick += DayCell_DoubleClick;
                 dayCell.Dock = DockStyle.Fill;
                 dayCell.Margin = new Padding(2);
                 dayCell.Padding = new Padding(0);
@@ -193,6 +197,13 @@ namespace VykazyPrace.UserControls.Calendar
                 int col = i % 7;
                 tableLayoutPanel1.Controls.Add(dayCell, col, row);
             }
+        }
+
+        private void DayCell_DoubleClick(object? sender, EventArgs e)
+        {
+            var dayCell = sender as DayUC;
+            int day = int.Parse(dayCell.labelDay.Text);
+            new TimeEntryDialog(_currentUser, new DateTime(_currentYear, _currentMonth, day)).ShowDialog();
         }
 
         private void labelPreviousMonth_Click(object sender, EventArgs e)

@@ -17,10 +17,5 @@ namespace VykazyPrace.UserControls.Calendar
         {
             InitializeComponent();
         }
-
-        private void labelDay_DoubleClick(object sender, EventArgs e)
-        {
-            new TimeEntryDialog().ShowDialog();
-        }
     }
 }

@@ -63,6 +63,7 @@
             labelCurrentDate.TabIndex = 12;
             labelCurrentDate.Text = "25.02.2025";
             labelCurrentDate.TextAlign = ContentAlignment.TopCenter;
+            labelCurrentDate.Click += labelCurrentDate_Click;
             // 
             // labelNextDate
             // 
@@ -74,6 +75,7 @@
             labelNextDate.TabIndex = 13;
             labelNextDate.Text = "26.02.2025";
             labelNextDate.TextAlign = ContentAlignment.TopCenter;
+            labelNextDate.Click += labelNextDate_Click;
             // 
             // buttonProject
             // 
@@ -247,10 +249,12 @@
             labelPreviousDate.TabIndex = 11;
             labelPreviousDate.Text = "24.02.2025";
             labelPreviousDate.TextAlign = ContentAlignment.TopCenter;
+            labelPreviousDate.Click += labelPreviousDate_Click;
             // 
             // labelFinishedHours
             // 
             labelFinishedHours.AutoSize = true;
+            labelFinishedHours.ForeColor = SystemColors.ControlText;
             labelFinishedHours.Location = new Point(9, 168);
             labelFinishedHours.Name = "labelFinishedHours";
             labelFinishedHours.Size = new Size(73, 25);

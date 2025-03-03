@@ -212,6 +212,8 @@ namespace VykazyPrace.UserControls.Calendar
             {
                 new TimeEntryDialog(_currentUser, new DateTime(_currentYear, _currentMonth, day)).ShowDialog();
             }
+
+            Task.Run(ReloadCalendar);
         }
 
         private void labelPreviousMonth_Click(object sender, EventArgs e)

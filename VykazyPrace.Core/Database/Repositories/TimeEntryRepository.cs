@@ -56,6 +56,64 @@ namespace VykazyPrace.Core.Database.Repositories
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Získání všech časových záznamů pro konkrétního uživatele, typ projektu a konkrétní den.
+        /// </summary>
+        public async Task<List<TimeEntry>> GetTimeEntriesByProjectTypeAndDateAsync(User user, int projectType, DateTime date)
+        {
+            return await _context.TimeEntries
+                .Where(te => te.UserId == user.Id
+                             && te.Project != null
+                             && te.Project.ProjectType == projectType
+                             && te.Timestamp.HasValue
+                             && te.Timestamp.Value.Date == date.Date)
+                .Include(te => te.Project)
+                .ToListAsync();
+        }
+
+        /// <summary>
+        /// Získání všech časových záznamů pro konkrétního uživatele a konkrétní den.
+        /// </summary>
+        public async Task<List<TimeEntry>> GetTimeEntriesByUserAndDateAsync(User user, DateTime date)
+        {
+            return await _context.TimeEntries
+                .Where(te => te.UserId == user.Id
+                             && te.Project != null
+                             && te.Timestamp.HasValue
+                             && te.Timestamp.Value.Date == date.Date)
+                .Include(te => te.Project)
+                .ToListAsync();
+        }
+
+        /// <summary>
+        /// Získání součtu odpracovaných minut pro konkrétního uživatele a zvolený den.
+        /// </summary>
+        public async Task<int> GetTotalMinutesForUserByDayAsync(User user, DateTime date)
+        {
+            DateTime today = DateTime.Today;
+
+            return await _context.TimeEntries
+                .Where(te => te.UserId == user.Id
+                             && te.Timestamp.HasValue
+                             && te.Timestamp.Value.Date == date.Date)
+                .SumAsync(te => te.EntryMinutes);
+        }
+
+        /// <summary>
+        /// Získání součtu odpracovaných minut pro konkrétního uživatele, zvolený den a projekt.
+        /// </summary>
+        public async Task<int> GetTotalMinutesForUserByDayAsync(User user, DateTime date, int projectType)
+        {
+            DateTime today = DateTime.Today;
+
+            return await _context.TimeEntries
+                .Where(te => te.UserId == user.Id
+                             && te.Project != null
+                             && te.Project.ProjectType == projectType
+                             && te.Timestamp.HasValue
+                             && te.Timestamp.Value.Date == date.Date)
+                .SumAsync(te => te.EntryMinutes);
+        }
 
 
         /// <summary>

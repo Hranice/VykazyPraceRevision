@@ -1,6 +1,4 @@
 ﻿using System.Data;
-using System.Diagnostics;
-using System.Windows.Forms;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Logging;
@@ -31,7 +29,9 @@ namespace VykazyPrace.Dialogs
         {
             _loadingUC.Size = this.Size;
             this.Controls.Add(_loadingUC);
-            
+
+            UpdateLabelDates();
+
             Task.Run(LoadData);
         }
 
@@ -51,12 +51,16 @@ namespace VykazyPrace.Dialogs
         {
             try
             {
-                var timeEntries = await _timeEntryRepo.GetAllTimeEntriesByUserAsync(_currentUser, _projectType);
+                // funkční, ale nepřijde mi logické načítat jen jeden typ
+                // var timeEntries = await _timeEntryRepo.GetTimeEntriesByProjectTypeAndDateAsync(_currentUser, _projectType, _currentDate);
+
+                var timeEntries = await _timeEntryRepo.GetTimeEntriesByUserAndDateAsync(_currentUser, _currentDate);
 
                 Invoke(() =>
                 {
                     listBoxTimeEntries.Items.Clear();
                     listBoxTimeEntries.Items.AddRange(timeEntries.Select(FormatTimeEntryToString).ToArray());
+                    UpdateLabelFinishedHours();
                 });
             }
             catch (Exception ex)
@@ -64,7 +68,6 @@ namespace VykazyPrace.Dialogs
                 Invoke(() => AppLogger.Error("Chyba při načítání seznamu zapsaných hodin.", ex));
             }
         }
-
 
         private async Task LoadProjectsContractsAsync()
         {
@@ -265,13 +268,14 @@ namespace VykazyPrace.Dialogs
                     UserId = _currentUser.Id,
                     ProjectId = int.Parse(comboBoxProjectsContracts.SelectedItem?.ToString()?.Split(' ')[0] ?? "0"),
                     Description = textBoxDescription.Text,
-                    EntryMinutes = _minutesCount
+                    EntryMinutes = _minutesCount,
+                    Timestamp = _currentDate,
                 };
 
                 var addedTimeEntry = await _timeEntryRepo.CreateTimeEntryAsync(newTimeEntry);
                 if (addedTimeEntry is not null)
                 {
-                    AppLogger.Information($"Zápis hodin {FormatTimeEntryToString(addedTimeEntry)} byl úspěšně proveden.", true);
+                    AppLogger.Information($"Zápis hodin {FormatTimeEntryToString(addedTimeEntry)} byl úspěšně proveden.");
                     ClearFields();
                 }
                 else
@@ -407,6 +411,61 @@ namespace VykazyPrace.Dialogs
         private void UpdateHoursLabel()
         {
             labelHours.Text = $"{_minutesCount / 60.0} h";
+        }
+
+        private void labelNextDate_Click(object sender, EventArgs e)
+        {
+            _currentDate = _currentDate.AddDays(1);
+            UpdateLabelDates();
+        }
+
+        private void labelPreviousDate_Click(object sender, EventArgs e)
+        {
+            _currentDate = _currentDate.AddDays(-1);
+            UpdateLabelDates();
+        }
+
+        private void labelCurrentDate_Click(object sender, EventArgs e)
+        {
+            _currentDate = _currentDate.AddDays(1);
+            UpdateLabelDates();
+        }
+
+        private async void UpdateLabelDates()
+        {
+            labelCurrentDate.Text = _currentDate.ToShortDateString();
+            labelNextDate.Text = _currentDate.AddDays(1).ToShortDateString();
+            labelPreviousDate.Text = _currentDate.AddDays(-1).ToShortDateString();
+
+            await LoadTimeEntriesAsync();
+        }
+
+        private async void UpdateLabelFinishedHours()
+        {
+            int projectMinutes = (await _timeEntryRepo.GetTimeEntriesByProjectTypeAndDateAsync(_currentUser, 0, _currentDate))
+                .Sum(te => te.EntryMinutes);
+
+            int contractMinutes = (await _timeEntryRepo.GetTimeEntriesByProjectTypeAndDateAsync(_currentUser, 1, _currentDate))
+                .Sum(te => te.EntryMinutes);
+
+            double totalMinutes = (projectMinutes + contractMinutes);
+
+            if (totalMinutes > 450)
+            {
+                labelFinishedHours.ForeColor = Color.DarkSlateBlue;
+            }
+
+            else if (totalMinutes == 450)
+            {
+                labelFinishedHours.ForeColor = Color.Green;
+            }
+
+            else
+            {
+                labelFinishedHours.ForeColor = Color.Tomato;
+            }
+
+            labelFinishedHours.Text = $"{totalMinutes / 60.0} / 7,5 h    ({projectMinutes / 60.0}+{contractMinutes / 60.0})";
         }
     }
 }

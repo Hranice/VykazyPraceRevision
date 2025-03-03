@@ -55,5 +55,10 @@ namespace VykazyPrace
         {
             new Dialogs.ProjectManagementDialog(_selectedUser).ShowDialog();
         }
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new Dialogs.ExportDialog(_selectedUser).ShowDialog();
+        }
     }
 }

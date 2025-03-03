@@ -72,3 +72,4 @@ C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-window
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.UserControls.Calendar.DayUC.resources
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.Dialogs.TimeEntryDialog.resources
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.Dialogs.ProjectManagementDialog.resources
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.Dialogs.ExportDialog.resources

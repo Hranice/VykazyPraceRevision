@@ -159,5 +159,34 @@ namespace VykazyPrace.Core.Database.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+
+        /// <summary>
+        /// Získání součtu odpracovaných hodin pro každého uživatele a projekt v daném časovém rozsahu.
+        /// </summary>
+        public async Task<List<TimeEntrySummary>> GetTimeEntriesSummaryAsync(DateTime fromDate, DateTime toDate)
+        {
+            return await _context.TimeEntries
+                .Where(te => te.Timestamp.HasValue
+                             && te.Timestamp.Value.Date >= fromDate.Date
+                             && te.Timestamp.Value.Date <= toDate.Date)
+                .GroupBy(te => new { te.UserId, te.ProjectId })
+                .Select(g => new TimeEntrySummary
+                {
+                    UserId = g.Key.UserId,
+                    ProjectId = g.Key.ProjectId,
+                    TotalHours = g.Sum(te => te.EntryMinutes) / 60.0
+                })
+                .ToListAsync();
+        }
+    }
+
+    /// <summary>
+    /// Pomocná třída pro souhrnné záznamy.
+    /// </summary>
+    public class TimeEntrySummary
+    {
+        public int? UserId { get; set; }
+        public int? ProjectId { get; set; }
+        public double TotalHours { get; set; }
     }
 }

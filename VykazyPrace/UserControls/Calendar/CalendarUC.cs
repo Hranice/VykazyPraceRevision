@@ -179,9 +179,17 @@ namespace VykazyPrace.UserControls.Calendar
 
                     // Zvýraznění dnešního dne
                     dayCell.Paint -= HighlightToday;
-                    if (dayCounter == today.Day && _currentMonth == today.Month && _currentYear == today.Year)
+                    if (dayCounter == today.Day
+                        && _currentMonth == today.Month
+                        && _currentYear == today.Year)
                     {
                         dayCell.Paint += HighlightToday;
+                        dayCell.Invalidate();
+                    }
+                    else
+                    {
+                        dayCell.Paint -= HighlightToday;
+                        dayCell.Invalidate();
                     }
 
                     dayCounter++;

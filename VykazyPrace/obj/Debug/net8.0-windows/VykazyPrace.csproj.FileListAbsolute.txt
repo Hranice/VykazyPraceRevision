@@ -77,3 +77,6 @@ C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-window
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\office.dll
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\Microsoft.Vbe.Interop.dll
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\stdole.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.Dialogs.SettingsDialog.resources
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.Dialogs.LoadProjectsFromFolderDialog.resources
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.Properties.Resources.resources

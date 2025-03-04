@@ -9,6 +9,8 @@ namespace VykazyPrace
 {
     public partial class MainForm : Form
     {
+        private NotifyIcon _trayIcon = new NotifyIcon();
+        private ContextMenuStrip _trayMenu = new ContextMenuStrip();
         private readonly UserRepository _userRepo = new UserRepository();
         private readonly LoadingUC _loadingUC = new LoadingUC();
         private User _selectedUser = new User();
@@ -59,6 +61,11 @@ namespace VykazyPrace
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new Dialogs.ExportDialog(_selectedUser).ShowDialog();
+        }
+
+        private void nastaveníToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new Dialogs.SettingsDialog(_selectedUser).ShowDialog();
         }
     }
 }

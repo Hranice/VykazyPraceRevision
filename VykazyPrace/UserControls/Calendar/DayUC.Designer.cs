@@ -43,6 +43,7 @@
             labelDay.TabIndex = 0;
             labelDay.Text = "00";
             labelDay.TextAlign = ContentAlignment.TopRight;
+            labelDay.DoubleClick += labelDay_DoubleClick;
             // 
             // labelHours
             // 
@@ -54,6 +55,7 @@
             labelHours.Name = "labelHours";
             labelHours.Size = new Size(0, 21);
             labelHours.TabIndex = 1;
+            labelHours.DoubleClick += labelHours_DoubleClick;
             // 
             // DayUC
             // 

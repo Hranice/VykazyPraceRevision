@@ -17,5 +17,15 @@ namespace VykazyPrace.UserControls.Calendar
         {
             InitializeComponent();
         }
+
+        private void labelDay_DoubleClick(object sender, EventArgs e)
+        {
+            this.OnDoubleClick(EventArgs.Empty);
+        }
+
+        private void labelHours_DoubleClick(object sender, EventArgs e)
+        {
+            this.OnDoubleClick(EventArgs.Empty);
+        }
     }
 }

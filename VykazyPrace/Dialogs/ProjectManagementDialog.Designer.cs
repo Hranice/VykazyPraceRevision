@@ -42,6 +42,7 @@
             textBoxProjectContractTitle = new TextBox();
             label6 = new Label();
             listBoxProjectContract = new ListBox();
+            buttonLoadFromFolder = new Button();
             panel1.SuspendLayout();
             groupBox1.SuspendLayout();
             SuspendLayout();
@@ -126,7 +127,7 @@
             groupBox1.Controls.Add(buttonAdd);
             groupBox1.Controls.Add(label2);
             groupBox1.Controls.Add(textBoxProjectContractDescription);
-            groupBox1.Location = new Point(12, 167);
+            groupBox1.Location = new Point(12, 198);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(400, 265);
             groupBox1.TabIndex = 22;
@@ -204,11 +205,21 @@
             listBoxProjectContract.TabIndex = 23;
             listBoxProjectContract.SelectedIndexChanged += listBoxProjectContract_SelectedIndexChanged;
             // 
+            // buttonLoadFromFolder
+            // 
+            buttonLoadFromFolder.Location = new Point(239, 158);
+            buttonLoadFromFolder.Name = "buttonLoadFromFolder";
+            buttonLoadFromFolder.Size = new Size(173, 34);
+            buttonLoadFromFolder.TabIndex = 21;
+            buttonLoadFromFolder.Text = "Načíst ze složky..";
+            buttonLoadFromFolder.UseVisualStyleBackColor = true;
+            // 
             // ProjectManagementDialog
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(424, 442);
+            ClientSize = new Size(424, 471);
+            Controls.Add(buttonLoadFromFolder);
             Controls.Add(label6);
             Controls.Add(listBoxProjectContract);
             Controls.Add(panel1);
@@ -241,5 +252,6 @@
         private Label label5;
         private TextBox textBoxProjectContractNote;
         private Button buttonRemove;
+        private Button buttonLoadFromFolder;
     }
 }

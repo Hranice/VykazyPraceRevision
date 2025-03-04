@@ -4,7 +4,13 @@
     <Compile Update="Dialogs\ExportDialog.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Dialogs\LoadProjectsFromFolderDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Dialogs\ProjectManagementDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\SettingsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Dialogs\TimeEntryDialog.cs">

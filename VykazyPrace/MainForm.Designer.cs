@@ -36,10 +36,10 @@
             projektyToolStripMenuItem = new ToolStripMenuItem();
             správaProjektůToolStripMenuItem = new ToolStripMenuItem();
             archivToolStripMenuItem = new ToolStripMenuItem();
-            panelCalendarContainer = new Panel();
             toolStripMenuItem1 = new ToolStripMenuItem();
             nápovědaToolStripMenuItem = new ToolStripMenuItem();
             nastaveníToolStripMenuItem = new ToolStripMenuItem();
+            panelCalendarContainer = new Panel();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -62,7 +62,7 @@
             // exportToolStripMenuItem
             // 
             exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            exportToolStripMenuItem.Size = new Size(180, 22);
+            exportToolStripMenuItem.Size = new Size(108, 22);
             exportToolStripMenuItem.Text = "Export";
             exportToolStripMenuItem.Click += exportToolStripMenuItem_Click;
             // 
@@ -76,7 +76,7 @@
             // správaUživatelůToolStripMenuItem
             // 
             správaUživatelůToolStripMenuItem.Name = "správaUživatelůToolStripMenuItem";
-            správaUživatelůToolStripMenuItem.Size = new Size(180, 22);
+            správaUživatelůToolStripMenuItem.Size = new Size(159, 22);
             správaUživatelůToolStripMenuItem.Text = "Správa uživatelů";
             správaUživatelůToolStripMenuItem.Click += správaUživatelůToolStripMenuItem_Click;
             // 
@@ -90,7 +90,7 @@
             // správaProjektůToolStripMenuItem
             // 
             správaProjektůToolStripMenuItem.Name = "správaProjektůToolStripMenuItem";
-            správaProjektůToolStripMenuItem.Size = new Size(180, 22);
+            správaProjektůToolStripMenuItem.Size = new Size(156, 22);
             správaProjektůToolStripMenuItem.Text = "Správa projektů";
             správaProjektůToolStripMenuItem.Click += správaProjektůToolStripMenuItem_Click;
             // 
@@ -99,13 +99,6 @@
             archivToolStripMenuItem.Name = "archivToolStripMenuItem";
             archivToolStripMenuItem.Size = new Size(53, 20);
             archivToolStripMenuItem.Text = "Archiv";
-            // 
-            // panelCalendarContainer
-            // 
-            panelCalendarContainer.Location = new Point(10, 34);
-            panelCalendarContainer.Name = "panelCalendarContainer";
-            panelCalendarContainer.Size = new Size(665, 563);
-            panelCalendarContainer.TabIndex = 1;
             // 
             // toolStripMenuItem1
             // 
@@ -125,6 +118,14 @@
             nastaveníToolStripMenuItem.Name = "nastaveníToolStripMenuItem";
             nastaveníToolStripMenuItem.Size = new Size(128, 22);
             nastaveníToolStripMenuItem.Text = "Nastavení";
+            nastaveníToolStripMenuItem.Click += nastaveníToolStripMenuItem_Click;
+            // 
+            // panelCalendarContainer
+            // 
+            panelCalendarContainer.Location = new Point(10, 34);
+            panelCalendarContainer.Name = "panelCalendarContainer";
+            panelCalendarContainer.Size = new Size(665, 563);
+            panelCalendarContainer.TabIndex = 1;
             // 
             // MainForm
             // 

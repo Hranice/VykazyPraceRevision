@@ -33,17 +33,17 @@
             comboBoxProjects = new ComboBox();
             listBoxTimeEntries = new ListBox();
             groupBox1 = new GroupBox();
+            buttonRemove = new Button();
+            buttonWrite = new Button();
+            maskedTextBoxNumberOfHours = new MaskedTextBox();
             label2 = new Label();
-            comboBoxCategory = new ComboBox();
+            comboBoxEntryType = new ComboBox();
             label8 = new Label();
             label7 = new Label();
             textBoxDescription = new TextBox();
             labelPreviousDate = new Label();
             panel2 = new Panel();
             label6 = new Label();
-            maskedTextBoxNumberOfHours = new MaskedTextBox();
-            buttonRemove = new Button();
-            buttonWrite = new Button();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -99,7 +99,7 @@
             groupBox1.Controls.Add(buttonWrite);
             groupBox1.Controls.Add(maskedTextBoxNumberOfHours);
             groupBox1.Controls.Add(label2);
-            groupBox1.Controls.Add(comboBoxCategory);
+            groupBox1.Controls.Add(comboBoxEntryType);
             groupBox1.Controls.Add(comboBoxProjects);
             groupBox1.Controls.Add(label8);
             groupBox1.Controls.Add(label7);
@@ -110,6 +110,38 @@
             groupBox1.TabIndex = 10;
             groupBox1.TabStop = false;
             groupBox1.Text = "Zápis hodin (zbývá zapsat 7 h)";
+            // 
+            // buttonRemove
+            // 
+            buttonRemove.Location = new Point(10, 222);
+            buttonRemove.Name = "buttonRemove";
+            buttonRemove.Size = new Size(134, 32);
+            buttonRemove.TabIndex = 29;
+            buttonRemove.Text = "Odstranit";
+            buttonRemove.UseVisualStyleBackColor = true;
+            buttonRemove.Click += buttonRemove_Click;
+            // 
+            // buttonWrite
+            // 
+            buttonWrite.Location = new Point(472, 222);
+            buttonWrite.Name = "buttonWrite";
+            buttonWrite.Size = new Size(131, 32);
+            buttonWrite.TabIndex = 28;
+            buttonWrite.Text = "Zapsat";
+            buttonWrite.UseVisualStyleBackColor = true;
+            buttonWrite.Click += buttonWrite_Click;
+            // 
+            // maskedTextBoxNumberOfHours
+            // 
+            maskedTextBoxNumberOfHours.BorderStyle = BorderStyle.FixedSingle;
+            maskedTextBoxNumberOfHours.Font = new Font("Reddit Sans", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            maskedTextBoxNumberOfHours.Location = new Point(402, 222);
+            maskedTextBoxNumberOfHours.Mask = "0.0 h";
+            maskedTextBoxNumberOfHours.Name = "maskedTextBoxNumberOfHours";
+            maskedTextBoxNumberOfHours.Size = new Size(64, 32);
+            maskedTextBoxNumberOfHours.TabIndex = 17;
+            maskedTextBoxNumberOfHours.Text = "05";
+            maskedTextBoxNumberOfHours.TextAlign = HorizontalAlignment.Center;
             // 
             // label2
             // 
@@ -122,17 +154,17 @@
             label2.TabIndex = 26;
             label2.Text = "Typ";
             // 
-            // comboBoxCategory
+            // comboBoxEntryType
             // 
-            comboBoxCategory.FormattingEnabled = true;
-            comboBoxCategory.IntegralHeight = false;
-            comboBoxCategory.ItemHeight = 25;
-            comboBoxCategory.Items.AddRange(new object[] { "Obecné", "Administrativa", "Meeting", "Servis", "AfterCare" });
-            comboBoxCategory.Location = new Point(10, 57);
-            comboBoxCategory.Name = "comboBoxCategory";
-            comboBoxCategory.Size = new Size(120, 33);
-            comboBoxCategory.TabIndex = 25;
-            comboBoxCategory.Text = "Obecné";
+            comboBoxEntryType.FormattingEnabled = true;
+            comboBoxEntryType.IntegralHeight = false;
+            comboBoxEntryType.ItemHeight = 25;
+            comboBoxEntryType.Items.AddRange(new object[] { "Obecné", "Administrativa", "Meeting", "Servis", "AfterCare" });
+            comboBoxEntryType.Location = new Point(10, 57);
+            comboBoxEntryType.Name = "comboBoxEntryType";
+            comboBoxEntryType.Size = new Size(120, 33);
+            comboBoxEntryType.TabIndex = 25;
+            comboBoxEntryType.Text = "Obecné";
             // 
             // label8
             // 
@@ -195,38 +227,6 @@
             label6.TabIndex = 16;
             label6.Text = "Zapsané hodiny:";
             // 
-            // maskedTextBoxNumberOfHours
-            // 
-            maskedTextBoxNumberOfHours.BorderStyle = BorderStyle.FixedSingle;
-            maskedTextBoxNumberOfHours.Font = new Font("Reddit Sans", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            maskedTextBoxNumberOfHours.Location = new Point(402, 222);
-            maskedTextBoxNumberOfHours.Mask = "0.0 h";
-            maskedTextBoxNumberOfHours.Name = "maskedTextBoxNumberOfHours";
-            maskedTextBoxNumberOfHours.Size = new Size(64, 32);
-            maskedTextBoxNumberOfHours.TabIndex = 17;
-            maskedTextBoxNumberOfHours.Text = "05";
-            maskedTextBoxNumberOfHours.TextAlign = HorizontalAlignment.Center;
-            // 
-            // buttonRemove
-            // 
-            buttonRemove.Location = new Point(10, 222);
-            buttonRemove.Name = "buttonRemove";
-            buttonRemove.Size = new Size(134, 32);
-            buttonRemove.TabIndex = 29;
-            buttonRemove.Text = "Odstranit";
-            buttonRemove.UseVisualStyleBackColor = true;
-            buttonRemove.Click += buttonRemove_Click;
-            // 
-            // buttonWrite
-            // 
-            buttonWrite.Location = new Point(472, 222);
-            buttonWrite.Name = "buttonWrite";
-            buttonWrite.Size = new Size(131, 32);
-            buttonWrite.TabIndex = 28;
-            buttonWrite.Text = "Zapsat";
-            buttonWrite.UseVisualStyleBackColor = true;
-            buttonWrite.Click += buttonWrite_Click;
-            // 
             // TimeEntryDialog
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
@@ -266,7 +266,7 @@
         private Label label7;
         private TextBox textBoxDescription;
         private Label label2;
-        private ComboBox comboBoxCategory;
+        private ComboBox comboBoxEntryType;
         private MaskedTextBox maskedTextBoxNumberOfHours;
         private Button buttonRemove;
         private Button buttonWrite;

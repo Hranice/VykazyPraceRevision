@@ -178,6 +178,14 @@ namespace VykazyPrace.Core.Database.Repositories
                 })
                 .ToListAsync();
         }
+
+        /// <summary>
+        /// Získání všech typů časových záznamů.
+        /// </summary>
+        public async Task<List<TimeEntryType>> GetAllTimeEntryTypesAsync()
+        {
+            return await _context.TimeEntryTypes.ToListAsync();
+        }
     }
 
     /// <summary>

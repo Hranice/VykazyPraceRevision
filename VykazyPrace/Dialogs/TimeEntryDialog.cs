@@ -51,13 +51,13 @@ namespace VykazyPrace.Dialogs
         {
             try
             {
-                // funkční, ale nepřijde mi logické načítat jen jeden typ
-                // var timeEntries = await _timeEntryRepo.GetTimeEntriesByProjectTypeAndDateAsync(_currentUser, _projectType, _currentDate);
-
+                var timeEntryTypes = await _timeEntryRepo.GetAllTimeEntryTypesAsync();
                 var timeEntries = await _timeEntryRepo.GetTimeEntriesByUserAndDateAsync(_currentUser, _currentDate);
 
                 Invoke(() =>
                 {
+                    comboBoxEntryType.Items.Clear();
+                    comboBoxEntryType.Items.AddRange(timeEntryTypes.ToArray());
                     listBoxTimeEntries.Items.Clear();
                     listBoxTimeEntries.Items.AddRange(timeEntries.Select(FormatTimeEntryToString).ToArray());
                     UpdateLabelFinishedHours();

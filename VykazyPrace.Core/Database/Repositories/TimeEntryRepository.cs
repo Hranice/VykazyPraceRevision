@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -185,6 +186,31 @@ namespace VykazyPrace.Core.Database.Repositories
         public async Task<List<TimeEntryType>> GetAllTimeEntryTypesAsync()
         {
             return await _context.TimeEntryTypes.ToListAsync();
+        }
+
+        /// <summary>
+        /// Ověří, zda existuje záznam s daným názvem.
+        /// </summary>
+        public async Task<bool> ExistsTimeEntryTypeAsync(string title)
+        {
+            return await _context.TimeEntryTypes.AnyAsync(t => t.Title == title);
+        }
+
+        /// <summary>
+        /// Vytvoří nový typ časového záznamu, pokud ještě neexistuje.
+        /// </summary>
+        public async Task<TimeEntryType?> CreateTimeEntryTypeAsync(TimeEntryType timeEntryType)
+        {
+            var existingEntry = await _context.TimeEntryTypes.FirstOrDefaultAsync(t => t.Title == timeEntryType.Title);
+
+            if (existingEntry != null)
+            {
+                return existingEntry;
+            }
+
+            _context.TimeEntryTypes.Add(timeEntryType);
+            await _context.SaveChangesAsync();
+            return timeEntryType;
         }
     }
 

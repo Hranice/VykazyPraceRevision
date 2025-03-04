@@ -123,9 +123,9 @@
             // 
             // buttonWrite
             // 
-            buttonWrite.Location = new Point(472, 222);
+            buttonWrite.Location = new Point(422, 222);
             buttonWrite.Name = "buttonWrite";
-            buttonWrite.Size = new Size(131, 32);
+            buttonWrite.Size = new Size(181, 32);
             buttonWrite.TabIndex = 28;
             buttonWrite.Text = "Zapsat";
             buttonWrite.UseVisualStyleBackColor = true;
@@ -135,13 +135,14 @@
             // 
             maskedTextBoxNumberOfHours.BorderStyle = BorderStyle.FixedSingle;
             maskedTextBoxNumberOfHours.Font = new Font("Reddit Sans", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            maskedTextBoxNumberOfHours.Location = new Point(402, 222);
+            maskedTextBoxNumberOfHours.Location = new Point(352, 222);
             maskedTextBoxNumberOfHours.Mask = "0.0 h";
             maskedTextBoxNumberOfHours.Name = "maskedTextBoxNumberOfHours";
             maskedTextBoxNumberOfHours.Size = new Size(64, 32);
             maskedTextBoxNumberOfHours.TabIndex = 17;
             maskedTextBoxNumberOfHours.Text = "05";
             maskedTextBoxNumberOfHours.TextAlign = HorizontalAlignment.Center;
+            maskedTextBoxNumberOfHours.TextChanged += maskedTextBoxNumberOfHours_TextChanged;
             // 
             // label2
             // 

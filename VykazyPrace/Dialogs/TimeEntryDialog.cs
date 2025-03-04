@@ -296,8 +296,8 @@ namespace VykazyPrace.Dialogs
         private void ClearFields()
         {
             listBoxTimeEntries.Items.Clear();
-            comboBoxProjectsContracts.SelectedText = string.Empty;
-            comboBoxProjectsContracts.Text = string.Empty;
+            //comboBoxProjectsContracts.SelectedText = string.Empty;
+            //comboBoxProjectsContracts.Text = string.Empty;
             textBoxDescription.Text = string.Empty;
             _minutesCount = 0;
             UpdateHoursLabel();
@@ -315,7 +315,7 @@ namespace VykazyPrace.Dialogs
                 {
                     if (await _timeEntryRepo.DeleteTimeEntryAsync(timeEntry.Id))
                     {
-                        AppLogger.Information($"Záznam {FormatTimeEntryToString(timeEntry)} byl smazán z databáze.", true);
+                        AppLogger.Information($"Záznam {FormatTimeEntryToString(timeEntry)} byl smazán z databáze.");
                         ClearFields();
                     }
 

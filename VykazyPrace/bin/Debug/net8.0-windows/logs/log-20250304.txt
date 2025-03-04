@@ -1,0 +1,5 @@
+2025-03-04 08:06:43.153 +01:00 [INF] Zápis hodin 16 (test): 0,5 h - test byl úspěšně proveden.
+2025-03-04 08:07:45.954 +01:00 [INF] Zápis hodin 17 (0279I25): 0,5 h - ščt byl úspěšně proveden.
+2025-03-04 08:09:05.850 +01:00 [INF] Zápis hodin 18 (): 7,5 h - efwefeewf byl úspěšně proveden.
+2025-03-04 08:10:06.783 +01:00 [INF] Zápis hodin 19 (): 7,5 h - přejezd byl úspěšně proveden.
+2025-03-04 08:10:20.294 +01:00 [INF] Záznam 19 (000015): 7,5 h - přejezd byl smazán z databáze.

@@ -51,13 +51,14 @@ namespace VykazyPrace.Dialogs
         {
             try
             {
-                // funkční, ale nepřijde mi logické načítat jen jeden typ
-                // var timeEntries = await _timeEntryRepo.GetTimeEntriesByProjectTypeAndDateAsync(_currentUser, _projectType, _currentDate);
-
+                var timeEntryTypes = await _timeEntryRepo.GetAllTimeEntryTypesAsync();
                 var timeEntries = await _timeEntryRepo.GetTimeEntriesByUserAndDateAsync(_currentUser, _currentDate);
 
                 Invoke(() =>
                 {
+                    comboBoxEntryType.Items.Clear();
+                    comboBoxEntryType.Items.AddRange(timeEntryTypes.Select(FormatTimeEntryTypeToString).ToArray());
+                    if (comboBoxEntryType.Items.Count > 0) comboBoxEntryType.SelectedIndex = 0;
                     listBoxTimeEntries.Items.Clear();
                     listBoxTimeEntries.Items.AddRange(timeEntries.Select(FormatTimeEntryToString).ToArray());
                     UpdateLabelFinishedHours();
@@ -77,14 +78,14 @@ namespace VykazyPrace.Dialogs
 
                 Invoke(new Action(() =>
                 {
-                    comboBoxProjectsContracts.Items.Clear();
+                    comboBoxProjects.Items.Clear();
                     _projectsFormattedToString.Clear();
                     foreach (var project in projects)
                     {
                         _projectsFormattedToString.Add(FormatProjectToString(project));
                     }
 
-                    comboBoxProjectsContracts.Items.AddRange(_projectsFormattedToString.ToArray());
+                    comboBoxProjects.Items.AddRange(_projectsFormattedToString.ToArray());
                 }));
             }
             catch (Exception ex)
@@ -96,50 +97,19 @@ namespace VykazyPrace.Dialogs
             }
         }
 
-        private async void VisualiseSelectedProjectOrContract()
+        private string FormatProjectToString(Project? project)
         {
-            switch (_projectType)
-            {
-                case 0:
-                    buttonProject.BackColor = Color.White;
-                    buttonProject.Font = new Font(buttonProject.Font, FontStyle.Bold);
-                    buttonContract.BackColor = Color.FromKnownColor(KnownColor.AppWorkspace);
-                    buttonContract.Font = new Font(buttonContract.Font, FontStyle.Regular);
-                    label8.Text = "Projekt*";
-                    break;
-                case 1:
-                    buttonContract.BackColor = Color.White;
-                    buttonContract.Font = new Font(buttonContract.Font, FontStyle.Bold);
-                    buttonProject.BackColor = Color.FromKnownColor(KnownColor.AppWorkspace);
-                    buttonProject.Font = new Font(buttonProject.Font, FontStyle.Regular);
-                    label8.Text = "Zakázka*";
-                    break;
-            }
-
-            await LoadTimeEntriesAsync();
-            await LoadProjectsContractsAsync();
-        }
-
-        private void buttonProject_Click(object sender, EventArgs e)
-        {
-            _projectType = 0;
-            VisualiseSelectedProjectOrContract();
-        }
-
-        private void buttonContract_Click(object sender, EventArgs e)
-        {
-            _projectType = 1;
-            VisualiseSelectedProjectOrContract();
-        }
-
-        private string FormatProjectToString(Project project)
-        {
-            return $"{project.Id} ({project.ProjectDescription}): {project.ProjectTitle}";
+            return $"{project?.Id} ({project?.ProjectDescription}): {project?.ProjectTitle}";
         }
 
         private string FormatTimeEntryToString(TimeEntry timeEntry)
         {
             return $"{timeEntry.Id} ({timeEntry?.Project?.ProjectDescription}): {timeEntry?.EntryMinutes / 60.0} h - {timeEntry?.Description}";
+        }
+
+        private string FormatTimeEntryTypeToString(TimeEntryType timeEntryType)
+        {
+            return $"{timeEntryType.Title}";
         }
 
         private bool isUpdating = false;
@@ -149,18 +119,18 @@ namespace VykazyPrace.Dialogs
             if (isUpdating)
                 return;
 
-            if (!comboBoxProjectsContracts.Enabled)
+            if (!comboBoxProjects.Enabled)
                 return;
 
             isUpdating = true;
             try
             {
-                if (comboBoxProjectsContracts.SelectedItem != null)
+                if (comboBoxProjects.SelectedItem != null)
                 {
-                    comboBoxProjectsContracts.Text = comboBoxProjectsContracts.SelectedItem.ToString();
-                    comboBoxProjectsContracts.SelectionStart = comboBoxProjectsContracts.Text.Length;
-                    comboBoxProjectsContracts.SelectionLength = 0;
-                    comboBoxProjectsContracts.DroppedDown = false;
+                    comboBoxProjects.Text = comboBoxProjects.SelectedItem.ToString();
+                    comboBoxProjects.SelectionStart = comboBoxProjects.Text.Length;
+                    comboBoxProjects.SelectionLength = 0;
+                    comboBoxProjects.DroppedDown = false;
                 }
             }
             finally
@@ -174,20 +144,20 @@ namespace VykazyPrace.Dialogs
             if (isUpdating)
                 return;
 
-            if (!comboBoxProjectsContracts.Enabled)
+            if (!comboBoxProjects.Enabled)
                 return;
 
             isUpdating = true;
             try
             {
-                string query = comboBoxProjectsContracts.Text;
-                int selectionStart = comboBoxProjectsContracts.SelectionStart;
+                string query = comboBoxProjects.Text;
+                int selectionStart = comboBoxProjects.SelectionStart;
 
                 if (string.IsNullOrWhiteSpace(query))
                 {
-                    comboBoxProjectsContracts.DroppedDown = false;
-                    comboBoxProjectsContracts.Items.Clear();
-                    comboBoxProjectsContracts.Items.AddRange(_projectsFormattedToString.ToArray());
+                    comboBoxProjects.DroppedDown = false;
+                    comboBoxProjects.Items.Clear();
+                    comboBoxProjects.Items.AddRange(_projectsFormattedToString.ToArray());
                     return;
                 }
 
@@ -198,29 +168,29 @@ namespace VykazyPrace.Dialogs
 
                 if (filteredItems.Count > 0)
                 {
-                    string originalText = comboBoxProjectsContracts.Text;
-                    int originalSelectionStart = comboBoxProjectsContracts.SelectionStart;
+                    string originalText = comboBoxProjects.Text;
+                    int originalSelectionStart = comboBoxProjects.SelectionStart;
 
-                    comboBoxProjectsContracts.Items.Clear();
-                    comboBoxProjectsContracts.Items.AddRange(filteredItems.ToArray());
+                    comboBoxProjects.Items.Clear();
+                    comboBoxProjects.Items.AddRange(filteredItems.ToArray());
 
-                    comboBoxProjectsContracts.Text = originalText;
-                    comboBoxProjectsContracts.SelectionStart = originalSelectionStart;
-                    comboBoxProjectsContracts.SelectionLength = 0;
+                    comboBoxProjects.Text = originalText;
+                    comboBoxProjects.SelectionStart = originalSelectionStart;
+                    comboBoxProjects.SelectionLength = 0;
 
                     // Otevření rozevíracího seznamu
-                    if (!comboBoxProjectsContracts.DroppedDown)
+                    if (!comboBoxProjects.DroppedDown)
                     {
                         BeginInvoke(new Action(() =>
                         {
-                            comboBoxProjectsContracts.DroppedDown = true;
+                            comboBoxProjects.DroppedDown = true;
                             Cursor = Cursors.Default;
                         }));
                     }
                 }
                 else
                 {
-                    comboBoxProjectsContracts.DroppedDown = false;
+                    comboBoxProjects.DroppedDown = false;
                 }
             }
             finally
@@ -241,14 +211,10 @@ namespace VykazyPrace.Dialogs
             {
                 ClearFields();
 
-                buttonProject.Enabled = true;
-                buttonContract.Enabled = true;
+                comboBoxEntryType.Enabled = true;
+                comboBoxProjects.Enabled = true;
                 textBoxDescription.Enabled = true;
-                comboBoxProjectsContracts.Enabled = true;
-                buttonAddHalfHour.Enabled = true;
-                buttonAddHour.Enabled = true;
-                buttonSubtractHalfHour.Enabled = true;
-                buttonSubtractHour.Enabled = true;
+                maskedTextBoxNumberOfHours.Enabled = true;
 
                 buttonWrite.Text = "Zapsat";
 
@@ -263,13 +229,21 @@ namespace VykazyPrace.Dialogs
                     return;
                 }
 
+                var newTimeEntryType = new TimeEntryType
+                {
+                    Title = comboBoxEntryType.Text
+                };
+
+                var addedTimeEntryType = await _timeEntryRepo.CreateTimeEntryTypeAsync(newTimeEntryType);
+
                 var newTimeEntry = new TimeEntry
                 {
                     UserId = _currentUser.Id,
-                    ProjectId = int.Parse(comboBoxProjectsContracts.SelectedItem?.ToString()?.Split(' ')[0] ?? "0"),
+                    ProjectId = int.Parse(comboBoxProjects.SelectedItem?.ToString()?.Split(' ')[0] ?? "0"),
                     Description = textBoxDescription.Text,
                     EntryMinutes = _minutesCount,
                     Timestamp = _currentDate,
+                    EntryTypeId = addedTimeEntryType?.Id ?? 0
                 };
 
                 var addedTimeEntry = await _timeEntryRepo.CreateTimeEntryAsync(newTimeEntry);
@@ -289,18 +263,18 @@ namespace VykazyPrace.Dialogs
 
         private (bool valid, object reason) CheckForEmptyOrIncorrectFields()
         {
-            if (comboBoxProjectsContracts.SelectedItem is null) return (false, _projectType == 0 ? "Projekt" : "Zakázka");
+            if (comboBoxProjects.SelectedItem is null) return (false, "Projekt");
+            if (comboBoxEntryType.SelectedItem is null) return (false, "Typ zápisu");
+            if (string.IsNullOrEmpty(textBoxDescription.Text)) return (false, "Popis činnosti");
+            if (!maskedTextBoxNumberOfHours.MaskFull) return (false, "Počet hodin");
             return (true, "");
         }
 
         private void ClearFields()
         {
             listBoxTimeEntries.Items.Clear();
-            //comboBoxProjectsContracts.SelectedText = string.Empty;
-            //comboBoxProjectsContracts.Text = string.Empty;
             textBoxDescription.Text = string.Empty;
             _minutesCount = 0;
-            UpdateHoursLabel();
         }
 
         private async void buttonRemove_Click(object sender, EventArgs e)
@@ -337,23 +311,24 @@ namespace VykazyPrace.Dialogs
 
                 if (timeEntry != null)
                 {
-                    buttonProject.Enabled = false;
-                    buttonContract.Enabled = false;
-                    buttonAddHalfHour.Enabled = false;
-                    buttonAddHour.Enabled = false;
-                    buttonSubtractHalfHour.Enabled = false;
-                    buttonSubtractHour.Enabled = false;
+                    comboBoxEntryType.Enabled = false;
+                    comboBoxEntryType.Text = timeEntry?.EntryType?.Title ?? "";
+                    comboBoxProjects.Enabled = false;
+                    comboBoxProjects.Text = FormatProjectToString(timeEntry?.Project);
                     textBoxDescription.Enabled = false;
-                    textBoxDescription.Text = timeEntry.Description;
-                    comboBoxProjectsContracts.Enabled = false;
-                    comboBoxProjectsContracts.Text = FormatProjectToString(timeEntry.Project);
-                    labelHours.Enabled = false;
-                    _minutesCount = timeEntry.EntryMinutes;
-                    UpdateHoursLabel();
+                    textBoxDescription.Text = timeEntry?.Description;
+                    maskedTextBoxNumberOfHours.Enabled = false;
+                    _minutesCount = timeEntry?.EntryMinutes ?? 0;
+                    UpdateHoursMaskedTextBox();
 
                     buttonWrite.Text = "Konec prohlížení";
                 }
             }
+        }
+
+        private void UpdateHoursMaskedTextBox()
+        {
+            maskedTextBoxNumberOfHours.Text = $"{_minutesCount / 60.0} h";
         }
 
         private async Task<TimeEntry?> GetTimeEntryBySelectedItem()
@@ -382,35 +357,6 @@ namespace VykazyPrace.Dialogs
             }
 
             return timeEntry;
-        }
-
-        private void buttonSubtractHour_Click(object sender, EventArgs e)
-        {
-            _minutesCount -= 60;
-            UpdateHoursLabel();
-        }
-
-        private void buttonSubtractHalfHour_Click(object sender, EventArgs e)
-        {
-            _minutesCount -= 30;
-            UpdateHoursLabel();
-        }
-
-        private void buttonAddHalfHour_Click(object sender, EventArgs e)
-        {
-            _minutesCount += 30;
-            UpdateHoursLabel();
-        }
-
-        private void buttonAddHour_Click(object sender, EventArgs e)
-        {
-            _minutesCount += 60;
-            UpdateHoursLabel();
-        }
-
-        private void UpdateHoursLabel()
-        {
-            labelHours.Text = $"{_minutesCount / 60.0} h";
         }
 
         private void labelNextDate_Click(object sender, EventArgs e)
@@ -442,30 +388,35 @@ namespace VykazyPrace.Dialogs
 
         private async void UpdateLabelFinishedHours()
         {
-            int projectMinutes = (await _timeEntryRepo.GetTimeEntriesByProjectTypeAndDateAsync(_currentUser, 0, _currentDate))
+            int projectMinutes = (await _timeEntryRepo.GetTimeEntriesByUserAndDateAsync(_currentUser, _currentDate))
                 .Sum(te => te.EntryMinutes);
 
-            int contractMinutes = (await _timeEntryRepo.GetTimeEntriesByProjectTypeAndDateAsync(_currentUser, 1, _currentDate))
-                .Sum(te => te.EntryMinutes);
-
-            double totalMinutes = (projectMinutes + contractMinutes);
-
-            if (totalMinutes > 450)
+            if (projectMinutes > 450)
             {
-                labelFinishedHours.ForeColor = Color.DarkSlateBlue;
+                //labelFinishedHours.ForeColor = Color.DarkSlateBlue;
             }
 
-            else if (totalMinutes == 450)
+            else if (projectMinutes == 450)
             {
-                labelFinishedHours.ForeColor = Color.Green;
+                //labelFinishedHours.ForeColor = Color.Green;
             }
 
             else
             {
-                labelFinishedHours.ForeColor = Color.Tomato;
+                //labelFinishedHours.ForeColor = Color.Tomato;
             }
 
-            labelFinishedHours.Text = $"{totalMinutes / 60.0} / 7,5 h    ({projectMinutes / 60.0}+{contractMinutes / 60.0})";
+            //labelFinishedHours.Text = $"{totalMinutes / 60.0} / 7,5 h    ({projectMinutes / 60.0}+{contractMinutes / 60.0})";
+
+            groupBox1.Text = $"Zápis hodin (zbývá zapsat {(450 - projectMinutes) / 60.0} h)";
+        }
+
+        private void maskedTextBoxNumberOfHours_TextChanged(object sender, EventArgs e)
+        {
+            if (maskedTextBoxNumberOfHours.MaskFull)
+            {
+                _minutesCount = (int)(double.Parse(maskedTextBoxNumberOfHours.Text.Split(' ')[0])*60);
+            }
         }
     }
 }

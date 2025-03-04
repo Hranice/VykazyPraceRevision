@@ -11,11 +11,15 @@ public partial class TimeEntry
 
     public int? ProjectId { get; set; }
 
+    public int? EntryTypeId { get; set; }
+
     public DateTime? Timestamp { get; set; }
 
     public string? Description { get; set; }
 
     public int EntryMinutes { get; set; }
+
+    public virtual TimeEntryType? EntryType { get; set; }
 
     public virtual Project? Project { get; set; }
 

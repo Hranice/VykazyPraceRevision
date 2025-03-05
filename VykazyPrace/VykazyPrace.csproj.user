@@ -22,6 +22,9 @@
     <Compile Update="UserControls\CalendarV2\CalendarV2.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="UserControls\CalendarV2\DayPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="UserControls\Calendar\CalendarUC.cs">
       <SubType>UserControl</SubType>
     </Compile>

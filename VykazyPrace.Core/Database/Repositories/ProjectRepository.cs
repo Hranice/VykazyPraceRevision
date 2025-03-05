@@ -43,6 +43,7 @@ namespace VykazyPrace.Core.Database.Repositories
         {
             var projects = await _context.Projects
                 .Include(p => p.CreatedByNavigation)
+                .Where(p => p.IsArchived == 0)
                 .ToListAsync(); // Asynchronní načtení dat do paměti
 
             return projects
@@ -88,13 +89,6 @@ namespace VykazyPrace.Core.Database.Repositories
         {
             return IsValidProjectDescription(description) && int.TryParse(description.Substring(0, 4), out int number) ? number : int.MinValue;
         }
-
-
-
-
-
-
-
 
 
         /// <summary>

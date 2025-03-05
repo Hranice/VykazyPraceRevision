@@ -144,20 +144,20 @@ namespace VykazyPrace.Dialogs
             }
         }
 
-        private void buttonArchive_Click(object sender, EventArgs e)
+        private async void buttonArchive_Click(object sender, EventArgs e)
         {
             var project = _projects[listBoxProjectContract.SelectedIndex];
             project.IsArchived = 1;
 
             if (project != null)
             {
-                var dialogResult = MessageBox.Show($"Smazat projekt {FormatHelper.FormatProjectToString(project)}?", "Smazat?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                var dialogResult = MessageBox.Show($"Archivovat projekt {FormatHelper.FormatProjectToString(project)}?", "Archivovat?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
                 if (dialogResult == DialogResult.Yes)
                 {
                     if (await _projectRepo.UpdateProjectAsync(project))
                     {
-                        AppLogger.Information($"Projekt {FormatHelper.FormatProjectToString(project)} byl smazán z databáze.", true);
+                        AppLogger.Information($"Projekt {FormatHelper.FormatProjectToString(project)} byl archivován.");
                         ClearFields();
                     }
 

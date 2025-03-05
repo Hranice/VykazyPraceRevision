@@ -13,6 +13,7 @@ namespace VykazyPrace.Dialogs
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
         private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
         private List<Project> _projects = new List<Project>();
+        private List<TimeEntry> _timeEntries = new List<TimeEntry>();
         private readonly User _currentUser;
         private DateTime _currentDate;
         private int _minutesCount = 0;
@@ -52,7 +53,7 @@ namespace VykazyPrace.Dialogs
             try
             {
                 var timeEntryTypes = await _timeEntryRepo.GetAllTimeEntryTypesAsync();
-                var timeEntries = await _timeEntryRepo.GetTimeEntriesByUserAndDateAsync(_currentUser, _currentDate);
+                _timeEntries = await _timeEntryRepo.GetTimeEntriesByUserAndDateAsync(_currentUser, _currentDate);
 
                 Invoke(() =>
                 {
@@ -60,7 +61,7 @@ namespace VykazyPrace.Dialogs
                     comboBoxEntryType.Items.AddRange(timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray());
                     if (comboBoxEntryType.Items.Count > 0) comboBoxEntryType.SelectedIndex = 0;
                     listBoxTimeEntries.Items.Clear();
-                    listBoxTimeEntries.Items.AddRange(timeEntries.Select(FormatHelper.FormatTimeEntryToString).ToArray());
+                    listBoxTimeEntries.Items.AddRange(_timeEntries.Select(FormatHelper.FormatTimeEntryToString).ToArray());
                     UpdateLabelFinishedHours();
                 });
             }
@@ -255,6 +256,9 @@ namespace VykazyPrace.Dialogs
 
         private void ClearFields()
         {
+            comboBoxEntryType.Text = string.Empty;
+            comboBoxProjects.Text = string.Empty;
+            maskedTextBoxNumberOfHours.Text = "0,5 h";
             listBoxTimeEntries.Items.Clear();
             textBoxDescription.Text = string.Empty;
             _minutesCount = 0;
@@ -262,7 +266,7 @@ namespace VykazyPrace.Dialogs
 
         private async void buttonRemove_Click(object sender, EventArgs e)
         {
-            var timeEntry = await GetTimeEntryBySelectedItem();
+            var timeEntry = _timeEntries[listBoxTimeEntries.SelectedIndex];
 
             if (timeEntry != null)
             {
@@ -286,11 +290,11 @@ namespace VykazyPrace.Dialogs
             }
         }
 
-        private async void listBoxTimeEntries_SelectedIndexChanged(object sender, EventArgs e)
+        private void listBoxTimeEntries_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBoxTimeEntries.SelectedItem is not null)
             {
-                var timeEntry = await GetTimeEntryBySelectedItem();
+                var timeEntry = _timeEntries[listBoxTimeEntries.SelectedIndex];
 
                 if (timeEntry != null)
                 {
@@ -314,33 +318,33 @@ namespace VykazyPrace.Dialogs
             maskedTextBoxNumberOfHours.Text = $"{_minutesCount / 60.0} h";
         }
 
-        private async Task<TimeEntry?> GetTimeEntryBySelectedItem()
-        {
-            TimeEntry? timeEntry = new TimeEntry();
+        //private async Task<TimeEntry?> GetTimeEntryBySelectedItem()
+        //{
+        //    TimeEntry? timeEntry = new TimeEntry();
 
-            if (listBoxTimeEntries.SelectedItem != null)
-            {
-                string? selectedItem = listBoxTimeEntries.SelectedItem?.ToString();
-                string? idString = selectedItem?.Split(' ')[0];
+        //    if (listBoxTimeEntries.SelectedItem != null)
+        //    {
+        //        string? selectedItem = listBoxTimeEntries.SelectedItem?.ToString();
+        //        string? idString = selectedItem?.Split(' ')[0];
 
-                if (int.TryParse(idString, out int timeEntryId))
-                {
-                    timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(timeEntryId);
-                }
+        //        if (int.TryParse(idString, out int timeEntryId))
+        //        {
+        //            timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(timeEntryId);
+        //        }
 
-                else
-                {
-                    AppLogger.Error($"Nepodařilo se získat zápis hodin {selectedItem} z databáze, id '{idString}' je neplatné.");
-                }
+        //        else
+        //        {
+        //            AppLogger.Error($"Nepodařilo se získat zápis hodin {selectedItem} z databáze, id '{idString}' je neplatné.");
+        //        }
 
-                if (timeEntry == null)
-                {
-                    AppLogger.Error($"Nepodařilo se získat zápis hodin {selectedItem} z databáze.");
-                }
-            }
+        //        if (timeEntry == null)
+        //        {
+        //            AppLogger.Error($"Nepodařilo se získat zápis hodin {selectedItem} z databáze.");
+        //        }
+        //    }
 
-            return timeEntry;
-        }
+        //    return timeEntry;
+        //}
 
         private void labelNextDate_Click(object sender, EventArgs e)
         {

@@ -6,12 +6,12 @@ namespace VykazyPrace.Helpers
     {
         public static string FormatProjectToString(Project? project)
         {
-            return $"{project?.Id ?? 0} ({project?.ProjectDescription}): {project?.ProjectTitle}";
+            return $"{project?.ProjectDescription} - {project?.ProjectTitle}";
         }
 
         public static string FormatTimeEntryToString(TimeEntry? timeEntry)
         {
-            return $"{timeEntry?.Id ?? 0} ({timeEntry?.Project?.ProjectDescription}): {timeEntry?.EntryMinutes / 60.0} h - {timeEntry?.Description}";
+            return $"{timeEntry?.Project?.ProjectDescription} - {timeEntry?.Project?.ProjectTitle}: {timeEntry?.EntryMinutes / 60.0} h - {timeEntry?.Description}";
         }
 
         public static string FormatTimeEntryTypeToString(TimeEntryType? timeEntryType)

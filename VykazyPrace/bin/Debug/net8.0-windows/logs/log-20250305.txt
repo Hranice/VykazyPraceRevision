@@ -37,3 +37,25 @@ System.InvalidOperationException: The LINQ expression 'DbSet<Project>()
 2025-03-05 11:35:05.443 +01:00 [INF] Projekt 8 (1): Provoz HP (Horká ražba) byl smazán z databáze.
 2025-03-05 11:35:08.491 +01:00 [INF] Projekt 9 (2): Provoz Metalizace byl smazán z databáze.
 2025-03-05 11:36:04.634 +01:00 [INF] Projekt 7 (0): Provoz SD (Sítotisk) byl smazán z databáze.
+2025-03-05 11:50:00.443 +01:00 [ERR] Nepodařilo se získat zápis hodin 3 (Provoz Nová hala):		 0,5 h - provoz nová hala z databáze.
+2025-03-05 11:50:08.552 +01:00 [ERR] Nepodařilo se získat zápis hodin 0230I24 (Automatické balení po pecích a UV):		 2,7 h - test z databáze, id '0230I24' je neplatné.
+2025-03-05 11:55:13.465 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Projekt
+2025-03-05 11:55:34.324 +01:00 [INF] Zápis hodin 3 - Provoz Nová hala: 4,5 h - test byl úspěšně proveden.
+2025-03-05 11:56:59.024 +01:00 [INF] Zápis hodin  - : 0,5 h - test byl úspěšně proveden.
+2025-03-05 11:57:02.090 +01:00 [INF] Záznam 4 - Provoz Ostatní: 0,5 h - test byl smazán z databáze.
+2025-03-05 11:57:04.111 +01:00 [INF] Záznam 3 - Provoz Nová hala: 4,5 h - test byl smazán z databáze.
+2025-03-05 12:03:58.758 +01:00 [INF] Projekt 3 - Provoz Nová hala byl smazán z databáze.
+2025-03-05 12:07:12.718 +01:00 [INF] Projekt 4 - Provoz Ostatní byl archivován.
+2025-03-05 12:07:35.134 +01:00 [INF] Projekt 0000000 - Provoz SD (Sítotisk) byl úspěšně přidán.
+2025-03-05 12:07:42.753 +01:00 [INF] Projekt 0000000 - Provoz SD (Sítotisk) byl archivován.
+2025-03-05 12:08:13.052 +01:00 [INF] Projekt 000A00 - Provoz SD (Sítotisk) byl úspěšně přidán.
+2025-03-05 12:08:27.744 +01:00 [INF] Projekt 000A00 - Provoz HP (Horká ražba) byl úspěšně přidán.
+2025-03-05 12:08:46.337 +01:00 [INF] Projekt 003A00 - Provoz Metalizace byl úspěšně přidán.
+2025-03-05 12:08:50.735 +01:00 [INF] Projekt 000A00 - Provoz HP (Horká ražba) byl archivován.
+2025-03-05 12:08:52.498 +01:00 [INF] Projekt 000A00 - Provoz SD (Sítotisk) byl archivován.
+2025-03-05 12:09:03.895 +01:00 [INF] Projekt 000A01 - Provoz SD (Sítotisk) byl úspěšně přidán.
+2025-03-05 12:09:09.974 +01:00 [INF] Projekt 000A01 - Provoz SD (Sítotisk) byl archivován.
+2025-03-05 12:09:20.057 +01:00 [INF] Projekt 001A00 - Provoz SD (Sítotisk) byl úspěšně přidán.
+2025-03-05 12:09:34.257 +01:00 [INF] Projekt 002A00 - Provoz HP (Horká ražba) byl úspěšně přidán.
+2025-03-05 12:09:54.813 +01:00 [INF] Projekt 004A00 - Provoz Nová hala byl úspěšně přidán.
+2025-03-05 12:10:00.708 +01:00 [INF] Projekt 005A00 - Provoz ostatní byl úspěšně přidán.

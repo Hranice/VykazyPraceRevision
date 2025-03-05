@@ -31,9 +31,6 @@
             buttonAdd = new Button();
             label2 = new Label();
             textBoxProjectContractDescription = new TextBox();
-            panel1 = new Panel();
-            buttonProject = new Button();
-            buttonContract = new Button();
             groupBox1 = new GroupBox();
             buttonRemove = new Button();
             label5 = new Label();
@@ -43,7 +40,6 @@
             label6 = new Label();
             listBoxProjectContract = new ListBox();
             buttonLoadFromFolder = new Button();
-            panel1.SuspendLayout();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -76,46 +72,6 @@
             textBoxProjectContractDescription.Name = "textBoxProjectContractDescription";
             textBoxProjectContractDescription.Size = new Size(121, 28);
             textBoxProjectContractDescription.TabIndex = 13;
-            // 
-            // panel1
-            // 
-            panel1.BorderStyle = BorderStyle.FixedSingle;
-            panel1.Controls.Add(buttonProject);
-            panel1.Controls.Add(buttonContract);
-            panel1.Location = new Point(12, 12);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(400, 33);
-            panel1.TabIndex = 21;
-            // 
-            // buttonProject
-            // 
-            buttonProject.BackColor = SystemColors.Window;
-            buttonProject.Dock = DockStyle.Left;
-            buttonProject.FlatAppearance.BorderSize = 0;
-            buttonProject.FlatStyle = FlatStyle.Flat;
-            buttonProject.Font = new Font("Reddit Sans", 10F, FontStyle.Bold);
-            buttonProject.Location = new Point(0, 0);
-            buttonProject.Name = "buttonProject";
-            buttonProject.Size = new Size(200, 31);
-            buttonProject.TabIndex = 3;
-            buttonProject.Text = "PROJEKT";
-            buttonProject.UseVisualStyleBackColor = false;
-            buttonProject.Click += buttonProject_Click;
-            // 
-            // buttonContract
-            // 
-            buttonContract.BackColor = SystemColors.AppWorkspace;
-            buttonContract.Dock = DockStyle.Right;
-            buttonContract.FlatAppearance.BorderSize = 0;
-            buttonContract.FlatStyle = FlatStyle.Flat;
-            buttonContract.Font = new Font("Reddit Sans", 10F);
-            buttonContract.Location = new Point(198, 0);
-            buttonContract.Name = "buttonContract";
-            buttonContract.Size = new Size(200, 31);
-            buttonContract.TabIndex = 4;
-            buttonContract.Text = "ZAKÁZKA";
-            buttonContract.UseVisualStyleBackColor = false;
-            buttonContract.Click += buttonContract_Click;
             // 
             // groupBox1
             // 
@@ -188,7 +144,7 @@
             // 
             label6.AutoSize = true;
             label6.Font = new Font("Reddit Sans", 8F);
-            label6.Location = new Point(10, 55);
+            label6.Location = new Point(12, 10);
             label6.Name = "label6";
             label6.Size = new Size(93, 17);
             label6.TabIndex = 24;
@@ -199,15 +155,15 @@
             listBoxProjectContract.BorderStyle = BorderStyle.FixedSingle;
             listBoxProjectContract.FormattingEnabled = true;
             listBoxProjectContract.ItemHeight = 25;
-            listBoxProjectContract.Location = new Point(12, 75);
+            listBoxProjectContract.Location = new Point(12, 30);
             listBoxProjectContract.Name = "listBoxProjectContract";
-            listBoxProjectContract.Size = new Size(399, 77);
+            listBoxProjectContract.Size = new Size(399, 127);
             listBoxProjectContract.TabIndex = 23;
             listBoxProjectContract.SelectedIndexChanged += listBoxProjectContract_SelectedIndexChanged;
             // 
             // buttonLoadFromFolder
             // 
-            buttonLoadFromFolder.Location = new Point(239, 158);
+            buttonLoadFromFolder.Location = new Point(239, 163);
             buttonLoadFromFolder.Name = "buttonLoadFromFolder";
             buttonLoadFromFolder.Size = new Size(173, 34);
             buttonLoadFromFolder.TabIndex = 21;
@@ -222,7 +178,6 @@
             Controls.Add(buttonLoadFromFolder);
             Controls.Add(label6);
             Controls.Add(listBoxProjectContract);
-            Controls.Add(panel1);
             Controls.Add(groupBox1);
             Font = new Font("Reddit Sans", 12F);
             Margin = new Padding(4, 5, 4, 5);
@@ -230,7 +185,6 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Správa projektů";
             Load += ProjectManagementDialog_Load;
-            panel1.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);
@@ -241,9 +195,6 @@
         private Button buttonAdd;
         private Label label2;
         private TextBox textBoxProjectContractDescription;
-        private Panel panel1;
-        private Button buttonProject;
-        private Button buttonContract;
         private GroupBox groupBox1;
         private Label label6;
         private ListBox listBoxProjectContract;

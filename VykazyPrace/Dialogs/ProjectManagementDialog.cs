@@ -1,5 +1,6 @@
 ﻿using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
+using VykazyPrace.Helpers;
 using VykazyPrace.Logging;
 using VykazyPrace.UserControls;
 
@@ -7,7 +8,6 @@ namespace VykazyPrace.Dialogs
 {
     public partial class ProjectManagementDialog : Form
     {
-        private int _projectType = 0;
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
         private readonly UserRepository _userRepo = new UserRepository();
         private readonly LoadingUC _loadingUC = new LoadingUC();
@@ -37,14 +37,14 @@ namespace VykazyPrace.Dialogs
 
             try
             {
-                List<Project> projects = await _projectRepo.GetAllProjectsAndContractsAsync(_projectType);
+                List<Project> projects = await _projectRepo.GetAllProjectsAndContractsAsync();
 
                 Invoke(new Action(() =>
                 {
                     listBoxProjectContract.Items.Clear();
                     foreach (var project in projects)
                     {
-                        listBoxProjectContract.Items.Add(FormatProjectToString(project));
+                        listBoxProjectContract.Items.Add(FormatHelper.FormatProjectToString(project));
                     }
                     _loadingUC.Visible = false;
                 }));
@@ -62,53 +62,7 @@ namespace VykazyPrace.Dialogs
         }
 
 
-        private string FormatProjectToString(Project project)
-        {
-            return $"{project.Id} ({project.ProjectDescription}): {project.ProjectTitle}";
-        }
-
-        private void VisualiseSelectedProjectOrContract()
-        {
-            switch (_projectType)
-            {
-                case 0:
-                    buttonProject.BackColor = Color.White;
-                    buttonProject.Font = new Font(buttonProject.Font, FontStyle.Bold);
-                    buttonContract.BackColor = Color.FromKnownColor(KnownColor.AppWorkspace);
-                    buttonContract.Font = new Font(buttonContract.Font, FontStyle.Regular);
-                    label6.Text = "Seznam projektů:";
-                    label2.Text = "Označení projektu:";
-                    label1.Text = "Název projektu:";
-                    groupBox1.Text = "Přidání projektu";
-                    this.Text = "Správa projektů";
-                    break;
-                case 1:
-                    buttonContract.BackColor = Color.White;
-                    buttonContract.Font = new Font(buttonContract.Font, FontStyle.Bold);
-                    buttonProject.BackColor = Color.FromKnownColor(KnownColor.AppWorkspace);
-                    buttonProject.Font = new Font(buttonProject.Font, FontStyle.Regular);
-                    label6.Text = "Seznam zakázek:";
-                    label2.Text = "Označení zakázky:";
-                    label1.Text = "Název zakázky:";
-                    groupBox1.Text = "Přidání zakázky";
-                    this.Text = "Správa zakázek";
-                    break;
-            }
-        }
-
-        private async void buttonProject_Click(object sender, EventArgs e)
-        {
-            _projectType = 0;
-            VisualiseSelectedProjectOrContract();
-            await LoadProjectsContractsAsync();
-        }
-
-        private async void buttonContract_Click(object sender, EventArgs e)
-        {
-            _projectType = 1;
-            VisualiseSelectedProjectOrContract();
-            await LoadProjectsContractsAsync();
-        }
+   
 
         private async void buttonAdd_Click(object sender, EventArgs e)
         {
@@ -138,7 +92,6 @@ namespace VykazyPrace.Dialogs
 
                 var newProject = new Project
                 {
-                    ProjectType = _projectType,
                     ProjectDescription = textBoxProjectContractDescription.Text,
                     ProjectTitle = textBoxProjectContractTitle.Text,
                     Note = textBoxProjectContractNote.Text,
@@ -148,18 +101,17 @@ namespace VykazyPrace.Dialogs
                 var addedProject = await _projectRepo.CreateProjectAsync(newProject);
                 if (addedProject is not null)
                 {
-                    AppLogger.Information($"Projekt {FormatProjectToString(addedProject)} byl úspěšně přidán.", true);
+                    AppLogger.Information($"Projekt {FormatHelper.FormatProjectToString(addedProject)} byl úspěšně přidán.", true);
                     ClearFields();
                 }
                 else
                 {
-                    AppLogger.Error($"Projekt {FormatProjectToString(newProject)} nebyl přidán.");
+                    AppLogger.Error($"Projekt {FormatHelper.FormatProjectToString(newProject)} nebyl přidán.");
                 }
 
                 await LoadProjectsContractsAsync();
             }
         }
-
 
         private async void buttonRemove_Click(object sender, EventArgs e)
         {
@@ -167,19 +119,19 @@ namespace VykazyPrace.Dialogs
 
             if (project != null)
             {
-                var dialogResult = MessageBox.Show($"Smazat projekt {FormatProjectToString(project)}?", "Smazat?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                var dialogResult = MessageBox.Show($"Smazat projekt {FormatHelper.FormatProjectToString(project)}?", "Smazat?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
                 if (dialogResult == DialogResult.Yes)
                 {
                     if (await _projectRepo.DeleteProjectAsync(project.Id))
                     {
-                        AppLogger.Information($"Projekt {FormatProjectToString(project)} byl smazán z databáze.", true);
+                        AppLogger.Information($"Projekt {FormatHelper.FormatProjectToString(project)} byl smazán z databáze.", true);
                         ClearFields();
                     }
 
                     else
                     {
-                        AppLogger.Error($"Nepodařilo se smazat projekt {FormatProjectToString(project)} z databáze.");
+                        AppLogger.Error($"Nepodařilo se smazat projekt {FormatHelper.FormatProjectToString(project)} z databáze.");
                     }
 
                     await LoadProjectsContractsAsync();

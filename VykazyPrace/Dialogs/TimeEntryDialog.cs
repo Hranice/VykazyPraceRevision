@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
+using VykazyPrace.Helpers;
 using VykazyPrace.Logging;
 using VykazyPrace.UserControls;
 
@@ -57,10 +58,10 @@ namespace VykazyPrace.Dialogs
                 Invoke(() =>
                 {
                     comboBoxEntryType.Items.Clear();
-                    comboBoxEntryType.Items.AddRange(timeEntryTypes.Select(FormatTimeEntryTypeToString).ToArray());
+                    comboBoxEntryType.Items.AddRange(timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray());
                     if (comboBoxEntryType.Items.Count > 0) comboBoxEntryType.SelectedIndex = 0;
                     listBoxTimeEntries.Items.Clear();
-                    listBoxTimeEntries.Items.AddRange(timeEntries.Select(FormatTimeEntryToString).ToArray());
+                    listBoxTimeEntries.Items.AddRange(timeEntries.Select(FormatHelper.FormatTimeEntryToString).ToArray());
                     UpdateLabelFinishedHours();
                 });
             }
@@ -82,7 +83,7 @@ namespace VykazyPrace.Dialogs
                     _projectsFormattedToString.Clear();
                     foreach (var project in projects)
                     {
-                        _projectsFormattedToString.Add(FormatProjectToString(project));
+                        _projectsFormattedToString.Add(FormatHelper.FormatProjectToString(project));
                     }
 
                     comboBoxProjects.Items.AddRange(_projectsFormattedToString.ToArray());
@@ -95,21 +96,6 @@ namespace VykazyPrace.Dialogs
                     AppLogger.Error("Chyba při načítání projektů.", ex);
                 }));
             }
-        }
-
-        private string FormatProjectToString(Project? project)
-        {
-            return $"{project?.Id} ({project?.ProjectDescription}): {project?.ProjectTitle}";
-        }
-
-        private string FormatTimeEntryToString(TimeEntry timeEntry)
-        {
-            return $"{timeEntry.Id} ({timeEntry?.Project?.ProjectDescription}): {timeEntry?.EntryMinutes / 60.0} h - {timeEntry?.Description}";
-        }
-
-        private string FormatTimeEntryTypeToString(TimeEntryType timeEntryType)
-        {
-            return $"{timeEntryType.Title}";
         }
 
         private bool isUpdating = false;
@@ -249,12 +235,12 @@ namespace VykazyPrace.Dialogs
                 var addedTimeEntry = await _timeEntryRepo.CreateTimeEntryAsync(newTimeEntry);
                 if (addedTimeEntry is not null)
                 {
-                    AppLogger.Information($"Zápis hodin {FormatTimeEntryToString(addedTimeEntry)} byl úspěšně proveden.");
+                    AppLogger.Information($"Zápis hodin {FormatHelper.FormatTimeEntryToString(addedTimeEntry)} byl úspěšně proveden.");
                     ClearFields();
                 }
                 else
                 {
-                    AppLogger.Error($"Zápis {FormatTimeEntryToString(newTimeEntry)} nebyl proveden.");
+                    AppLogger.Error($"Zápis {FormatHelper.FormatTimeEntryToString(newTimeEntry)} nebyl proveden.");
                 }
 
                 await LoadTimeEntriesAsync();
@@ -264,7 +250,7 @@ namespace VykazyPrace.Dialogs
         private (bool valid, object reason) CheckForEmptyOrIncorrectFields()
         {
             if (comboBoxProjects.SelectedItem is null) return (false, "Projekt");
-            if (comboBoxEntryType.SelectedItem is null) return (false, "Typ zápisu");
+            if (string.IsNullOrEmpty(comboBoxEntryType.Text)) return (false, "Typ zápisu");
             if (string.IsNullOrEmpty(textBoxDescription.Text)) return (false, "Popis činnosti");
             if (!maskedTextBoxNumberOfHours.MaskFull) return (false, "Počet hodin");
             return (true, "");
@@ -283,19 +269,19 @@ namespace VykazyPrace.Dialogs
 
             if (timeEntry != null)
             {
-                var dialogResult = MessageBox.Show($"Smazat záznam {FormatTimeEntryToString(timeEntry)}?", "Smazat?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                var dialogResult = MessageBox.Show($"Smazat záznam {FormatHelper.FormatTimeEntryToString(timeEntry)}?", "Smazat?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
                 if (dialogResult == DialogResult.Yes)
                 {
                     if (await _timeEntryRepo.DeleteTimeEntryAsync(timeEntry.Id))
                     {
-                        AppLogger.Information($"Záznam {FormatTimeEntryToString(timeEntry)} byl smazán z databáze.");
+                        AppLogger.Information($"Záznam {FormatHelper.FormatTimeEntryToString(timeEntry)} byl smazán z databáze.");
                         ClearFields();
                     }
 
                     else
                     {
-                        AppLogger.Error($"Nepodařilo se smazat záznam {FormatTimeEntryToString(timeEntry)} z databáze.");
+                        AppLogger.Error($"Nepodařilo se smazat záznam {FormatHelper.FormatTimeEntryToString(timeEntry)} z databáze.");
                     }
 
                     await LoadTimeEntriesAsync();
@@ -314,7 +300,7 @@ namespace VykazyPrace.Dialogs
                     comboBoxEntryType.Enabled = false;
                     comboBoxEntryType.Text = timeEntry?.EntryType?.Title ?? "";
                     comboBoxProjects.Enabled = false;
-                    comboBoxProjects.Text = FormatProjectToString(timeEntry?.Project);
+                    comboBoxProjects.Text = FormatHelper.FormatProjectToString(timeEntry?.Project);
                     textBoxDescription.Enabled = false;
                     textBoxDescription.Text = timeEntry?.Description;
                     maskedTextBoxNumberOfHours.Enabled = false;

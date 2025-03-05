@@ -2,6 +2,7 @@
 using System.Text;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
+using VykazyPrace.Helpers;
 using VykazyPrace.Logging;
 using VykazyPrace.UserControls;
 
@@ -40,7 +41,7 @@ namespace VykazyPrace.Dialogs
                     listBoxUsers.Items.Clear();
                     foreach (var user in users)
                     {
-                        listBoxUsers.Items.Add(FormatUserToString(user));
+                        listBoxUsers.Items.Add(FormatHelper.FormatUserToString(user));
                     }
                     _loadingUC.Visible = false;
                 }));
@@ -87,13 +88,13 @@ namespace VykazyPrace.Dialogs
                     var addedUser = await _userRepo.CreateUserAsync(newUser);
                     if (addedUser is not null)
                     {
-                        AppLogger.Information($"Uživatel {FormatUserToString(addedUser)} byl přidán do databáze.", true);
+                        AppLogger.Information($"Uživatel {FormatHelper.FormatUserToString(addedUser)} byl přidán do databáze.", true);
                         ClearFields();
                     }
 
                     else
                     {
-                        AppLogger.Error($"Uživatel {FormatUserToString(newUser)} nebyl přidán do databáze.");
+                        AppLogger.Error($"Uživatel {FormatHelper.FormatUserToString(newUser)} nebyl přidán do databáze.");
                     }
 
                     await LoadUsersAsync();
@@ -112,19 +113,19 @@ namespace VykazyPrace.Dialogs
 
             if (user != null)
             {
-                var dialogResult = MessageBox.Show($"Smazat uživatele {FormatUserToString(user)}?", "Smazat?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                var dialogResult = MessageBox.Show($"Smazat uživatele {FormatHelper.FormatUserToString(user)}?", "Smazat?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
                 if (dialogResult == DialogResult.Yes)
                 {
                     if (await _userRepo.DeleteUserAsync(user.Id))
                     {
-                        AppLogger.Information($"Uživatel {FormatUserToString(user)} byl smazán z databáze.", true);
+                        AppLogger.Information($"Uživatel {FormatHelper.FormatUserToString(user)} byl smazán z databáze.", true);
                         ClearFields();
                     }
 
                     else
                     {
-                        AppLogger.Error($"Nepodařilo se smazat uživatele {FormatUserToString(user)} z databáze.");
+                        AppLogger.Error($"Nepodařilo se smazat uživatele {FormatHelper.FormatUserToString(user)} z databáze.");
                     }
 
                     await LoadUsersAsync();
@@ -158,11 +159,6 @@ namespace VykazyPrace.Dialogs
             }
 
             return user;
-        }
-
-        private string FormatUserToString(User user)
-        {
-            return $"{user.Id} ({user.PersonalNumber}): {user.FirstName} {user.Surname}";
         }
 
         private void GenerateWindowsUsername()

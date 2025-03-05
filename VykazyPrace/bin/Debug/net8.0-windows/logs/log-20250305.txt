@@ -33,3 +33,7 @@ System.InvalidOperationException: The LINQ expression 'DbSet<Project>()
 2025-03-05 11:21:45.284 +01:00 [INF] Projekt 13 (0186E24): Lepicí linka pro HG s hot-melt byl úspěšně přidán.
 2025-03-05 11:22:54.585 +01:00 [INF] Projekt 1 (test): test byl smazán z databáze.
 2025-03-05 11:22:58.302 +01:00 [INF] Projekt 4 (000015): Přejezd artiklu-výstup byl smazán z databáze.
+2025-03-05 11:30:46.162 +01:00 [INF] Zápis hodin 8 (): 0,5 h - provoz nová hala byl úspěšně proveden.
+2025-03-05 11:35:05.443 +01:00 [INF] Projekt 8 (1): Provoz HP (Horká ražba) byl smazán z databáze.
+2025-03-05 11:35:08.491 +01:00 [INF] Projekt 9 (2): Provoz Metalizace byl smazán z databáze.
+2025-03-05 11:36:04.634 +01:00 [INF] Projekt 7 (0): Provoz SD (Sítotisk) byl smazán z databáze.

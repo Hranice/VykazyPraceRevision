@@ -12,7 +12,7 @@ namespace VykazyPrace.Dialogs
         private readonly LoadingUC _loadingUC = new LoadingUC();
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
         private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
-        private List<string> _projectsFormattedToString = new List<string>();
+        private List<Project> _projects = new List<Project>();
         private readonly User _currentUser;
         private DateTime _currentDate;
         private int _minutesCount = 0;
@@ -74,18 +74,12 @@ namespace VykazyPrace.Dialogs
         {
             try
             {
-                List<Project> projects = await _projectRepo.GetAllProjectsAndContractsAsync();
+                _projects = await _projectRepo.GetAllProjectsAndContractsAsync();
 
                 Invoke(new Action(() =>
                 {
                     comboBoxProjects.Items.Clear();
-                    _projectsFormattedToString.Clear();
-                    foreach (var project in projects)
-                    {
-                        _projectsFormattedToString.Add(FormatHelper.FormatProjectToString(project));
-                    }
-
-                    comboBoxProjects.Items.AddRange(_projectsFormattedToString.ToArray());
+                    comboBoxProjects.Items.AddRange(_projects.Select(FormatHelper.FormatProjectToString).ToArray());
                 }));
             }
             catch (Exception ex)
@@ -142,12 +136,15 @@ namespace VykazyPrace.Dialogs
                 {
                     comboBoxProjects.DroppedDown = false;
                     comboBoxProjects.Items.Clear();
-                    comboBoxProjects.Items.AddRange(_projectsFormattedToString.ToArray());
+                    comboBoxProjects.Items.AddRange(_projects.Select(FormatHelper.FormatProjectToString).ToArray());
+
                     return;
                 }
 
                 // Filtrace podle libovolné části textu
-                List<string> filteredItems = _projectsFormattedToString
+                List<string> filteredItems = _projects
+                    .Select(FormatHelper.FormatProjectToString)
+                    .ToArray()
                     .Where(x => x.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)
                     .ToList();
 
@@ -224,7 +221,8 @@ namespace VykazyPrace.Dialogs
                 var newTimeEntry = new TimeEntry
                 {
                     UserId = _currentUser.Id,
-                    ProjectId = int.Parse(comboBoxProjects.SelectedItem?.ToString()?.Split(' ')[0] ?? "0"),
+                    //ProjectId = int.Parse(comboBoxProjects.SelectedItem?.ToString()?.Split(' ')[0] ?? "0"),
+                    ProjectId = _projects[comboBoxProjects.SelectedIndex].Id,
                     Description = textBoxDescription.Text,
                     EntryMinutes = _minutesCount,
                     Timestamp = _currentDate,

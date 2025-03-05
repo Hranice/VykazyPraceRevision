@@ -9,9 +9,9 @@ namespace VykazyPrace.Dialogs
     public partial class ProjectManagementDialog : Form
     {
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
-        private readonly UserRepository _userRepo = new UserRepository();
         private readonly LoadingUC _loadingUC = new LoadingUC();
         private readonly User _currentUser;
+        private List<Project> _projects = new List<Project>();
 
         public ProjectManagementDialog(User currentUser)
         {
@@ -37,18 +37,16 @@ namespace VykazyPrace.Dialogs
 
             try
             {
-                List<Project> projects = await _projectRepo.GetAllProjectsAndContractsAsync();
+                _projects = await _projectRepo.GetAllProjectsAndContractsAsync();
 
                 Invoke(new Action(() =>
                 {
                     listBoxProjectContract.Items.Clear();
-                    foreach (var project in projects)
-                    {
-                        listBoxProjectContract.Items.Add(FormatHelper.FormatProjectToString(project));
-                    }
+                    listBoxProjectContract.Items.AddRange(_projects.Select(FormatHelper.FormatProjectToString).ToArray());
                     _loadingUC.Visible = false;
                 }));
             }
+
             catch (Exception ex)
             {
                 Invoke(new Action(() =>
@@ -60,9 +58,6 @@ namespace VykazyPrace.Dialogs
 
             Invoke(() => _loadingUC.Visible = false);
         }
-
-
-   
 
         private async void buttonAdd_Click(object sender, EventArgs e)
         {
@@ -113,32 +108,6 @@ namespace VykazyPrace.Dialogs
             }
         }
 
-        private async void buttonRemove_Click(object sender, EventArgs e)
-        {
-            var project = await GetProjectBySelectedItem();
-
-            if (project != null)
-            {
-                var dialogResult = MessageBox.Show($"Smazat projekt {FormatHelper.FormatProjectToString(project)}?", "Smazat?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-
-                if (dialogResult == DialogResult.Yes)
-                {
-                    if (await _projectRepo.DeleteProjectAsync(project.Id))
-                    {
-                        AppLogger.Information($"Projekt {FormatHelper.FormatProjectToString(project)} byl smazán z databáze.", true);
-                        ClearFields();
-                    }
-
-                    else
-                    {
-                        AppLogger.Error($"Nepodařilo se smazat projekt {FormatHelper.FormatProjectToString(project)} z databáze.");
-                    }
-
-                    await LoadProjectsContractsAsync();
-                }
-            }
-        }
-
         private void ClearFields()
         {
             textBoxProjectContractTitle.Text = "";
@@ -154,40 +123,11 @@ namespace VykazyPrace.Dialogs
             return (true, "");
         }
 
-
-        private async Task<Project?> GetProjectBySelectedItem()
-        {
-            Project? project = new Project();
-
-            if (listBoxProjectContract.SelectedItem != null)
-            {
-                string? selectedItem = listBoxProjectContract.SelectedItem?.ToString();
-                string? idString = selectedItem?.Split(' ')[0];
-
-                if (int.TryParse(idString, out int userId))
-                {
-                    project = await _projectRepo.GetProjectByIdAsync(userId);
-                }
-
-                else
-                {
-                    AppLogger.Error($"Nepodařilo se získat projekt {selectedItem} z databáze, id '{idString}' je neplatné.");
-                }
-
-                if (project == null)
-                {
-                    AppLogger.Error($"Nepodařilo se získat projekt {selectedItem} z databáze.");
-                }
-            }
-
-            return project;
-        }
-
-        private async void listBoxProjectContract_SelectedIndexChanged(object sender, EventArgs e)
+        private void listBoxProjectContract_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBoxProjectContract.SelectedItem is not null)
             {
-                var project = await GetProjectBySelectedItem();
+                var project = _projects[listBoxProjectContract.SelectedIndex];
 
                 if (project != null)
                 {
@@ -200,6 +140,33 @@ namespace VykazyPrace.Dialogs
                     textBoxProjectContractNote.Text = project.Note;
 
                     buttonAdd.Text = "Konec prohlížení";
+                }
+            }
+        }
+
+        private void buttonArchive_Click(object sender, EventArgs e)
+        {
+            var project = _projects[listBoxProjectContract.SelectedIndex];
+            project.IsArchived = 1;
+
+            if (project != null)
+            {
+                var dialogResult = MessageBox.Show($"Smazat projekt {FormatHelper.FormatProjectToString(project)}?", "Smazat?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+
+                if (dialogResult == DialogResult.Yes)
+                {
+                    if (await _projectRepo.UpdateProjectAsync(project))
+                    {
+                        AppLogger.Information($"Projekt {FormatHelper.FormatProjectToString(project)} byl smazán z databáze.", true);
+                        ClearFields();
+                    }
+
+                    else
+                    {
+                        AppLogger.Error($"Nepodařilo se smazat projekt {FormatHelper.FormatProjectToString(project)} z databáze.");
+                    }
+
+                    await LoadProjectsContractsAsync();
                 }
             }
         }

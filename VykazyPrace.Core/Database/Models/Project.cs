@@ -17,6 +17,8 @@ public partial class Project
 
     public string? Note { get; set; }
 
+    public int IsArchived { get; set; }
+
     public virtual User CreatedByNavigation { get; set; } = null!;
 
     public virtual ICollection<TimeEntry> TimeEntries { get; set; } = new List<TimeEntry>();

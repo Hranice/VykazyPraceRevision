@@ -32,7 +32,7 @@
             label2 = new Label();
             textBoxProjectContractDescription = new TextBox();
             groupBox1 = new GroupBox();
-            buttonRemove = new Button();
+            buttonArchive = new Button();
             label5 = new Label();
             textBoxProjectContractNote = new TextBox();
             label1 = new Label();
@@ -75,7 +75,7 @@
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(buttonRemove);
+            groupBox1.Controls.Add(buttonArchive);
             groupBox1.Controls.Add(label5);
             groupBox1.Controls.Add(textBoxProjectContractNote);
             groupBox1.Controls.Add(label1);
@@ -90,16 +90,16 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Přidání projektu";
             // 
-            // buttonRemove
+            // buttonArchive
             // 
-            buttonRemove.Location = new Point(255, 219);
-            buttonRemove.Margin = new Padding(4, 5, 4, 5);
-            buttonRemove.Name = "buttonRemove";
-            buttonRemove.Size = new Size(128, 36);
-            buttonRemove.TabIndex = 20;
-            buttonRemove.Text = "Odstranit";
-            buttonRemove.UseVisualStyleBackColor = true;
-            buttonRemove.Click += buttonRemove_Click;
+            buttonArchive.Location = new Point(255, 219);
+            buttonArchive.Margin = new Padding(4, 5, 4, 5);
+            buttonArchive.Name = "buttonArchive";
+            buttonArchive.Size = new Size(128, 36);
+            buttonArchive.TabIndex = 20;
+            buttonArchive.Text = "Archivovat";
+            buttonArchive.UseVisualStyleBackColor = true;
+            buttonArchive.Click += buttonArchive_Click;
             // 
             // label5
             // 
@@ -202,7 +202,7 @@
         private TextBox textBoxProjectContractTitle;
         private Label label5;
         private TextBox textBoxProjectContractNote;
-        private Button buttonRemove;
+        private Button buttonArchive;
         private Button buttonLoadFromFolder;
     }
 }

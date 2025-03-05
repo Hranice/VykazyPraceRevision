@@ -67,5 +67,10 @@ namespace VykazyPrace
         {
             new Dialogs.SettingsDialog(_selectedUser).ShowDialog();
         }
+
+        private void testToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new Dialogs.TestDialog().ShowDialog();
+        }
     }
 }

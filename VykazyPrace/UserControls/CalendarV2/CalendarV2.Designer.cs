@@ -830,6 +830,10 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(141, 65);
             panel1.TabIndex = 0;
+            panel1.MouseDown += panel1_MouseDown;
+            panel1.MouseLeave += panel1_MouseLeave;
+            panel1.MouseMove += panel1_MouseMove;
+            panel1.MouseUp += panel1_MouseUp;
             // 
             // panel00
             // 

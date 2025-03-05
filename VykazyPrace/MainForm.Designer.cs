@@ -40,6 +40,7 @@
             nápovědaToolStripMenuItem = new ToolStripMenuItem();
             nastaveníToolStripMenuItem = new ToolStripMenuItem();
             panelCalendarContainer = new Panel();
+            testToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -102,7 +103,7 @@
             // 
             // toolStripMenuItem1
             // 
-            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { nápovědaToolStripMenuItem, nastaveníToolStripMenuItem });
+            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { nápovědaToolStripMenuItem, nastaveníToolStripMenuItem, testToolStripMenuItem });
             toolStripMenuItem1.Name = "toolStripMenuItem1";
             toolStripMenuItem1.Size = new Size(24, 20);
             toolStripMenuItem1.Text = "?";
@@ -110,13 +111,13 @@
             // nápovědaToolStripMenuItem
             // 
             nápovědaToolStripMenuItem.Name = "nápovědaToolStripMenuItem";
-            nápovědaToolStripMenuItem.Size = new Size(128, 22);
+            nápovědaToolStripMenuItem.Size = new Size(180, 22);
             nápovědaToolStripMenuItem.Text = "Nápověda";
             // 
             // nastaveníToolStripMenuItem
             // 
             nastaveníToolStripMenuItem.Name = "nastaveníToolStripMenuItem";
-            nastaveníToolStripMenuItem.Size = new Size(128, 22);
+            nastaveníToolStripMenuItem.Size = new Size(180, 22);
             nastaveníToolStripMenuItem.Text = "Nastavení";
             nastaveníToolStripMenuItem.Click += nastaveníToolStripMenuItem_Click;
             // 
@@ -126,6 +127,13 @@
             panelCalendarContainer.Name = "panelCalendarContainer";
             panelCalendarContainer.Size = new Size(665, 563);
             panelCalendarContainer.TabIndex = 1;
+            // 
+            // testToolStripMenuItem
+            // 
+            testToolStripMenuItem.Name = "testToolStripMenuItem";
+            testToolStripMenuItem.Size = new Size(180, 22);
+            testToolStripMenuItem.Text = "Test";
+            testToolStripMenuItem.Click += testToolStripMenuItem_Click;
             // 
             // MainForm
             // 
@@ -162,5 +170,6 @@
         private ToolStripMenuItem toolStripMenuItem1;
         private ToolStripMenuItem nápovědaToolStripMenuItem;
         private ToolStripMenuItem nastaveníToolStripMenuItem;
+        private ToolStripMenuItem testToolStripMenuItem;
     }
 }

@@ -13,6 +13,9 @@
     <Compile Update="Dialogs\SettingsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Dialogs\TestDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Dialogs\TimeEntryDialog.cs">
       <SubType>Form</SubType>
     </Compile>

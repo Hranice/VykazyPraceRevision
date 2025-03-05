@@ -19,6 +19,9 @@
     <Compile Update="Dialogs\UserManagementDialog.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="UserControls\CalendarV2\CalendarV2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="UserControls\Calendar\CalendarUC.cs">
       <SubType>UserControl</SubType>
     </Compile>

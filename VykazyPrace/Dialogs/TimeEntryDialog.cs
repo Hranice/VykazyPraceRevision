@@ -9,7 +9,6 @@ namespace VykazyPrace.Dialogs
 {
     public partial class TimeEntryDialog : Form
     {
-        private int _projectType = 0;
         private readonly LoadingUC _loadingUC = new LoadingUC();
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
         private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
@@ -75,7 +74,7 @@ namespace VykazyPrace.Dialogs
         {
             try
             {
-                List<Project> projects = await _projectRepo.GetAllProjectsAndContractsAsync(_projectType);
+                List<Project> projects = await _projectRepo.GetAllProjectsAndContractsAsync();
 
                 Invoke(new Action(() =>
                 {

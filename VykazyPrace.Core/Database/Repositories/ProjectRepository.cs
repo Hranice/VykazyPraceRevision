@@ -36,23 +36,66 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
-        /// Získání všech projektů i zakázek.
+        /// Získání všech projektů i zakázek, seřazených podle interního/externího označení,
+        /// roku sestupně a pořadového čísla sestupně. Chybné záznamy jsou umístěny na konec.
         /// </summary>
         public async Task<List<Project>> GetAllProjectsAndContractsAsync()
         {
-            return await _context.Projects.Include(p => p.CreatedByNavigation).ToListAsync();
+            var projects = await _context.Projects
+                .Include(p => p.CreatedByNavigation)
+                .ToListAsync(); // Asynchronní načtení dat do paměti
+
+            return projects
+                .OrderBy(p => IsValidProjectDescription(p.ProjectDescription) ? 1 : 0) // Ostatní první, seřazené na konec
+                .ThenBy(p => GetProjectType(p.ProjectDescription)) // I/E
+                .ThenByDescending(p => GetProjectYear(p.ProjectDescription)) // Rok sestupně
+                .ThenByDescending(p => GetProjectNumber(p.ProjectDescription)) // Pořadové číslo sestupně
+                .ToList();
         }
 
         /// <summary>
-        /// Získání všech projektů i zakázek.
+        /// Ověří, zda je ProjectDescription platný (má správnou délku a formát).
         /// </summary>
-        public async Task<List<Project>> GetAllProjectsAndContractsAsync(int projectType)
+        private bool IsValidProjectDescription(string description)
         {
-            return await _context.Projects
-                          .Where(p => p.ProjectType == projectType)
-                          .Include(p => p.CreatedByNavigation)
-                          .ToListAsync();
+            return !string.IsNullOrEmpty(description) &&
+                   description.Length >= 7 &&
+                   (description[4] == 'I' || description[4] == 'E') &&
+                   int.TryParse(description.Substring(5, 2), out _) &&
+                   int.TryParse(description.Substring(0, 4), out _);
         }
+
+        /// <summary>
+        /// Vrací typ projektu (I/E) nebo prázdný string pro neplatné záznamy.
+        /// </summary>
+        private string GetProjectType(string description)
+        {
+            return IsValidProjectDescription(description) ? description.Substring(4, 1) : "";
+        }
+
+        /// <summary>
+        /// Vrací rok jako číslo, nebo nejnižší možnou hodnotu pro neplatné záznamy.
+        /// </summary>
+        private int GetProjectYear(string description)
+        {
+            return IsValidProjectDescription(description) && int.TryParse(description.Substring(5, 2), out int year) ? year : int.MinValue;
+        }
+
+        /// <summary>
+        /// Vrací pořadové číslo jako číslo, nebo nejnižší možnou hodnotu pro neplatné záznamy.
+        /// </summary>
+        private int GetProjectNumber(string description)
+        {
+            return IsValidProjectDescription(description) && int.TryParse(description.Substring(0, 4), out int number) ? number : int.MinValue;
+        }
+
+
+
+
+
+
+
+
 
         /// <summary>
         /// Získání projektu podle ID.

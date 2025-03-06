@@ -262,6 +262,8 @@ namespace VykazyPrace.UserControls.CalendarV2
             _loadingUC.Size = this.Size;
             this.Controls.Add(_loadingUC);
 
+            BeginInvoke(new Action(() => panelContainer.AutoScrollPosition = new Point(302, panelContainer.AutoScrollPosition.Y)));
+
             Task.Run(LoadData);
         }
 
@@ -340,7 +342,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private int GetRowBasedOnTimeEntry(TimeEntry timeEntry)
         {
-            return 0;
+            return ((int)timeEntry.Timestamp.Value.DayOfWeek + 6) % 7;
         }
     }
 }

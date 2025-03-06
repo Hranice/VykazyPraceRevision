@@ -1,15 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using VykazyPrace.Core.Database.Models;
-using VykazyPrace.UserControls.CalendarV2;
-using static System.Windows.Forms.DataFormats;
 
 namespace VykazyPrace.Dialogs
 {
@@ -32,12 +22,30 @@ namespace VykazyPrace.Dialogs
             calendarV21.Size = new Size(1520, 537);
             calendarV21.TabIndex = 0;
 
-            panel1.Controls.Add(calendarV21);
+            this.Controls.Add(calendarV21);
+
+            //panel1.Controls.Add(calendarV21);
+
+            //List<string> days = new List<string>() { "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek"};
+
+            //for (int i = 0; i < 7;)
+            //{
+            //    var panel = new Panel()
+            //    {
+            //        Location = new Point(3, 53),
+            //        Size = new Size(67, 56)
+            //    };
+
+            //    panel.Controls.Add(new Label()
+            //    {
+            //        Text = 
+            //    })
+            //}
         }
 
         private void TestDialog_Shown(object sender, EventArgs e)
         {
-            BeginInvoke(new Action(() => panel1.AutoScrollPosition = new Point(370, panel1.AutoScrollPosition.Y)));
+            //BeginInvoke(new Action(() => panel1.AutoScrollPosition = new Point(370, panel1.AutoScrollPosition.Y)));
         }
     }
 }

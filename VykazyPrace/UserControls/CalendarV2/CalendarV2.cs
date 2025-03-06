@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
+using System.Windows.Forms;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
+using VykazyPrace.Dialogs;
 using VykazyPrace.Logging;
 
 
@@ -44,38 +46,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             _currentUser = currentUser;
         }
 
-        public int GetControlIndex(Control control)
-        {
-            if (control == null || tableLayoutPanel1 == null)
-                return -1;
-
-            return tableLayoutPanel1.Controls.IndexOf(control);
-        }
-
-        private void TableLayoutPanel1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            TableLayoutPanelCellPosition cell = GetCellAt(tableLayoutPanel1, e.Location);
-
-            if (IsOverlapping(cell.Column, 1, cell.Row, null))
-                return;
-
-            DayPanel newPanel = new DayPanel
-            {
-                Dock = DockStyle.Fill,
-                BackColor = Color.LightBlue,
-                BorderStyle = BorderStyle.FixedSingle
-            };
-
-            tableLayoutPanel1.Controls.Add(newPanel, cell.Column, cell.Row);
-            tableLayoutPanel1.SetColumnSpan(newPanel, 1);
-            panels.Add(newPanel);
-
-            newPanel.MouseMove += panel1_MouseMove;
-            newPanel.MouseDown += panel1_MouseDown;
-            newPanel.MouseUp += panel1_MouseUp;
-            newPanel.MouseLeave += panel1_MouseLeave;
-        }
-
         private TableLayoutPanelCellPosition GetCellAt(TableLayoutPanel panel, Point clickPosition)
         {
             int width = panel.Width / panel.ColumnCount;
@@ -85,6 +55,73 @@ namespace VykazyPrace.UserControls.CalendarV2
             int row = Math.Min(clickPosition.Y / height, panel.RowCount - 1);
 
             return new TableLayoutPanelCellPosition(col, row);
+        }
+
+        private void TableLayoutPanel1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            TableLayoutPanelCellPosition cell = GetCellAt(tableLayoutPanel1, e.Location);
+
+            var timeEntryDialog = new TimeEntryV2Dialog(new TimeEntry()
+            {
+                Timestamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddMinutes(cell.Column * 30),
+                EntryMinutes = 30
+            });
+
+            var result = timeEntryDialog.ShowDialog();
+
+            switch (result)
+            {
+                // Beze změn
+                case DialogResult.Cancel:
+                    break;
+                // Odstranění
+                case DialogResult.Abort:
+                    break;
+                // Přidání
+                case DialogResult.OK:
+                    if (IsOverlapping(cell.Column, 1, cell.Row, null))
+                        return;
+
+                    DayPanel newPanel = new DayPanel
+                    {
+                        Dock = DockStyle.Fill,
+                        BackColor = Color.LightBlue,
+                        BorderStyle = BorderStyle.FixedSingle,
+                        TimeEntry = timeEntryDialog.TimeEntry
+                    };
+
+                    tableLayoutPanel1.Controls.Add(newPanel, GetColumnBasedOnTimeEntry(newPanel.TimeEntry), GetRowBasedOnTimeEntry(newPanel.TimeEntry));
+                    tableLayoutPanel1.SetColumnSpan(newPanel, GetColumnSpanBasedOnTimeEntry(newPanel.TimeEntry));
+                    panels.Add(newPanel);
+
+                    newPanel.MouseMove += panel1_MouseMove;
+                    newPanel.MouseDown += panel1_MouseDown;
+                    newPanel.MouseUp += panel1_MouseUp;
+                    newPanel.MouseLeave += panel1_MouseLeave;
+                    newPanel.MouseDoubleClick += panel1_MouseDoubleClick;
+                    break;
+            }
+
+            if (result != DialogResult.Cancel)
+            {
+               
+
+                // TODO: timeentry repo create time entry
+                // TODO: Reload TimeEntries ? hlavně když se smaže
+            }
+        }
+
+        private void panel1_MouseDoubleClick(object? sender, MouseEventArgs e)
+        {
+            if (sender is not DayPanel panel)
+                return;
+
+            var result = new TimeEntryV2Dialog((sender as DayPanel)?.TimeEntry).ShowDialog();
+
+            if (result != DialogResult.Cancel)
+            {
+                // TODO: Reload time entries
+            }
         }
 
         private void panel1_MouseMove(object sender, MouseEventArgs e)
@@ -259,6 +296,8 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void CalendarV2_Load(object sender, EventArgs e)
         {
+            tableLayoutPanel1.Controls.Clear();
+
             _loadingUC.Size = this.Size;
             this.Controls.Add(_loadingUC);
 
@@ -285,7 +324,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             {
                 _timeEntries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_currentUser, _currentDate);
 
-                foreach(var timeEntry in _timeEntries)
+                foreach (var timeEntry in _timeEntries)
                 {
                     int column = GetColumnBasedOnTimeEntry(timeEntry);
                     int row = GetRowBasedOnTimeEntry(timeEntry);
@@ -298,7 +337,8 @@ namespace VykazyPrace.UserControls.CalendarV2
                         TimeEntry = timeEntry
                     };
 
-                    Invoke(() => {
+                    Invoke(() =>
+                    {
                         tableLayoutPanel1.Controls.Add(newPanel, column, row);
                         tableLayoutPanel1.SetColumnSpan(newPanel, 1);
                         panels.Add(newPanel);
@@ -308,6 +348,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                     newPanel.MouseDown += panel1_MouseDown;
                     newPanel.MouseUp += panel1_MouseUp;
                     newPanel.MouseLeave += panel1_MouseLeave;
+                    newPanel.MouseDoubleClick += panel1_MouseDoubleClick;
                 }
             }
             catch (Exception ex)
@@ -334,9 +375,14 @@ namespace VykazyPrace.UserControls.CalendarV2
         private int GetColumnBasedOnTimeEntry(TimeEntry timeEntry)
         {
             var hour = timeEntry.Timestamp.Value.Hour;
-            var minutes = hour*60 + timeEntry.Timestamp.Value.Minute;
-            Debug.WriteLine($"Zápis: {timeEntry.Timestamp}\t{timeEntry.EntryMinutes/60.0} h, tzn. sloupec č. {minutes/30}");
+            var minutes = hour * 60 + timeEntry.Timestamp.Value.Minute;
+            Debug.WriteLine($"Zápis: {timeEntry.Timestamp}\t{timeEntry.EntryMinutes / 60.0} h, tzn. sloupec č. {minutes / 30}");
             return minutes / 30;
+        }
+
+        private int GetColumnSpanBasedOnTimeEntry(TimeEntry timeEntry)
+        {
+            return timeEntry.EntryMinutes / 30;
 
         }
 
@@ -344,5 +390,6 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             return ((int)timeEntry.Timestamp.Value.DayOfWeek + 6) % 7;
         }
+
     }
 }

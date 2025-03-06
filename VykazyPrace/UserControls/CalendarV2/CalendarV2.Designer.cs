@@ -207,7 +207,6 @@
             // label25
             // 
             label25.AutoSize = true;
-            label25.Enabled = false;
             label25.Location = new Point(13, 9);
             label25.Name = "label25";
             label25.Size = new Size(37, 21);
@@ -262,7 +261,6 @@
             // label31
             // 
             label31.AutoSize = true;
-            label31.Enabled = false;
             label31.Location = new Point(1093, 9);
             label31.Name = "label31";
             label31.Size = new Size(42, 21);
@@ -272,7 +270,6 @@
             // label32
             // 
             label32.AutoSize = true;
-            label32.Enabled = false;
             label32.Location = new Point(1033, 9);
             label32.Name = "label32";
             label32.Size = new Size(41, 21);
@@ -282,7 +279,6 @@
             // label33
             // 
             label33.AutoSize = true;
-            label33.Enabled = false;
             label33.Location = new Point(973, 9);
             label33.Name = "label33";
             label33.Size = new Size(42, 21);
@@ -292,7 +288,6 @@
             // label34
             // 
             label34.AutoSize = true;
-            label34.Enabled = false;
             label34.Location = new Point(913, 9);
             label34.Name = "label34";
             label34.Size = new Size(42, 21);
@@ -302,7 +297,6 @@
             // label26
             // 
             label26.AutoSize = true;
-            label26.Enabled = false;
             label26.Location = new Point(853, 9);
             label26.Name = "label26";
             label26.Size = new Size(42, 21);
@@ -312,7 +306,6 @@
             // label27
             // 
             label27.AutoSize = true;
-            label27.Enabled = false;
             label27.Location = new Point(793, 9);
             label27.Name = "label27";
             label27.Size = new Size(41, 21);
@@ -322,7 +315,6 @@
             // label28
             // 
             label28.AutoSize = true;
-            label28.Enabled = false;
             label28.Location = new Point(733, 9);
             label28.Name = "label28";
             label28.Size = new Size(41, 21);
@@ -332,7 +324,6 @@
             // label29
             // 
             label29.AutoSize = true;
-            label29.Enabled = false;
             label29.Location = new Point(673, 9);
             label29.Name = "label29";
             label29.Size = new Size(39, 21);
@@ -342,7 +333,6 @@
             // label20
             // 
             label20.AutoSize = true;
-            label20.Enabled = false;
             label20.Location = new Point(613, 9);
             label20.Name = "label20";
             label20.Size = new Size(42, 21);
@@ -352,7 +342,6 @@
             // label21
             // 
             label21.AutoSize = true;
-            label21.Enabled = false;
             label21.Location = new Point(553, 9);
             label21.Name = "label21";
             label21.Size = new Size(37, 21);
@@ -362,7 +351,6 @@
             // label22
             // 
             label22.AutoSize = true;
-            label22.Enabled = false;
             label22.Location = new Point(493, 9);
             label22.Name = "label22";
             label22.Size = new Size(37, 21);
@@ -372,7 +360,6 @@
             // label23
             // 
             label23.AutoSize = true;
-            label23.Enabled = false;
             label23.Location = new Point(433, 9);
             label23.Name = "label23";
             label23.Size = new Size(36, 21);
@@ -382,7 +369,6 @@
             // label24
             // 
             label24.AutoSize = true;
-            label24.Enabled = false;
             label24.Location = new Point(373, 9);
             label24.Name = "label24";
             label24.Size = new Size(37, 21);
@@ -392,7 +378,6 @@
             // label19
             // 
             label19.AutoSize = true;
-            label19.Enabled = false;
             label19.Location = new Point(313, 9);
             label19.Name = "label19";
             label19.Size = new Size(37, 21);
@@ -402,7 +387,6 @@
             // label18
             // 
             label18.AutoSize = true;
-            label18.Enabled = false;
             label18.Location = new Point(253, 9);
             label18.Name = "label18";
             label18.Size = new Size(37, 21);
@@ -412,7 +396,6 @@
             // label17
             // 
             label17.AutoSize = true;
-            label17.Enabled = false;
             label17.Location = new Point(193, 9);
             label17.Name = "label17";
             label17.Size = new Size(36, 21);
@@ -422,7 +405,6 @@
             // label16
             // 
             label16.AutoSize = true;
-            label16.Enabled = false;
             label16.Location = new Point(133, 9);
             label16.Name = "label16";
             label16.Size = new Size(36, 21);
@@ -432,7 +414,6 @@
             // label15
             // 
             label15.AutoSize = true;
-            label15.Enabled = false;
             label15.Location = new Point(73, 9);
             label15.Name = "label15";
             label15.Size = new Size(34, 21);
@@ -801,6 +782,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.Size = new Size(1441, 488);
             tableLayoutPanel1.TabIndex = 71;
+            tableLayoutPanel1.MouseDoubleClick += TableLayoutPanel1_MouseDoubleClick;
             // 
             // panel38
             // 

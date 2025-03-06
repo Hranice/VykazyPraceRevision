@@ -28,27 +28,27 @@
         /// </summary>
         private void InitializeComponent()
         {
-            comboBox1 = new ComboBox();
+            comboBoxStart = new ComboBox();
             label1 = new Label();
             label2 = new Label();
-            comboBox2 = new ComboBox();
+            comboBoxEnd = new ComboBox();
             groupBox1 = new GroupBox();
-            buttonConfirm = new Button();
-            textBox1 = new TextBox();
             label3 = new Label();
+            textBox1 = new TextBox();
+            buttonConfirm = new Button();
             buttonRemove = new Button();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
-            // comboBox1
+            // comboBoxStart
             // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Items.AddRange(new object[] { "9:00", "9:30", "10:00", "10:30" });
-            comboBox1.Location = new Point(97, 51);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(69, 33);
-            comboBox1.TabIndex = 0;
-            comboBox1.Text = "9:00";
+            comboBoxStart.FormattingEnabled = true;
+            comboBoxStart.Items.AddRange(new object[] { "0:00", "0:30", "1:00", "1:30", "2:00", "2:30", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30" });
+            comboBoxStart.Location = new Point(97, 51);
+            comboBoxStart.Name = "comboBoxStart";
+            comboBoxStart.Size = new Size(69, 33);
+            comboBoxStart.TabIndex = 0;
+            comboBoxStart.SelectedIndexChanged += comboBoxStart_SelectedIndexChanged;
             // 
             // label1
             // 
@@ -68,48 +68,30 @@
             label2.TabIndex = 3;
             label2.Text = "Ukončení";
             // 
-            // comboBox2
+            // comboBoxEnd
             // 
-            comboBox2.FormattingEnabled = true;
-            comboBox2.Items.AddRange(new object[] { "10:30", "11:00", "11:30", "12:00" });
-            comboBox2.Location = new Point(97, 90);
-            comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(69, 33);
-            comboBox2.TabIndex = 2;
-            comboBox2.Text = "10:30";
+            comboBoxEnd.FormattingEnabled = true;
+            comboBoxEnd.Items.AddRange(new object[] { "0:00", "0:30", "1:00", "1:30", "2:00", "2:30", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30" });
+            comboBoxEnd.Location = new Point(97, 90);
+            comboBoxEnd.Name = "comboBoxEnd";
+            comboBoxEnd.Size = new Size(69, 33);
+            comboBoxEnd.TabIndex = 2;
+            comboBoxEnd.SelectionChangeCommitted += comboBoxEnd_SelectionChangeCommitted;
             // 
             // groupBox1
             // 
             groupBox1.Controls.Add(label3);
             groupBox1.Controls.Add(textBox1);
             groupBox1.Controls.Add(label1);
-            groupBox1.Controls.Add(comboBox1);
+            groupBox1.Controls.Add(comboBoxStart);
             groupBox1.Controls.Add(label2);
-            groupBox1.Controls.Add(comboBox2);
+            groupBox1.Controls.Add(comboBoxEnd);
             groupBox1.Location = new Point(12, 12);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(447, 151);
             groupBox1.TabIndex = 5;
             groupBox1.TabStop = false;
             groupBox1.Text = "Čtvrtek 06.03.2025";
-            // 
-            // buttonConfirm
-            // 
-            buttonConfirm.Location = new Point(360, 169);
-            buttonConfirm.Name = "buttonConfirm";
-            buttonConfirm.Size = new Size(99, 41);
-            buttonConfirm.TabIndex = 6;
-            buttonConfirm.Text = "Potvrdit";
-            buttonConfirm.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            textBox1.Location = new Point(181, 51);
-            textBox1.Multiline = true;
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(240, 72);
-            textBox1.TabIndex = 4;
-            textBox1.Text = "Zapínání kávovaru";
             // 
             // label3
             // 
@@ -121,8 +103,29 @@
             label3.TabIndex = 5;
             label3.Text = "Popis činnosti";
             // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(181, 51);
+            textBox1.Multiline = true;
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(240, 72);
+            textBox1.TabIndex = 4;
+            textBox1.Text = "Zapínání kávovaru";
+            // 
+            // buttonConfirm
+            // 
+            buttonConfirm.DialogResult = DialogResult.OK;
+            buttonConfirm.Location = new Point(360, 169);
+            buttonConfirm.Name = "buttonConfirm";
+            buttonConfirm.Size = new Size(99, 41);
+            buttonConfirm.TabIndex = 6;
+            buttonConfirm.Text = "Potvrdit";
+            buttonConfirm.UseVisualStyleBackColor = true;
+            buttonConfirm.Click += buttonConfirm_Click;
+            // 
             // buttonRemove
             // 
+            buttonRemove.DialogResult = DialogResult.Abort;
             buttonRemove.Location = new Point(255, 169);
             buttonRemove.Name = "buttonRemove";
             buttonRemove.Size = new Size(99, 41);
@@ -142,6 +145,7 @@
             Margin = new Padding(4, 5, 4, 5);
             Name = "TimeEntryV2Dialog";
             Text = "Provést záznam";
+            Load += TimeEntryV2Dialog_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);
@@ -149,10 +153,10 @@
 
         #endregion
 
-        private ComboBox comboBox1;
+        private ComboBox comboBoxStart;
         private Label label1;
         private Label label2;
-        private ComboBox comboBox2;
+        private ComboBox comboBoxEnd;
         private GroupBox groupBox1;
         private TextBox textBox1;
         private Button buttonConfirm;

@@ -1,22 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using VykazyPrace.Core.Database.Models;
+﻿using VykazyPrace.Core.Database.Models;
 
 namespace VykazyPrace.UserControls.CalendarV2
 {
     public partial class DayPanel : UserControl
     {
-        public TimeEntry TimeEntry { get; set; } = new TimeEntry();
+        private TimeEntry _timeEntry = new TimeEntry();
+
+        public TimeEntry TimeEntry
+        {
+            get
+            {
+                return _timeEntry;
+            }
+            set
+            {
+                _timeEntry = value;
+                UpdateUi();
+
+            }
+        }
+
         public DayPanel()
         {
             InitializeComponent();
+        }
+
+        private void UpdateUi()
+        {
+            if (TimeEntry != null)
+            {
+                label1.Text = TimeEntry.Description;
+                label2.Text = TimeEntry.Project?.ProjectDescription;
+            }
         }
     }
 }

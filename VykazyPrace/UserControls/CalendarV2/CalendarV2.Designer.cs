@@ -247,6 +247,7 @@
             // panel8
             // 
             panel8.BackColor = SystemColors.AppWorkspace;
+            panel8.Enabled = false;
             panel8.Location = new Point(76, 17);
             panel8.Name = "panel8";
             panel8.Size = new Size(1, 516);
@@ -255,6 +256,7 @@
             // panel11
             // 
             panel11.BackColor = SystemColors.AppWorkspace;
+            panel11.Enabled = false;
             panel11.Location = new Point(136, 17);
             panel11.Name = "panel11";
             panel11.Size = new Size(1, 516);
@@ -263,6 +265,7 @@
             // panel12
             // 
             panel12.BackColor = SystemColors.AppWorkspace;
+            panel12.Enabled = false;
             panel12.Location = new Point(196, 17);
             panel12.Name = "panel12";
             panel12.Size = new Size(1, 516);
@@ -271,6 +274,7 @@
             // panel13
             // 
             panel13.BackColor = SystemColors.AppWorkspace;
+            panel13.Enabled = false;
             panel13.Location = new Point(376, 17);
             panel13.Name = "panel13";
             panel13.Size = new Size(1, 516);
@@ -279,6 +283,7 @@
             // panel14
             // 
             panel14.BackColor = SystemColors.AppWorkspace;
+            panel14.Enabled = false;
             panel14.Location = new Point(496, 17);
             panel14.Name = "panel14";
             panel14.Size = new Size(1, 516);
@@ -287,6 +292,7 @@
             // panel15
             // 
             panel15.BackColor = SystemColors.AppWorkspace;
+            panel15.Enabled = false;
             panel15.Location = new Point(316, 17);
             panel15.Name = "panel15";
             panel15.Size = new Size(1, 516);
@@ -295,6 +301,7 @@
             // panel16
             // 
             panel16.BackColor = SystemColors.AppWorkspace;
+            panel16.Enabled = false;
             panel16.Location = new Point(436, 17);
             panel16.Name = "panel16";
             panel16.Size = new Size(1, 516);
@@ -303,6 +310,7 @@
             // panel17
             // 
             panel17.BackColor = SystemColors.AppWorkspace;
+            panel17.Enabled = false;
             panel17.Location = new Point(256, 17);
             panel17.Name = "panel17";
             panel17.Size = new Size(1, 516);
@@ -311,6 +319,7 @@
             // panel9
             // 
             panel9.BackColor = SystemColors.AppWorkspace;
+            panel9.Enabled = false;
             panel9.Location = new Point(856, 17);
             panel9.Name = "panel9";
             panel9.Size = new Size(1, 516);
@@ -319,6 +328,7 @@
             // panel10
             // 
             panel10.BackColor = SystemColors.AppWorkspace;
+            panel10.Enabled = false;
             panel10.Location = new Point(976, 17);
             panel10.Name = "panel10";
             panel10.Size = new Size(1, 516);
@@ -327,6 +337,7 @@
             // panel18
             // 
             panel18.BackColor = SystemColors.AppWorkspace;
+            panel18.Enabled = false;
             panel18.Location = new Point(796, 17);
             panel18.Name = "panel18";
             panel18.Size = new Size(1, 516);
@@ -335,6 +346,7 @@
             // panel19
             // 
             panel19.BackColor = SystemColors.AppWorkspace;
+            panel19.Enabled = false;
             panel19.Location = new Point(916, 17);
             panel19.Name = "panel19";
             panel19.Size = new Size(1, 516);
@@ -343,6 +355,7 @@
             // panel20
             // 
             panel20.BackColor = SystemColors.AppWorkspace;
+            panel20.Enabled = false;
             panel20.Location = new Point(736, 17);
             panel20.Name = "panel20";
             panel20.Size = new Size(1, 516);
@@ -351,6 +364,7 @@
             // panel21
             // 
             panel21.BackColor = SystemColors.AppWorkspace;
+            panel21.Enabled = false;
             panel21.Location = new Point(676, 17);
             panel21.Name = "panel21";
             panel21.Size = new Size(1, 516);
@@ -359,6 +373,7 @@
             // panel22
             // 
             panel22.BackColor = SystemColors.AppWorkspace;
+            panel22.Enabled = false;
             panel22.Location = new Point(616, 17);
             panel22.Name = "panel22";
             panel22.Size = new Size(1, 516);
@@ -367,6 +382,7 @@
             // panel23
             // 
             panel23.BackColor = SystemColors.AppWorkspace;
+            panel23.Enabled = false;
             panel23.Location = new Point(556, 17);
             panel23.Name = "panel23";
             panel23.Size = new Size(1, 516);
@@ -415,6 +431,7 @@
             // panel29
             // 
             panel29.BackColor = SystemColors.AppWorkspace;
+            panel29.Enabled = false;
             panel29.Location = new Point(1156, 17);
             panel29.Name = "panel29";
             panel29.Size = new Size(1, 516);
@@ -423,6 +440,7 @@
             // panel30
             // 
             panel30.BackColor = SystemColors.AppWorkspace;
+            panel30.Enabled = false;
             panel30.Location = new Point(1096, 17);
             panel30.Name = "panel30";
             panel30.Size = new Size(1, 516);
@@ -431,6 +449,7 @@
             // panel31
             // 
             panel31.BackColor = SystemColors.AppWorkspace;
+            panel31.Enabled = false;
             panel31.Location = new Point(1036, 17);
             panel31.Name = "panel31";
             panel31.Size = new Size(1, 516);
@@ -681,6 +700,7 @@
             // label15
             // 
             label15.AutoSize = true;
+            label15.Enabled = false;
             label15.Location = new Point(143, 22);
             label15.Name = "label15";
             label15.Size = new Size(34, 21);
@@ -690,6 +710,7 @@
             // label16
             // 
             label16.AutoSize = true;
+            label16.Enabled = false;
             label16.Location = new Point(203, 22);
             label16.Name = "label16";
             label16.Size = new Size(36, 21);
@@ -699,6 +720,7 @@
             // label17
             // 
             label17.AutoSize = true;
+            label17.Enabled = false;
             label17.Location = new Point(263, 22);
             label17.Name = "label17";
             label17.Size = new Size(36, 21);
@@ -708,6 +730,7 @@
             // label18
             // 
             label18.AutoSize = true;
+            label18.Enabled = false;
             label18.Location = new Point(323, 22);
             label18.Name = "label18";
             label18.Size = new Size(37, 21);
@@ -717,6 +740,7 @@
             // label19
             // 
             label19.AutoSize = true;
+            label19.Enabled = false;
             label19.Location = new Point(383, 22);
             label19.Name = "label19";
             label19.Size = new Size(37, 21);
@@ -726,6 +750,7 @@
             // label20
             // 
             label20.AutoSize = true;
+            label20.Enabled = false;
             label20.Location = new Point(683, 22);
             label20.Name = "label20";
             label20.Size = new Size(42, 21);
@@ -735,6 +760,7 @@
             // label21
             // 
             label21.AutoSize = true;
+            label21.Enabled = false;
             label21.Location = new Point(623, 22);
             label21.Name = "label21";
             label21.Size = new Size(37, 21);
@@ -744,6 +770,7 @@
             // label22
             // 
             label22.AutoSize = true;
+            label22.Enabled = false;
             label22.Location = new Point(563, 22);
             label22.Name = "label22";
             label22.Size = new Size(37, 21);
@@ -753,6 +780,7 @@
             // label23
             // 
             label23.AutoSize = true;
+            label23.Enabled = false;
             label23.Location = new Point(503, 22);
             label23.Name = "label23";
             label23.Size = new Size(36, 21);
@@ -762,6 +790,7 @@
             // label24
             // 
             label24.AutoSize = true;
+            label24.Enabled = false;
             label24.Location = new Point(443, 22);
             label24.Name = "label24";
             label24.Size = new Size(37, 21);
@@ -771,6 +800,7 @@
             // label26
             // 
             label26.AutoSize = true;
+            label26.Enabled = false;
             label26.Location = new Point(923, 22);
             label26.Name = "label26";
             label26.Size = new Size(42, 21);
@@ -780,6 +810,7 @@
             // label27
             // 
             label27.AutoSize = true;
+            label27.Enabled = false;
             label27.Location = new Point(863, 22);
             label27.Name = "label27";
             label27.Size = new Size(41, 21);
@@ -789,6 +820,7 @@
             // label28
             // 
             label28.AutoSize = true;
+            label28.Enabled = false;
             label28.Location = new Point(803, 22);
             label28.Name = "label28";
             label28.Size = new Size(41, 21);
@@ -798,6 +830,7 @@
             // label29
             // 
             label29.AutoSize = true;
+            label29.Enabled = false;
             label29.Location = new Point(743, 22);
             label29.Name = "label29";
             label29.Size = new Size(39, 21);
@@ -816,6 +849,7 @@
             // label31
             // 
             label31.AutoSize = true;
+            label31.Enabled = false;
             label31.Location = new Point(1163, 22);
             label31.Name = "label31";
             label31.Size = new Size(42, 21);
@@ -825,6 +859,7 @@
             // label32
             // 
             label32.AutoSize = true;
+            label32.Enabled = false;
             label32.Location = new Point(1103, 22);
             label32.Name = "label32";
             label32.Size = new Size(41, 21);
@@ -834,6 +869,7 @@
             // label33
             // 
             label33.AutoSize = true;
+            label33.Enabled = false;
             label33.Location = new Point(1043, 22);
             label33.Name = "label33";
             label33.Size = new Size(42, 21);
@@ -843,6 +879,7 @@
             // label34
             // 
             label34.AutoSize = true;
+            label34.Enabled = false;
             label34.Location = new Point(983, 22);
             label34.Name = "label34";
             label34.Size = new Size(42, 21);
@@ -888,6 +925,7 @@
             // label25
             // 
             label25.AutoSize = true;
+            label25.Enabled = false;
             label25.Location = new Point(83, 22);
             label25.Name = "label25";
             label25.Size = new Size(37, 21);

@@ -1,4 +1,5 @@
-﻿using VykazyPrace.Core.Database.Models;
+﻿using System.Diagnostics;
+using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Logging;
 
@@ -281,6 +282,31 @@ namespace VykazyPrace.UserControls.CalendarV2
             try
             {
                 _timeEntries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_currentUser, _currentDate);
+
+                foreach(var timeEntry in _timeEntries)
+                {
+                    int column = GetColumnBasedOnTimeEntry(timeEntry);
+                    int row = GetRowBasedOnTimeEntry(timeEntry);
+
+                    DayPanel newPanel = new DayPanel
+                    {
+                        Dock = DockStyle.Fill,
+                        BackColor = Color.LightBlue,
+                        BorderStyle = BorderStyle.FixedSingle,
+                        TimeEntry = timeEntry
+                    };
+
+                    Invoke(() => {
+                        tableLayoutPanel1.Controls.Add(newPanel, column, row);
+                        tableLayoutPanel1.SetColumnSpan(newPanel, 1);
+                        panels.Add(newPanel);
+                    });
+
+                    newPanel.MouseMove += panel1_MouseMove;
+                    newPanel.MouseDown += panel1_MouseDown;
+                    newPanel.MouseUp += panel1_MouseUp;
+                    newPanel.MouseLeave += panel1_MouseLeave;
+                }
             }
             catch (Exception ex)
             {
@@ -301,6 +327,20 @@ namespace VykazyPrace.UserControls.CalendarV2
                     AppLogger.Error("Chyba při načítání projektů.", ex);
                 }));
             }
+        }
+
+        private int GetColumnBasedOnTimeEntry(TimeEntry timeEntry)
+        {
+            var hour = timeEntry.Timestamp.Value.Hour;
+            var minutes = hour*60 + timeEntry.Timestamp.Value.Minute;
+            Debug.WriteLine($"Zápis: {timeEntry.Timestamp}\t{timeEntry.EntryMinutes/60.0} h, tzn. sloupec č. {minutes/30}");
+            return minutes / 30;
+
+        }
+
+        private int GetRowBasedOnTimeEntry(TimeEntry timeEntry)
+        {
+            return 0;
         }
     }
 }

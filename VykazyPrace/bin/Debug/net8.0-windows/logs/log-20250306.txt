@@ -46,3 +46,12 @@ System.InvalidOperationException: An exception was thrown while attempting to ev
    at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
    at VykazyPrace.Core.Database.Repositories.TimeEntryRepository.GetTimeEntriesByUserAndCurrentWeekAsync(User user, DateTime date) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\Repositories\TimeEntryRepository.cs:line 97
    at VykazyPrace.UserControls.CalendarV2.CalendarV2.LoadTimeEntriesAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\UserControls\CalendarV2\CalendarV2.cs:line 287
+2025-03-06 10:50:58.909 +01:00 [ERR] Chyba při načítání seznamu zapsaných hodin.
+System.InvalidOperationException: Operace mezi vlákny není platná: Přístup k ovládacímu prvku tableLayoutPanel1 proběhl z jiného vlákna než z vlákna, v rámci kterého byl vytvořen.
+   at System.Windows.Forms.Control.get_Handle()
+   at System.Windows.Forms.Control.IHandle<Windows.Win32.Foundation.HWND>.get_Handle()
+   at Windows.Win32.PInvoke.GetWindowThreadProcessId[T](T hWnd, UInt32& lpdwProcessId)
+   at System.Windows.Forms.Control.get_CreateThreadId()
+   at System.Windows.Forms.Control.ControlCollection.Add(Control value)
+   at System.Windows.Forms.TableLayoutControlCollection.Add(Control control, Int32 column, Int32 row)
+   at VykazyPrace.UserControls.CalendarV2.CalendarV2.LoadTimeEntriesAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\UserControls\CalendarV2\CalendarV2.cs:line 298

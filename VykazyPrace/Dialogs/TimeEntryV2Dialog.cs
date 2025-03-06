@@ -1,4 +1,6 @@
-﻿using VykazyPrace.Core.Database.Models;
+﻿using System.Globalization;
+using System.Text;
+using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Helpers;
 using VykazyPrace.Logging;
@@ -279,7 +281,7 @@ namespace VykazyPrace.Dialogs
             isUpdating = true;
             try
             {
-                string query = comboBoxProjects.Text;
+                string query = RemoveDiacritics(comboBoxProjects.Text);
                 int selectionStart = comboBoxProjects.SelectionStart;
 
                 if (string.IsNullOrWhiteSpace(query))
@@ -287,15 +289,13 @@ namespace VykazyPrace.Dialogs
                     comboBoxProjects.DroppedDown = false;
                     comboBoxProjects.Items.Clear();
                     comboBoxProjects.Items.AddRange(_projects.Select(FormatHelper.FormatProjectToString).ToArray());
-
                     return;
                 }
 
-                // Filtrace podle libovolné části textu
+                // Filtrace bez diakritiky
                 List<string> filteredItems = _projects
                     .Select(FormatHelper.FormatProjectToString)
-                    .ToArray()
-                    .Where(x => x.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)
+                    .Where(x => RemoveDiacritics(x).IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)
                     .ToList();
 
                 if (filteredItems.Count > 0)
@@ -329,6 +329,26 @@ namespace VykazyPrace.Dialogs
             {
                 isUpdating = false;
             }
+        }
+
+        // Metoda pro odstranění diakritiky
+        private  string RemoveDiacritics(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            string normalized = text.Normalize(NormalizationForm.FormD);
+            StringBuilder sb = new StringBuilder();
+
+            foreach (char c in normalized)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(c);
+                }
+            }
+
+            return sb.ToString().Normalize(NormalizationForm.FormC);
         }
     }
 }

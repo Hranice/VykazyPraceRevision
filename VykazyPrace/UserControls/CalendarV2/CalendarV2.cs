@@ -27,7 +27,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
         private List<Project> _projects = new List<Project>();
         private List<TimeEntry> _timeEntries = new List<TimeEntry>();
-        private readonly User _currentUser;
+        private readonly User _selectedUser = new User();
         private readonly DateTime _currentDate = DateTime.Now;
 
         private List<DayPanel> panels = new List<DayPanel>();
@@ -43,7 +43,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             InitializeComponent();
             DoubleBuffered = true;
-            _currentUser = currentUser;
+            _selectedUser = currentUser;
         }
 
         private TableLayoutPanelCellPosition GetCellAt(TableLayoutPanel panel, Point clickPosition)
@@ -61,11 +61,13 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             TableLayoutPanelCellPosition cell = GetCellAt(tableLayoutPanel1, e.Location);
 
-            var timeEntryDialog = new TimeEntryV2Dialog(new TimeEntry()
-            {
-                Timestamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddMinutes(cell.Column * 30),
-                EntryMinutes = 30
-            });
+            var timeEntryDialog = new TimeEntryV2Dialog(_selectedUser,
+                new TimeEntry()
+                {
+                    Id = -1,
+                    Timestamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddMinutes(cell.Column * 30),
+                    EntryMinutes = 30
+                });
 
             var result = timeEntryDialog.ShowDialog();
 
@@ -104,7 +106,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             if (result != DialogResult.Cancel)
             {
-               
+
 
                 // TODO: timeentry repo create time entry
                 // TODO: Reload TimeEntries ? hlavně když se smaže
@@ -116,7 +118,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             if (sender is not DayPanel panel)
                 return;
 
-            var result = new TimeEntryV2Dialog((sender as DayPanel)?.TimeEntry).ShowDialog();
+            var result = new TimeEntryV2Dialog(_selectedUser, (sender as DayPanel)?.TimeEntry).ShowDialog();
 
             if (result != DialogResult.Cancel)
             {
@@ -322,7 +324,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             try
             {
-                _timeEntries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_currentUser, _currentDate);
+                _timeEntries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _currentDate);
 
                 foreach (var timeEntry in _timeEntries)
                 {
@@ -340,7 +342,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                     Invoke(() =>
                     {
                         tableLayoutPanel1.Controls.Add(newPanel, column, row);
-                        tableLayoutPanel1.SetColumnSpan(newPanel, 1);
+                        tableLayoutPanel1.SetColumnSpan(newPanel, GetColumnSpanBasedOnTimeEntry(timeEntry));
                         panels.Add(newPanel);
                     });
 

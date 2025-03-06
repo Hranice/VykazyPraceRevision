@@ -55,3 +55,15 @@ System.InvalidOperationException: Operace mezi vlákny není platná: Přístup 
    at System.Windows.Forms.Control.ControlCollection.Add(Control value)
    at System.Windows.Forms.TableLayoutControlCollection.Add(Control control, Int32 column, Int32 row)
    at VykazyPrace.UserControls.CalendarV2.CalendarV2.LoadTimeEntriesAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\UserControls\CalendarV2\CalendarV2.cs:line 298
+2025-03-06 15:05:59.284 +01:00 [INF] Zápis hodin  - : 1,5 h - test činnosti byl úspěšně proveden.
+2025-03-06 15:13:02.184 +01:00 [INF] Zápis hodin  - : 1,5 h - test činnosti byl úspěšně proveden.
+2025-03-06 15:15:09.216 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Projekt
+2025-03-06 15:17:01.779 +01:00 [INF] Zápis hodin  - : 1,5 h - test činnosti byl úspěšně proveden.
+2025-03-06 15:23:13.695 +01:00 [INF] Zápis hodin 001A00 - Provoz SD (Sítotisk): 1,5 h - test činnosti byl úspěšně proveden.
+2025-03-06 15:23:48.193 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Projekt
+2025-03-06 15:23:53.155 +01:00 [INF] Zápis hodin 002A00 - Provoz HP (Horká ražba): 0,5 h - test činnosti byl úspěšně proveden.
+2025-03-06 15:24:03.729 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Projekt
+2025-03-06 15:26:11.128 +01:00 [INF] Zápis hodin 0279I25 - Kobot: 1,5 h - test činnosti byl úspěšně proveden.
+2025-03-06 15:26:15.698 +01:00 [INF] Zápis hodin 0279I25 - Kobot: 1,5 h - test činnosti byl úspěšně proveden.
+2025-03-06 15:26:38.931 +01:00 [INF] Zápis hodin 0230I24 - Automatické balení po pecích a UV: 0,5 h - test činnosti byl úspěšně proveden.
+2025-03-06 15:26:51.516 +01:00 [INF] Zápis hodin 0230I24 - Automatické balení po pecích a UV: 4 h - test činnosti byl úspěšně proveden.

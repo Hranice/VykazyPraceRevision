@@ -7,14 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using VykazyPrace.Core.Database.Models;
 
-namespace VykazyPrace.UserControls.CalendarV2
+namespace VykazyPrace.Dialogs
 {
-    public partial class DayPanel : UserControl
+    public partial class TimeEntryV2Dialog : Form
     {
-        public TimeEntry TimeEntry { get; set; } = new TimeEntry();
-        public DayPanel()
+        public TimeEntryV2Dialog()
         {
             InitializeComponent();
         }

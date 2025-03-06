@@ -70,7 +70,7 @@ namespace VykazyPrace
 
         private void testToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new Dialogs.TestDialog().ShowDialog();
+            new Dialogs.TestDialog(_selectedUser).ShowDialog();
         }
     }
 }

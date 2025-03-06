@@ -87,6 +87,25 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
+        /// Získání všech časových záznamů pro konkrétního uživatele a týden zadaného data (po-ne).
+        /// </summary>
+        public async Task<List<TimeEntry>> GetTimeEntriesByUserAndCurrentWeekAsync(User user, DateTime date)
+        {
+            var startOfWeek = date.Date.AddDays(-(int)date.DayOfWeek + (date.DayOfWeek == DayOfWeek.Sunday ? -6 : 1));
+            var endOfWeek = startOfWeek.AddDays(6);
+
+            return await _context.TimeEntries
+                .Where(te => te.UserId == user.Id
+                             && te.Project != null
+                             && te.Timestamp.HasValue
+                             && te.Timestamp.Value.Date >= startOfWeek
+                             && te.Timestamp.Value.Date <= endOfWeek)
+                .Include(te => te.Project)
+                .ToListAsync();
+        }
+
+
+        /// <summary>
         /// Získání součtu odpracovaných minut pro konkrétního uživatele a zvolený den.
         /// </summary>
         public async Task<int> GetTotalMinutesForUserByDayAsync(User user, DateTime date)

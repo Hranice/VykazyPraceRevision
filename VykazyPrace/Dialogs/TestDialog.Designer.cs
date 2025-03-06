@@ -28,31 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
-            calendarV21 = new UserControls.CalendarV2.CalendarV2();
+            panel1 = new Panel();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
-            // calendarV21
+            // panel1
             // 
-            calendarV21.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            calendarV21.Location = new Point(12, 12);
-            calendarV21.Name = "calendarV21";
-            calendarV21.Size = new Size(1067, 537);
-            calendarV21.TabIndex = 0;
+            panel1.AutoScroll = true;
+            panel1.Location = new Point(12, 12);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(677, 554);
+            panel1.TabIndex = 1;
             // 
             // TestDialog
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1584, 861);
-            Controls.Add(calendarV21);
+            Controls.Add(panel1);
             Name = "TestDialog";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "TestDialog";
+            Load += TestDialog_Load;
+            Shown += TestDialog_Shown;
+            panel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
-        private UserControls.CalendarV2.CalendarV2 calendarV21;
+        private Panel panel1;
     }
 }

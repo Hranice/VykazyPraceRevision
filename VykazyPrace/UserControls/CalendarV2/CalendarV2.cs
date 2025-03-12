@@ -22,6 +22,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 {
     public partial class CalendarV2 : UserControl
     {
+        public bool ChangesMade { get; private set; }
         private readonly LoadingUC _loadingUC = new LoadingUC();
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
         private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
@@ -39,12 +40,66 @@ namespace VykazyPrace.UserControls.CalendarV2
         private int originalColumn, originalColumnSpan;
         private const int ResizeThreshold = 5;
 
+
         public CalendarV2(User currentUser)
         {
             InitializeComponent();
             DoubleBuffered = true;
             _selectedUser = currentUser;
         }
+
+        private void CalendarV2_Load(object sender, EventArgs e)
+        {
+            tableLayoutPanel1.Controls.Clear();
+
+            _loadingUC.Size = this.Size;
+            this.Controls.Add(_loadingUC);
+
+            BeginInvoke(new Action(() => panelContainer.AutoScrollPosition = new Point(302, panelContainer.AutoScrollPosition.Y)));
+
+            Task.Run(LoadData);
+        }
+
+        private async Task LoadData()
+        {
+            Invoke(() => _loadingUC.BringToFront());
+
+            var projectsTask = LoadProjectsContractsAsync();
+            var timeEntriesTask = LoadTimeEntriesAsync();
+
+            await Task.WhenAll(projectsTask, timeEntriesTask);
+
+            Invoke(() => _loadingUC.Visible = false);
+        }
+
+        private async Task LoadTimeEntriesAsync()
+        {
+            try
+            {
+                _timeEntries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _currentDate);
+                Invoke(() => RenderCalendar());
+            }
+            catch (Exception ex)
+            {
+                Invoke(() => AppLogger.Error("Chyba při načítání seznamu zapsaných hodin.", ex));
+            }
+        }
+
+        private async Task LoadProjectsContractsAsync()
+        {
+            try
+            {
+                _projects = await _projectRepo.GetAllProjectsAndContractsAsync();
+            }
+            catch (Exception ex)
+            {
+                Invoke(new Action(() =>
+                {
+                    AppLogger.Error("Chyba při načítání projektů.", ex);
+                }));
+            }
+        }
+
 
         private TableLayoutPanelCellPosition GetCellAt(TableLayoutPanel panel, Point clickPosition)
         {
@@ -106,24 +161,56 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             if (result != DialogResult.Cancel)
             {
-
+                ChangesMade = true;
 
                 // TODO: timeentry repo create time entry
                 // TODO: Reload TimeEntries ? hlavně když se smaže
             }
         }
 
-        private void panel1_MouseDoubleClick(object? sender, MouseEventArgs e)
+        private async void panel1_MouseDoubleClick(object? sender, MouseEventArgs e)
         {
             if (sender is not DayPanel panel)
                 return;
 
-            var result = new TimeEntryV2Dialog(_selectedUser, (sender as DayPanel)?.TimeEntry).ShowDialog();
+            // ! posílá se reference, změny provedené v dialogu se provedou do listu
+            var timeEntry = _timeEntries.Find(x => x == panel.TimeEntry);
+            new TimeEntryV2Dialog(_selectedUser, timeEntry).ShowDialog();
 
-            if (result != DialogResult.Cancel)
+            ChangesMade = true;
+            RenderCalendar();
+        }
+
+        private void RenderCalendar()
+        {
+            var scrollPosition = panelContainer.AutoScrollPosition;
+            tableLayoutPanel1.Controls.Clear();
+
+            foreach (var timeEntry in _timeEntries)
             {
-                // TODO: Reload time entries
+                int column = GetColumnBasedOnTimeEntry(timeEntry);
+                int row = GetRowBasedOnTimeEntry(timeEntry);
+
+                DayPanel newPanel = new DayPanel
+                {
+                    Dock = DockStyle.Fill,
+                    BackColor = Color.LightBlue,
+                    BorderStyle = BorderStyle.FixedSingle,
+                    TimeEntry = timeEntry
+                };
+
+                tableLayoutPanel1.Controls.Add(newPanel, column, row);
+                tableLayoutPanel1.SetColumnSpan(newPanel, GetColumnSpanBasedOnTimeEntry(timeEntry));
+                panels.Add(newPanel);
+
+                newPanel.MouseMove += panel1_MouseMove;
+                newPanel.MouseDown += panel1_MouseDown;
+                newPanel.MouseUp += panel1_MouseUp;
+                newPanel.MouseLeave += panel1_MouseLeave;
+                newPanel.MouseDoubleClick += panel1_MouseDoubleClick;
             }
+
+            panelContainer.AutoScrollPosition = new Point(Math.Abs(scrollPosition.X), 0);
         }
 
         private void panel1_MouseMove(object sender, MouseEventArgs e)
@@ -217,9 +304,11 @@ namespace VykazyPrace.UserControls.CalendarV2
             panel.BackColor = Color.LightCoral;
         }
 
-        private void panel1_MouseUp(object sender, MouseEventArgs e)
+        private async void panel1_MouseUp(object sender, MouseEventArgs e)
         {
             if (!(sender is DayPanel panel)) return;
+
+            var scrollPosition = panelContainer.AutoScrollPosition;
 
             isResizing = false;
             isMoving = false;
@@ -227,7 +316,12 @@ namespace VykazyPrace.UserControls.CalendarV2
             Cursor = Cursors.Default;
             panel.BackColor = Color.LightBlue;
 
-            var pos = tableLayoutPanel1.GetCellPosition(panel);
+            var entry = _timeEntries.Find(x => x == panel.TimeEntry);
+
+            entry.Timestamp = GetTimestampBasedOnColumn(tableLayoutPanel1.GetColumn(panel));
+            entry.EntryMinutes = GetEntryMinutesBasedOnColumnSpan(tableLayoutPanel1.GetColumnSpan(panel));
+
+            ChangesMade = true;
         }
 
         private void panel1_MouseLeave(object sender, EventArgs e)
@@ -296,83 +390,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             return maxColumn;
         }
 
-        private void CalendarV2_Load(object sender, EventArgs e)
-        {
-            tableLayoutPanel1.Controls.Clear();
 
-            _loadingUC.Size = this.Size;
-            this.Controls.Add(_loadingUC);
-
-            BeginInvoke(new Action(() => panelContainer.AutoScrollPosition = new Point(302, panelContainer.AutoScrollPosition.Y)));
-
-            Task.Run(LoadData);
-        }
-
-        private async Task LoadData()
-        {
-            Invoke(() => _loadingUC.BringToFront());
-
-            var projectsTask = LoadProjectsContractsAsync();
-            var timeEntriesTask = LoadTimeEntriesAsync();
-
-            await Task.WhenAll(projectsTask, timeEntriesTask);
-
-            Invoke(() => _loadingUC.Visible = false);
-        }
-
-        private async Task LoadTimeEntriesAsync()
-        {
-            try
-            {
-                _timeEntries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _currentDate);
-
-                foreach (var timeEntry in _timeEntries)
-                {
-                    int column = GetColumnBasedOnTimeEntry(timeEntry);
-                    int row = GetRowBasedOnTimeEntry(timeEntry);
-
-                    DayPanel newPanel = new DayPanel
-                    {
-                        Dock = DockStyle.Fill,
-                        BackColor = Color.LightBlue,
-                        BorderStyle = BorderStyle.FixedSingle,
-                        TimeEntry = timeEntry
-                    };
-
-                    Invoke(() =>
-                    {
-                        tableLayoutPanel1.Controls.Add(newPanel, column, row);
-                        tableLayoutPanel1.SetColumnSpan(newPanel, GetColumnSpanBasedOnTimeEntry(timeEntry));
-                        panels.Add(newPanel);
-                    });
-
-                    newPanel.MouseMove += panel1_MouseMove;
-                    newPanel.MouseDown += panel1_MouseDown;
-                    newPanel.MouseUp += panel1_MouseUp;
-                    newPanel.MouseLeave += panel1_MouseLeave;
-                    newPanel.MouseDoubleClick += panel1_MouseDoubleClick;
-                }
-            }
-            catch (Exception ex)
-            {
-                Invoke(() => AppLogger.Error("Chyba při načítání seznamu zapsaných hodin.", ex));
-            }
-        }
-
-        private async Task LoadProjectsContractsAsync()
-        {
-            try
-            {
-                _projects = await _projectRepo.GetAllProjectsAndContractsAsync();
-            }
-            catch (Exception ex)
-            {
-                Invoke(new Action(() =>
-                {
-                    AppLogger.Error("Chyba při načítání projektů.", ex);
-                }));
-            }
-        }
 
         private int GetColumnBasedOnTimeEntry(TimeEntry timeEntry)
         {
@@ -393,5 +411,45 @@ namespace VykazyPrace.UserControls.CalendarV2
             return ((int)timeEntry.Timestamp.Value.DayOfWeek + 6) % 7;
         }
 
+        private DateTime GetTimestampBasedOnColumn(int column)
+        {
+            int totalMinutes = column * 30;
+            return new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, totalMinutes / 60, totalMinutes % 60, 0);
+        }
+
+        private int GetEntryMinutesBasedOnColumnSpan(int columnSpan)
+        {
+            return columnSpan * 30;
+        }
+
+        private async void buttonSaveChanges_Click(object sender, EventArgs e)
+        {
+            await SaveChanges();
+        }
+
+        public async Task SaveChanges()
+        {
+            try
+            {
+                var updateResults = await Task.WhenAll(_timeEntries.Select(async timeEntry =>
+                {
+                    return await _timeEntryRepo.UpdateTimeEntryAsync(timeEntry);
+                }));
+
+                if (updateResults.All(result => result))
+                {
+                    AppLogger.Information("Všechny změny byly úspěšně uloženy.", true);
+                    ChangesMade = false;
+                }
+                else
+                {
+                    AppLogger.Error("Některé změny se nepodařilo uložit.");
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("Došlo k chybě při ukládání změn.", ex);
+            }
+        }
     }
 }

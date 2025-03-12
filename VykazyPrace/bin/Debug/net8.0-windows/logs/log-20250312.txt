@@ -1,0 +1,26 @@
+2025-03-12 11:41:39.693 +01:00 [INF] Zápis hodin  - : 0,5 h - test byl úspěšně proveden.
+2025-03-12 11:43:47.546 +01:00 [INF] Zápis hodin 002A00 - Provoz HP (Horká ražba): 2,5 h - test byl úspěšně proveden.
+2025-03-12 11:46:41.497 +01:00 [INF] Zápis hodin 002A00 - Provoz HP (Horká ražba): 0,5 h - test byl úspěšně proveden.
+2025-03-12 11:47:18.278 +01:00 [INF] Zápis hodin 002A00 - Provoz HP (Horká ražba): 3 h - test byl úspěšně proveden.
+2025-03-12 11:48:33.996 +01:00 [INF] Zápis hodin 002A00 - Provoz HP (Horká ražba): 0,5 h - test byl úspěšně proveden.
+2025-03-12 11:48:42.303 +01:00 [INF] Zápis hodin 002A00 - Provoz HP (Horká ražba): 6 h - test byl úspěšně proveden.
+2025-03-12 11:50:41.456 +01:00 [INF] Zápis hodin 002A00 - Provoz HP (Horká ražba): 0,5 h - test byl úspěšně proveden.
+2025-03-12 11:51:34.757 +01:00 [INF] Zápis hodin 002A00 - Provoz HP (Horká ražba): 2 h - test byl úspěšně proveden.
+2025-03-12 11:52:41.671 +01:00 [INF] Zápis hodin 002A00 - Provoz HP (Horká ražba): 4 h - test byl úspěšně proveden.
+2025-03-12 11:52:49.185 +01:00 [INF] Zápis hodin 002A00 - Provoz HP (Horká ražba): 1 h - test byl úspěšně proveden.
+2025-03-12 12:47:22.061 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Popis činnosti
+2025-03-12 13:29:22.437 +01:00 [INF] Změny byly úspěšně uloženy.
+2025-03-12 13:31:35.574 +01:00 [INF] Všechny změny byly úspěšně uloženy.
+2025-03-12 13:31:40.773 +01:00 [INF] Všechny změny byly úspěšně uloženy.
+2025-03-12 13:40:11.272 +01:00 [INF] Všechny změny byly úspěšně uloženy.
+2025-03-12 13:41:15.621 +01:00 [INF] Všechny změny byly úspěšně uloženy.
+2025-03-12 13:41:43.019 +01:00 [INF] Všechny změny byly úspěšně uloženy.
+2025-03-12 13:41:51.962 +01:00 [INF] Všechny změny byly úspěšně uloženy.
+2025-03-12 13:43:29.626 +01:00 [INF] Všechny změny byly úspěšně uloženy.
+2025-03-12 13:56:46.537 +01:00 [INF] Všechny změny byly úspěšně uloženy.
+2025-03-12 13:58:16.950 +01:00 [INF] Všechny změny byly úspěšně uloženy.
+2025-03-12 13:58:24.256 +01:00 [INF] Všechny změny byly úspěšně uloženy.
+2025-03-12 14:04:36.934 +01:00 [INF] Všechny změny byly úspěšně uloženy.
+2025-03-12 14:07:52.319 +01:00 [INF] Všechny změny byly úspěšně uloženy.
+2025-03-12 14:09:47.270 +01:00 [INF] Všechny změny byly úspěšně uloženy.
+2025-03-12 14:10:00.291 +01:00 [INF] Všechny změny byly úspěšně uloženy.

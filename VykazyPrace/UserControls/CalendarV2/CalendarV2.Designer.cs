@@ -111,6 +111,7 @@
             panel42 = new Panel();
             label39 = new Label();
             label40 = new Label();
+            buttonSaveChanges = new Button();
             panelContainer.SuspendLayout();
             panel11.SuspendLayout();
             panel38.SuspendLayout();
@@ -125,6 +126,7 @@
             // panelContainer
             // 
             panelContainer.AutoScroll = true;
+            panelContainer.BorderStyle = BorderStyle.FixedSingle;
             panelContainer.Controls.Add(panel40);
             panelContainer.Controls.Add(panel39);
             panelContainer.Controls.Add(label25);
@@ -185,7 +187,7 @@
             panelContainer.Controls.Add(tableLayoutPanel1);
             panelContainer.Location = new Point(76, 3);
             panelContainer.Name = "panelContainer";
-            panelContainer.Size = new Size(670, 538);
+            panelContainer.Size = new Size(670, 540);
             panelContainer.TabIndex = 71;
             // 
             // panel40
@@ -987,10 +989,21 @@
             label40.Text = "5.3.2025";
             label40.TextAlign = ContentAlignment.TopRight;
             // 
+            // buttonSaveChanges
+            // 
+            buttonSaveChanges.Location = new Point(753, 500);
+            buttonSaveChanges.Name = "buttonSaveChanges";
+            buttonSaveChanges.Size = new Size(129, 43);
+            buttonSaveChanges.TabIndex = 117;
+            buttonSaveChanges.Text = "Uložit změny";
+            buttonSaveChanges.UseVisualStyleBackColor = true;
+            buttonSaveChanges.Click += buttonSaveChanges_Click;
+            // 
             // CalendarV2
             // 
             AutoScaleDimensions = new SizeF(8F, 21F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(buttonSaveChanges);
             Controls.Add(panel38);
             Controls.Add(panel37);
             Controls.Add(panel36);
@@ -1001,7 +1014,7 @@
             Controls.Add(panelContainer);
             Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
             Name = "CalendarV2";
-            Size = new Size(750, 544);
+            Size = new Size(885, 546);
             Load += CalendarV2_Load;
             panelContainer.ResumeLayout(false);
             panelContainer.PerformLayout();
@@ -1102,5 +1115,6 @@
         private Panel panel42;
         private Label label39;
         private Label label40;
+        private Button buttonSaveChanges;
     }
 }

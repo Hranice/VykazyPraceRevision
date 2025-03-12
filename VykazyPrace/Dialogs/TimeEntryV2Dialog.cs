@@ -11,7 +11,8 @@ namespace VykazyPrace.Dialogs
     public partial class TimeEntryV2Dialog : Form
     {
         private readonly LoadingUC _loadingUC = new LoadingUC();
-        public TimeEntry TimeEntry;
+        public TimeEntry TimeEntry { get; set; }
+
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
         private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
         private List<Project> _projects = new List<Project>();
@@ -24,13 +25,14 @@ namespace VykazyPrace.Dialogs
             _currentUser = currentUser;
         }
 
+        #region Loading
         private void LoadUi()
         {
             int minutesStart = TimeEntry.Timestamp.Value.Hour * 60 + TimeEntry.Timestamp.Value.Minute;
             int minutesEnd = minutesStart + TimeEntry.EntryMinutes;
 
-            comboBoxStart.SelectedIndex = minutesStart / 30;
-            comboBoxEnd.SelectedIndex = minutesEnd / 30;
+            comboBoxStart.SelectedIndex = minutesStart / 30 - 1;
+            comboBoxEnd.SelectedIndex = minutesEnd / 30 - 1;
             comboBoxProjects.SelectedText = FormatHelper.FormatProjectToString(TimeEntry.Project);
             comboBoxEntryType.SelectedText = FormatHelper.FormatTimeEntryTypeToString(TimeEntry.EntryType);
             textBoxDescription.Text = TimeEntry.Description;
@@ -100,6 +102,7 @@ namespace VykazyPrace.Dialogs
                 }));
             }
         }
+        #endregion
 
         private async void buttonConfirm_Click(object sender, EventArgs e)
         {
@@ -126,12 +129,12 @@ namespace VykazyPrace.Dialogs
                                        int.Parse(comboBoxEnd.Text.Split(':')[0]),
                                        int.Parse(comboBoxEnd.Text.Split(':')[1]), 0);
 
+            var newTimeEntryType = new TimeEntryType() { Title = comboBoxEntryType.Text };
+            var addedTimeEntryType = await _timeEntryRepo.CreateTimeEntryTypeAsync(newTimeEntryType);
+
             // nový záznam
             if (TimeEntry.Id == -1)
             {
-                var newTimeEntryType = new TimeEntryType() { Title = comboBoxEntryType.Text };
-                var addedTimeEntryType = await _timeEntryRepo.CreateTimeEntryTypeAsync(newTimeEntryType);
-
                 var newTimeEntry = new TimeEntry
                 {
                     UserId = _currentUser.Id,
@@ -142,40 +145,57 @@ namespace VykazyPrace.Dialogs
                     EntryTypeId = addedTimeEntryType?.Id ?? 0
                 };
 
+                TimeEntry = await _timeEntryRepo.CreateTimeEntryAsync(newTimeEntry);
 
-                var addedTimeEntry = await _timeEntryRepo.CreateTimeEntryAsync(newTimeEntry);
-                if (addedTimeEntry is not null)
-                {
-                    AppLogger.Information($"Zápis hodin {FormatHelper.FormatTimeEntryToString(addedTimeEntry)} byl úspěšně proveden.");
-                    DialogResult = DialogResult.OK;
-                }
-                else
-                {
-                    AppLogger.Error($"Zápis {FormatHelper.FormatTimeEntryToString(newTimeEntry)} nebyl proveden.");
-                }
+                //var addedTimeEntry = await _timeEntryRepo.CreateTimeEntryAsync(newTimeEntry);
+                //if (addedTimeEntry is not null)
+                //{
+                //    AppLogger.Information($"Zápis hodin {FormatHelper.FormatTimeEntryToString(addedTimeEntry)} byl úspěšně proveden.");
+                //    DialogResult = DialogResult.OK;
+                //}
+                //else
+                //{
+                //    AppLogger.Error($"Zápis {FormatHelper.FormatTimeEntryToString(newTimeEntry)} nebyl proveden.");
+                //}
             }
 
             // existující záznam
             else
             {
-                var newTimeEntryType = new TimeEntryType() { Title = comboBoxEntryType.Text };
-                var addedTimeEntryType = await _timeEntryRepo.CreateTimeEntryTypeAsync(newTimeEntryType);
-
-                if(comboBoxProjects.SelectedIndex > -1) TimeEntry.ProjectId = _projects[comboBoxProjects.SelectedIndex].Id;
+                if (comboBoxProjects.SelectedIndex > -1) TimeEntry.ProjectId = _projects[comboBoxProjects.SelectedIndex].Id;
                 TimeEntry.Description = textBoxDescription.Text;
                 TimeEntry.Timestamp = start;
                 TimeEntry.EntryMinutes = GetNumberOfMinutesFromDateSpan(start, end);
                 TimeEntry.EntryTypeId = addedTimeEntryType?.Id ?? 0;
 
-                var success = await _timeEntryRepo.UpdateTimeEntryAsync(TimeEntry);
-                if (success)
+                //var success = await _timeEntryRepo.UpdateTimeEntryAsync(TimeEntry);
+                //if (success)
+                //{
+                //    AppLogger.Information($"Zápis hodin {FormatHelper.FormatTimeEntryToString(TimeEntry)} byl úspěšně proveden.");
+                //    DialogResult = DialogResult.OK;
+                //}
+                //else
+                //{
+                //    AppLogger.Error($"Zápis {FormatHelper.FormatTimeEntryToString(TimeEntry)} nebyl proveden.");
+                //}
+            }
+        }
+
+        private async void buttonRemove_Click(object sender, EventArgs e)
+        {
+            var dialogResult = MessageBox.Show($"Smazat záznam {FormatHelper.FormatTimeEntryToString(TimeEntry)}?", "Smazat?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+
+            if (dialogResult == DialogResult.Yes)
+            {
+                if (await _timeEntryRepo.DeleteTimeEntryAsync(TimeEntry.Id))
                 {
-                    AppLogger.Information($"Zápis hodin {FormatHelper.FormatTimeEntryToString(TimeEntry)} byl úspěšně proveden.");
-                    DialogResult = DialogResult.OK;
+                    AppLogger.Information($"Záznam {FormatHelper.FormatTimeEntryToString(TimeEntry)} byl smazán z databáze.");
+                    Close();
                 }
+
                 else
                 {
-                    AppLogger.Error($"Zápis {FormatHelper.FormatTimeEntryToString(TimeEntry)} nebyl proveden.");
+                    AppLogger.Error($"Nepodařilo se smazat záznam {FormatHelper.FormatTimeEntryToString(TimeEntry)} z databáze.");
                 }
             }
         }
@@ -188,7 +208,7 @@ namespace VykazyPrace.Dialogs
             return (true, "");
         }
 
-
+        #region Timespans
         private int GetNumberOfMinutesFromDateSpan(DateTime start, DateTime end)
         {
             return (int)(end - start).TotalMinutes;
@@ -223,26 +243,9 @@ namespace VykazyPrace.Dialogs
 
             return minutesEnd - minutesStart <= 0;
         }
+        #endregion
 
-        private async void buttonRemove_Click(object sender, EventArgs e)
-        {
-            var dialogResult = MessageBox.Show($"Smazat záznam {FormatHelper.FormatTimeEntryToString(TimeEntry)}?", "Smazat?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-
-            if (dialogResult == DialogResult.Yes)
-            {
-                if (await _timeEntryRepo.DeleteTimeEntryAsync(TimeEntry.Id))
-                {
-                    AppLogger.Information($"Záznam {FormatHelper.FormatTimeEntryToString(TimeEntry)} byl smazán z databáze.");
-                    Close();
-                }
-
-                else
-                {
-                    AppLogger.Error($"Nepodařilo se smazat záznam {FormatHelper.FormatTimeEntryToString(TimeEntry)} z databáze.");
-                }
-            }
-        }
-
+        #region Projects combobox
         private bool isUpdating = false;
 
         private void comboBoxProjects_SelectionChangeCommitted(object sender, EventArgs e)
@@ -332,7 +335,7 @@ namespace VykazyPrace.Dialogs
         }
 
         // Metoda pro odstranění diakritiky
-        private  string RemoveDiacritics(string text)
+        private string RemoveDiacritics(string text)
         {
             if (string.IsNullOrEmpty(text))
                 return text;
@@ -349,6 +352,12 @@ namespace VykazyPrace.Dialogs
             }
 
             return sb.ToString().Normalize(NormalizationForm.FormC);
+        }
+        #endregion
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            TimeEntry.Id = 69;
         }
     }
 }

@@ -191,6 +191,7 @@
             // 
             // buttonConfirm
             // 
+            buttonConfirm.DialogResult = DialogResult.OK;
             buttonConfirm.Location = new Point(360, 312);
             buttonConfirm.Name = "buttonConfirm";
             buttonConfirm.Size = new Size(99, 41);

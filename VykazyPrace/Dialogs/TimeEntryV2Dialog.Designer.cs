@@ -112,9 +112,9 @@
             label5.Location = new Point(149, 150);
             label5.Margin = new Padding(4, 0, 4, 0);
             label5.Name = "label5";
-            label5.Size = new Size(117, 21);
+            label5.Size = new Size(43, 21);
             label5.TabIndex = 32;
-            label5.Text = "Index - konstrukce";
+            label5.Text = "Index";
             // 
             // comboBoxIndex
             // 

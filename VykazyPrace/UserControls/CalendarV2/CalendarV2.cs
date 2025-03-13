@@ -1,22 +1,9 @@
 ﻿using System.Diagnostics;
-using System.Windows.Forms;
+using System.Net.Http.Headers;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Dialogs;
 using VykazyPrace.Logging;
-
-
-//public event EventHandler<DayCell>? CellPositionChanged;
-//public event EventHandler<DayCell>? CellCreated;
-
-//protected virtual void OnCellPositionChanged(DayCell cell)
-//{
-//    CellPositionChanged?.Invoke(this, cell);
-//}
-//protected virtual void OnCellCreated(DayCell cell)
-//{
-//    CellCreated?.Invoke(this, cell);
-//}
 
 namespace VykazyPrace.UserControls.CalendarV2
 {
@@ -24,15 +11,12 @@ namespace VykazyPrace.UserControls.CalendarV2
     {
         public bool ChangesMade { get; private set; }
         private readonly LoadingUC _loadingUC = new LoadingUC();
-        private readonly ProjectRepository _projectRepo = new ProjectRepository();
         private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
-        private List<Project> _projects = new List<Project>();
-        private List<TimeEntry> _timeEntries = new List<TimeEntry>();
         private readonly User _selectedUser = new User();
-        private readonly DateTime _currentDate = DateTime.Now;
+        private DateTime _selectedDate;
 
         private List<DayPanel> panels = new List<DayPanel>();
-        private DayPanel activePanel = null;
+        private DayPanel? activePanel = null;
         private bool isResizing = false;
         private bool isMoving = false;
         private bool isResizingLeft = false;
@@ -45,61 +29,20 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             InitializeComponent();
             DoubleBuffered = true;
+
+
+            _selectedDate = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
+
             _selectedUser = currentUser;
         }
 
-        private void CalendarV2_Load(object sender, EventArgs e)
+        private async void CalendarV2_Load(object sender, EventArgs e)
         {
-            tableLayoutPanel1.Controls.Clear();
-
             _loadingUC.Size = this.Size;
             this.Controls.Add(_loadingUC);
 
-            BeginInvoke(new Action(() => panelContainer.AutoScrollPosition = new Point(302, panelContainer.AutoScrollPosition.Y)));
-
-            Task.Run(LoadData);
+            await RenderCalendar();
         }
-
-        private async Task LoadData()
-        {
-            Invoke(() => _loadingUC.BringToFront());
-
-            var projectsTask = LoadProjectsContractsAsync();
-            var timeEntriesTask = LoadTimeEntriesAsync();
-
-            await Task.WhenAll(projectsTask, timeEntriesTask);
-
-            Invoke(() => _loadingUC.Visible = false);
-        }
-
-        private async Task LoadTimeEntriesAsync()
-        {
-            try
-            {
-                _timeEntries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _currentDate);
-                Invoke(() => RenderCalendar());
-            }
-            catch (Exception ex)
-            {
-                Invoke(() => AppLogger.Error("Chyba při načítání seznamu zapsaných hodin.", ex));
-            }
-        }
-
-        private async Task LoadProjectsContractsAsync()
-        {
-            try
-            {
-                _projects = await _projectRepo.GetAllProjectsAndContractsAsync();
-            }
-            catch (Exception ex)
-            {
-                Invoke(new Action(() =>
-                {
-                    AppLogger.Error("Chyba při načítání projektů.", ex);
-                }));
-            }
-        }
-
 
         private TableLayoutPanelCellPosition GetCellAt(TableLayoutPanel panel, Point clickPosition)
         {
@@ -112,110 +55,104 @@ namespace VykazyPrace.UserControls.CalendarV2
             return new TableLayoutPanelCellPosition(col, row);
         }
 
-        private void TableLayoutPanel1_MouseDoubleClick(object sender, MouseEventArgs e)
+        private async void TableLayoutPanel1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             TableLayoutPanelCellPosition cell = GetCellAt(tableLayoutPanel1, e.Location);
 
-            var timeEntryDialog = new TimeEntryV2Dialog(_selectedUser,
-                new TimeEntry()
-                {
-                    Id = -1,
-                    Timestamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddMinutes(cell.Column * 30),
-                    EntryMinutes = 30
-                });
+            DateTime clickedDate = _selectedDate
+                .AddDays(cell.Row)
+                .AddMinutes(cell.Column * 30);
 
-            var result = timeEntryDialog.ShowDialog();
+            var dialog = new TimeEntryV2Dialog(_selectedUser, clickedDate, -1);
+            var result = dialog.ShowDialog();
+
 
             switch (result)
             {
-                // Beze změn
-                case DialogResult.Cancel:
-                    break;
-                // Odstranění
-                case DialogResult.Abort:
-                    break;
-                // Přidání
                 case DialogResult.OK:
-                    if (IsOverlapping(cell.Column, 1, cell.Row, null))
-                        return;
+                    ChangesMade = true;
+                    await RenderCalendar();
+                    break;
+                default:
 
-                    DayPanel newPanel = new DayPanel
-                    {
-                        Dock = DockStyle.Fill,
-                        BackColor = Color.LightBlue,
-                        BorderStyle = BorderStyle.FixedSingle,
-                        TimeEntry = timeEntryDialog.TimeEntry
-                    };
-
-                    tableLayoutPanel1.Controls.Add(newPanel, GetColumnBasedOnTimeEntry(newPanel.TimeEntry), GetRowBasedOnTimeEntry(newPanel.TimeEntry));
-                    tableLayoutPanel1.SetColumnSpan(newPanel, GetColumnSpanBasedOnTimeEntry(newPanel.TimeEntry));
-                    panels.Add(newPanel);
-
-                    newPanel.MouseMove += panel1_MouseMove;
-                    newPanel.MouseDown += panel1_MouseDown;
-                    newPanel.MouseUp += panel1_MouseUp;
-                    newPanel.MouseLeave += panel1_MouseLeave;
-                    newPanel.MouseDoubleClick += panel1_MouseDoubleClick;
                     break;
             }
-
-            if (result != DialogResult.Cancel)
-            {
-                ChangesMade = true;
-
-                // TODO: timeentry repo create time entry
-                // TODO: Reload TimeEntries ? hlavně když se smaže
-            }
         }
 
-        private async void panel1_MouseDoubleClick(object? sender, MouseEventArgs e)
+        private async Task RenderCalendar()
         {
-            if (sender is not DayPanel panel)
-                return;
+            Point scrollPosition = panelContainer.AutoScrollPosition;
+            _loadingUC.BringToFront();
 
-            // ! posílá se reference, změny provedené v dialogu se provedou do listu
-            var timeEntry = _timeEntries.Find(x => x == panel.TimeEntry);
-            new TimeEntryV2Dialog(_selectedUser, timeEntry).ShowDialog();
-
-            ChangesMade = true;
-            RenderCalendar();
-        }
-
-        private void RenderCalendar()
-        {
-            var scrollPosition = panelContainer.AutoScrollPosition;
             tableLayoutPanel1.Controls.Clear();
+            panels.Clear();
 
-            foreach (var timeEntry in _timeEntries)
+            var entries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _selectedDate);
+
+            tableLayoutPanel1.SuspendLayout();
+
+            foreach (var entry in entries)
             {
-                int column = GetColumnBasedOnTimeEntry(timeEntry);
-                int row = GetRowBasedOnTimeEntry(timeEntry);
-
-                DayPanel newPanel = new DayPanel
+                var newPanel = new DayPanel
                 {
                     Dock = DockStyle.Fill,
                     BackColor = Color.LightBlue,
                     BorderStyle = BorderStyle.FixedSingle,
-                    TimeEntry = timeEntry
+                    EntryId = entry.Id
                 };
 
-                tableLayoutPanel1.Controls.Add(newPanel, column, row);
-                tableLayoutPanel1.SetColumnSpan(newPanel, GetColumnSpanBasedOnTimeEntry(timeEntry));
-                panels.Add(newPanel);
+                newPanel.UpdateUi(entry.Description, entry.Project?.ProjectDescription);
 
-                newPanel.MouseMove += panel1_MouseMove;
-                newPanel.MouseDown += panel1_MouseDown;
-                newPanel.MouseUp += panel1_MouseUp;
-                newPanel.MouseLeave += panel1_MouseLeave;
-                newPanel.MouseDoubleClick += panel1_MouseDoubleClick;
+                int column = GetColumnBasedOnTimeEntry(entry.Timestamp);
+                int row = GetRowBasedOnTimeEntry(entry.Timestamp);
+                int columnSpan = GetColumnSpanBasedOnTimeEntry(entry.EntryMinutes);
+
+                newPanel.MouseMove += dayPanel_MouseMove;
+                newPanel.MouseDown += dayPanel_MouseDown;
+                newPanel.MouseUp += dayPanel_MouseUp;
+                newPanel.MouseLeave += dayPanel_MouseLeave;
+                newPanel.MouseDoubleClick += dayPanel_MouseDoubleClick;
+
+                tableLayoutPanel1.Controls.Add(newPanel, column, row);
+                tableLayoutPanel1.SetColumnSpan(newPanel, columnSpan);
+                panels.Add(newPanel);
             }
 
-            panelContainer.AutoScrollPosition = new Point(Math.Abs(scrollPosition.X), 0);
+            tableLayoutPanel1.ResumeLayout();
+
+            BeginInvoke((Action)(() =>
+            {
+                panelContainer.AutoScrollPosition = new Point(Math.Abs(scrollPosition.X), 0);
+                UpdateDateLabels();
+                _loadingUC.Visible = false;
+            }));
         }
 
-        private void panel1_MouseMove(object sender, MouseEventArgs e)
+        #region DayPanel events
+        private async void dayPanel_MouseDoubleClick(object? sender, MouseEventArgs e)
         {
-            if (!(sender is DayPanel panel)) return;
+            if (sender is not DayPanel panel) return;
+
+            var result = new TimeEntryV2Dialog(_selectedUser, _selectedDate, panel.EntryId).ShowDialog();
+
+            ChangesMade = true;
+            await RenderCalendar();
+
+            //switch (result)
+            //{
+            //    case DialogResult.OK:
+            //        ChangesMade = true;
+            //        await RenderCalendar();
+            //        break;
+            //    default:
+
+            //        break;
+            //}
+        }
+
+        private void dayPanel_MouseMove(object? sender, MouseEventArgs e)
+        {
+            if (sender is not DayPanel panel) return;
 
             int currentMouseX = Cursor.Position.X;
             int deltaX = currentMouseX - startMouseX;
@@ -282,9 +219,9 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
-        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        private void dayPanel_MouseDown(object? sender, MouseEventArgs e)
         {
-            if (!(sender is DayPanel panel)) return;
+            if (sender is not DayPanel panel) return;
 
             if (Cursor == Cursors.SizeWE)
             {
@@ -304,11 +241,9 @@ namespace VykazyPrace.UserControls.CalendarV2
             panel.BackColor = Color.LightCoral;
         }
 
-        private async void panel1_MouseUp(object sender, MouseEventArgs e)
+        private async void dayPanel_MouseUp(object? sender, MouseEventArgs e)
         {
-            if (!(sender is DayPanel panel)) return;
-
-            var scrollPosition = panelContainer.AutoScrollPosition;
+            if (sender is not DayPanel panel) return;
 
             isResizing = false;
             isMoving = false;
@@ -316,27 +251,32 @@ namespace VykazyPrace.UserControls.CalendarV2
             Cursor = Cursors.Default;
             panel.BackColor = Color.LightBlue;
 
-            var entry = _timeEntries.Find(x => x == panel.TimeEntry);
+            var entry = await _timeEntryRepo.GetTimeEntryByIdAsync(panel.EntryId);
 
-            entry.Timestamp = GetTimestampBasedOnColumn(tableLayoutPanel1.GetColumn(panel));
-            entry.EntryMinutes = GetEntryMinutesBasedOnColumnSpan(tableLayoutPanel1.GetColumnSpan(panel));
+            if (entry is not null)
+            {
+                entry.Timestamp = _selectedDate.AddMinutes(tableLayoutPanel1.GetColumn(panel) * 30).AddDays(tableLayoutPanel1.GetRow(panel));
+                entry.EntryMinutes = GetEntryMinutesBasedOnColumnSpan(tableLayoutPanel1.GetColumnSpan(panel));
+                await _timeEntryRepo.UpdateTimeEntryAsync(entry);
 
-            ChangesMade = true;
+                ChangesMade = true;
+            }
         }
 
-        private void panel1_MouseLeave(object sender, EventArgs e)
+        private void dayPanel_MouseLeave(object? sender, EventArgs e)
         {
             if (!isResizing && !isMoving)
             {
                 Cursor = Cursors.Default;
             }
         }
+        #endregion
 
         private bool IsOverlapping(int newColumn, int newSpan, int row, DayPanel currentPanel)
         {
             foreach (DayPanel p in panels)
             {
-                if (p == currentPanel) continue; //
+                if (p == currentPanel) continue;
 
                 int pRow = tableLayoutPanel1.GetRow(p);
                 if (pRow != row) continue;
@@ -390,31 +330,27 @@ namespace VykazyPrace.UserControls.CalendarV2
             return maxColumn;
         }
 
-
-
-        private int GetColumnBasedOnTimeEntry(TimeEntry timeEntry)
+        private int GetColumnBasedOnTimeEntry(DateTime? timeStamp)
         {
-            var hour = timeEntry.Timestamp.Value.Hour;
-            var minutes = hour * 60 + timeEntry.Timestamp.Value.Minute;
-            Debug.WriteLine($"Zápis: {timeEntry.Timestamp}\t{timeEntry.EntryMinutes / 60.0} h, tzn. sloupec č. {minutes / 30}");
+            var minutes = timeStamp.Value.Hour * 60 + timeStamp.Value.Minute;
             return minutes / 30;
         }
 
-        private int GetColumnSpanBasedOnTimeEntry(TimeEntry timeEntry)
+        private int GetColumnSpanBasedOnTimeEntry(int entryMinutes)
         {
-            return timeEntry.EntryMinutes / 30;
-
+            return entryMinutes / 30;
         }
 
-        private int GetRowBasedOnTimeEntry(TimeEntry timeEntry)
+        private int GetRowBasedOnTimeEntry(DateTime? timeStamp)
         {
-            return ((int)timeEntry.Timestamp.Value.DayOfWeek + 6) % 7;
+            return ((int)timeStamp.Value.DayOfWeek + 6) % 7;
         }
 
         private DateTime GetTimestampBasedOnColumn(int column)
         {
             int totalMinutes = column * 30;
-            return new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, totalMinutes / 60, totalMinutes % 60, 0);
+            return _selectedDate.AddMinutes(totalMinutes);
+            //return new DateTime(_selectedDate.Year, _selectedDate.Month, _selectedDate.Day, totalMinutes / 60, totalMinutes % 60, 0);
         }
 
         private int GetEntryMinutesBasedOnColumnSpan(int columnSpan)
@@ -422,34 +358,27 @@ namespace VykazyPrace.UserControls.CalendarV2
             return columnSpan * 30;
         }
 
-        private async void buttonSaveChanges_Click(object sender, EventArgs e)
+        private async void buttonPreviousWeek_Click(object sender, EventArgs e)
         {
-            await SaveChanges();
+            _selectedDate = _selectedDate.AddDays(-7);
+            await RenderCalendar();
         }
 
-        public async Task SaveChanges()
+        private async void buttonNextWeek_Click(object sender, EventArgs e)
         {
-            try
-            {
-                var updateResults = await Task.WhenAll(_timeEntries.Select(async timeEntry =>
-                {
-                    return await _timeEntryRepo.UpdateTimeEntryAsync(timeEntry);
-                }));
+            _selectedDate = _selectedDate.AddDays(7);
+            await RenderCalendar();
+        }
 
-                if (updateResults.All(result => result))
-                {
-                    AppLogger.Information("Všechny změny byly úspěšně uloženy.", true);
-                    ChangesMade = false;
-                }
-                else
-                {
-                    AppLogger.Error("Některé změny se nepodařilo uložit.");
-                }
-            }
-            catch (Exception ex)
-            {
-                AppLogger.Error("Došlo k chybě při ukládání změn.", ex);
-            }
+        private void UpdateDateLabels()
+        {
+            labelDate1.Text = _selectedDate.ToString("d.M.yyyy");
+            labelDate2.Text = _selectedDate.AddDays(1).ToString("d.M.yyyy");
+            labelDate3.Text = _selectedDate.AddDays(2).ToString("d.M.yyyy");
+            labelDate4.Text = _selectedDate.AddDays(3).ToString("d.M.yyyy");
+            labelDate5.Text = _selectedDate.AddDays(4).ToString("d.M.yyyy");
+            labelDate6.Text = _selectedDate.AddDays(5).ToString("d.M.yyyy");
+            labelDate7.Text = _selectedDate.AddDays(6).ToString("d.M.yyyy");
         }
     }
 }

@@ -4,34 +4,17 @@ namespace VykazyPrace.UserControls.CalendarV2
 {
     public partial class DayPanel : UserControl
     {
-        private TimeEntry _timeEntry = new TimeEntry();
-
-        public TimeEntry TimeEntry
-        {
-            get
-            {
-                return _timeEntry;
-            }
-            set
-            {
-                _timeEntry = value;
-                UpdateUi();
-
-            }
-        }
+        public int EntryId { get; set; }
 
         public DayPanel()
         {
             InitializeComponent();
         }
 
-        private void UpdateUi()
+        public void UpdateUi(string? title, string? subtitle)
         {
-            if (TimeEntry != null)
-            {
-                label1.Text = TimeEntry.Description;
-                label2.Text = TimeEntry.Project?.ProjectDescription;
-            }
+            label1.Text = title;
+            label2.Text = subtitle;
         }
     }
 }

@@ -38,9 +38,7 @@
             Name = "TestDialog";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "TestDialog";
-            FormClosing += TestDialog_FormClosing;
             Load += TestDialog_Load;
-            Shown += TestDialog_Shown;
             ResumeLayout(false);
         }
 

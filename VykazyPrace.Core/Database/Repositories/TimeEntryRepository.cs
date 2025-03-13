@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -95,6 +96,7 @@ namespace VykazyPrace.Core.Database.Repositories
             var endOfWeek = startOfWeek.AddDays(6);
 
             return await _context.TimeEntries
+                .AsNoTracking()
                 .Where(te => te.UserId == user.Id
                              && te.Project != null
                              && te.Timestamp.HasValue
@@ -137,20 +139,22 @@ namespace VykazyPrace.Core.Database.Repositories
 
 
         /// <summary>
-        /// Získání časového záznamu podle ID.
+        /// Získání časového záznamu podle ID, nezávisle na datu.
         /// </summary>
         public async Task<TimeEntry?> GetTimeEntryByIdAsync(int id)
         {
             return await _context.TimeEntries
+                .AsNoTracking()
                 .Include(t => t.User)
                 .Include(t => t.Project)
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 
+
         /// <summary>
         /// Aktualizace časového záznamu.
         /// </summary>
-        public async Task<bool> UpdateTimeEntryAsync(TimeEntry timeEntry)
+        public async Task<bool> UpdateTimeEntryAsync(TimeEntry? timeEntry)
         {
             var existingEntry = await _context.TimeEntries.FindAsync(timeEntry.Id);
             if (existingEntry == null)

@@ -14,6 +14,8 @@ namespace VykazyPrace.UserControls.CalendarV2
         private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
         private readonly User _selectedUser = new User();
         private DateTime _selectedDate;
+        private int arrivalColumn = 12;
+        private int leaveColumn = 16;
 
         private List<DayPanel> panels = new List<DayPanel>();
         private DayPanel? activePanel = null;
@@ -23,6 +25,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         private int startMouseX, startPanelX;
         private int originalColumn, originalColumnSpan;
         private const int ResizeThreshold = 5;
+        bool resetScrollPosition = true;
 
 
         public CalendarV2(User currentUser)
@@ -30,9 +33,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             InitializeComponent();
             DoubleBuffered = true;
 
-
             _selectedDate = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
-
             _selectedUser = currentUser;
         }
 
@@ -122,7 +123,34 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             BeginInvoke((Action)(() =>
             {
-                panelContainer.AutoScrollPosition = new Point(Math.Abs(scrollPosition.X), 0);
+                for (int i = 0; i < 2; i++)
+                {
+                    for (int j = 0; j < 7; j++)
+                    {
+                        var panelIndicator = new Panel()
+                        {
+                            Size = new Size(1, 69),
+                            Location = new Point((30 * arrivalColumn) + 6 + (i * (30 * leaveColumn)), j * 69 + 33 + j),
+                            BackColor = Color.Red
+                        };
+
+                        panelContainer.Controls.Add(panelIndicator);
+                        panelIndicator.BringToFront();
+                    }
+                }
+
+
+                if (resetScrollPosition)
+                {
+                    panelContainer.AutoScrollPosition = new Point(310, panelContainer.AutoScrollPosition.Y);
+                    resetScrollPosition = false;
+                }
+
+                else
+                {
+                    panelContainer.AutoScrollPosition = new Point(Math.Abs(scrollPosition.X), 0);
+                }
+
                 UpdateDateLabels();
                 _loadingUC.Visible = false;
             }));

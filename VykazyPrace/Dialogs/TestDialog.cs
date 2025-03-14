@@ -14,6 +14,16 @@ namespace VykazyPrace.Dialogs
         {
             InitializeComponent();
             _currentUser = currentUser;
+            KeyPreview = true;
+            this.KeyDown += Form1_KeyDown;
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                _calendar.DeleteRecord();
+            }
         }
 
         private void TestDialog_Load(object sender, EventArgs e)

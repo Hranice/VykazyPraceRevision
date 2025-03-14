@@ -257,9 +257,9 @@ namespace VykazyPrace.UserControls.CalendarV2
             if (sender is not DayPanel panel) return;
 
 
-            foreach(var ctrl in tableLayoutPanel1.Controls)
+            foreach (var ctrl in tableLayoutPanel1.Controls)
             {
-                if(ctrl is DayPanel pan)
+                if (ctrl is DayPanel pan)
                 {
                     pan.Deactivate();
                 }
@@ -715,7 +715,12 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
-        private async void buttonRemove_Click(object sender, EventArgs e)
+        private void buttonRemove_Click(object sender, EventArgs e)
+        {
+            DeleteRecord();
+        }
+
+        public async void DeleteRecord()
         {
             var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
 

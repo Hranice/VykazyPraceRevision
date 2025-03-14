@@ -1,6 +1,4 @@
-﻿using VykazyPrace.Core.Database.Models;
-
-namespace VykazyPrace.UserControls.CalendarV2
+﻿namespace VykazyPrace.UserControls.CalendarV2
 {
     public partial class DayPanel : UserControl
     {

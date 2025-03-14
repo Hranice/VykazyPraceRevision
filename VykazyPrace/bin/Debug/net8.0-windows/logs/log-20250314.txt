@@ -10,3 +10,4 @@
 2025-03-14 14:09:12.605 +01:00 [INF] Záznam 003A00 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
 2025-03-14 14:09:48.956 +01:00 [INF] Záznam 002A00 - Provoz HP (Horká ražba): 0,5 h - Zapínání kávovaru byl smazán z databáze.
 2025-03-14 14:09:54.001 +01:00 [INF] Záznam 003A00 - Provoz Metalizace: 1 h -  byl smazán z databáze.
+2025-03-14 14:41:27.574 +01:00 [INF] Záznam 003A00 - Provoz Metalizace: 2,5 h -  byl smazán z databáze.

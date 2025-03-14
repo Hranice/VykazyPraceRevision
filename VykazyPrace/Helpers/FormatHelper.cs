@@ -1,4 +1,6 @@
-﻿using VykazyPrace.Core.Database.Models;
+﻿using System.Globalization;
+using System.Text;
+using VykazyPrace.Core.Database.Models;
 
 namespace VykazyPrace.Helpers
 {
@@ -22,6 +24,25 @@ namespace VykazyPrace.Helpers
         public static string FormatUserToString(User? user)
         {
             return $"{user?.Id ?? 0} ({user?.PersonalNumber}): {user?.FirstName} {user?.Surname}";
+        }
+
+        public static string RemoveDiacritics(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            string normalized = text.Normalize(NormalizationForm.FormD);
+            StringBuilder sb = new StringBuilder();
+
+            foreach (char c in normalized)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(c);
+                }
+            }
+
+            return sb.ToString().Normalize(NormalizationForm.FormC);
         }
     }
 }

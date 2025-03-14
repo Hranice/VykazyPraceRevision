@@ -18,3 +18,9 @@
 2025-03-13 11:15:14.858 +01:00 [INF] Záznam 0273E25 - K14C - Brazílie #2: 0,5 h - test byl smazán z databáze.
 2025-03-13 11:45:10.811 +01:00 [INF] Zápis hodin 005A00 - Provoz ostatní: 0,5 h - Zapínání kávovaefeffwefefwefewru byl úspěšně proveden.
 2025-03-13 12:36:30.871 +01:00 [INF] Záznam 002A00 - Provoz HP (Horká ražba): 1,5 h - Zapínání kávovwefwefaru byl smazán z databáze.
+2025-03-13 13:31:53.545 +01:00 [INF] Zápis hodin 0279I25 - Kobot: 2,5 h - Zapínání kávovaru2 byl úspěšně proveden.
+2025-03-13 13:34:47.298 +01:00 [INF] Zápis hodin 0279I25 - Kobot: 2,5 h - Zapínání kávovaru2 byl úspěšně proveden.
+2025-03-13 13:36:45.511 +01:00 [INF] Zápis hodin 0279I25 - Kobot: 2,5 h - Zapínání kávovaru2 byl úspěšně proveden.
+2025-03-13 13:42:22.187 +01:00 [INF] Zápis hodin 0230I24 - Automatické balení po pecích a UV: 1,5 h - testok byl úspěšně proveden.
+2025-03-13 13:42:27.865 +01:00 [INF] Zápis hodin 0230I24 - Automatické balení po pecích a UV: 1,5 h - testok byl úspěšně proveden.
+2025-03-13 13:42:33.474 +01:00 [INF] Zápis hodin 0230I24 - Automatické balení po pecích a UV: 1,5 h - testok byl úspěšně proveden.

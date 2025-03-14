@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using VykazyPrace.Core.Database.Models;
 
 namespace VykazyPrace.Core.Database.Repositories
@@ -160,6 +161,7 @@ namespace VykazyPrace.Core.Database.Repositories
             if (existingEntry == null)
                 return false;
 
+            existingEntry.EntryTypeId= timeEntry.EntryTypeId;
             existingEntry.Description = timeEntry.Description;
             existingEntry.EntryMinutes = timeEntry.EntryMinutes;
             existingEntry.Timestamp = timeEntry.Timestamp;
@@ -234,6 +236,14 @@ namespace VykazyPrace.Core.Database.Repositories
             _context.TimeEntryTypes.Add(timeEntryType);
             await _context.SaveChangesAsync();
             return timeEntryType;
+        }
+
+        /// <summary>
+        /// Vrátí typ časového záznamu podle id.
+        /// </summary>
+        public async Task<TimeEntryType?> GetTimeEntryTypeByIdAsync(int? id)
+        {
+            return await _context.TimeEntryTypes.FirstOrDefaultAsync(t => t.Id == id);
         }
     }
 

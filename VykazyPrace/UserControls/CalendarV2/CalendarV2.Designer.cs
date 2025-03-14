@@ -113,6 +113,21 @@
             labelDate3 = new Label();
             buttonNextWeek = new Button();
             buttonPreviousWeek = new Button();
+            buttonRemove = new Button();
+            buttonConfirm = new Button();
+            groupBox1 = new GroupBox();
+            label5 = new Label();
+            comboBoxIndex = new ComboBox();
+            label4 = new Label();
+            comboBoxEntryType = new ComboBox();
+            comboBoxProjects = new ComboBox();
+            label8 = new Label();
+            label6 = new Label();
+            textBoxDescription = new TextBox();
+            comboBoxStart = new ComboBox();
+            comboBoxEnd = new ComboBox();
+            label10 = new Label();
+            label12 = new Label();
             panelContainer.SuspendLayout();
             panel11.SuspendLayout();
             panel38.SuspendLayout();
@@ -122,6 +137,7 @@
             panel33.SuspendLayout();
             panel32.SuspendLayout();
             panel42.SuspendLayout();
+            groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // panelContainer
@@ -1010,10 +1026,176 @@
             buttonPreviousWeek.UseVisualStyleBackColor = true;
             buttonPreviousWeek.Click += buttonPreviousWeek_Click;
             // 
+            // buttonRemove
+            // 
+            buttonRemove.Location = new Point(1008, 317);
+            buttonRemove.Name = "buttonRemove";
+            buttonRemove.Size = new Size(99, 41);
+            buttonRemove.TabIndex = 123;
+            buttonRemove.Text = "Odstranit";
+            buttonRemove.UseVisualStyleBackColor = true;
+            buttonRemove.Click += buttonRemove_Click;
+            // 
+            // buttonConfirm
+            // 
+            buttonConfirm.Location = new Point(1113, 317);
+            buttonConfirm.Name = "buttonConfirm";
+            buttonConfirm.Size = new Size(99, 41);
+            buttonConfirm.TabIndex = 122;
+            buttonConfirm.Text = "Potvrdit";
+            buttonConfirm.UseVisualStyleBackColor = true;
+            buttonConfirm.Click += buttonConfirm_Click;
+            // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(label5);
+            groupBox1.Controls.Add(comboBoxIndex);
+            groupBox1.Controls.Add(label4);
+            groupBox1.Controls.Add(comboBoxEntryType);
+            groupBox1.Controls.Add(comboBoxProjects);
+            groupBox1.Controls.Add(label8);
+            groupBox1.Controls.Add(label6);
+            groupBox1.Controls.Add(textBoxDescription);
+            groupBox1.Controls.Add(comboBoxStart);
+            groupBox1.Controls.Add(comboBoxEnd);
+            groupBox1.Controls.Add(label10);
+            groupBox1.Controls.Add(label12);
+            groupBox1.Location = new Point(765, 17);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(447, 294);
+            groupBox1.TabIndex = 121;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Čtvrtek 06.03.2025";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label5.Location = new Point(149, 150);
+            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(43, 21);
+            label5.TabIndex = 32;
+            label5.Text = "Index";
+            // 
+            // comboBoxIndex
+            // 
+            comboBoxIndex.FormattingEnabled = true;
+            comboBoxIndex.IntegralHeight = false;
+            comboBoxIndex.ItemHeight = 21;
+            comboBoxIndex.Location = new Point(149, 174);
+            comboBoxIndex.Name = "comboBoxIndex";
+            comboBoxIndex.Size = new Size(272, 29);
+            comboBoxIndex.TabIndex = 31;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label4.Location = new Point(23, 150);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(35, 21);
+            label4.TabIndex = 30;
+            label4.Text = "Typ*";
+            // 
+            // comboBoxEntryType
+            // 
+            comboBoxEntryType.FormattingEnabled = true;
+            comboBoxEntryType.IntegralHeight = false;
+            comboBoxEntryType.ItemHeight = 21;
+            comboBoxEntryType.Location = new Point(23, 174);
+            comboBoxEntryType.Name = "comboBoxEntryType";
+            comboBoxEntryType.Size = new Size(120, 29);
+            comboBoxEntryType.TabIndex = 29;
+            // 
+            // comboBoxProjects
+            // 
+            comboBoxProjects.FormattingEnabled = true;
+            comboBoxProjects.IntegralHeight = false;
+            comboBoxProjects.ItemHeight = 21;
+            comboBoxProjects.Location = new Point(23, 240);
+            comboBoxProjects.Name = "comboBoxProjects";
+            comboBoxProjects.Size = new Size(398, 29);
+            comboBoxProjects.TabIndex = 27;
+            comboBoxProjects.SelectionChangeCommitted += comboBoxProjects_SelectionChangeCommitted;
+            comboBoxProjects.TextChanged += comboBoxProjects_TextChanged;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label8.Location = new Point(23, 216);
+            label8.Margin = new Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(57, 21);
+            label8.TabIndex = 28;
+            label8.Text = "Projekt*";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label6.Location = new Point(181, 27);
+            label6.Name = "label6";
+            label6.Size = new Size(94, 21);
+            label6.TabIndex = 5;
+            label6.Text = "Popis činnosti*";
+            // 
+            // textBoxDescription
+            // 
+            textBoxDescription.Location = new Point(181, 51);
+            textBoxDescription.Multiline = true;
+            textBoxDescription.Name = "textBoxDescription";
+            textBoxDescription.Size = new Size(240, 72);
+            textBoxDescription.TabIndex = 4;
+            textBoxDescription.Text = "Zapínání kávovaru";
+            // 
+            // comboBoxStart
+            // 
+            comboBoxStart.FormattingEnabled = true;
+            comboBoxStart.Items.AddRange(new object[] { "0:00", "0:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30" });
+            comboBoxStart.Location = new Point(97, 51);
+            comboBoxStart.Name = "comboBoxStart";
+            comboBoxStart.Size = new Size(69, 29);
+            comboBoxStart.TabIndex = 0;
+            comboBoxStart.SelectedIndexChanged += comboBoxStart_SelectedIndexChanged;
+            // 
+            // comboBoxEnd
+            // 
+            comboBoxEnd.FormattingEnabled = true;
+            comboBoxEnd.Items.AddRange(new object[] { "0:00", "0:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30" });
+            comboBoxEnd.Location = new Point(97, 90);
+            comboBoxEnd.Name = "comboBoxEnd";
+            comboBoxEnd.Size = new Size(69, 29);
+            comboBoxEnd.TabIndex = 2;
+            comboBoxEnd.SelectionChangeCommitted += comboBoxEnd_SelectionChangeCommitted;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(23, 54);
+            label10.Name = "label10";
+            label10.Size = new Size(61, 21);
+            label10.TabIndex = 1;
+            label10.Text = "Počátek*";
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Location = new Point(13, 93);
+            label12.Name = "label12";
+            label12.Size = new Size(68, 21);
+            label12.TabIndex = 3;
+            label12.Text = "Ukončení*";
+            // 
             // CalendarV2
             // 
             AutoScaleDimensions = new SizeF(8F, 21F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(buttonRemove);
+            Controls.Add(buttonConfirm);
+            Controls.Add(groupBox1);
             Controls.Add(buttonPreviousWeek);
             Controls.Add(buttonNextWeek);
             Controls.Add(panel38);
@@ -1026,7 +1208,7 @@
             Controls.Add(panelContainer);
             Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
             Name = "CalendarV2";
-            Size = new Size(885, 546);
+            Size = new Size(1319, 546);
             Load += CalendarV2_Load;
             panelContainer.ResumeLayout(false);
             panelContainer.PerformLayout();
@@ -1039,6 +1221,8 @@
             panel33.ResumeLayout(false);
             panel32.ResumeLayout(false);
             panel42.ResumeLayout(false);
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -1129,5 +1313,20 @@
         private Label labelDate3;
         private Button buttonNextWeek;
         private Button buttonPreviousWeek;
+        private Button buttonRemove;
+        private Button buttonConfirm;
+        private GroupBox groupBox1;
+        private Label label5;
+        private ComboBox comboBoxIndex;
+        private Label label4;
+        private ComboBox comboBoxEntryType;
+        private ComboBox comboBoxProjects;
+        private Label label8;
+        private Label label6;
+        private TextBox textBoxDescription;
+        private ComboBox comboBoxStart;
+        private ComboBox comboBoxEnd;
+        private Label label10;
+        private Label label12;
     }
 }

@@ -17,6 +17,7 @@ namespace VykazyPrace.UserControls.CalendarV2
     {
         private readonly LoadingUC _loadingUC = new LoadingUC();
         private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
+        private readonly TimeEntryTypeRepository _timeEntryTypeRepo = new TimeEntryTypeRepository();
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
         private List<Project> _projects = new List<Project>();
         private List<TimeEntryType> _timeEntryTypes = new List<TimeEntryType>();
@@ -60,7 +61,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             try
             {
-                _timeEntryTypes = await _timeEntryRepo.GetAllTimeEntryTypesAsync();
+                _timeEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesAsync();
 
                 Invoke(() =>
                 {
@@ -674,7 +675,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 return;
             }
 
-            var addedTimeEntryType = await _timeEntryRepo.CreateTimeEntryTypeAsync(
+            var addedTimeEntryType = await _timeEntryTypeRepo.CreateTimeEntryTypeAsync(
                 new TimeEntryType()
                 {
                     Title = comboBoxEntryType.Text

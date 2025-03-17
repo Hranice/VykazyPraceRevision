@@ -16,11 +16,21 @@ namespace VykazyPrace.Core.Database.Repositories
             _context = new VykazyPraceContext();
         }
 
-        public async Task<TimeEntryType> CreateTimeEntryTypeAsync(TimeEntryType type)
+/// <summary>
+        /// Vytvoří nový typ časového záznamu, pokud ještě neexistuje.
+        /// </summary>
+        public async Task<TimeEntryType?> CreateTimeEntryTypeAsync(TimeEntryType timeEntryType)
         {
-            _context.TimeEntryTypes.Add(type);
+            var existingEntry = await _context.TimeEntryTypes.FirstOrDefaultAsync(t => t.Title == timeEntryType.Title);
+
+            if (existingEntry != null)
+            {
+                return existingEntry;
+            }
+
+            _context.TimeEntryTypes.Add(timeEntryType);
             await _context.SaveChangesAsync();
-            return type;
+            return timeEntryType;
         }
 
         public async Task<List<TimeEntryType>> GetAllTimeEntryTypesAsync()

@@ -21,6 +21,11 @@ namespace VykazyPrace.Helpers
             return $"{timeEntryType?.Title ?? "<>"}";
         }
 
+        public static string FormatTimeEntrySubTypeToString(TimeEntrySubType? timeEntrySubType)
+        {
+            return $"{timeEntrySubType?.Title ?? "<>"}";
+        }
+
         public static string FormatUserToString(User? user)
         {
             return $"{user?.Id ?? 0} ({user?.PersonalNumber}): {user?.FirstName} {user?.Surname}";

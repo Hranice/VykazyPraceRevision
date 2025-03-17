@@ -28,6 +28,15 @@ namespace VykazyPrace.Core.Database.Repositories
             return await _context.TimeEntrySubTypes.Include(t => t.Group).ToListAsync();
         }
 
+        public async Task<List<TimeEntrySubType>> GetAllTimeEntrySubTypesByGroupIdAsync(int groupId)
+        {
+            return await _context.TimeEntrySubTypes
+                .Where(t => t.GroupId == groupId)
+                .Include(t => t.Group)
+                .ToListAsync();
+        }
+
+
         public async Task<TimeEntrySubType?> GetTimeEntrySubTypeByIdAsync(int id)
         {
             return await _context.TimeEntrySubTypes.Include(t => t.Group).FirstOrDefaultAsync(t => t.Id == id);

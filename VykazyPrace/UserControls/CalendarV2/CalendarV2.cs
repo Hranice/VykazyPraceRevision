@@ -18,9 +18,11 @@ namespace VykazyPrace.UserControls.CalendarV2
         private readonly LoadingUC _loadingUC = new LoadingUC();
         private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
         private readonly TimeEntryTypeRepository _timeEntryTypeRepo = new TimeEntryTypeRepository();
+        private readonly TimeEntrySubTypeRepository _timeEntrySubTypeRepo = new TimeEntrySubTypeRepository();
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
         private List<Project> _projects = new List<Project>();
         private List<TimeEntryType> _timeEntryTypes = new List<TimeEntryType>();
+        private List<TimeEntrySubType> _timeEntrySubTypes = new List<TimeEntrySubType>();
         private int _selectedTimeEntryId = 0;
         private readonly User _selectedUser = new User();
         private DateTime _selectedDate;
@@ -53,6 +55,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             this.Controls.Add(_loadingUC);
 
             await LoadTimeEntryTypesAsync();
+            await LoadTimeEntrySubTypesAsync();
             await LoadProjectsAsync();
             await RenderCalendar();
         }
@@ -75,6 +78,28 @@ namespace VykazyPrace.UserControls.CalendarV2
                 Invoke(new Action(() =>
                 {
                     AppLogger.Error("Chyba při načítání typů časových záznamů.", ex);
+                }));
+            }
+        }
+
+        private async Task LoadTimeEntrySubTypesAsync()
+        {
+            try
+            {
+                _timeEntrySubTypes = await _timeEntrySubTypeRepo.GetAllTimeEntrySubTypesByGroupIdAsync(_selectedUser.UserGroup.Value);
+
+                Invoke(() =>
+                {
+                    comboBoxIndex.Items.Clear();
+                    comboBoxIndex.Items.AddRange(_timeEntrySubTypes.Select(FormatHelper.FormatTimeEntrySubTypeToString).ToArray());
+                    if (comboBoxIndex.Items.Count > 0) comboBoxIndex.SelectedIndex = 0;
+                });
+            }
+            catch (Exception ex)
+            {
+                Invoke(new Action(() =>
+                {
+                    AppLogger.Error("Chyba při načítání sub-typů (indexů) časových záznamů.", ex);
                 }));
             }
         }

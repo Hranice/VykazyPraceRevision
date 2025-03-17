@@ -86,7 +86,10 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             try
             {
-                _timeEntrySubTypes = await _timeEntrySubTypeRepo.GetAllTimeEntrySubTypesByGroupIdAsync(_selectedUser.UserGroup.Value);
+
+                var group = _selectedUser.UserGroup.Id;
+
+                _timeEntrySubTypes = await _timeEntrySubTypeRepo.GetAllTimeEntrySubTypesByGroupIdAsync(_selectedUser.UserGroup.Id);
 
                 Invoke(() =>
                 {

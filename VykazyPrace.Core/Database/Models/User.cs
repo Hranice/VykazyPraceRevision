@@ -17,11 +17,11 @@ public partial class User
 
     public int LevelOfAccess { get; set; }
 
-    public int? UserGroup { get; set; }
+    public int? UserGroupId { get; set; }
 
     public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
 
     public virtual ICollection<TimeEntry> TimeEntries { get; set; } = new List<TimeEntry>();
 
-    public virtual UserGroup? UserGroupNavigation { get; set; }
+    public virtual UserGroup? UserGroup { get; set; }
 }

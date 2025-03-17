@@ -16,7 +16,7 @@ namespace VykazyPrace.Core.Database.Repositories
             _context = new VykazyPraceContext();
         }
 
-/// <summary>
+        /// <summary>
         /// Vytvoří nový typ časového záznamu, pokud ještě neexistuje.
         /// </summary>
         public async Task<TimeEntryType?> CreateTimeEntryTypeAsync(TimeEntryType timeEntryType)

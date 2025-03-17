@@ -81,7 +81,7 @@ public partial class VykazyPraceContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("ID");
 
-            entity.HasOne(d => d.UserGroupNavigation).WithMany(p => p.Users).HasForeignKey(d => d.UserGroup);
+            entity.HasOne(d => d.UserGroup).WithMany(p => p.Users).HasForeignKey(d => d.UserGroupId);
         });
 
         modelBuilder.Entity<UserGroup>(entity =>

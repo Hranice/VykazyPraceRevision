@@ -34,8 +34,14 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<List<TimeEntry>> GetAllTimeEntriesAsync()
         {
-            return await _context.TimeEntries.Include(t => t.User).Include(t => t.Project).ToListAsync();
+            return await _context.TimeEntries
+                .Include(t => t.User)
+                .ThenInclude(t => t.UserGroup)
+                .Include(t => t.EntryType)
+                .Include(t => t.Project)
+                .ToListAsync();
         }
+
 
         /// <summary>
         /// Získání všech časových záznamů pro konkrétního uživatele.
@@ -161,7 +167,7 @@ namespace VykazyPrace.Core.Database.Repositories
             if (existingEntry == null)
                 return false;
 
-            existingEntry.EntryTypeId= timeEntry.EntryTypeId;
+            existingEntry.EntryTypeId = timeEntry.EntryTypeId;
             existingEntry.Description = timeEntry.Description;
             existingEntry.EntryMinutes = timeEntry.EntryMinutes;
             existingEntry.Timestamp = timeEntry.Timestamp;

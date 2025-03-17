@@ -35,6 +35,7 @@
             dataGridView1 = new DataGridView();
             button2 = new Button();
             comboBoxMonth = new ComboBox();
+            checkedListBoxUsers = new CheckedListBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -70,7 +71,7 @@
             // 
             // buttonSaveAs
             // 
-            buttonSaveAs.Location = new Point(196, 440);
+            buttonSaveAs.Location = new Point(196, 453);
             buttonSaveAs.Name = "buttonSaveAs";
             buttonSaveAs.Size = new Size(344, 40);
             buttonSaveAs.TabIndex = 6;
@@ -86,16 +87,16 @@
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.EditMode = DataGridViewEditMode.EditProgrammatically;
-            dataGridView1.Location = new Point(10, 87);
+            dataGridView1.Location = new Point(10, 90);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
             dataGridView1.RowHeadersVisible = false;
-            dataGridView1.Size = new Size(530, 347);
+            dataGridView1.Size = new Size(530, 349);
             dataGridView1.TabIndex = 7;
             // 
             // button2
             // 
-            button2.Location = new Point(10, 440);
+            button2.Location = new Point(10, 453);
             button2.Name = "button2";
             button2.Size = new Size(180, 40);
             button2.TabIndex = 8;
@@ -113,11 +114,20 @@
             comboBoxMonth.Text = "Březen";
             comboBoxMonth.SelectionChangeCommitted += ComboBoxMonth_SelectionChangeCommitted;
             // 
+            // checkedListBoxUsers
+            // 
+            checkedListBoxUsers.FormattingEnabled = true;
+            checkedListBoxUsers.Location = new Point(557, 90);
+            checkedListBoxUsers.Name = "checkedListBoxUsers";
+            checkedListBoxUsers.Size = new Size(309, 349);
+            checkedListBoxUsers.TabIndex = 12;
+            // 
             // ExportDialog
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(549, 490);
+            ClientSize = new Size(881, 505);
+            Controls.Add(checkedListBoxUsers);
             Controls.Add(comboBoxMonth);
             Controls.Add(button2);
             Controls.Add(dataGridView1);
@@ -143,5 +153,6 @@
         private DataGridView dataGridView1;
         private Button button2;
         private ComboBox comboBoxMonth;
+        private CheckedListBox checkedListBoxUsers;
     }
 }

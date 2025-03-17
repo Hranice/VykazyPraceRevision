@@ -28,7 +28,7 @@ namespace VykazyPrace.Helpers
 
         public static string FormatUserToString(User? user)
         {
-            return $"{user?.Id ?? 0} ({user?.PersonalNumber}): {user?.FirstName} {user?.Surname}";
+            return $"({user?.PersonalNumber}): {user?.FirstName} {user?.Surname} - {user?.UserGroup?.Title}";
         }
 
         public static string RemoveDiacritics(string text)

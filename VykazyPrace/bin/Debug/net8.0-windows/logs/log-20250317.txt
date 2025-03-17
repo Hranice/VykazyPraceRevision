@@ -1,1 +1,2 @@
 2025-03-17 08:16:00.833 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 2,5 h - rwarí byl úspěšně proveden.
+2025-03-17 08:44:21.991 +01:00 [INF] Export do Excelu dokončen.

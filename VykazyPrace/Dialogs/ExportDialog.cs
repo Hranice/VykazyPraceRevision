@@ -10,113 +10,90 @@ namespace VykazyPrace.Dialogs
     public partial class ExportDialog : Form
     {
         private readonly User _selectedUser;
-        private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
-        private readonly UserRepository _userRepo = new UserRepository();
-        private readonly ProjectRepository _projectRepo = new ProjectRepository();
-        private readonly LoadingUC _loadingUC = new LoadingUC();
+        private readonly TimeEntryRepository _timeEntryRepo = new();
+        private readonly UserRepository _userRepo = new();
+        private readonly ProjectRepository _projectRepo = new();
+        private readonly LoadingUC _loadingUC = new();
 
         public ExportDialog(User selectedUser)
         {
             InitializeComponent();
-
             _selectedUser = selectedUser;
         }
 
-        private async Task LoadTimeEntriesSummary(DateTime fromDate, DateTime toDate)
+        private async Task LoadTimeEntriesSummaryAsync(DateTime fromDate, DateTime toDate)
         {
             Invoke(() => _loadingUC.BringToFront());
             var summaryList = await _timeEntryRepo.GetTimeEntriesSummaryAsync(fromDate, toDate);
 
-            var tasks = summaryList.Select(async summary =>
+            var data = await Task.WhenAll(summaryList.Select(async summary =>
             {
-                var userTask = _userRepo.GetUserByIdAsync(summary.UserId ?? 0);
-                var projectTask = _projectRepo.GetProjectByIdAsync(summary.ProjectId ?? 0);
+                var user = await _userRepo.GetUserByIdAsync(summary.UserId ?? 0) ?? new User { FirstName = "Neznámý", Surname = "uživatel" };
+                var project = await _projectRepo.GetProjectByIdAsync(summary.ProjectId ?? 0) ?? new Project { ProjectTitle = "Neznámý projekt" };
 
-                await Task.WhenAll(userTask, projectTask);
+                return new { UserName = $"{user.FirstName} {user.Surname}", ProjectName = project.ProjectTitle, TotalHours = $"{summary.TotalHours:F1} h" };
+            }));
 
-                var user = await userTask;
-                var project = await projectTask;
+            UpdateDataGrid(data);
+        }
 
-                return new
-                {
-                    UserName = user != null ? $"{user.FirstName} {user.Surname}" : "Neznámý uživatel",
-                    ProjectName = project != null ? project.ProjectTitle : "Neznámý projekt",
-                    TotalHours = $"{summary.TotalHours:F1} h"
-                };
-            });
-
-            var data = await Task.WhenAll(tasks);
-
+        private void UpdateDataGrid(object data)
+        {
             if (dataGridView1.InvokeRequired)
             {
-                dataGridView1.Invoke(new Action(() => dataGridView1.DataSource = data.ToList()));
+                dataGridView1.Invoke(new Action(() => dataGridView1.DataSource = data));
             }
             else
             {
-                dataGridView1.DataSource = data.ToList();
+                dataGridView1.DataSource = data;
             }
-
             Invoke(() => _loadingUC.Visible = false);
         }
 
         private void ExportDialog_Load(object sender, EventArgs e)
         {
+            InitializeLoadingControl();
+            InitializeDatePickers();
+            this.Shown += async (s, ev) => await LoadTimeEntriesSummaryAsync(dateTimePicker1.Value, dateTimePicker2.Value);
+        }
+
+        private void InitializeLoadingControl()
+        {
             _loadingUC.Size = this.Size;
             this.Controls.Add(_loadingUC);
-
-            var dateFirstDay = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-            dateTimePicker1.Value = dateFirstDay.AddMonths(-1);
-
-            int dateLastDay = DateTime.DaysInMonth(dateFirstDay.Year, dateTimePicker1.Value.Month);
-            dateTimePicker2.Value = new DateTime(dateFirstDay.Year, dateTimePicker1.Value.Month, dateLastDay);
-
-
-            Task.Run(() => LoadTimeEntriesSummary(dateTimePicker1.Value, dateTimePicker2.Value));
         }
 
-        private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
+        private void InitializeDatePickers()
         {
-            Task.Run(() => LoadTimeEntriesSummary(dateTimePicker1.Value, dateTimePicker2.Value));
+            var firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            dateTimePicker1.Value = firstDayOfMonth.AddMonths(-1);
+            dateTimePicker2.Value = new DateTime(firstDayOfMonth.Year, dateTimePicker1.Value.Month, DateTime.DaysInMonth(firstDayOfMonth.Year, dateTimePicker1.Value.Month));
         }
 
-        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        private async void DateTimePicker_ValueChanged(object sender, EventArgs e)
         {
-            Task.Run(() => LoadTimeEntriesSummary(dateTimePicker1.Value, dateTimePicker2.Value));
+            await LoadTimeEntriesSummaryAsync(dateTimePicker1.Value, dateTimePicker2.Value);
         }
 
         private void ExportToExcel(string filePath)
         {
-            Microsoft.Office.Interop.Excel.Application excelApp = new Microsoft.Office.Interop.Excel.Application();
+            var excelApp = new Microsoft.Office.Interop.Excel.Application();
             if (excelApp == null)
             {
                 AppLogger.Error("Excel nebyl nalezen na tomto počítači.");
                 return;
             }
 
-            Microsoft.Office.Interop.Excel.Workbook workbook = excelApp.Workbooks.Add();
-            Microsoft.Office.Interop.Excel.Worksheet worksheet = (Microsoft.Office.Interop.Excel.Worksheet)workbook.Sheets[1];
-
             try
             {
-                // Hlavičky
-                for (int i = 0; i < dataGridView1.Columns.Count; i++)
-                {
-                    worksheet.Cells[1, i + 1] = dataGridView1.Columns[i].HeaderText;
-                }
+                var workbook = excelApp.Workbooks.Add();
+                var worksheet = (Microsoft.Office.Interop.Excel.Worksheet)workbook.Sheets[1];
 
-                // Data
-                for (int i = 0; i < dataGridView1.Rows.Count; i++)
-                {
-                    for (int j = 0; j < dataGridView1.Columns.Count; j++)
-                    {
-                        worksheet.Cells[i + 2, j + 1] = dataGridView1.Rows[i].Cells[j].Value?.ToString() ?? "";
-                    }
-                }
+                FillWorksheetWithData(worksheet);
 
                 workbook.SaveAs(filePath);
                 workbook.Close();
                 excelApp.Quit();
-
                 AppLogger.Information("Export do Excelu dokončen.", true);
             }
             catch (Exception ex)
@@ -125,24 +102,47 @@ namespace VykazyPrace.Dialogs
             }
             finally
             {
-                Marshal.ReleaseComObject(worksheet);
-                Marshal.ReleaseComObject(workbook);
-                Marshal.ReleaseComObject(excelApp);
+                ReleaseExcelObjects(excelApp);
             }
         }
 
-        private void buttonSaveAs_Click(object sender, EventArgs e)
+        private void FillWorksheetWithData(Microsoft.Office.Interop.Excel.Worksheet worksheet)
         {
-            using (SaveFileDialog sfd = new SaveFileDialog())
+            for (int i = 0; i < dataGridView1.Columns.Count; i++)
             {
-                sfd.Filter = "Excel Files|*.xlsx";
-                sfd.FileName = "Export.xlsx";
+                worksheet.Cells[1, i + 1] = dataGridView1.Columns[i].HeaderText;
+            }
 
-                if (sfd.ShowDialog() == DialogResult.OK)
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                for (int j = 0; j < dataGridView1.Columns.Count; j++)
                 {
-                    ExportToExcel(sfd.FileName);
+                    worksheet.Cells[i + 2, j + 1] = dataGridView1.Rows[i].Cells[j].Value?.ToString() ?? "";
                 }
             }
+        }
+
+        private void ReleaseExcelObjects(Microsoft.Office.Interop.Excel.Application excelApp)
+        {
+            Marshal.ReleaseComObject(excelApp);
+        }
+
+        private void ButtonSaveAs_Click(object sender, EventArgs e)
+        {
+            using SaveFileDialog sfd = new SaveFileDialog { Filter = "Excel Files|*.xlsx", FileName = "Export.xlsx" };
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                ExportToExcel(sfd.FileName);
+            }
+        }
+
+        private async void ComboBoxMonth_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            var firstDayOfYear = new DateTime(dateTimePicker1.Value.Year, 1, 1);
+            dateTimePicker1.Value = firstDayOfYear.AddMonths(comboBoxMonth.SelectedIndex);
+            dateTimePicker2.Value = new DateTime(firstDayOfYear.Year, dateTimePicker1.Value.Month, DateTime.DaysInMonth(firstDayOfYear.Year, dateTimePicker1.Value.Month));
+
+            await LoadTimeEntriesSummaryAsync(dateTimePicker1.Value, dateTimePicker2.Value);
         }
     }
 }

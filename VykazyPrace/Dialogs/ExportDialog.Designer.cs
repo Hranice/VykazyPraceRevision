@@ -34,9 +34,7 @@
             buttonSaveAs = new Button();
             dataGridView1 = new DataGridView();
             button2 = new Button();
-            comboBox1 = new ComboBox();
-            checkBoxFillMissingHours = new CheckBox();
-            comboBox2 = new ComboBox();
+            comboBoxMonth = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -48,7 +46,7 @@
             dateTimePicker1.Size = new Size(256, 28);
             dateTimePicker1.TabIndex = 2;
             dateTimePicker1.Value = new DateTime(2025, 3, 1, 15, 43, 0, 0);
-            dateTimePicker1.ValueChanged += dateTimePicker1_ValueChanged;
+            dateTimePicker1.ValueChanged += DateTimePicker_ValueChanged;
             // 
             // dateTimePicker2
             // 
@@ -58,7 +56,7 @@
             dateTimePicker2.Size = new Size(256, 28);
             dateTimePicker2.TabIndex = 4;
             dateTimePicker2.Value = new DateTime(2025, 3, 31, 15, 44, 0, 0);
-            dateTimePicker2.ValueChanged += dateTimePicker2_ValueChanged;
+            dateTimePicker2.ValueChanged += DateTimePicker_ValueChanged;
             // 
             // label2
             // 
@@ -72,13 +70,13 @@
             // 
             // buttonSaveAs
             // 
-            buttonSaveAs.Location = new Point(196, 538);
+            buttonSaveAs.Location = new Point(196, 440);
             buttonSaveAs.Name = "buttonSaveAs";
             buttonSaveAs.Size = new Size(344, 40);
             buttonSaveAs.TabIndex = 6;
             buttonSaveAs.Text = "Uložit jako..";
             buttonSaveAs.UseVisualStyleBackColor = true;
-            buttonSaveAs.Click += buttonSaveAs_Click;
+            buttonSaveAs.Click += ButtonSaveAs_Click;
             // 
             // dataGridView1
             // 
@@ -97,53 +95,30 @@
             // 
             // button2
             // 
-            button2.Location = new Point(10, 538);
+            button2.Location = new Point(10, 440);
             button2.Name = "button2";
             button2.Size = new Size(180, 40);
             button2.TabIndex = 8;
             button2.Text = "Zavřít";
             button2.UseVisualStyleBackColor = true;
             // 
-            // comboBox1
+            // comboBoxMonth
             // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Items.AddRange(new object[] { "Vše", "Konstrukce", "Elekro" });
-            comboBox1.Location = new Point(10, 475);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(121, 33);
-            comboBox1.TabIndex = 9;
-            comboBox1.Text = "Vše";
-            // 
-            // checkBoxFillMissingHours
-            // 
-            checkBoxFillMissingHours.AutoSize = true;
-            checkBoxFillMissingHours.Checked = true;
-            checkBoxFillMissingHours.CheckState = CheckState.Checked;
-            checkBoxFillMissingHours.Location = new Point(10, 440);
-            checkBoxFillMissingHours.Name = "checkBoxFillMissingHours";
-            checkBoxFillMissingHours.Size = new Size(268, 29);
-            checkBoxFillMissingHours.TabIndex = 10;
-            checkBoxFillMissingHours.Text = "Doplnit prázdné hodiny <provoz>";
-            checkBoxFillMissingHours.UseVisualStyleBackColor = true;
-            // 
-            // comboBox2
-            // 
-            comboBox2.FormattingEnabled = true;
-            comboBox2.Items.AddRange(new object[] { "Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec" });
-            comboBox2.Location = new Point(10, 10);
-            comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(121, 33);
-            comboBox2.TabIndex = 11;
-            comboBox2.Text = "Březen";
+            comboBoxMonth.FormattingEnabled = true;
+            comboBoxMonth.Items.AddRange(new object[] { "Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec" });
+            comboBoxMonth.Location = new Point(10, 10);
+            comboBoxMonth.Name = "comboBoxMonth";
+            comboBoxMonth.Size = new Size(121, 33);
+            comboBoxMonth.TabIndex = 11;
+            comboBoxMonth.Text = "Březen";
+            comboBoxMonth.SelectionChangeCommitted += ComboBoxMonth_SelectionChangeCommitted;
             // 
             // ExportDialog
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(549, 590);
-            Controls.Add(comboBox2);
-            Controls.Add(checkBoxFillMissingHours);
-            Controls.Add(comboBox1);
+            ClientSize = new Size(549, 490);
+            Controls.Add(comboBoxMonth);
             Controls.Add(button2);
             Controls.Add(dataGridView1);
             Controls.Add(buttonSaveAs);
@@ -167,8 +142,6 @@
         private Button buttonSaveAs;
         private DataGridView dataGridView1;
         private Button button2;
-        private ComboBox comboBox1;
-        private CheckBox checkBoxFillMissingHours;
-        private ComboBox comboBox2;
+        private ComboBox comboBoxMonth;
     }
 }

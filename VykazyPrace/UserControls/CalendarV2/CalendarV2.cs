@@ -204,7 +204,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                 newPanel.MouseUp += dayPanel_MouseUp;
                 newPanel.MouseLeave += dayPanel_MouseLeave;
                 newPanel.MouseClick += dayPanel_MouseClick;
-                newPanel.MouseDoubleClick += dayPanel_MouseDoubleClick;
 
                 tableLayoutPanel1.Controls.Add(newPanel, column, row);
                 tableLayoutPanel1.SetColumnSpan(newPanel, columnSpan);
@@ -272,27 +271,6 @@ namespace VykazyPrace.UserControls.CalendarV2
         }
 
         #region DayPanel events
-        private async void dayPanel_MouseDoubleClick(object? sender, MouseEventArgs e)
-        {
-            if (sender is not DayPanel panel) return;
-
-            //var result = new TimeEntryV2Dialog(_selectedUser, _selectedDate, panel.EntryId).ShowDialog();
-
-            //ChangesMade = true;
-            //await RenderCalendar();
-
-            //switch (result)
-            //{
-            //    case DialogResult.OK:
-            //        ChangesMade = true;
-            //        await RenderCalendar();
-            //        break;
-            //    default:
-
-            //        break;
-            //}
-        }
-
         private void dayPanel_MouseMove(object? sender, MouseEventArgs e)
         {
             if (sender is not DayPanel panel) return;

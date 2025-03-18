@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Net.WebSockets;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Windows.Forms;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Dialogs;
@@ -37,7 +38,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         private bool isResizingLeft = false;
         private int startMouseX, startPanelX;
         private int originalColumn, originalColumnSpan;
-        private const int ResizeThreshold = 5;
+        private const int ResizeThreshold = 7;
 
 
         public CalendarV2(User currentUser)
@@ -150,7 +151,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 comboBoxStart.SelectedIndex = minutesStart / 30;
                 comboBoxEnd.SelectedIndex = minutesEnd / 30;
 
-                groupBox1.Text = $"{days[(int)timeStamp.DayOfWeek]} - {timeStamp:dd.MM.yyyy}";
+                //groupBox1.Text = $"{days[(int)timeStamp.DayOfWeek]} - {timeStamp:dd.MM.yyyy}";
 
                 if (lastPanel?.EntryId != -1)
                 {
@@ -239,32 +240,32 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
 
             // Odstranění starých indikátorů
-            var oldIndicators = panelContainer.Controls.OfType<Panel>().Where(p => p.Name == "indicator").ToList();
-            foreach (var ctrl in oldIndicators)
-            {
-                panelContainer.Controls.Remove(ctrl);
-                ctrl.Dispose();
-            }
+            //var oldIndicators = panelContainer.Controls.OfType<Panel>().Where(p => p.Name == "indicator").ToList();
+            //foreach (var ctrl in oldIndicators)
+            //{
+            //    panelContainer.Controls.Remove(ctrl);
+            //    ctrl.Dispose();
+            //}
 
             BeginInvoke((Action)(() =>
             {
                 // Přidání indikátorů
-                for (int i = 0; i < 2; i++)
-                {
-                    for (int j = 0; j < 7; j++)
-                    {
-                        var panelIndicator = new Panel
-                        {
-                            Name = "indicator",
-                            Size = new Size(1, 69),
-                            Location = new Point((30 * arrivalColumn) + 6 + (i * (30 * leaveColumn) - Math.Abs(scrollPosition.X)), j * 69 + 33 + j),
-                            BackColor = Color.Red
-                        };
+                //for (int i = 0; i < 2; i++)
+                //{
+                //    for (int j = 0; j < 7; j++)
+                //    {
+                //        var panelIndicator = new Panel
+                //        {
+                //            Name = "indicator",
+                //            Size = new Size(1, 69),
+                //            Location = new Point((30 * arrivalColumn) + 6 + (i * (30 * leaveColumn) - Math.Abs(scrollPosition.X)), j * 69 + 33 + j),
+                //            BackColor = Color.Red
+                //        };
 
-                        panelContainer.Controls.Add(panelIndicator);
-                        panelIndicator.BringToFront();
-                    }
-                }
+                //        panelContainer.Controls.Add(panelIndicator);
+                //        panelIndicator.BringToFront();
+                //    }
+                //}
 
                 UpdateDateLabels();
 
@@ -279,7 +280,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             }));
         }
 
-
+        #region DayPanel events
         private async void dayPanel_MouseClick(object? sender, MouseEventArgs e)
         {
             if (sender is not DayPanel panel) return;
@@ -298,7 +299,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             await LoadSidebar();
         }
 
-        #region DayPanel events
         private void dayPanel_MouseMove(object? sender, MouseEventArgs e)
         {
             if (sender is not DayPanel panel) return;
@@ -523,13 +523,13 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void UpdateDateLabels()
         {
-            labelDate1.Text = _selectedDate.ToString("d.M.yyyy");
-            labelDate2.Text = _selectedDate.AddDays(1).ToString("d.M.yyyy");
-            labelDate3.Text = _selectedDate.AddDays(2).ToString("d.M.yyyy");
-            labelDate4.Text = _selectedDate.AddDays(3).ToString("d.M.yyyy");
-            labelDate5.Text = _selectedDate.AddDays(4).ToString("d.M.yyyy");
-            labelDate6.Text = _selectedDate.AddDays(5).ToString("d.M.yyyy");
-            labelDate7.Text = _selectedDate.AddDays(6).ToString("d.M.yyyy");
+            labelDate01.Text = _selectedDate.ToString("d.M.yyyy");
+            labelDate02.Text = _selectedDate.AddDays(1).ToString("d.M.yyyy");
+            labelDate03.Text = _selectedDate.AddDays(2).ToString("d.M.yyyy");
+            labelDate04.Text = _selectedDate.AddDays(3).ToString("d.M.yyyy");
+            labelDate05.Text = _selectedDate.AddDays(4).ToString("d.M.yyyy");
+            labelDate06.Text = _selectedDate.AddDays(5).ToString("d.M.yyyy");
+            labelDate07.Text = _selectedDate.AddDays(6).ToString("d.M.yyyy");
         }
 
         private (bool valid, object reason) CheckForEmptyOrIncorrectFields()

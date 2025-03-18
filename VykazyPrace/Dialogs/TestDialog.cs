@@ -13,6 +13,7 @@ namespace VykazyPrace.Dialogs
         public TestDialog(User currentUser)
         {
             InitializeComponent();
+            DoubleBuffered = true;
             _currentUser = currentUser;
             KeyPreview = true;
             this.KeyDown += Form1_KeyDown;
@@ -29,10 +30,11 @@ namespace VykazyPrace.Dialogs
         private void TestDialog_Load(object sender, EventArgs e)
         {
             _calendar = new UserControls.CalendarV2.CalendarV2(_currentUser);
+            _calendar.Dock = DockStyle.Fill;
             _calendar.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
             _calendar.Location = new Point(0, 0);
             _calendar.Name = "calendarV21";
-            _calendar.Size = new Size(1520, 580);
+            _calendar.Size = new Size(1100, 620);
             _calendar.TabIndex = 0;
 
             this.Controls.Add(_calendar);

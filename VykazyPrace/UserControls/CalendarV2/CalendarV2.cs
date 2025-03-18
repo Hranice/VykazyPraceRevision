@@ -269,28 +269,48 @@ namespace VykazyPrace.UserControls.CalendarV2
             int[] columnWidths = tableLayoutPanel1.GetColumnWidths();
             int[] headerRowHeights = customTableLayoutPanel1.GetRowHeights();
 
-            // Přidání indikátorů
-            for (int i = 0; i < 2; i++)
-            {
-                for (int j = 0; j < 7; j++)
-                {
-                    int rowHeight = (j < rowHeights.Length) ? rowHeights[j] : 69;
-                    int yPos = tableLayoutPanel1.GetRowHeights().Take(j).Sum() + headerRowHeights[0];
-                    int xPos = (columnWidths[0] * arrivalColumn) + tableLayoutPanel3.Width + (i * (columnWidths[0] * leaveColumn) - Math.Abs(scrollPosition.X));
+            int todayIndex = (int)DateTime.Now.DayOfWeek - 1;
+            if (todayIndex < 0) todayIndex = 6; // Oprava, aby pondělí bylo 0 a neděle 6
 
-                    var panelIndicator = new Panel
+            // Přidání indikátorů
+            for (int j = 0; j < 7; j++)
+            {
+                int rowHeight = (j < rowHeights.Length) ? rowHeights[j] : 69;
+                int yPos = tableLayoutPanel1.GetRowHeights().Take(j).Sum() + headerRowHeights[0];
+
+                int arrivalXPos = (columnWidths[0] * arrivalColumn) + tableLayoutPanel3.Width - Math.Abs(scrollPosition.X);
+
+                var arrivalIndicator = new Panel
+                {
+                    Name = "indicator",
+                    Size = new Size(1, rowHeight),
+                    Location = new Point(arrivalXPos, yPos),
+                    BackColor = Color.Red
+                };
+
+                panelContainer.Controls.Add(arrivalIndicator);
+                arrivalIndicator.BringToFront();
+
+                // Vykreslení leaveColumn pouze pokud to není aktuální den
+                if (j != todayIndex)
+                {
+                    int leaveXPos = (columnWidths[0] * leaveColumn) + tableLayoutPanel3.Width - Math.Abs(scrollPosition.X);
+
+                    var leaveIndicator = new Panel
                     {
                         Name = "indicator",
                         Size = new Size(1, rowHeight),
-                        Location = new Point(xPos, yPos),
+                        Location = new Point(leaveXPos, yPos),
                         BackColor = Color.Red
                     };
 
-                    panelContainer.Controls.Add(panelIndicator);
-                    panelIndicator.BringToFront();
+                    panelContainer.Controls.Add(leaveIndicator);
+                    leaveIndicator.BringToFront();
                 }
             }
         }
+
+
 
         #region DayPanel events
         private async void dayPanel_MouseClick(object? sender, MouseEventArgs e)

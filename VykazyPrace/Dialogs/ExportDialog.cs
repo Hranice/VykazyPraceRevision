@@ -144,8 +144,8 @@ namespace VykazyPrace.Dialogs
                     worksheet.Cells[i + 2, 6] = entry.Description ?? "N/A";
                     worksheet.Cells[i + 2, 7] = entry.EntryMinutes / 60.0;
 
+                    // Výpočet sazby podle skupiny + celkových nákladů
                     ((Range)worksheet.Cells[i + 2, 8]).Formula = $"=IFERROR(VLOOKUP(TRIM(B{i + 2}), NákladyTabulka, 2, FALSE), 0)";
-                    // Výpočet celkových nákladů
                     ((Range)worksheet.Cells[i + 2, 9]).Formula = $"=G{i + 2}*H{i + 2}";
                 }
 
@@ -170,9 +170,7 @@ namespace VykazyPrace.Dialogs
                 Range namedRange = costSheet.Range[$"A1:B{userGroups.Count + 1}"];
                 workbook.Names.Add("NákladyTabulka", namedRange);
 
-                // Uložení před kontingenčními tabulkami
-                workbook.SaveAs(filePath);
-
+                // KONTINGENČNÍ TABULKY
                 // Kontingenční tabulka "Souhrn podle projektu"
                 Worksheet summarySheet = (Worksheet)workbook.Sheets.Add();
                 summarySheet.Name = "Souhrn podle projektu";
@@ -186,17 +184,16 @@ namespace VykazyPrace.Dialogs
 
                 ((PivotField)pivotTable1.PivotFields("Projekt")).Orientation = XlPivotFieldOrientation.xlRowField;
                 ((PivotField)pivotTable1.PivotFields("Skupina")).Orientation = XlPivotFieldOrientation.xlRowField;
-                ((PivotField)pivotTable1.PivotFields("Typ záznamu")).Orientation = XlPivotFieldOrientation.xlRowField; // Přidán Typ záznamu
+                ((PivotField)pivotTable1.PivotFields("Typ záznamu")).Orientation = XlPivotFieldOrientation.xlRowField;
+                ((PivotField)pivotTable1.PivotFields("Uživatel")).Orientation = XlPivotFieldOrientation.xlRowField;
 
-                PivotField hoursField = (PivotField)pivotTable1.PivotFields("Doba v hodinách");
-                hoursField.Orientation = XlPivotFieldOrientation.xlDataField;
-                hoursField.Function = XlConsolidationFunction.xlSum;
-                hoursField.Name = "- hodiny celkem";
+                PivotField hoursField1 = (PivotField)pivotTable1.PivotFields("Doba v hodinách");
+                hoursField1.Orientation = XlPivotFieldOrientation.xlDataField;
+                hoursField1.Function = XlConsolidationFunction.xlSum;
 
                 PivotField costField1 = (PivotField)pivotTable1.PivotFields("Celkové náklady");
                 costField1.Orientation = XlPivotFieldOrientation.xlDataField;
                 costField1.Function = XlConsolidationFunction.xlSum;
-                costField1.Name = "- náklady celkem";
 
                 pivotTable1.RefreshTable();
                 summarySheet.Columns.AutoFit();
@@ -215,33 +212,52 @@ namespace VykazyPrace.Dialogs
                 ((PivotField)pivotTable2.PivotFields("Skupina")).Orientation = XlPivotFieldOrientation.xlRowField;
                 ((PivotField)pivotTable2.PivotFields("Projekt")).Orientation = XlPivotFieldOrientation.xlRowField;
                 ((PivotField)pivotTable2.PivotFields("Typ záznamu")).Orientation = XlPivotFieldOrientation.xlRowField;
+                ((PivotField)pivotTable2.PivotFields("Uživatel")).Orientation = XlPivotFieldOrientation.xlRowField;
 
                 PivotField hoursField2 = (PivotField)pivotTable2.PivotFields("Doba v hodinách");
                 hoursField2.Orientation = XlPivotFieldOrientation.xlDataField;
                 hoursField2.Function = XlConsolidationFunction.xlSum;
-                hoursField2.Name = "- hodiny celkem ";
 
                 PivotField costField2 = (PivotField)pivotTable2.PivotFields("Celkové náklady");
                 costField2.Orientation = XlPivotFieldOrientation.xlDataField;
                 costField2.Function = XlConsolidationFunction.xlSum;
-                costField2.Name = "- náklady celkem ";
 
                 pivotTable2.RefreshTable();
                 costSummarySheet.Columns.AutoFit();
 
+                // Kontingenční tabulka "Souhrn podle uživatele"
+                Worksheet userSummarySheet = (Worksheet)workbook.Sheets.Add();
+                userSummarySheet.Name = "Souhrn podle uživatele";
+
+                PivotTable pivotTable3 = (PivotTable)userSummarySheet.PivotTableWizard(
+                    XlPivotTableSourceType.xlDatabase,
+                    worksheet.Range["A1:I" + (timeEntries.Count + 1)],
+                    userSummarySheet.Range["A3"],
+                    "UserSummaryPivot"
+                );
+
+                ((PivotField)pivotTable3.PivotFields("Uživatel")).Orientation = XlPivotFieldOrientation.xlRowField;
+                ((PivotField)pivotTable3.PivotFields("Projekt")).Orientation = XlPivotFieldOrientation.xlRowField;
+                ((PivotField)pivotTable3.PivotFields("Typ záznamu")).Orientation = XlPivotFieldOrientation.xlRowField;
+
+                PivotField hoursField3 = (PivotField)pivotTable3.PivotFields("Doba v hodinách");
+                hoursField3.Orientation = XlPivotFieldOrientation.xlDataField;
+                hoursField3.Function = XlConsolidationFunction.xlSum;
+
+                PivotField costField3 = (PivotField)pivotTable3.PivotFields("Celkové náklady");
+                costField3.Orientation = XlPivotFieldOrientation.xlDataField;
+                costField3.Function = XlConsolidationFunction.xlSum;
+
+                pivotTable3.RefreshTable();
+                userSummarySheet.Columns.AutoFit();
+
                 workbook.Save();
                 workbook.Close();
                 excelApp.Quit();
-
-                AppLogger.Information("Export dokončen.", true);
             }
             catch (Exception ex)
             {
                 AppLogger.Error("Chyba při exportu do Excelu.", ex);
-            }
-            finally
-            {
-                Marshal.ReleaseComObject(excelApp);
             }
         }
 

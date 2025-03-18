@@ -239,34 +239,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                 panels.Add(newPanel);
             }
 
-            // Odstranění starých indikátorů
-            //var oldIndicators = panelContainer.Controls.OfType<Panel>().Where(p => p.Name == "indicator").ToList();
-            //foreach (var ctrl in oldIndicators)
-            //{
-            //    panelContainer.Controls.Remove(ctrl);
-            //    ctrl.Dispose();
-            //}
-
             BeginInvoke((Action)(() =>
             {
-                // Přidání indikátorů
-                //for (int i = 0; i < 2; i++)
-                //{
-                //    for (int j = 0; j < 7; j++)
-                //    {
-                //        var panelIndicator = new Panel
-                //        {
-                //            Name = "indicator",
-                //            Size = new Size(1, 69),
-                //            Location = new Point((30 * arrivalColumn) + 6 + (i * (30 * leaveColumn) - Math.Abs(scrollPosition.X)), j * 69 + 33 + j),
-                //            BackColor = Color.Red
-                //        };
-
-                //        panelContainer.Controls.Add(panelIndicator);
-                //        panelIndicator.BringToFront();
-                //    }
-                //}
-
+                AdjustIndicators(scrollPosition);
                 UpdateDateLabels();
 
                 panelContainer.AutoScroll = true;
@@ -278,6 +253,43 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                 _loadingUC.Visible = false;
             }));
+        }
+
+        private void AdjustIndicators(Point scrollPosition)
+        {
+            // Odstranění starých indikátorů
+            var oldIndicators = panelContainer.Controls.OfType<Panel>().Where(p => p.Name == "indicator").ToList();
+            foreach (var ctrl in oldIndicators)
+            {
+                panelContainer.Controls.Remove(ctrl);
+                ctrl.Dispose();
+            }
+
+            int[] rowHeights = tableLayoutPanel1.GetRowHeights();
+            int[] columnWidths = tableLayoutPanel1.GetColumnWidths();
+            int[] headerRowHeights = customTableLayoutPanel1.GetRowHeights();
+
+            // Přidání indikátorů
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 7; j++)
+                {
+                    int rowHeight = (j < rowHeights.Length) ? rowHeights[j] : 69;
+                    int yPos = tableLayoutPanel1.GetRowHeights().Take(j).Sum() + headerRowHeights[0];
+                    int xPos = (columnWidths[0] * arrivalColumn) + tableLayoutPanel3.Width + (i * (columnWidths[0] * leaveColumn) - Math.Abs(scrollPosition.X));
+
+                    var panelIndicator = new Panel
+                    {
+                        Name = "indicator",
+                        Size = new Size(1, rowHeight),
+                        Location = new Point(xPos, yPos),
+                        BackColor = Color.Red
+                    };
+
+                    panelContainer.Controls.Add(panelIndicator);
+                    panelIndicator.BringToFront();
+                }
+            }
         }
 
         #region DayPanel events
@@ -747,6 +759,11 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
 
             await RenderCalendar();
+        }
+
+        private void CalendarV2_Resize(object sender, EventArgs e)
+        {
+            AdjustIndicators(panelContainer.AutoScrollPosition);
         }
     }
 }

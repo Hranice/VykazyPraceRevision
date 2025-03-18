@@ -73,7 +73,6 @@
             label24 = new Label();
             label23 = new Label();
             label22 = new Label();
-            label21 = new Label();
             label20 = new Label();
             label19 = new Label();
             label18 = new Label();
@@ -81,6 +80,7 @@
             label16 = new Label();
             label15 = new Label();
             label1 = new Label();
+            label21 = new Label();
             tableLayoutPanel3 = new TableLayoutPanel();
             panel3 = new Panel();
             label12 = new Label();
@@ -527,54 +527,54 @@
             // customTableLayoutPanel1
             // 
             customTableLayoutPanel1.ColumnCount = 48;
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.083332F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
             customTableLayoutPanel1.Controls.Add(label37, 0, 0);
             customTableLayoutPanel1.Controls.Add(label36, 0, 0);
             customTableLayoutPanel1.Controls.Add(label35, 0, 0);
@@ -591,7 +591,6 @@
             customTableLayoutPanel1.Controls.Add(label24, 0, 0);
             customTableLayoutPanel1.Controls.Add(label23, 0, 0);
             customTableLayoutPanel1.Controls.Add(label22, 0, 0);
-            customTableLayoutPanel1.Controls.Add(label21, 0, 0);
             customTableLayoutPanel1.Controls.Add(label20, 0, 0);
             customTableLayoutPanel1.Controls.Add(label19, 0, 0);
             customTableLayoutPanel1.Controls.Add(label18, 0, 0);
@@ -599,6 +598,7 @@
             customTableLayoutPanel1.Controls.Add(label16, 0, 0);
             customTableLayoutPanel1.Controls.Add(label15, 0, 0);
             customTableLayoutPanel1.Controls.Add(label1, 0, 0);
+            customTableLayoutPanel1.Controls.Add(label21, 2, 0);
             customTableLayoutPanel1.Dock = DockStyle.Top;
             customTableLayoutPanel1.Location = new Point(69, 0);
             customTableLayoutPanel1.Margin = new Padding(0);
@@ -613,312 +613,312 @@
             customTableLayoutPanel1.SetColumnSpan(label37, 2);
             label37.Dock = DockStyle.Fill;
             label37.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label37.Location = new Point(1230, 0);
-            label37.Margin = new Padding(0);
+            label37.Location = new Point(1231, 0);
+            label37.Margin = new Padding(1, 0, 0, 0);
             label37.Name = "label37";
-            label37.Size = new Size(82, 25);
+            label37.Size = new Size(81, 25);
             label37.TabIndex = 164;
             label37.Text = "15:00";
-            label37.TextAlign = ContentAlignment.MiddleCenter;
+            label37.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label36
             // 
             customTableLayoutPanel1.SetColumnSpan(label36, 2);
             label36.Dock = DockStyle.Fill;
             label36.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label36.Location = new Point(1312, 0);
-            label36.Margin = new Padding(0);
+            label36.Location = new Point(1313, 0);
+            label36.Margin = new Padding(1, 0, 0, 0);
             label36.Name = "label36";
-            label36.Size = new Size(82, 25);
+            label36.Size = new Size(81, 25);
             label36.TabIndex = 163;
             label36.Text = "16:00";
-            label36.TextAlign = ContentAlignment.MiddleCenter;
+            label36.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label35
             // 
             customTableLayoutPanel1.SetColumnSpan(label35, 2);
             label35.Dock = DockStyle.Fill;
             label35.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label35.Location = new Point(1394, 0);
-            label35.Margin = new Padding(0);
+            label35.Location = new Point(1149, 0);
+            label35.Margin = new Padding(1, 0, 0, 0);
             label35.Name = "label35";
-            label35.Size = new Size(82, 25);
+            label35.Size = new Size(81, 25);
             label35.TabIndex = 162;
-            label35.Text = "17:00";
-            label35.TextAlign = ContentAlignment.MiddleCenter;
+            label35.Text = "14:00";
+            label35.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label34
             // 
             customTableLayoutPanel1.SetColumnSpan(label34, 2);
             label34.Dock = DockStyle.Fill;
             label34.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label34.Location = new Point(984, 0);
-            label34.Margin = new Padding(0);
+            label34.Location = new Point(985, 0);
+            label34.Margin = new Padding(1, 0, 0, 0);
             label34.Name = "label34";
-            label34.Size = new Size(82, 25);
+            label34.Size = new Size(81, 25);
             label34.TabIndex = 161;
             label34.Text = "12:00";
-            label34.TextAlign = ContentAlignment.MiddleCenter;
+            label34.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label33
             // 
             customTableLayoutPanel1.SetColumnSpan(label33, 2);
             label33.Dock = DockStyle.Fill;
             label33.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label33.Location = new Point(1066, 0);
-            label33.Margin = new Padding(0);
+            label33.Location = new Point(1067, 0);
+            label33.Margin = new Padding(1, 0, 0, 0);
             label33.Name = "label33";
-            label33.Size = new Size(82, 25);
+            label33.Size = new Size(81, 25);
             label33.TabIndex = 160;
             label33.Text = "13:00";
-            label33.TextAlign = ContentAlignment.MiddleCenter;
+            label33.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label32
             // 
             customTableLayoutPanel1.SetColumnSpan(label32, 2);
             label32.Dock = DockStyle.Fill;
             label32.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label32.Location = new Point(1148, 0);
-            label32.Margin = new Padding(0);
+            label32.Location = new Point(1395, 0);
+            label32.Margin = new Padding(1, 0, 0, 0);
             label32.Name = "label32";
-            label32.Size = new Size(82, 25);
+            label32.Size = new Size(81, 25);
             label32.TabIndex = 159;
-            label32.Text = "14:00";
-            label32.TextAlign = ContentAlignment.MiddleCenter;
+            label32.Text = "17:00";
+            label32.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label31
             // 
             customTableLayoutPanel1.SetColumnSpan(label31, 2);
             label31.Dock = DockStyle.Fill;
             label31.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label31.Location = new Point(1722, 0);
-            label31.Margin = new Padding(0);
+            label31.Location = new Point(1723, 0);
+            label31.Margin = new Padding(1, 0, 0, 0);
             label31.Name = "label31";
-            label31.Size = new Size(82, 25);
+            label31.Size = new Size(81, 25);
             label31.TabIndex = 158;
             label31.Text = "21:00";
-            label31.TextAlign = ContentAlignment.MiddleCenter;
+            label31.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label30
             // 
             customTableLayoutPanel1.SetColumnSpan(label30, 2);
             label30.Dock = DockStyle.Fill;
             label30.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label30.Location = new Point(1804, 0);
-            label30.Margin = new Padding(0);
+            label30.Location = new Point(1805, 0);
+            label30.Margin = new Padding(1, 0, 0, 0);
             label30.Name = "label30";
-            label30.Size = new Size(82, 25);
+            label30.Size = new Size(81, 25);
             label30.TabIndex = 157;
             label30.Text = "22:00";
-            label30.TextAlign = ContentAlignment.MiddleCenter;
+            label30.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label29
             // 
             customTableLayoutPanel1.SetColumnSpan(label29, 2);
             label29.Dock = DockStyle.Fill;
             label29.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label29.Location = new Point(1886, 0);
-            label29.Margin = new Padding(0);
+            label29.Location = new Point(1641, 0);
+            label29.Margin = new Padding(1, 0, 0, 0);
             label29.Name = "label29";
-            label29.Size = new Size(83, 25);
+            label29.Size = new Size(81, 25);
             label29.TabIndex = 156;
-            label29.Text = "23:00";
-            label29.TextAlign = ContentAlignment.MiddleCenter;
+            label29.Text = "20:00";
+            label29.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label28
             // 
             customTableLayoutPanel1.SetColumnSpan(label28, 2);
             label28.Dock = DockStyle.Fill;
             label28.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label28.Location = new Point(1476, 0);
-            label28.Margin = new Padding(0);
+            label28.Location = new Point(1477, 0);
+            label28.Margin = new Padding(1, 0, 0, 0);
             label28.Name = "label28";
-            label28.Size = new Size(82, 25);
+            label28.Size = new Size(81, 25);
             label28.TabIndex = 155;
             label28.Text = "18:00";
-            label28.TextAlign = ContentAlignment.MiddleCenter;
+            label28.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label27
             // 
             customTableLayoutPanel1.SetColumnSpan(label27, 2);
             label27.Dock = DockStyle.Fill;
             label27.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label27.Location = new Point(1558, 0);
-            label27.Margin = new Padding(0);
+            label27.Location = new Point(1559, 0);
+            label27.Margin = new Padding(1, 0, 0, 0);
             label27.Name = "label27";
-            label27.Size = new Size(82, 25);
+            label27.Size = new Size(81, 25);
             label27.TabIndex = 154;
             label27.Text = "19:00";
-            label27.TextAlign = ContentAlignment.MiddleCenter;
+            label27.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label26
             // 
             customTableLayoutPanel1.SetColumnSpan(label26, 2);
             label26.Dock = DockStyle.Fill;
             label26.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label26.Location = new Point(1640, 0);
-            label26.Margin = new Padding(0);
+            label26.Location = new Point(903, 0);
+            label26.Margin = new Padding(1, 0, 0, 0);
             label26.Name = "label26";
-            label26.Size = new Size(82, 25);
+            label26.Size = new Size(81, 25);
             label26.TabIndex = 153;
-            label26.Text = "20:00";
-            label26.TextAlign = ContentAlignment.MiddleCenter;
+            label26.Text = "11:00";
+            label26.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label25
             // 
             customTableLayoutPanel1.SetColumnSpan(label25, 2);
             label25.Dock = DockStyle.Fill;
             label25.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label25.Location = new Point(246, 0);
-            label25.Margin = new Padding(0);
+            label25.Location = new Point(247, 0);
+            label25.Margin = new Padding(1, 0, 0, 0);
             label25.Name = "label25";
-            label25.Size = new Size(82, 25);
+            label25.Size = new Size(81, 25);
             label25.TabIndex = 152;
             label25.Text = "3:00";
-            label25.TextAlign = ContentAlignment.MiddleCenter;
+            label25.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label24
             // 
             customTableLayoutPanel1.SetColumnSpan(label24, 2);
             label24.Dock = DockStyle.Fill;
             label24.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label24.Location = new Point(328, 0);
-            label24.Margin = new Padding(0);
+            label24.Location = new Point(329, 0);
+            label24.Margin = new Padding(1, 0, 0, 0);
             label24.Name = "label24";
-            label24.Size = new Size(82, 25);
+            label24.Size = new Size(81, 25);
             label24.TabIndex = 151;
             label24.Text = "4:00";
-            label24.TextAlign = ContentAlignment.MiddleCenter;
+            label24.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label23
             // 
             customTableLayoutPanel1.SetColumnSpan(label23, 2);
             label23.Dock = DockStyle.Fill;
             label23.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label23.Location = new Point(410, 0);
-            label23.Margin = new Padding(0);
+            label23.Location = new Point(165, 0);
+            label23.Margin = new Padding(1, 0, 0, 0);
             label23.Name = "label23";
-            label23.Size = new Size(82, 25);
+            label23.Size = new Size(81, 25);
             label23.TabIndex = 150;
-            label23.Text = "5:00";
-            label23.TextAlign = ContentAlignment.MiddleCenter;
+            label23.Text = "2:00";
+            label23.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label22
             // 
             customTableLayoutPanel1.SetColumnSpan(label22, 2);
             label22.Dock = DockStyle.Fill;
             label22.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label22.Location = new Point(0, 0);
-            label22.Margin = new Padding(0);
+            label22.Location = new Point(1, 0);
+            label22.Margin = new Padding(1, 0, 0, 0);
             label22.Name = "label22";
-            label22.Size = new Size(82, 25);
+            label22.Size = new Size(81, 25);
             label22.TabIndex = 149;
             label22.Text = "0:00";
-            label22.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // label21
-            // 
-            customTableLayoutPanel1.SetColumnSpan(label21, 2);
-            label21.Dock = DockStyle.Fill;
-            label21.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label21.Location = new Point(82, 0);
-            label21.Margin = new Padding(0);
-            label21.Name = "label21";
-            label21.Size = new Size(82, 25);
-            label21.TabIndex = 148;
-            label21.Text = "1:00";
-            label21.TextAlign = ContentAlignment.MiddleCenter;
+            label22.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label20
             // 
             customTableLayoutPanel1.SetColumnSpan(label20, 2);
             label20.Dock = DockStyle.Fill;
             label20.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label20.Location = new Point(164, 0);
-            label20.Margin = new Padding(0);
+            label20.Location = new Point(83, 0);
+            label20.Margin = new Padding(1, 0, 0, 0);
             label20.Name = "label20";
-            label20.Size = new Size(82, 25);
+            label20.Size = new Size(81, 25);
             label20.TabIndex = 147;
-            label20.Text = "2:00";
-            label20.TextAlign = ContentAlignment.MiddleCenter;
+            label20.Text = "1:00";
+            label20.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label19
             // 
             customTableLayoutPanel1.SetColumnSpan(label19, 2);
             label19.Dock = DockStyle.Fill;
             label19.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label19.Location = new Point(738, 0);
-            label19.Margin = new Padding(0);
+            label19.Location = new Point(411, 0);
+            label19.Margin = new Padding(1, 0, 0, 0);
             label19.Name = "label19";
-            label19.Size = new Size(82, 25);
+            label19.Size = new Size(81, 25);
             label19.TabIndex = 146;
-            label19.Text = "9:00";
-            label19.TextAlign = ContentAlignment.MiddleCenter;
+            label19.Text = "5:00";
+            label19.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label18
             // 
             customTableLayoutPanel1.SetColumnSpan(label18, 2);
             label18.Dock = DockStyle.Fill;
             label18.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label18.Location = new Point(820, 0);
-            label18.Margin = new Padding(0);
+            label18.Location = new Point(739, 0);
+            label18.Margin = new Padding(1, 0, 0, 0);
             label18.Name = "label18";
-            label18.Size = new Size(82, 25);
+            label18.Size = new Size(81, 25);
             label18.TabIndex = 145;
-            label18.Text = "10:00";
-            label18.TextAlign = ContentAlignment.MiddleCenter;
+            label18.Text = "9:00";
+            label18.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label17
             // 
             customTableLayoutPanel1.SetColumnSpan(label17, 2);
             label17.Dock = DockStyle.Fill;
             label17.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label17.Location = new Point(902, 0);
-            label17.Margin = new Padding(0);
+            label17.Location = new Point(821, 0);
+            label17.Margin = new Padding(1, 0, 0, 0);
             label17.Name = "label17";
-            label17.Size = new Size(82, 25);
+            label17.Size = new Size(81, 25);
             label17.TabIndex = 144;
-            label17.Text = "11:00";
-            label17.TextAlign = ContentAlignment.MiddleCenter;
+            label17.Text = "10:00";
+            label17.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label16
             // 
             customTableLayoutPanel1.SetColumnSpan(label16, 2);
             label16.Dock = DockStyle.Fill;
             label16.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label16.Location = new Point(492, 0);
-            label16.Margin = new Padding(0);
+            label16.Location = new Point(657, 0);
+            label16.Margin = new Padding(1, 0, 0, 0);
             label16.Name = "label16";
-            label16.Size = new Size(82, 25);
+            label16.Size = new Size(81, 25);
             label16.TabIndex = 143;
-            label16.Text = "6:00";
-            label16.TextAlign = ContentAlignment.MiddleCenter;
+            label16.Text = "8:00";
+            label16.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label15
             // 
             customTableLayoutPanel1.SetColumnSpan(label15, 2);
             label15.Dock = DockStyle.Fill;
             label15.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label15.Location = new Point(574, 0);
-            label15.Margin = new Padding(0);
+            label15.Location = new Point(493, 0);
+            label15.Margin = new Padding(1, 0, 0, 0);
             label15.Name = "label15";
-            label15.Size = new Size(82, 25);
+            label15.Size = new Size(81, 25);
             label15.TabIndex = 142;
-            label15.Text = "7:00";
-            label15.TextAlign = ContentAlignment.MiddleCenter;
+            label15.Text = "6:00";
+            label15.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label1
             // 
             customTableLayoutPanel1.SetColumnSpan(label1, 2);
             label1.Dock = DockStyle.Fill;
             label1.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label1.Location = new Point(656, 0);
-            label1.Margin = new Padding(0);
+            label1.Location = new Point(575, 0);
+            label1.Margin = new Padding(1, 0, 0, 0);
             label1.Name = "label1";
-            label1.Size = new Size(82, 25);
+            label1.Size = new Size(81, 25);
             label1.TabIndex = 141;
-            label1.Text = "8:00";
-            label1.TextAlign = ContentAlignment.MiddleCenter;
+            label1.Text = "7:00";
+            label1.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // label21
+            // 
+            customTableLayoutPanel1.SetColumnSpan(label21, 2);
+            label21.Dock = DockStyle.Fill;
+            label21.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label21.Location = new Point(1887, 0);
+            label21.Margin = new Padding(1, 0, 0, 0);
+            label21.Name = "label21";
+            label21.Size = new Size(82, 25);
+            label21.TabIndex = 148;
+            label21.Text = "23:00";
+            label21.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // tableLayoutPanel3
             // 
@@ -1196,6 +1196,7 @@
             Name = "CalendarV2";
             Size = new Size(1000, 600);
             Load += CalendarV2_Load;
+            Resize += CalendarV2_Resize;
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
             flowLayoutPanel1.ResumeLayout(false);

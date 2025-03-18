@@ -195,7 +195,6 @@
             textBoxDescription.Name = "textBoxDescription";
             textBoxDescription.Size = new Size(170, 89);
             textBoxDescription.TabIndex = 4;
-            textBoxDescription.Text = "Zapínání kávovaru";
             // 
             // tableLayoutPanel6
             // 
@@ -307,6 +306,8 @@
             comboBoxProjects.Name = "comboBoxProjects";
             comboBoxProjects.Size = new Size(174, 29);
             comboBoxProjects.TabIndex = 27;
+            comboBoxProjects.SelectionChangeCommitted += comboBoxProjects_SelectionChangeCommitted;
+            comboBoxProjects.TextChanged += comboBoxProjects_TextChanged;
             // 
             // tableLayoutPanel9
             // 
@@ -342,6 +343,7 @@
             comboBoxStart.Name = "comboBoxStart";
             comboBoxStart.Size = new Size(79, 29);
             comboBoxStart.TabIndex = 131;
+            comboBoxStart.SelectedIndexChanged += comboBoxStart_SelectedIndexChanged;
             // 
             // tableLayoutPanel10
             // 
@@ -368,6 +370,7 @@
             comboBoxEnd.Name = "comboBoxEnd";
             comboBoxEnd.Size = new Size(79, 29);
             comboBoxEnd.TabIndex = 133;
+            comboBoxEnd.SelectionChangeCommitted += comboBoxEnd_SelectionChangeCommitted;
             // 
             // label39
             // 
@@ -434,6 +437,7 @@
             buttonConfirm.TabIndex = 141;
             buttonConfirm.Text = "Potvrdit";
             buttonConfirm.UseVisualStyleBackColor = true;
+            buttonConfirm.Click += buttonConfirm_Click;
             // 
             // buttonRemove
             // 
@@ -444,6 +448,7 @@
             buttonRemove.TabIndex = 142;
             buttonRemove.Text = "Odstranit";
             buttonRemove.UseVisualStyleBackColor = true;
+            buttonRemove.Click += buttonRemove_Click;
             // 
             // panelContainer
             // 

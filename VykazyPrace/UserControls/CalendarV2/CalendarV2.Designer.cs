@@ -54,31 +54,6 @@
             panelDay1 = new Panel();
             label88 = new Label();
             labelDate02 = new Label();
-            flowLayoutPanel1 = new FlowLayoutPanel();
-            tableLayoutPanel5 = new TableLayoutPanel();
-            label6 = new Label();
-            textBoxDescription = new TextBox();
-            tableLayoutPanel6 = new TableLayoutPanel();
-            comboBoxEntryType = new ComboBox();
-            label4 = new Label();
-            tableLayoutPanel7 = new TableLayoutPanel();
-            label5 = new Label();
-            comboBoxIndex = new ComboBox();
-            tableLayoutPanel8 = new TableLayoutPanel();
-            label8 = new Label();
-            comboBoxProjects = new ComboBox();
-            tableLayoutPanel9 = new TableLayoutPanel();
-            label10 = new Label();
-            comboBoxStart = new ComboBox();
-            tableLayoutPanel10 = new TableLayoutPanel();
-            comboBoxEnd = new ComboBox();
-            label39 = new Label();
-            panel2 = new Panel();
-            tableLayoutPanel4 = new TableLayoutPanel();
-            buttonNextWeek = new Button();
-            buttonPreviousWeek = new Button();
-            buttonConfirm = new Button();
-            buttonRemove = new Button();
             panelContainer = new Panel();
             tableLayoutPanel1 = new CustomTableLayoutPanel();
             customTableLayoutPanel1 = new CustomTableLayoutPanel();
@@ -106,6 +81,37 @@
             label15 = new Label();
             label1 = new Label();
             label21 = new Label();
+            flowLayoutPanel2 = new FlowLayoutPanel();
+            radioButton1 = new RadioButton();
+            radioButton2 = new RadioButton();
+            radioButton3 = new RadioButton();
+            radioButton4 = new RadioButton();
+            radioButton5 = new RadioButton();
+            radioButton6 = new RadioButton();
+            tableLayoutPanelProject = new TableLayoutPanel();
+            comboBoxProjects = new ComboBox();
+            labelProject = new Label();
+            tableLayoutPanelEntryType = new TableLayoutPanel();
+            comboBoxEntryType = new ComboBox();
+            labelType = new Label();
+            tableLayoutPanelEntrySubType = new TableLayoutPanel();
+            label10 = new Label();
+            comboBoxIndex = new ComboBox();
+            panel4 = new Panel();
+            tableLayoutPanel13 = new TableLayoutPanel();
+            comboBoxStart = new ComboBox();
+            label40 = new Label();
+            tableLayoutPanel12 = new TableLayoutPanel();
+            label38 = new Label();
+            comboBoxEnd = new ComboBox();
+            tableLayoutPanel6 = new TableLayoutPanel();
+            label4 = new Label();
+            textBoxDescription = new TextBox();
+            tableLayoutPanel4 = new TableLayoutPanel();
+            buttonNextWeek = new Button();
+            buttonPreviousWeek = new Button();
+            buttonConfirm = new Button();
+            buttonRemove = new Button();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
             panelDay6.SuspendLayout();
@@ -116,34 +122,34 @@
             panelDay4.SuspendLayout();
             panelDay2.SuspendLayout();
             panelDay1.SuspendLayout();
-            flowLayoutPanel1.SuspendLayout();
-            tableLayoutPanel5.SuspendLayout();
-            tableLayoutPanel6.SuspendLayout();
-            tableLayoutPanel7.SuspendLayout();
-            tableLayoutPanel8.SuspendLayout();
-            tableLayoutPanel9.SuspendLayout();
-            tableLayoutPanel10.SuspendLayout();
-            panel2.SuspendLayout();
-            tableLayoutPanel4.SuspendLayout();
             panelContainer.SuspendLayout();
             customTableLayoutPanel1.SuspendLayout();
+            flowLayoutPanel2.SuspendLayout();
+            tableLayoutPanelProject.SuspendLayout();
+            tableLayoutPanelEntryType.SuspendLayout();
+            tableLayoutPanelEntrySubType.SuspendLayout();
+            panel4.SuspendLayout();
+            tableLayoutPanel13.SuspendLayout();
+            tableLayoutPanel12.SuspendLayout();
+            tableLayoutPanel6.SuspendLayout();
+            tableLayoutPanel4.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel2
             // 
             tableLayoutPanel2.ColumnCount = 3;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 75F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 80.55F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 19.45F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 76.3145447F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23.6854572F));
             tableLayoutPanel2.Controls.Add(tableLayoutPanel3, 0, 0);
-            tableLayoutPanel2.Controls.Add(flowLayoutPanel1, 2, 0);
             tableLayoutPanel2.Controls.Add(panelContainer, 1, 0);
+            tableLayoutPanel2.Controls.Add(flowLayoutPanel2, 2, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(0, 0);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel2.Size = new Size(1000, 600);
+            tableLayoutPanel2.Size = new Size(1126, 600);
             tableLayoutPanel2.TabIndex = 124;
             // 
             // tableLayoutPanel3
@@ -413,314 +419,6 @@
             labelDate02.Text = "5.3.2025";
             labelDate02.TextAlign = ContentAlignment.TopRight;
             // 
-            // flowLayoutPanel1
-            // 
-            flowLayoutPanel1.AutoSize = true;
-            flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            flowLayoutPanel1.Controls.Add(tableLayoutPanel5);
-            flowLayoutPanel1.Controls.Add(tableLayoutPanel6);
-            flowLayoutPanel1.Controls.Add(tableLayoutPanel7);
-            flowLayoutPanel1.Controls.Add(tableLayoutPanel8);
-            flowLayoutPanel1.Controls.Add(tableLayoutPanel9);
-            flowLayoutPanel1.Controls.Add(tableLayoutPanel10);
-            flowLayoutPanel1.Controls.Add(panel2);
-            flowLayoutPanel1.Dock = DockStyle.Fill;
-            flowLayoutPanel1.Location = new Point(823, 3);
-            flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(174, 594);
-            flowLayoutPanel1.TabIndex = 131;
-            // 
-            // tableLayoutPanel5
-            // 
-            tableLayoutPanel5.ColumnCount = 1;
-            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel5.Controls.Add(label6, 0, 0);
-            tableLayoutPanel5.Controls.Add(textBoxDescription, 0, 1);
-            tableLayoutPanel5.Dock = DockStyle.Top;
-            tableLayoutPanel5.Location = new Point(3, 3);
-            tableLayoutPanel5.Name = "tableLayoutPanel5";
-            tableLayoutPanel5.RowCount = 2;
-            tableLayoutPanel5.RowStyles.Add(new RowStyle());
-            tableLayoutPanel5.RowStyles.Add(new RowStyle());
-            tableLayoutPanel5.Size = new Size(180, 120);
-            tableLayoutPanel5.TabIndex = 129;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label6.Location = new Point(3, 0);
-            label6.Name = "label6";
-            label6.Size = new Size(94, 21);
-            label6.TabIndex = 5;
-            label6.Text = "Popis činnosti*";
-            // 
-            // textBoxDescription
-            // 
-            textBoxDescription.Dock = DockStyle.Fill;
-            textBoxDescription.Location = new Point(5, 26);
-            textBoxDescription.Margin = new Padding(5);
-            textBoxDescription.Multiline = true;
-            textBoxDescription.Name = "textBoxDescription";
-            textBoxDescription.Size = new Size(170, 89);
-            textBoxDescription.TabIndex = 4;
-            // 
-            // tableLayoutPanel6
-            // 
-            tableLayoutPanel6.ColumnCount = 1;
-            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel6.Controls.Add(comboBoxEntryType, 0, 1);
-            tableLayoutPanel6.Controls.Add(label4, 0, 0);
-            tableLayoutPanel6.Dock = DockStyle.Top;
-            tableLayoutPanel6.Location = new Point(3, 129);
-            tableLayoutPanel6.Name = "tableLayoutPanel6";
-            tableLayoutPanel6.RowCount = 2;
-            tableLayoutPanel6.RowStyles.Add(new RowStyle());
-            tableLayoutPanel6.RowStyles.Add(new RowStyle());
-            tableLayoutPanel6.Size = new Size(180, 60);
-            tableLayoutPanel6.TabIndex = 130;
-            // 
-            // comboBoxEntryType
-            // 
-            comboBoxEntryType.Dock = DockStyle.Fill;
-            comboBoxEntryType.FormattingEnabled = true;
-            comboBoxEntryType.IntegralHeight = false;
-            comboBoxEntryType.ItemHeight = 21;
-            comboBoxEntryType.Location = new Point(3, 24);
-            comboBoxEntryType.Name = "comboBoxEntryType";
-            comboBoxEntryType.Size = new Size(174, 29);
-            comboBoxEntryType.TabIndex = 29;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label4.Location = new Point(4, 0);
-            label4.Margin = new Padding(4, 0, 4, 0);
-            label4.Name = "label4";
-            label4.Size = new Size(35, 21);
-            label4.TabIndex = 30;
-            label4.Text = "Typ*";
-            // 
-            // tableLayoutPanel7
-            // 
-            tableLayoutPanel7.ColumnCount = 1;
-            tableLayoutPanel7.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel7.Controls.Add(label5, 0, 0);
-            tableLayoutPanel7.Controls.Add(comboBoxIndex, 0, 1);
-            tableLayoutPanel7.Dock = DockStyle.Top;
-            tableLayoutPanel7.Location = new Point(3, 195);
-            tableLayoutPanel7.Name = "tableLayoutPanel7";
-            tableLayoutPanel7.RowCount = 2;
-            tableLayoutPanel7.RowStyles.Add(new RowStyle());
-            tableLayoutPanel7.RowStyles.Add(new RowStyle());
-            tableLayoutPanel7.Size = new Size(180, 60);
-            tableLayoutPanel7.TabIndex = 131;
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label5.Location = new Point(4, 0);
-            label5.Margin = new Padding(4, 0, 4, 0);
-            label5.Name = "label5";
-            label5.Size = new Size(43, 21);
-            label5.TabIndex = 32;
-            label5.Text = "Index";
-            // 
-            // comboBoxIndex
-            // 
-            comboBoxIndex.Dock = DockStyle.Fill;
-            comboBoxIndex.FormattingEnabled = true;
-            comboBoxIndex.IntegralHeight = false;
-            comboBoxIndex.ItemHeight = 21;
-            comboBoxIndex.Location = new Point(3, 24);
-            comboBoxIndex.Name = "comboBoxIndex";
-            comboBoxIndex.Size = new Size(174, 29);
-            comboBoxIndex.TabIndex = 31;
-            // 
-            // tableLayoutPanel8
-            // 
-            tableLayoutPanel8.ColumnCount = 1;
-            tableLayoutPanel8.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel8.Controls.Add(label8, 0, 0);
-            tableLayoutPanel8.Controls.Add(comboBoxProjects, 0, 1);
-            tableLayoutPanel8.Dock = DockStyle.Top;
-            tableLayoutPanel8.Location = new Point(3, 261);
-            tableLayoutPanel8.Name = "tableLayoutPanel8";
-            tableLayoutPanel8.RowCount = 2;
-            tableLayoutPanel8.RowStyles.Add(new RowStyle());
-            tableLayoutPanel8.RowStyles.Add(new RowStyle());
-            tableLayoutPanel8.Size = new Size(180, 60);
-            tableLayoutPanel8.TabIndex = 132;
-            // 
-            // label8
-            // 
-            label8.AutoSize = true;
-            label8.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label8.Location = new Point(4, 0);
-            label8.Margin = new Padding(4, 0, 4, 0);
-            label8.Name = "label8";
-            label8.Size = new Size(57, 21);
-            label8.TabIndex = 28;
-            label8.Text = "Projekt*";
-            // 
-            // comboBoxProjects
-            // 
-            comboBoxProjects.Dock = DockStyle.Fill;
-            comboBoxProjects.FormattingEnabled = true;
-            comboBoxProjects.IntegralHeight = false;
-            comboBoxProjects.ItemHeight = 21;
-            comboBoxProjects.Location = new Point(3, 24);
-            comboBoxProjects.Name = "comboBoxProjects";
-            comboBoxProjects.Size = new Size(174, 29);
-            comboBoxProjects.TabIndex = 27;
-            comboBoxProjects.SelectionChangeCommitted += comboBoxProjects_SelectionChangeCommitted;
-            comboBoxProjects.TextChanged += comboBoxProjects_TextChanged;
-            // 
-            // tableLayoutPanel9
-            // 
-            tableLayoutPanel9.ColumnCount = 1;
-            tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel9.Controls.Add(label10, 0, 0);
-            tableLayoutPanel9.Controls.Add(comboBoxStart, 0, 1);
-            tableLayoutPanel9.Dock = DockStyle.Top;
-            tableLayoutPanel9.Location = new Point(3, 327);
-            tableLayoutPanel9.Name = "tableLayoutPanel9";
-            tableLayoutPanel9.RowCount = 2;
-            tableLayoutPanel9.RowStyles.Add(new RowStyle());
-            tableLayoutPanel9.RowStyles.Add(new RowStyle());
-            tableLayoutPanel9.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel9.Size = new Size(85, 60);
-            tableLayoutPanel9.TabIndex = 133;
-            // 
-            // label10
-            // 
-            label10.AutoSize = true;
-            label10.Location = new Point(3, 0);
-            label10.Name = "label10";
-            label10.Size = new Size(61, 21);
-            label10.TabIndex = 132;
-            label10.Text = "Počátek*";
-            // 
-            // comboBoxStart
-            // 
-            comboBoxStart.Dock = DockStyle.Fill;
-            comboBoxStart.FormattingEnabled = true;
-            comboBoxStart.Items.AddRange(new object[] { "0:00", "0:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30" });
-            comboBoxStart.Location = new Point(3, 24);
-            comboBoxStart.Name = "comboBoxStart";
-            comboBoxStart.Size = new Size(79, 29);
-            comboBoxStart.TabIndex = 131;
-            comboBoxStart.SelectedIndexChanged += comboBoxStart_SelectedIndexChanged;
-            // 
-            // tableLayoutPanel10
-            // 
-            tableLayoutPanel10.ColumnCount = 1;
-            tableLayoutPanel10.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel10.Controls.Add(comboBoxEnd, 0, 1);
-            tableLayoutPanel10.Controls.Add(label39, 0, 0);
-            tableLayoutPanel10.Dock = DockStyle.Top;
-            tableLayoutPanel10.Location = new Point(3, 393);
-            tableLayoutPanel10.Name = "tableLayoutPanel10";
-            tableLayoutPanel10.RowCount = 2;
-            tableLayoutPanel10.RowStyles.Add(new RowStyle());
-            tableLayoutPanel10.RowStyles.Add(new RowStyle());
-            tableLayoutPanel10.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel10.Size = new Size(85, 60);
-            tableLayoutPanel10.TabIndex = 134;
-            // 
-            // comboBoxEnd
-            // 
-            comboBoxEnd.Dock = DockStyle.Fill;
-            comboBoxEnd.FormattingEnabled = true;
-            comboBoxEnd.Items.AddRange(new object[] { "0:00", "0:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30" });
-            comboBoxEnd.Location = new Point(3, 24);
-            comboBoxEnd.Name = "comboBoxEnd";
-            comboBoxEnd.Size = new Size(79, 29);
-            comboBoxEnd.TabIndex = 133;
-            comboBoxEnd.SelectionChangeCommitted += comboBoxEnd_SelectionChangeCommitted;
-            // 
-            // label39
-            // 
-            label39.AutoSize = true;
-            label39.Location = new Point(3, 0);
-            label39.Name = "label39";
-            label39.Size = new Size(68, 21);
-            label39.TabIndex = 132;
-            label39.Text = "Ukončení*";
-            // 
-            // panel2
-            // 
-            panel2.Controls.Add(tableLayoutPanel4);
-            panel2.Dock = DockStyle.Top;
-            panel2.Location = new Point(3, 459);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(180, 100);
-            panel2.TabIndex = 139;
-            // 
-            // tableLayoutPanel4
-            // 
-            tableLayoutPanel4.ColumnCount = 2;
-            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel4.Controls.Add(buttonNextWeek, 1, 0);
-            tableLayoutPanel4.Controls.Add(buttonPreviousWeek, 0, 0);
-            tableLayoutPanel4.Controls.Add(buttonConfirm, 1, 1);
-            tableLayoutPanel4.Controls.Add(buttonRemove, 0, 1);
-            tableLayoutPanel4.Dock = DockStyle.Fill;
-            tableLayoutPanel4.Location = new Point(0, 0);
-            tableLayoutPanel4.Name = "tableLayoutPanel4";
-            tableLayoutPanel4.RowCount = 2;
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel4.Size = new Size(180, 100);
-            tableLayoutPanel4.TabIndex = 140;
-            // 
-            // buttonNextWeek
-            // 
-            buttonNextWeek.Dock = DockStyle.Fill;
-            buttonNextWeek.Location = new Point(93, 3);
-            buttonNextWeek.Name = "buttonNextWeek";
-            buttonNextWeek.Size = new Size(84, 44);
-            buttonNextWeek.TabIndex = 139;
-            buttonNextWeek.Text = ">";
-            buttonNextWeek.UseVisualStyleBackColor = true;
-            buttonNextWeek.Click += buttonNextWeek_Click;
-            // 
-            // buttonPreviousWeek
-            // 
-            buttonPreviousWeek.Dock = DockStyle.Fill;
-            buttonPreviousWeek.Location = new Point(3, 3);
-            buttonPreviousWeek.Name = "buttonPreviousWeek";
-            buttonPreviousWeek.Size = new Size(84, 44);
-            buttonPreviousWeek.TabIndex = 140;
-            buttonPreviousWeek.Text = "<";
-            buttonPreviousWeek.UseVisualStyleBackColor = true;
-            buttonPreviousWeek.Click += buttonPreviousWeek_Click;
-            // 
-            // buttonConfirm
-            // 
-            buttonConfirm.Dock = DockStyle.Fill;
-            buttonConfirm.Location = new Point(93, 53);
-            buttonConfirm.Name = "buttonConfirm";
-            buttonConfirm.Size = new Size(84, 44);
-            buttonConfirm.TabIndex = 141;
-            buttonConfirm.Text = "Potvrdit";
-            buttonConfirm.UseVisualStyleBackColor = true;
-            buttonConfirm.Click += buttonConfirm_Click;
-            // 
-            // buttonRemove
-            // 
-            buttonRemove.Dock = DockStyle.Fill;
-            buttonRemove.Location = new Point(3, 53);
-            buttonRemove.Name = "buttonRemove";
-            buttonRemove.Size = new Size(84, 44);
-            buttonRemove.TabIndex = 142;
-            buttonRemove.Text = "Odstranit";
-            buttonRemove.UseVisualStyleBackColor = true;
-            buttonRemove.Click += buttonRemove_Click;
-            // 
             // panelContainer
             // 
             panelContainer.AutoScroll = true;
@@ -730,7 +428,7 @@
             panelContainer.Dock = DockStyle.Fill;
             panelContainer.Location = new Point(78, 3);
             panelContainer.Name = "panelContainer";
-            panelContainer.Size = new Size(739, 594);
+            panelContainer.Size = new Size(796, 594);
             panelContainer.TabIndex = 130;
             // 
             // tableLayoutPanel1
@@ -1197,6 +895,395 @@
             label21.Text = "23:00";
             label21.TextAlign = ContentAlignment.MiddleLeft;
             // 
+            // flowLayoutPanel2
+            // 
+            flowLayoutPanel2.AutoSize = true;
+            flowLayoutPanel2.Controls.Add(radioButton1);
+            flowLayoutPanel2.Controls.Add(radioButton2);
+            flowLayoutPanel2.Controls.Add(radioButton3);
+            flowLayoutPanel2.Controls.Add(radioButton4);
+            flowLayoutPanel2.Controls.Add(radioButton5);
+            flowLayoutPanel2.Controls.Add(radioButton6);
+            flowLayoutPanel2.Controls.Add(tableLayoutPanelProject);
+            flowLayoutPanel2.Controls.Add(tableLayoutPanelEntryType);
+            flowLayoutPanel2.Controls.Add(tableLayoutPanelEntrySubType);
+            flowLayoutPanel2.Controls.Add(panel4);
+            flowLayoutPanel2.Controls.Add(tableLayoutPanel6);
+            flowLayoutPanel2.Controls.Add(tableLayoutPanel4);
+            flowLayoutPanel2.Dock = DockStyle.Top;
+            flowLayoutPanel2.Font = new Font("Reddit Sans", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            flowLayoutPanel2.Location = new Point(880, 3);
+            flowLayoutPanel2.Name = "flowLayoutPanel2";
+            flowLayoutPanel2.Size = new Size(243, 594);
+            flowLayoutPanel2.TabIndex = 146;
+            flowLayoutPanel2.Paint += flowLayoutPanel2_Paint;
+            // 
+            // radioButton1
+            // 
+            radioButton1.Appearance = Appearance.Button;
+            radioButton1.AutoSize = true;
+            radioButton1.Location = new Point(3, 3);
+            radioButton1.Name = "radioButton1";
+            radioButton1.Size = new Size(88, 35);
+            radioButton1.TabIndex = 0;
+            radioButton1.TabStop = true;
+            radioButton1.Text = "PROVOZ";
+            radioButton1.UseVisualStyleBackColor = true;
+            radioButton1.CheckedChanged += radioButton_CheckedChanged;
+            // 
+            // radioButton2
+            // 
+            radioButton2.Appearance = Appearance.Button;
+            radioButton2.AutoSize = true;
+            radioButton2.Location = new Point(97, 3);
+            radioButton2.Name = "radioButton2";
+            radioButton2.Size = new Size(90, 35);
+            radioButton2.TabIndex = 1;
+            radioButton2.TabStop = true;
+            radioButton2.Text = "PROJEKT";
+            radioButton2.UseVisualStyleBackColor = true;
+            radioButton2.CheckedChanged += radioButton_CheckedChanged;
+            // 
+            // radioButton3
+            // 
+            radioButton3.Appearance = Appearance.Button;
+            radioButton3.AutoSize = true;
+            radioButton3.Location = new Point(3, 44);
+            radioButton3.Name = "radioButton3";
+            radioButton3.Size = new Size(129, 35);
+            radioButton3.TabIndex = 2;
+            radioButton3.TabStop = true;
+            radioButton3.Text = "PŘEDPROJEKT";
+            radioButton3.UseVisualStyleBackColor = true;
+            radioButton3.CheckedChanged += radioButton_CheckedChanged;
+            // 
+            // radioButton4
+            // 
+            radioButton4.Appearance = Appearance.Button;
+            radioButton4.AutoSize = true;
+            radioButton4.Location = new Point(138, 44);
+            radioButton4.Name = "radioButton4";
+            radioButton4.Size = new Size(86, 35);
+            radioButton4.TabIndex = 3;
+            radioButton4.TabStop = true;
+            radioButton4.Text = "ŠKOLENÍ";
+            radioButton4.UseVisualStyleBackColor = true;
+            radioButton4.CheckedChanged += radioButton_CheckedChanged;
+            // 
+            // radioButton5
+            // 
+            radioButton5.Appearance = Appearance.Button;
+            radioButton5.AutoSize = true;
+            radioButton5.Location = new Point(3, 85);
+            radioButton5.Name = "radioButton5";
+            radioButton5.Size = new Size(144, 35);
+            radioButton5.TabIndex = 4;
+            radioButton5.TabStop = true;
+            radioButton5.Text = "NEPŘÍTOMNOST";
+            radioButton5.UseVisualStyleBackColor = true;
+            radioButton5.CheckedChanged += radioButton_CheckedChanged;
+            // 
+            // radioButton6
+            // 
+            radioButton6.Appearance = Appearance.Button;
+            radioButton6.AutoSize = true;
+            radioButton6.Location = new Point(153, 85);
+            radioButton6.Name = "radioButton6";
+            radioButton6.Size = new Size(87, 35);
+            radioButton6.TabIndex = 5;
+            radioButton6.TabStop = true;
+            radioButton6.Text = "OSTATNÍ";
+            radioButton6.UseVisualStyleBackColor = true;
+            radioButton6.CheckedChanged += radioButton_CheckedChanged;
+            // 
+            // tableLayoutPanelProject
+            // 
+            tableLayoutPanelProject.AutoSize = true;
+            tableLayoutPanelProject.ColumnCount = 1;
+            tableLayoutPanelProject.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanelProject.Controls.Add(comboBoxProjects, 0, 1);
+            tableLayoutPanelProject.Controls.Add(labelProject, 0, 0);
+            tableLayoutPanelProject.Dock = DockStyle.Top;
+            tableLayoutPanelProject.Location = new Point(3, 126);
+            tableLayoutPanelProject.Name = "tableLayoutPanelProject";
+            tableLayoutPanelProject.RowCount = 2;
+            tableLayoutPanelProject.RowStyles.Add(new RowStyle());
+            tableLayoutPanelProject.RowStyles.Add(new RowStyle());
+            tableLayoutPanelProject.Size = new Size(237, 64);
+            tableLayoutPanelProject.TabIndex = 149;
+            // 
+            // comboBoxProjects
+            // 
+            comboBoxProjects.Dock = DockStyle.Top;
+            comboBoxProjects.FormattingEnabled = true;
+            comboBoxProjects.IntegralHeight = false;
+            comboBoxProjects.ItemHeight = 25;
+            comboBoxProjects.Location = new Point(3, 28);
+            comboBoxProjects.Name = "comboBoxProjects";
+            comboBoxProjects.Size = new Size(231, 33);
+            comboBoxProjects.TabIndex = 148;
+            // 
+            // labelProject
+            // 
+            labelProject.AutoSize = true;
+            labelProject.Dock = DockStyle.Top;
+            labelProject.Location = new Point(4, 0);
+            labelProject.Margin = new Padding(4, 0, 4, 0);
+            labelProject.Name = "labelProject";
+            labelProject.Size = new Size(229, 25);
+            labelProject.TabIndex = 30;
+            labelProject.Text = "Projekt*";
+            // 
+            // tableLayoutPanelEntryType
+            // 
+            tableLayoutPanelEntryType.AutoSize = true;
+            tableLayoutPanelEntryType.ColumnCount = 1;
+            tableLayoutPanelEntryType.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanelEntryType.Controls.Add(comboBoxEntryType, 0, 1);
+            tableLayoutPanelEntryType.Controls.Add(labelType, 0, 0);
+            tableLayoutPanelEntryType.Dock = DockStyle.Top;
+            tableLayoutPanelEntryType.Location = new Point(3, 196);
+            tableLayoutPanelEntryType.Name = "tableLayoutPanelEntryType";
+            tableLayoutPanelEntryType.RowCount = 2;
+            tableLayoutPanelEntryType.RowStyles.Add(new RowStyle());
+            tableLayoutPanelEntryType.RowStyles.Add(new RowStyle());
+            tableLayoutPanelEntryType.Size = new Size(237, 64);
+            tableLayoutPanelEntryType.TabIndex = 150;
+            // 
+            // comboBoxEntryType
+            // 
+            comboBoxEntryType.Dock = DockStyle.Top;
+            comboBoxEntryType.FormattingEnabled = true;
+            comboBoxEntryType.IntegralHeight = false;
+            comboBoxEntryType.ItemHeight = 25;
+            comboBoxEntryType.Location = new Point(3, 28);
+            comboBoxEntryType.Name = "comboBoxEntryType";
+            comboBoxEntryType.Size = new Size(231, 33);
+            comboBoxEntryType.TabIndex = 29;
+            // 
+            // labelType
+            // 
+            labelType.AutoSize = true;
+            labelType.Dock = DockStyle.Top;
+            labelType.Location = new Point(4, 0);
+            labelType.Margin = new Padding(4, 0, 4, 0);
+            labelType.Name = "labelType";
+            labelType.Size = new Size(229, 25);
+            labelType.TabIndex = 30;
+            labelType.Text = "Typ*";
+            // 
+            // tableLayoutPanelEntrySubType
+            // 
+            tableLayoutPanelEntrySubType.ColumnCount = 1;
+            tableLayoutPanelEntrySubType.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanelEntrySubType.Controls.Add(label10, 0, 0);
+            tableLayoutPanelEntrySubType.Controls.Add(comboBoxIndex, 0, 1);
+            tableLayoutPanelEntrySubType.Dock = DockStyle.Top;
+            tableLayoutPanelEntrySubType.Location = new Point(3, 266);
+            tableLayoutPanelEntrySubType.Name = "tableLayoutPanelEntrySubType";
+            tableLayoutPanelEntrySubType.RowCount = 2;
+            tableLayoutPanelEntrySubType.RowStyles.Add(new RowStyle());
+            tableLayoutPanelEntrySubType.RowStyles.Add(new RowStyle());
+            tableLayoutPanelEntrySubType.Size = new Size(238, 65);
+            tableLayoutPanelEntrySubType.TabIndex = 151;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Dock = DockStyle.Top;
+            label10.Location = new Point(4, 0);
+            label10.Margin = new Padding(4, 0, 4, 0);
+            label10.Name = "label10";
+            label10.Size = new Size(230, 25);
+            label10.TabIndex = 32;
+            label10.Text = "Index*";
+            // 
+            // comboBoxIndex
+            // 
+            comboBoxIndex.Dock = DockStyle.Top;
+            comboBoxIndex.FormattingEnabled = true;
+            comboBoxIndex.IntegralHeight = false;
+            comboBoxIndex.ItemHeight = 25;
+            comboBoxIndex.Location = new Point(3, 28);
+            comboBoxIndex.Name = "comboBoxIndex";
+            comboBoxIndex.Size = new Size(232, 33);
+            comboBoxIndex.TabIndex = 31;
+            // 
+            // panel4
+            // 
+            panel4.Controls.Add(tableLayoutPanel13);
+            panel4.Controls.Add(tableLayoutPanel12);
+            panel4.Dock = DockStyle.Top;
+            panel4.Location = new Point(3, 337);
+            panel4.Name = "panel4";
+            panel4.Size = new Size(238, 65);
+            panel4.TabIndex = 152;
+            // 
+            // tableLayoutPanel13
+            // 
+            tableLayoutPanel13.ColumnCount = 1;
+            tableLayoutPanel13.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel13.Controls.Add(comboBoxStart, 0, 1);
+            tableLayoutPanel13.Controls.Add(label40, 0, 0);
+            tableLayoutPanel13.Dock = DockStyle.Fill;
+            tableLayoutPanel13.Location = new Point(111, 0);
+            tableLayoutPanel13.Name = "tableLayoutPanel13";
+            tableLayoutPanel13.RowCount = 2;
+            tableLayoutPanel13.RowStyles.Add(new RowStyle());
+            tableLayoutPanel13.RowStyles.Add(new RowStyle());
+            tableLayoutPanel13.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel13.Size = new Size(127, 65);
+            tableLayoutPanel13.TabIndex = 146;
+            // 
+            // comboBoxStart
+            // 
+            comboBoxStart.Dock = DockStyle.Top;
+            comboBoxStart.FormattingEnabled = true;
+            comboBoxStart.Items.AddRange(new object[] { "0:00", "0:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30" });
+            comboBoxStart.Location = new Point(3, 28);
+            comboBoxStart.Name = "comboBoxStart";
+            comboBoxStart.Size = new Size(121, 33);
+            comboBoxStart.TabIndex = 133;
+            // 
+            // label40
+            // 
+            label40.AutoSize = true;
+            label40.Dock = DockStyle.Top;
+            label40.Location = new Point(3, 0);
+            label40.Name = "label40";
+            label40.Size = new Size(121, 25);
+            label40.TabIndex = 132;
+            label40.Text = "Ukončení*";
+            // 
+            // tableLayoutPanel12
+            // 
+            tableLayoutPanel12.ColumnCount = 1;
+            tableLayoutPanel12.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel12.Controls.Add(label38, 0, 0);
+            tableLayoutPanel12.Controls.Add(comboBoxEnd, 0, 1);
+            tableLayoutPanel12.Dock = DockStyle.Left;
+            tableLayoutPanel12.Location = new Point(0, 0);
+            tableLayoutPanel12.Name = "tableLayoutPanel12";
+            tableLayoutPanel12.RowCount = 2;
+            tableLayoutPanel12.RowStyles.Add(new RowStyle());
+            tableLayoutPanel12.RowStyles.Add(new RowStyle());
+            tableLayoutPanel12.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel12.Size = new Size(111, 65);
+            tableLayoutPanel12.TabIndex = 145;
+            // 
+            // label38
+            // 
+            label38.AutoSize = true;
+            label38.Dock = DockStyle.Top;
+            label38.Location = new Point(3, 0);
+            label38.Name = "label38";
+            label38.Size = new Size(105, 25);
+            label38.TabIndex = 132;
+            label38.Text = "Počátek*";
+            // 
+            // comboBoxEnd
+            // 
+            comboBoxEnd.Dock = DockStyle.Top;
+            comboBoxEnd.FormattingEnabled = true;
+            comboBoxEnd.Items.AddRange(new object[] { "0:00", "0:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30" });
+            comboBoxEnd.Location = new Point(3, 28);
+            comboBoxEnd.Name = "comboBoxEnd";
+            comboBoxEnd.Size = new Size(105, 33);
+            comboBoxEnd.TabIndex = 131;
+            // 
+            // tableLayoutPanel6
+            // 
+            tableLayoutPanel6.ColumnCount = 1;
+            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel6.Controls.Add(label4, 0, 0);
+            tableLayoutPanel6.Controls.Add(textBoxDescription, 0, 1);
+            tableLayoutPanel6.Dock = DockStyle.Top;
+            tableLayoutPanel6.Location = new Point(3, 408);
+            tableLayoutPanel6.Name = "tableLayoutPanel6";
+            tableLayoutPanel6.RowCount = 2;
+            tableLayoutPanel6.RowStyles.Add(new RowStyle());
+            tableLayoutPanel6.RowStyles.Add(new RowStyle());
+            tableLayoutPanel6.Size = new Size(238, 98);
+            tableLayoutPanel6.TabIndex = 153;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Dock = DockStyle.Top;
+            label4.Location = new Point(3, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(232, 25);
+            label4.TabIndex = 5;
+            label4.Text = "Poznámka";
+            // 
+            // textBoxDescription
+            // 
+            textBoxDescription.Dock = DockStyle.Top;
+            textBoxDescription.Location = new Point(5, 30);
+            textBoxDescription.Margin = new Padding(5);
+            textBoxDescription.Multiline = true;
+            textBoxDescription.Name = "textBoxDescription";
+            textBoxDescription.Size = new Size(228, 66);
+            textBoxDescription.TabIndex = 4;
+            // 
+            // tableLayoutPanel4
+            // 
+            tableLayoutPanel4.ColumnCount = 2;
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel4.Controls.Add(buttonNextWeek, 1, 0);
+            tableLayoutPanel4.Controls.Add(buttonPreviousWeek, 0, 0);
+            tableLayoutPanel4.Controls.Add(buttonConfirm, 1, 1);
+            tableLayoutPanel4.Controls.Add(buttonRemove, 0, 1);
+            tableLayoutPanel4.Dock = DockStyle.Top;
+            tableLayoutPanel4.Location = new Point(3, 512);
+            tableLayoutPanel4.Name = "tableLayoutPanel4";
+            tableLayoutPanel4.RowCount = 2;
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel4.Size = new Size(238, 82);
+            tableLayoutPanel4.TabIndex = 154;
+            // 
+            // buttonNextWeek
+            // 
+            buttonNextWeek.Dock = DockStyle.Fill;
+            buttonNextWeek.Location = new Point(122, 3);
+            buttonNextWeek.Name = "buttonNextWeek";
+            buttonNextWeek.Size = new Size(113, 35);
+            buttonNextWeek.TabIndex = 139;
+            buttonNextWeek.Text = ">";
+            buttonNextWeek.UseVisualStyleBackColor = true;
+            // 
+            // buttonPreviousWeek
+            // 
+            buttonPreviousWeek.Dock = DockStyle.Fill;
+            buttonPreviousWeek.Location = new Point(3, 3);
+            buttonPreviousWeek.Name = "buttonPreviousWeek";
+            buttonPreviousWeek.Size = new Size(113, 35);
+            buttonPreviousWeek.TabIndex = 140;
+            buttonPreviousWeek.Text = "<";
+            buttonPreviousWeek.UseVisualStyleBackColor = true;
+            // 
+            // buttonConfirm
+            // 
+            buttonConfirm.Dock = DockStyle.Fill;
+            buttonConfirm.Location = new Point(122, 44);
+            buttonConfirm.Name = "buttonConfirm";
+            buttonConfirm.Size = new Size(113, 35);
+            buttonConfirm.TabIndex = 141;
+            buttonConfirm.Text = "Potvrdit";
+            buttonConfirm.UseVisualStyleBackColor = true;
+            // 
+            // buttonRemove
+            // 
+            buttonRemove.Dock = DockStyle.Fill;
+            buttonRemove.Location = new Point(3, 44);
+            buttonRemove.Name = "buttonRemove";
+            buttonRemove.Size = new Size(113, 35);
+            buttonRemove.TabIndex = 142;
+            buttonRemove.Text = "Odstranit";
+            buttonRemove.UseVisualStyleBackColor = true;
+            // 
             // CalendarV2
             // 
             AutoScaleDimensions = new SizeF(8F, 21F);
@@ -1204,7 +1291,7 @@
             Controls.Add(tableLayoutPanel2);
             Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
             Name = "CalendarV2";
-            Size = new Size(1000, 600);
+            Size = new Size(1126, 600);
             Load += CalendarV2_Load;
             Resize += CalendarV2_Resize;
             tableLayoutPanel2.ResumeLayout(false);
@@ -1218,54 +1305,29 @@
             panelDay4.ResumeLayout(false);
             panelDay2.ResumeLayout(false);
             panelDay1.ResumeLayout(false);
-            flowLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel5.ResumeLayout(false);
-            tableLayoutPanel5.PerformLayout();
-            tableLayoutPanel6.ResumeLayout(false);
-            tableLayoutPanel6.PerformLayout();
-            tableLayoutPanel7.ResumeLayout(false);
-            tableLayoutPanel7.PerformLayout();
-            tableLayoutPanel8.ResumeLayout(false);
-            tableLayoutPanel8.PerformLayout();
-            tableLayoutPanel9.ResumeLayout(false);
-            tableLayoutPanel9.PerformLayout();
-            tableLayoutPanel10.ResumeLayout(false);
-            tableLayoutPanel10.PerformLayout();
-            panel2.ResumeLayout(false);
-            tableLayoutPanel4.ResumeLayout(false);
             panelContainer.ResumeLayout(false);
             customTableLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel2.ResumeLayout(false);
+            flowLayoutPanel2.PerformLayout();
+            tableLayoutPanelProject.ResumeLayout(false);
+            tableLayoutPanelProject.PerformLayout();
+            tableLayoutPanelEntryType.ResumeLayout(false);
+            tableLayoutPanelEntryType.PerformLayout();
+            tableLayoutPanelEntrySubType.ResumeLayout(false);
+            tableLayoutPanelEntrySubType.PerformLayout();
+            panel4.ResumeLayout(false);
+            tableLayoutPanel13.ResumeLayout(false);
+            tableLayoutPanel13.PerformLayout();
+            tableLayoutPanel12.ResumeLayout(false);
+            tableLayoutPanel12.PerformLayout();
+            tableLayoutPanel6.ResumeLayout(false);
+            tableLayoutPanel6.PerformLayout();
+            tableLayoutPanel4.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
         private TableLayoutPanel tableLayoutPanel2;
-        private Label label14;
-        private FlowLayoutPanel flowLayoutPanel1;
-        private TableLayoutPanel tableLayoutPanel5;
-        private Label label6;
-        private TextBox textBoxDescription;
-        private TableLayoutPanel tableLayoutPanel6;
-        private ComboBox comboBoxEntryType;
-        private Label label4;
-        private TableLayoutPanel tableLayoutPanel7;
-        private Label label5;
-        private ComboBox comboBoxIndex;
-        private TableLayoutPanel tableLayoutPanel8;
-        private Label label8;
-        private ComboBox comboBoxProjects;
-        private TableLayoutPanel tableLayoutPanel9;
-        private Label label10;
-        private ComboBox comboBoxStart;
-        private TableLayoutPanel tableLayoutPanel10;
-        private ComboBox comboBoxEnd;
-        private Label label39;
-        private Panel panel2;
-        private TableLayoutPanel tableLayoutPanel4;
-        private Button buttonNextWeek;
-        private Button buttonPreviousWeek;
-        private Button buttonConfirm;
-        private Button buttonRemove;
         private Panel panelContainer;
         private CustomTableLayoutPanel tableLayoutPanel1;
         private CustomTableLayoutPanel customTableLayoutPanel1;
@@ -1318,5 +1380,36 @@
         private Panel panelDay1;
         private Label label88;
         private Label labelDate02;
+        private FlowLayoutPanel flowLayoutPanel2;
+        private RadioButton radioButton1;
+        private RadioButton radioButton2;
+        private RadioButton radioButton3;
+        private RadioButton radioButton4;
+        private RadioButton radioButton5;
+        private RadioButton radioButton6;
+        private TableLayoutPanel tableLayoutPanelProject;
+        private ComboBox comboBoxProjects;
+        private Label labelProject;
+        private TableLayoutPanel tableLayoutPanelEntryType;
+        private ComboBox comboBoxEntryType;
+        private Label labelType;
+        private TableLayoutPanel tableLayoutPanelEntrySubType;
+        private Label label10;
+        private ComboBox comboBoxIndex;
+        private Panel panel4;
+        private TableLayoutPanel tableLayoutPanel13;
+        private ComboBox comboBoxStart;
+        private Label label40;
+        private TableLayoutPanel tableLayoutPanel12;
+        private Label label38;
+        private ComboBox comboBoxEnd;
+        private TableLayoutPanel tableLayoutPanel6;
+        private Label label4;
+        private TextBox textBoxDescription;
+        private TableLayoutPanel tableLayoutPanel4;
+        private Button buttonNextWeek;
+        private Button buttonPreviousWeek;
+        private Button buttonConfirm;
+        private Button buttonRemove;
     }
 }

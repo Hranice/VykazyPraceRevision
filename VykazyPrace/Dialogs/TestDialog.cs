@@ -34,7 +34,7 @@ namespace VykazyPrace.Dialogs
             _calendar.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
             _calendar.Location = new Point(0, 0);
             _calendar.Name = "calendarV21";
-            _calendar.Size = new Size(1100, 620);
+            _calendar.Size = new Size(1126, 620);
             _calendar.TabIndex = 0;
 
             this.Controls.Add(_calendar);

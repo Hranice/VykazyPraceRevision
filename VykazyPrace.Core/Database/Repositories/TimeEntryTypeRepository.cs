@@ -38,6 +38,13 @@ namespace VykazyPrace.Core.Database.Repositories
             return await _context.TimeEntryTypes.ToListAsync();
         }
 
+        public async Task<List<TimeEntryType>> GetAllTimeEntryTypesByProjectTypeAsync(int projectType)
+        {
+            return await _context.TimeEntryTypes
+                .Where(t => t.ForProjectType == projectType)
+                .ToListAsync();
+        }
+
         public async Task<TimeEntryType?> GetTimeEntryTypeByIdAsync(int id)
         {
             return await _context.TimeEntryTypes.FirstOrDefaultAsync(t => t.Id == id);

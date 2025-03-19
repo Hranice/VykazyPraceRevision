@@ -34,8 +34,8 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1069, 641);
-            MinimumSize = new Size(1085, 590);
+            ClientSize = new Size(1124, 641);
+            MinimumSize = new Size(1140, 590);
             Name = "TestDialog";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "TestDialog";

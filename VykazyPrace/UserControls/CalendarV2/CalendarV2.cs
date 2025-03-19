@@ -55,24 +55,24 @@ namespace VykazyPrace.UserControls.CalendarV2
             _loadingUC.Size = this.Size;
             this.Controls.Add(_loadingUC);
 
-            await LoadTimeEntryTypesAsync();
+            await LoadTimeEntryTypesAsync(0);
             await LoadTimeEntrySubTypesAsync();
-            await LoadProjectsAsync();
+            await LoadProjectsAsync(0);
             await RenderCalendar();
         }
 
-        private async Task LoadTimeEntryTypesAsync()
+        private async Task LoadTimeEntryTypesAsync(int projectType)
         {
             try
             {
-                _timeEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesAsync();
+                _timeEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesByProjectTypeAsync(projectType);
 
-                Invoke(() =>
+                Invoke((Delegate)(() =>
                 {
                     comboBoxEntryType.Items.Clear();
                     comboBoxEntryType.Items.AddRange(_timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray());
                     if (comboBoxEntryType.Items.Count > 0) comboBoxEntryType.SelectedIndex = 0;
-                });
+                }));
             }
             catch (Exception ex)
             {
@@ -87,17 +87,14 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             try
             {
+                _timeEntrySubTypes = await _timeEntrySubTypeRepo.GetAllTimeEntrySubTypesByUserIdAsync(_selectedUser.Id);
 
-                var group = _selectedUser.UserGroup.Id;
-
-                _timeEntrySubTypes = await _timeEntrySubTypeRepo.GetAllTimeEntrySubTypesByGroupIdAsync(_selectedUser.UserGroup.Id);
-
-                Invoke(() =>
+                Invoke((Delegate)(() =>
                 {
                     comboBoxIndex.Items.Clear();
                     comboBoxIndex.Items.AddRange(_timeEntrySubTypes.Select(FormatHelper.FormatTimeEntrySubTypeToString).ToArray());
                     if (comboBoxIndex.Items.Count > 0) comboBoxIndex.SelectedIndex = 0;
-                });
+                }));
             }
             catch (Exception ex)
             {
@@ -108,11 +105,11 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
-        private async Task LoadProjectsAsync()
+        private async Task LoadProjectsAsync(int projectType)
         {
             try
             {
-                _projects = await _projectRepo.GetAllProjectsAndContractsAsync();
+                _projects = await _projectRepo.GetAllProjectsAndContractsAsyncByProjectType(projectType);
 
                 Invoke(new Action(() =>
                 {
@@ -800,6 +797,71 @@ namespace VykazyPrace.UserControls.CalendarV2
                     pan.Deactivate();
                 }
             }
+        }
+
+        private async void radioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (sender is RadioButton rb && rb.Checked)
+            {
+                int index = 0;
+
+                switch (rb.Text)
+                {
+                    case "PROVOZ":
+                        index = 0;
+                        labelProject.Text = "Nákladové středisko*";
+                        labelType.Text = "Typ záznamu*";
+                        tableLayoutPanelProject.Visible = true;
+                        tableLayoutPanelEntryType.Visible = true;
+                        tableLayoutPanelEntrySubType.Visible = true;
+                        break;
+                    case "PROJEKT":
+                        index = 1;
+                        labelProject.Text = "Projekt*";
+                        labelType.Text = "Typ záznamu*";
+                        tableLayoutPanelProject.Visible = true;
+                        tableLayoutPanelEntryType.Visible = true;
+                        tableLayoutPanelEntrySubType.Visible = true;
+                        break;
+                    case "PŘEDPROJEKT":
+                        index = 2;
+                        labelProject.Text = "Předprojekt*";
+                        labelType.Text = "Typ záznamu*";
+                        tableLayoutPanelProject.Visible = true;
+                        tableLayoutPanelEntryType.Visible = true;
+                        tableLayoutPanelEntrySubType.Visible = true;
+                        break;
+                    case "ŠKOLENÍ":
+                        index = 3;
+                        tableLayoutPanelProject.Visible = false;
+                        tableLayoutPanelEntryType.Visible = false;
+                        tableLayoutPanelEntrySubType.Visible = false;
+                        break;
+                    case "NEPŘÍTOMNOST":
+                        labelType.Text = "Důvod*";
+                        tableLayoutPanelProject.Visible = false;
+                        tableLayoutPanelEntryType.Visible = true;
+                        tableLayoutPanelEntrySubType.Visible = false;
+                        index = 4;
+                        break;
+                    default:
+                        index = 5;
+                        labelType.Text = "Činnost*";
+                        tableLayoutPanelProject.Visible = false;
+                        tableLayoutPanelEntryType.Visible = true;
+                        tableLayoutPanelEntrySubType.Visible = true;
+                        break;
+                }
+
+                await LoadProjectsAsync(index);
+                await LoadTimeEntryTypesAsync(index);
+            }
+        }
+
+
+        private void flowLayoutPanel2_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

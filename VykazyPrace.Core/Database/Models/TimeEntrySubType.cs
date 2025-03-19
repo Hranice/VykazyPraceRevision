@@ -11,5 +11,5 @@ public partial class TimeEntrySubType
 
     public int UserId { get; set; }
 
-    public virtual UserGroup User { get; set; } = null!;
+    public virtual User User { get; set; } = null!;
 }

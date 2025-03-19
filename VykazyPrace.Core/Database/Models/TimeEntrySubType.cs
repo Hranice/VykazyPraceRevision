@@ -9,7 +9,7 @@ public partial class TimeEntrySubType
 
     public string? Title { get; set; }
 
-    public int GroupId { get; set; }
+    public int UserId { get; set; }
 
-    public virtual UserGroup Group { get; set; } = null!;
+    public virtual UserGroup User { get; set; } = null!;
 }

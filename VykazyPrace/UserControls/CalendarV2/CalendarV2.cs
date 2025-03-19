@@ -253,6 +253,10 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                 _loadingUC.Visible = false;
             }));
+
+            int todayIndex = ((int)DateTime.Now.DayOfWeek + 6) % 7; // Pondělí = 0
+            var panel = tableLayoutPanel3.Controls.Find(Name = $"panelDay{todayIndex}", false)[0];
+            panel.Font = new Font(panel.Font, FontStyle.Bold);
         }
 
         private void AdjustIndicators(Point scrollPosition)

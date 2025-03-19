@@ -12,3 +12,5 @@
 2025-03-19 09:46:07.713 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 4,5 h - nemoc byl úspěšně proveden.
 2025-03-19 09:46:16.437 +01:00 [INF] Záznam 000A01 - Dovolená: 8 h - Dovolená byl smazán z databáze.
 2025-03-19 09:58:05.951 +01:00 [INF] Záznam 003A00 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-19 11:33:05.128 +01:00 [INF] Záznam 003A00 - Provoz Metalizace: 2,5 h -  byl smazán z databáze.
+2025-03-19 12:21:37.104 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 2,5 h - dva testy byl úspěšně proveden.

@@ -30,28 +30,28 @@
         {
             tableLayoutPanel2 = new TableLayoutPanel();
             tableLayoutPanel3 = new TableLayoutPanel();
-            panel3 = new Panel();
+            panelDay6 = new Panel();
             label12 = new Label();
             labelDate07 = new Label();
             panel1 = new Panel();
             label2 = new Label();
             labelDate1 = new Label();
-            panel33 = new Panel();
+            panelDay0 = new Panel();
             label3 = new Label();
             labelDate01 = new Label();
-            panel36 = new Panel();
+            panelDay3 = new Panel();
             label9 = new Label();
             labelDate04 = new Label();
-            panel38 = new Panel();
+            panelDay5 = new Panel();
             label13 = new Label();
             labelDate06 = new Label();
-            panel37 = new Panel();
+            panelDay4 = new Panel();
             label11 = new Label();
             labelDate05 = new Label();
-            panel35 = new Panel();
+            panelDay2 = new Panel();
             label7 = new Label();
             labelDate03 = new Label();
-            panel42 = new Panel();
+            panelDay1 = new Panel();
             label88 = new Label();
             labelDate02 = new Label();
             flowLayoutPanel1 = new FlowLayoutPanel();
@@ -108,14 +108,14 @@
             label21 = new Label();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
-            panel3.SuspendLayout();
+            panelDay6.SuspendLayout();
             panel1.SuspendLayout();
-            panel33.SuspendLayout();
-            panel36.SuspendLayout();
-            panel38.SuspendLayout();
-            panel37.SuspendLayout();
-            panel35.SuspendLayout();
-            panel42.SuspendLayout();
+            panelDay0.SuspendLayout();
+            panelDay3.SuspendLayout();
+            panelDay5.SuspendLayout();
+            panelDay4.SuspendLayout();
+            panelDay2.SuspendLayout();
+            panelDay1.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             tableLayoutPanel5.SuspendLayout();
             tableLayoutPanel6.SuspendLayout();
@@ -150,14 +150,14 @@
             // 
             tableLayoutPanel3.ColumnCount = 1;
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.Controls.Add(panel3, 0, 7);
+            tableLayoutPanel3.Controls.Add(panelDay6, 0, 7);
             tableLayoutPanel3.Controls.Add(panel1, 0, 0);
-            tableLayoutPanel3.Controls.Add(panel33, 0, 1);
-            tableLayoutPanel3.Controls.Add(panel36, 0, 4);
-            tableLayoutPanel3.Controls.Add(panel38, 0, 6);
-            tableLayoutPanel3.Controls.Add(panel37, 0, 5);
-            tableLayoutPanel3.Controls.Add(panel35, 0, 3);
-            tableLayoutPanel3.Controls.Add(panel42, 0, 2);
+            tableLayoutPanel3.Controls.Add(panelDay0, 0, 1);
+            tableLayoutPanel3.Controls.Add(panelDay3, 0, 4);
+            tableLayoutPanel3.Controls.Add(panelDay5, 0, 6);
+            tableLayoutPanel3.Controls.Add(panelDay4, 0, 5);
+            tableLayoutPanel3.Controls.Add(panelDay2, 0, 3);
+            tableLayoutPanel3.Controls.Add(panelDay1, 0, 2);
             tableLayoutPanel3.Dock = DockStyle.Left;
             tableLayoutPanel3.Location = new Point(3, 3);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -173,15 +173,15 @@
             tableLayoutPanel3.Size = new Size(69, 594);
             tableLayoutPanel3.TabIndex = 145;
             // 
-            // panel3
+            // panelDay6
             // 
-            panel3.Controls.Add(label12);
-            panel3.Controls.Add(labelDate07);
-            panel3.Location = new Point(3, 526);
-            panel3.Margin = new Padding(3, 15, 3, 3);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(63, 45);
-            panel3.TabIndex = 126;
+            panelDay6.Controls.Add(label12);
+            panelDay6.Controls.Add(labelDate07);
+            panelDay6.Location = new Point(3, 526);
+            panelDay6.Margin = new Padding(3, 15, 3, 3);
+            panelDay6.Name = "panelDay6";
+            panelDay6.Size = new Size(63, 45);
+            panelDay6.TabIndex = 126;
             // 
             // label12
             // 
@@ -233,15 +233,15 @@
             labelDate1.Text = "3.3.2025";
             labelDate1.TextAlign = ContentAlignment.TopRight;
             // 
-            // panel33
+            // panelDay0
             // 
-            panel33.Controls.Add(label3);
-            panel33.Controls.Add(labelDate01);
-            panel33.Location = new Point(3, 40);
-            panel33.Margin = new Padding(3, 15, 3, 3);
-            panel33.Name = "panel33";
-            panel33.Size = new Size(63, 45);
-            panel33.TabIndex = 112;
+            panelDay0.Controls.Add(label3);
+            panelDay0.Controls.Add(labelDate01);
+            panelDay0.Location = new Point(3, 40);
+            panelDay0.Margin = new Padding(3, 15, 3, 3);
+            panelDay0.Name = "panelDay0";
+            panelDay0.Size = new Size(63, 45);
+            panelDay0.TabIndex = 112;
             // 
             // label3
             // 
@@ -263,15 +263,15 @@
             labelDate01.Text = "4.3.2025";
             labelDate01.TextAlign = ContentAlignment.TopRight;
             // 
-            // panel36
+            // panelDay3
             // 
-            panel36.Controls.Add(label9);
-            panel36.Controls.Add(labelDate04);
-            panel36.Location = new Point(3, 283);
-            panel36.Margin = new Padding(3, 15, 3, 3);
-            panel36.Name = "panel36";
-            panel36.Size = new Size(63, 45);
-            panel36.TabIndex = 114;
+            panelDay3.Controls.Add(label9);
+            panelDay3.Controls.Add(labelDate04);
+            panelDay3.Location = new Point(3, 283);
+            panelDay3.Margin = new Padding(3, 15, 3, 3);
+            panelDay3.Name = "panelDay3";
+            panelDay3.Size = new Size(63, 45);
+            panelDay3.TabIndex = 114;
             // 
             // label9
             // 
@@ -293,15 +293,15 @@
             labelDate04.Text = "7.3.2025";
             labelDate04.TextAlign = ContentAlignment.TopRight;
             // 
-            // panel38
+            // panelDay5
             // 
-            panel38.Controls.Add(label13);
-            panel38.Controls.Add(labelDate06);
-            panel38.Location = new Point(3, 445);
-            panel38.Margin = new Padding(3, 15, 3, 3);
-            panel38.Name = "panel38";
-            panel38.Size = new Size(63, 45);
-            panel38.TabIndex = 116;
+            panelDay5.Controls.Add(label13);
+            panelDay5.Controls.Add(labelDate06);
+            panelDay5.Location = new Point(3, 445);
+            panelDay5.Margin = new Padding(3, 15, 3, 3);
+            panelDay5.Name = "panelDay5";
+            panelDay5.Size = new Size(63, 45);
+            panelDay5.TabIndex = 116;
             // 
             // label13
             // 
@@ -323,15 +323,15 @@
             labelDate06.Text = "9.3.2025";
             labelDate06.TextAlign = ContentAlignment.TopRight;
             // 
-            // panel37
+            // panelDay4
             // 
-            panel37.Controls.Add(label11);
-            panel37.Controls.Add(labelDate05);
-            panel37.Location = new Point(3, 364);
-            panel37.Margin = new Padding(3, 15, 3, 3);
-            panel37.Name = "panel37";
-            panel37.Size = new Size(63, 45);
-            panel37.TabIndex = 115;
+            panelDay4.Controls.Add(label11);
+            panelDay4.Controls.Add(labelDate05);
+            panelDay4.Location = new Point(3, 364);
+            panelDay4.Margin = new Padding(3, 15, 3, 3);
+            panelDay4.Name = "panelDay4";
+            panelDay4.Size = new Size(63, 45);
+            panelDay4.TabIndex = 115;
             // 
             // label11
             // 
@@ -353,15 +353,15 @@
             labelDate05.Text = "8.3.2025";
             labelDate05.TextAlign = ContentAlignment.TopRight;
             // 
-            // panel35
+            // panelDay2
             // 
-            panel35.Controls.Add(label7);
-            panel35.Controls.Add(labelDate03);
-            panel35.Location = new Point(3, 202);
-            panel35.Margin = new Padding(3, 15, 3, 3);
-            panel35.Name = "panel35";
-            panel35.Size = new Size(63, 45);
-            panel35.TabIndex = 113;
+            panelDay2.Controls.Add(label7);
+            panelDay2.Controls.Add(labelDate03);
+            panelDay2.Location = new Point(3, 202);
+            panelDay2.Margin = new Padding(3, 15, 3, 3);
+            panelDay2.Name = "panelDay2";
+            panelDay2.Size = new Size(63, 45);
+            panelDay2.TabIndex = 113;
             // 
             // label7
             // 
@@ -383,15 +383,15 @@
             labelDate03.Text = "6.3.2025";
             labelDate03.TextAlign = ContentAlignment.TopRight;
             // 
-            // panel42
+            // panelDay1
             // 
-            panel42.Controls.Add(label88);
-            panel42.Controls.Add(labelDate02);
-            panel42.Location = new Point(3, 121);
-            panel42.Margin = new Padding(3, 15, 3, 3);
-            panel42.Name = "panel42";
-            panel42.Size = new Size(63, 45);
-            panel42.TabIndex = 110;
+            panelDay1.Controls.Add(label88);
+            panelDay1.Controls.Add(labelDate02);
+            panelDay1.Location = new Point(3, 121);
+            panelDay1.Margin = new Padding(3, 15, 3, 3);
+            panelDay1.Name = "panelDay1";
+            panelDay1.Size = new Size(63, 45);
+            panelDay1.TabIndex = 110;
             // 
             // label88
             // 
@@ -1210,14 +1210,14 @@
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
             tableLayoutPanel3.ResumeLayout(false);
-            panel3.ResumeLayout(false);
+            panelDay6.ResumeLayout(false);
             panel1.ResumeLayout(false);
-            panel33.ResumeLayout(false);
-            panel36.ResumeLayout(false);
-            panel38.ResumeLayout(false);
-            panel37.ResumeLayout(false);
-            panel35.ResumeLayout(false);
-            panel42.ResumeLayout(false);
+            panelDay0.ResumeLayout(false);
+            panelDay3.ResumeLayout(false);
+            panelDay5.ResumeLayout(false);
+            panelDay4.ResumeLayout(false);
+            panelDay2.ResumeLayout(false);
+            panelDay1.ResumeLayout(false);
             flowLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel5.ResumeLayout(false);
             tableLayoutPanel5.PerformLayout();
@@ -1294,28 +1294,28 @@
         private Label label16;
         private Label label15;
         private TableLayoutPanel tableLayoutPanel3;
-        private Panel panel3;
+        private Panel panelDay6;
         private Label label12;
         private Label labelDate07;
         private Panel panel1;
         private Label label2;
         private Label labelDate1;
-        private Panel panel33;
+        private Panel panelDay0;
         private Label label3;
         private Label labelDate01;
-        private Panel panel36;
+        private Panel panelDay3;
         private Label label9;
         private Label labelDate04;
-        private Panel panel38;
+        private Panel panelDay5;
         private Label label13;
         private Label labelDate06;
-        private Panel panel37;
+        private Panel panelDay4;
         private Label label11;
         private Label labelDate05;
-        private Panel panel35;
+        private Panel panelDay2;
         private Label label7;
         private Label labelDate03;
-        private Panel panel42;
+        private Panel panelDay1;
         private Label label88;
         private Label labelDate02;
     }

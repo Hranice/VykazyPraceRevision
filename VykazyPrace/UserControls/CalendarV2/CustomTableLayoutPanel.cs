@@ -23,7 +23,6 @@ public class CustomTableLayoutPanel : TableLayoutPanel
     {
         int todayIndex = ((int)DateTime.Now.DayOfWeek + 6) % 7; // Pondělí = 0
 
-        // Nejdříve vykreslíme aktivní den (šedě)
         if (e.Row == todayIndex)
         {
             using (var brush = new SolidBrush(ActiveDayColor))
@@ -50,20 +49,17 @@ public class CustomTableLayoutPanel : TableLayoutPanel
         {
             selectedRow = row;
             selectedColumn = col;
-            Invalidate(); // Překreslení pouze pokud se změnila vybraná buňka
+            Invalidate();
         }
     }
 
-    /// <summary>
-    /// Metoda pro deaktivování vybrané buňky a obnovení původního zobrazení.
-    /// </summary>
     public void ClearSelection()
     {
         if (selectedRow != -1 || selectedColumn != -1)
         {
             selectedRow = -1;
             selectedColumn = -1;
-            Invalidate(); // Překreslení pro odstranění zvýraznění
+            Invalidate();
         }
     }
 
@@ -132,7 +128,7 @@ public class CustomTableLayoutPanel : TableLayoutPanel
             int xPos = colWidths.Take(halfHourIndex).Sum();
             int yPos = rowHeights.Take(todayIndex).Sum();
 
-            using (var redPen = new Pen(Color.Red, 2)) // Mírně silnější čára pro lepší viditelnost
+            using (var redPen = new Pen(Color.Red, 2))
             {
                 e.Graphics.DrawLine(redPen, xPos, yPos, xPos, yPos + rowHeights[todayIndex]);
             }

@@ -3,63 +3,121 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace VykazyPrace.UserControls.CalendarV2
+public class CustomTableLayoutPanel : TableLayoutPanel
 {
-    public class CustomTableLayoutPanel : TableLayoutPanel
+    private int selectedRow = -1;
+    private int selectedColumn = -1;
+
+    private static readonly Color SelectedTodayColor = Color.FromArgb(225, 225, 225);
+    private static readonly Color SelectedColor = Color.FromArgb(255, 255, 255);
+    private static readonly Color ActiveDayColor = Color.FromArgb(200, 200, 200);
+
+    public CustomTableLayoutPanel()
     {
-        public CustomTableLayoutPanel()
+        this.DoubleBuffered = true;
+        this.CellPaint += CustomTableLayoutPanel_CellPaint;
+        this.MouseClick += CustomTableLayoutPanel_MouseClick;
+    }
+
+    private void CustomTableLayoutPanel_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
+    {
+        int todayIndex = ((int)DateTime.Now.DayOfWeek + 6) % 7; // Pondělí = 0
+
+        if (e.Row == todayIndex)
         {
-            this.DoubleBuffered = true;
+            using (var brush = new SolidBrush(ActiveDayColor))
+            {
+                e.Graphics.FillRectangle(brush, e.CellBounds);
+            }
         }
 
-        protected override void OnPaint(PaintEventArgs e)
+        if (e.Row == selectedRow && e.Column == selectedColumn)
         {
-            base.OnPaint(e);
-
-            int todayIndex = (int)DateTime.Now.DayOfWeek - 1;
-            if (todayIndex < 0) todayIndex = 6;
-
-            DateTime now = DateTime.Now;
-            int halfHourIndex = (now.Hour * 2) + (now.Minute / 30);
-
-            int[] colWidths = this.GetColumnWidths();
-            int[] rowHeights = this.GetRowHeights();
-
-            if (todayIndex < rowHeights.Length)
+            Color highlightColor = (e.Row == todayIndex) ? SelectedTodayColor : SelectedColor;
+            using (var brush = new SolidBrush(highlightColor))
             {
-                int yStart = rowHeights.Take(todayIndex).Sum();
-                int rowHeight = rowHeights[todayIndex];
-
-                using (Brush brush = new SolidBrush(Color.FromArgb(230, 230, 230)))
-                {
-                    e.Graphics.FillRectangle(brush, 0, yStart, this.Width, rowHeight);
-                }
+                e.Graphics.FillRectangle(brush, e.CellBounds);
             }
+        }
+    }
 
-            using (Pen pen = new Pen(Color.Gray))
+    private void CustomTableLayoutPanel_MouseClick(object sender, MouseEventArgs e)
+    {
+        (int row, int col) = GetCellFromPoint(e.Location);
+        if (row != -1 && col != -1 && (row != selectedRow || col != selectedColumn))
+        {
+            selectedRow = row;
+            selectedColumn = col;
+            Invalidate();
+        }
+    }
+
+    private (int row, int col) GetCellFromPoint(Point point)
+    {
+        int[] colWidths = GetColumnWidths();
+        int[] rowHeights = GetRowHeights();
+
+        int xSum = 0, ySum = 0;
+        int clickedCol = -1, clickedRow = -1;
+
+        for (int i = 0; i < colWidths.Length; i++)
+        {
+            if (point.X >= xSum && point.X < xSum + colWidths[i])
             {
-                for (int i = 0; i < this.ColumnCount; i++)
-                {
-                    int x = colWidths.Take(i).Sum();
-                    e.Graphics.DrawLine(pen, x, 0, x, this.Height);
-                }
-                for (int j = 0; j < this.RowCount; j++)
-                {
-                    int y = rowHeights.Take(j).Sum();
-                    e.Graphics.DrawLine(pen, 0, y, this.Width, y);
-                }
+                clickedCol = i;
+                break;
             }
+            xSum += colWidths[i];
+        }
 
-            // Vykreslení červené čáry podle aktuálního času
-            if (todayIndex < rowHeights.Length && halfHourIndex < colWidths.Length)
+        for (int j = 0; j < rowHeights.Length; j++)
+        {
+            if (point.Y >= ySum && point.Y < ySum + rowHeights[j])
             {
-                int yPos = rowHeights.Take(todayIndex).Sum();
-                int xPos = colWidths.Take(halfHourIndex).Sum();
+                clickedRow = j;
+                break;
+            }
+            ySum += rowHeights[j];
+        }
 
-                using (Pen redPen = new Pen(Color.Red, 1))
-                {
-                    e.Graphics.DrawLine(redPen, xPos, yPos + 1, xPos, yPos + rowHeights[todayIndex]);
-                }
+        return (clickedRow, clickedCol);
+    }
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        base.OnPaint(e);
+        int[] colWidths = GetColumnWidths();
+        int[] rowHeights = GetRowHeights();
+
+        if (colWidths.Length == 0 || rowHeights.Length == 0) return;
+
+        DateTime now = DateTime.Now;
+        int todayIndex = ((int)now.DayOfWeek + 6) % 7; // Pondělí = 0
+        int halfHourIndex = now.Hour * 2 + now.Minute / 30;
+
+        using (var pen = new Pen(Color.Gray))
+        {
+            int x = 0, y = 0;
+            foreach (var width in colWidths)
+            {
+                x += width;
+                e.Graphics.DrawLine(pen, x, 0, x, Height);
+            }
+            foreach (var height in rowHeights)
+            {
+                y += height;
+                e.Graphics.DrawLine(pen, 0, y, Width, y);
+            }
+        }
+
+        if (todayIndex < rowHeights.Length && halfHourIndex < colWidths.Length)
+        {
+            int xPos = colWidths.Take(halfHourIndex).Sum();
+            int yPos = rowHeights.Take(todayIndex).Sum();
+
+            using (var redPen = new Pen(Color.Red, 1))
+            {
+                e.Graphics.DrawLine(redPen, xPos, yPos + 1, xPos, yPos + rowHeights[todayIndex]);
             }
         }
     }

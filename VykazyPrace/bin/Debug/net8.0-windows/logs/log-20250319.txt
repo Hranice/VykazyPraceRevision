@@ -1,0 +1,14 @@
+2025-03-19 09:02:05.967 +01:00 [INF] Záznam 003A00 - Provoz Metalizace: 5,5 h -  byl smazán z databáze.
+2025-03-19 09:02:41.196 +01:00 [INF] Záznam 003A00 - Provoz Metalizace: 2 h - meow byl smazán z databáze.
+2025-03-19 09:02:46.527 +01:00 [INF] Záznam 003A00 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-19 09:02:52.379 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Popis činnosti
+2025-03-19 09:02:59.086 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 8 h - mýtingování byl úspěšně proveden.
+2025-03-19 09:03:08.845 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 1 h - rwarí byl úspěšně proveden.
+2025-03-19 09:03:15.654 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 1 h - servisík byl úspěšně proveden.
+2025-03-19 09:03:19.177 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 2,5 h - test byl úspěšně proveden.
+2025-03-19 09:03:24.483 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 1,5 h - dva testy byl úspěšně proveden.
+2025-03-19 09:45:23.879 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 4,5 h - přestavba byl úspěšně proveden.
+2025-03-19 09:45:32.213 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 3,5 h - projekt meeting byl úspěšně proveden.
+2025-03-19 09:46:07.713 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 4,5 h - nemoc byl úspěšně proveden.
+2025-03-19 09:46:16.437 +01:00 [INF] Záznam 000A01 - Dovolená: 8 h - Dovolená byl smazán z databáze.
+2025-03-19 09:58:05.951 +01:00 [INF] Záznam 003A00 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.

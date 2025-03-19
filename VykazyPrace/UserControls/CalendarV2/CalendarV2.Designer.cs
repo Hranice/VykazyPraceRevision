@@ -417,6 +417,7 @@
             buttonNextWeek.TabIndex = 139;
             buttonNextWeek.Text = ">";
             buttonNextWeek.UseVisualStyleBackColor = true;
+            buttonNextWeek.Click += buttonNextWeek_Click;
             // 
             // buttonPreviousWeek
             // 
@@ -427,6 +428,7 @@
             buttonPreviousWeek.TabIndex = 140;
             buttonPreviousWeek.Text = "<";
             buttonPreviousWeek.UseVisualStyleBackColor = true;
+            buttonPreviousWeek.Click += buttonPreviousWeek_Click;
             // 
             // buttonConfirm
             // 
@@ -528,6 +530,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.Size = new Size(1969, 550);
             tableLayoutPanel1.TabIndex = 149;
+            tableLayoutPanel1.MouseDoubleClick += TableLayoutPanel1_MouseDoubleClick;
             // 
             // customTableLayoutPanel1
             // 

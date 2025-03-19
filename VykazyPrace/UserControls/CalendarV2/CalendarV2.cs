@@ -28,7 +28,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         private readonly User _selectedUser = new User();
         private DateTime _selectedDate;
         private int arrivalColumn = 12;
-        private int leaveColumn = 16;
+        private int leaveColumn = 28;
 
         private List<DayPanel> panels = new List<DayPanel>();
         private DayPanel? activePanel = null;
@@ -283,9 +283,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                 var arrivalIndicator = new Panel
                 {
                     Name = "indicator",
-                    Size = new Size(1, rowHeight),
+                    Size = new Size(2, rowHeight),
                     Location = new Point(arrivalXPos, yPos),
-                    BackColor = Color.Red
+                    BackColor = Color.Green
                 };
 
                 panelContainer.Controls.Add(arrivalIndicator);
@@ -299,7 +299,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                     var leaveIndicator = new Panel
                     {
                         Name = "indicator",
-                        Size = new Size(1, rowHeight),
+                        Size = new Size(2, rowHeight),
                         Location = new Point(leaveXPos, yPos),
                         BackColor = Color.Red
                     };

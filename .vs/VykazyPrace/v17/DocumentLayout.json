@@ -9,6 +9,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\vykazyprace\\usercontrols\\calendarv2\\calendarv2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\usercontrols\\calendarv2\\calendarv2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\usercontrols\\calendarv2\\daypanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\usercontrols\\calendarv2\\daypanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\usercontrols\\calendarv2\\daypanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\usercontrols\\calendarv2\\daypanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,11 +26,36 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DayPanel.cs",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\CalendarV2\\DayPanel.cs",
+              "RelativeDocumentMoniker": "VykazyPrace\\UserControls\\CalendarV2\\DayPanel.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\CalendarV2\\DayPanel.cs",
+              "RelativeToolTip": "VykazyPrace\\UserControls\\CalendarV2\\DayPanel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-19T15:24:36.692Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DayPanel.cs [N\u00E1vrh]",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\CalendarV2\\DayPanel.cs",
+              "RelativeDocumentMoniker": "VykazyPrace\\UserControls\\CalendarV2\\DayPanel.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\CalendarV2\\DayPanel.cs [N\u00E1vrh]",
+              "RelativeToolTip": "VykazyPrace\\UserControls\\CalendarV2\\DayPanel.cs [N\u00E1vrh]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-19T15:24:34.785Z",
+              "EditorCaption": " [N\u00E1vrh]"
             },
             {
               "$type": "Document",
@@ -32,7 +65,7 @@
               "RelativeDocumentMoniker": "VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs",
               "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs",
               "RelativeToolTip": "VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs",
-              "ViewState": "AQIAAOgCAAAAAAAAAAAAwPYCAAAXAAAA",
+              "ViewState": "AQIAAGMAAAAAAAAAAAAkwH0AAAAzAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-18T14:42:58.067Z",
               "EditorCaption": ""

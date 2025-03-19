@@ -115,6 +115,17 @@ namespace VykazyPrace.UserControls.CalendarV2
                 {
                     comboBoxProjects.Items.Clear();
                     comboBoxProjects.Items.AddRange(_projects.Select(FormatHelper.FormatProjectToString).ToArray());
+                    comboBoxProjectsLoading = true;
+                    if (comboBoxProjects.Items.Count > 0)
+                    {
+                        comboBoxProjects.SelectedIndex = 0;
+                    }
+
+                    else
+                    {
+                        comboBoxProjects.Text = "";
+                    }
+                    comboBoxProjectsLoading = false;
                 }));
             }
             catch (Exception ex)
@@ -246,7 +257,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                     EntryId = entry.Id
                 };
 
-                newPanel.UpdateUi(entry.Description, entry.Project?.ProjectDescription);
+                newPanel.UpdateUi("test", entry.Project?.ProjectTitle);
 
                 int column = GetColumnBasedOnTimeEntry(entry.Timestamp);
                 int row = GetRowBasedOnTimeEntry(entry.Timestamp);
@@ -600,9 +611,9 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private (bool valid, object reason) CheckForEmptyOrIncorrectFields()
         {
-            if (comboBoxProjects.SelectedItem is null) return (false, "Projekt");
-            if (string.IsNullOrEmpty(comboBoxEntryType.Text)) return (false, "Typ zápisu");
-            if (comboBoxIndex.SelectedItem is null) return (false, "Index");
+            //if (comboBoxProjects.SelectedItem is null) return (false, "Projekt");
+            //if (string.IsNullOrEmpty(comboBoxEntryType.Text)) return (false, "Typ zápisu");
+            //if (comboBoxIndex.SelectedItem is null) return (false, "Index");
             return (true, "");
         }
 
@@ -748,10 +759,11 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
 
             var addedTimeEntryType = await _timeEntryTypeRepo.CreateTimeEntryTypeAsync(
-                new TimeEntryType()
-                {
-                    Title = comboBoxEntryType.Text
-                });
+              new TimeEntryType()
+              {
+                  Title = comboBoxEntryType.Text,
+                  ForProjectType = _projects[(comboBoxProjects.SelectedIndex == -1 ? 0 : comboBoxProjects.SelectedIndex)].ProjectType
+              });
 
             if (addedTimeEntryType == null)
             {
@@ -767,7 +779,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             if (comboBoxProjects.SelectedIndex > -1)
             {
-                timeEntry.ProjectId = _projects[comboBoxProjects.SelectedIndex].Id;
+                timeEntry.ProjectId = _projects[(comboBoxProjects.SelectedIndex == -1 ? 0 : comboBoxProjects.SelectedIndex)].Id;
             }
 
             bool success = await _timeEntryRepo.UpdateTimeEntryAsync(timeEntry);

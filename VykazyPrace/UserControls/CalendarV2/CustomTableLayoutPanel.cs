@@ -23,6 +23,7 @@ public class CustomTableLayoutPanel : TableLayoutPanel
     {
         int todayIndex = ((int)DateTime.Now.DayOfWeek + 6) % 7; // Pondělí = 0
 
+        // Nejdříve vykreslíme aktivní den (šedě)
         if (e.Row == todayIndex)
         {
             using (var brush = new SolidBrush(ActiveDayColor))
@@ -31,6 +32,7 @@ public class CustomTableLayoutPanel : TableLayoutPanel
             }
         }
 
+        // Kliknutá buňka (s jinou barvou pro aktivní den)
         if (e.Row == selectedRow && e.Column == selectedColumn)
         {
             Color highlightColor = (e.Row == todayIndex) ? SelectedTodayColor : SelectedColor;
@@ -48,7 +50,20 @@ public class CustomTableLayoutPanel : TableLayoutPanel
         {
             selectedRow = row;
             selectedColumn = col;
-            Invalidate();
+            Invalidate(); // Překreslení pouze pokud se změnila vybraná buňka
+        }
+    }
+
+    /// <summary>
+    /// Metoda pro deaktivování vybrané buňky a obnovení původního zobrazení.
+    /// </summary>
+    public void ClearSelection()
+    {
+        if (selectedRow != -1 || selectedColumn != -1)
+        {
+            selectedRow = -1;
+            selectedColumn = -1;
+            Invalidate(); // Překreslení pro odstranění zvýraznění
         }
     }
 
@@ -95,6 +110,7 @@ public class CustomTableLayoutPanel : TableLayoutPanel
         int todayIndex = ((int)now.DayOfWeek + 6) % 7; // Pondělí = 0
         int halfHourIndex = now.Hour * 2 + now.Minute / 30;
 
+        // Kreslení mřížky
         using (var pen = new Pen(Color.Gray))
         {
             int x = 0, y = 0;
@@ -110,14 +126,15 @@ public class CustomTableLayoutPanel : TableLayoutPanel
             }
         }
 
+        // Červená čára podle aktuálního času
         if (todayIndex < rowHeights.Length && halfHourIndex < colWidths.Length)
         {
             int xPos = colWidths.Take(halfHourIndex).Sum();
             int yPos = rowHeights.Take(todayIndex).Sum();
 
-            using (var redPen = new Pen(Color.Red, 1))
+            using (var redPen = new Pen(Color.Red, 2)) // Mírně silnější čára pro lepší viditelnost
             {
-                e.Graphics.DrawLine(redPen, xPos, yPos + 1, xPos, yPos + rowHeights[todayIndex]);
+                e.Graphics.DrawLine(redPen, xPos, yPos, xPos, yPos + rowHeights[todayIndex]);
             }
         }
     }

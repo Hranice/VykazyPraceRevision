@@ -278,7 +278,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 int rowHeight = (j < rowHeights.Length) ? rowHeights[j] : 69;
                 int yPos = tableLayoutPanel1.GetRowHeights().Take(j).Sum() + headerRowHeights[0];
 
-                int arrivalXPos = (columnWidths[0] * arrivalColumn) + tableLayoutPanel3.Width - Math.Abs(scrollPosition.X);
+                int arrivalXPos = (columnWidths[0] * arrivalColumn) - Math.Abs(scrollPosition.X);
 
                 var arrivalIndicator = new Panel
                 {
@@ -294,7 +294,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 // Vykreslení leaveColumn pouze pokud to není aktuální den
                 if (j != todayIndex)
                 {
-                    int leaveXPos = (columnWidths[0] * leaveColumn) + tableLayoutPanel3.Width - Math.Abs(scrollPosition.X);
+                    int leaveXPos = (columnWidths[0] * leaveColumn) - Math.Abs(scrollPosition.X);
 
                     var leaveIndicator = new Panel
                     {
@@ -317,7 +317,6 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             if (sender is not DayPanel panel) return;
 
-
             foreach (var ctrl in tableLayoutPanel1.Controls)
             {
                 if (ctrl is DayPanel pan)
@@ -325,7 +324,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                     pan.Deactivate();
                 }
             }
+
             panel.Activate();
+            tableLayoutPanel1.ClearSelection();
 
             _selectedTimeEntryId = panel.EntryId;
             await LoadSidebar();
@@ -784,6 +785,17 @@ namespace VykazyPrace.UserControls.CalendarV2
         private void CalendarV2_Resize(object sender, EventArgs e)
         {
             AdjustIndicators(panelContainer.AutoScrollPosition);
+        }
+
+        private void tableLayoutPanel1_MouseClick(object sender, MouseEventArgs e)
+        {
+            foreach (var ctrl in tableLayoutPanel1.Controls)
+            {
+                if (ctrl is DayPanel pan)
+                {
+                    pan.Deactivate();
+                }
+            }
         }
     }
 }

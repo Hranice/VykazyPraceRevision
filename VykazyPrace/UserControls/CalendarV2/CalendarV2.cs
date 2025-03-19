@@ -131,6 +131,17 @@ namespace VykazyPrace.UserControls.CalendarV2
         private async Task LoadSidebar()
         {
             var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
+            if (timeEntry == null) return; // Přidána ochrana proti nulovým hodnotám
+
+            var proj = await _projectRepo.GetProjectByIdAsync(timeEntry.ProjectId ?? 0);
+            if (proj == null) return; // Přidána ochrana proti nulovým hodnotám
+
+            await LoadTimeEntryTypesAsync(proj.ProjectType);
+
+            int index = proj.ProjectType + 1;
+            var radioButton = flowLayoutPanel2.Controls.Find($"radioButton{index}", false).FirstOrDefault() as RadioButton;
+            if (radioButton != null)
+                radioButton.Checked = true;
 
             comboBoxProjectsLoading = true;
 
@@ -142,24 +153,21 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             BeginInvoke((Action)(() =>
             {
-                comboBoxStart.SelectedIndex = 0;
-                comboBoxEnd.SelectedIndex = 0;
-
                 comboBoxStart.SelectedIndex = minutesStart / 30;
                 comboBoxEnd.SelectedIndex = minutesEnd / 30;
-
-                //groupBox1.Text = $"{days[(int)timeStamp.DayOfWeek]} - {timeStamp:dd.MM.yyyy}";
 
                 if (lastPanel?.EntryId != -1)
                 {
                     textBoxDescription.Text = timeEntry.Description;
                     comboBoxProjects.Text = FormatHelper.FormatProjectToString(timeEntry.Project);
-                    comboBoxEntryType.Text = FormatHelper.FormatTimeEntryTypeToString(_timeEntryTypes.First(x => x.Id == timeEntry.EntryTypeId));
+                    var selectedType = _timeEntryTypes.FirstOrDefault(x => x.Id == timeEntry.EntryTypeId);
+                    comboBoxEntryType.Text = selectedType != null ? FormatHelper.FormatTimeEntryTypeToString(selectedType) : "";
                 }
 
                 comboBoxProjectsLoading = false;
             }));
         }
+
 
         private TableLayoutPanelCellPosition GetCellAt(TableLayoutPanel panel, Point clickPosition)
         {
@@ -180,6 +188,12 @@ namespace VykazyPrace.UserControls.CalendarV2
                 .AddDays(cell.Row)
                 .AddMinutes(cell.Column * 30);
 
+            if (_projects.Count == 0 || _timeEntryTypes.Count == 0)
+            {
+                AppLogger.Error("Nelze vytvořit záznam: nejsou načteny projekty nebo typy záznamů.");
+                return;
+            }
+
             var newTimeEntry = new TimeEntry()
             {
                 ProjectId = _projects[0].Id,
@@ -190,10 +204,17 @@ namespace VykazyPrace.UserControls.CalendarV2
             };
 
             var addedTimeEntry = await _timeEntryRepo.CreateTimeEntryAsync(newTimeEntry);
+            if (addedTimeEntry == null)
+            {
+                AppLogger.Error("Chyba při vytváření nového časového záznamu.");
+                return;
+            }
+
             _selectedTimeEntryId = addedTimeEntry.Id;
             await LoadSidebar();
             await RenderCalendar();
         }
+
 
         private async Task RenderCalendar()
         {
@@ -211,10 +232,16 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             foreach (var entry in entries)
             {
+                var proj = await _projectRepo.GetProjectByIdAsync(entry.ProjectId ?? 0);
+                if (proj == null) continue; // Ochrana proti null hodnotám
+
+                var entryType = _timeEntryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
+                string color = entryType?.Color ?? "#ADD8E6";
+
                 var newPanel = new DayPanel
                 {
                     Dock = DockStyle.Fill,
-                    BackColor = ColorTranslator.FromHtml(_timeEntryTypes.First(x => x.Id == entry.EntryTypeId).Color ?? "#ADD8E6"),
+                    BackColor = ColorTranslator.FromHtml(color),
                     BorderStyle = BorderStyle.FixedSingle,
                     EntryId = entry.Id
                 };
@@ -247,14 +274,10 @@ namespace VykazyPrace.UserControls.CalendarV2
                 tableLayoutPanel1.ResumeLayout(true);
                 panelContainer.ResumeLayout(true);
 
-
                 _loadingUC.Visible = false;
             }));
-
-            int todayIndex = ((int)DateTime.Now.DayOfWeek + 6) % 7; // Pondělí = 0
-            var panel = tableLayoutPanel3.Controls.Find(Name = $"panelDay{todayIndex}", false)[0];
-            panel.Font = new Font(panel.Font, FontStyle.Bold);
         }
+
 
         private void AdjustIndicators(Point scrollPosition)
         {
@@ -434,20 +457,29 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             Cursor = Cursors.Default;
 
-
             _selectedTimeEntryId = panel.EntryId;
             var entry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
-            panel.BackColor = ColorTranslator.FromHtml(_timeEntryTypes.First(x => x.Id == entry.EntryTypeId).Color ?? "#ADD8E6");
+            if (entry == null) return; // Přidána ochrana proti null hodnotám
 
-            if (entry is not null)
+            var entryType = _timeEntryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
+            panel.BackColor = ColorTranslator.FromHtml(entryType?.Color ?? "#ADD8E6");
+
+            if (entry != null)
             {
-                entry.Timestamp = _selectedDate.AddMinutes(tableLayoutPanel1.GetColumn(panel) * 30).AddDays(tableLayoutPanel1.GetRow(panel));
-                entry.EntryMinutes = GetEntryMinutesBasedOnColumnSpan(tableLayoutPanel1.GetColumnSpan(panel));
-                await _timeEntryRepo.UpdateTimeEntryAsync(entry);
+                DateTime newTimestamp = _selectedDate.AddMinutes(tableLayoutPanel1.GetColumn(panel) * 30).AddDays(tableLayoutPanel1.GetRow(panel));
+                int newDuration = GetEntryMinutesBasedOnColumnSpan(tableLayoutPanel1.GetColumnSpan(panel));
+
+                if (entry.Timestamp != newTimestamp || entry.EntryMinutes != newDuration)
+                {
+                    entry.Timestamp = newTimestamp;
+                    entry.EntryMinutes = newDuration;
+                    await _timeEntryRepo.UpdateTimeEntryAsync(entry);
+                }
             }
 
             await LoadSidebar();
         }
+
 
         private void dayPanel_MouseLeave(object? sender, EventArgs e)
         {
@@ -570,7 +602,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             if (comboBoxProjects.SelectedItem is null) return (false, "Projekt");
             if (string.IsNullOrEmpty(comboBoxEntryType.Text)) return (false, "Typ zápisu");
-            if (string.IsNullOrEmpty(textBoxDescription.Text)) return (false, "Popis činnosti");
+            if (comboBoxIndex.SelectedItem is null) return (false, "Index");
             return (true, "");
         }
 
@@ -721,40 +753,31 @@ namespace VykazyPrace.UserControls.CalendarV2
                     Title = comboBoxEntryType.Text
                 });
 
+            if (addedTimeEntryType == null)
+            {
+                AppLogger.Error("Chyba při vytváření typu časového záznamu.");
+                return;
+            }
+
             var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
+            if (timeEntry == null) return;
 
-            int startHours = int.Parse(comboBoxStart.Text.Split(':')[0]);
-            int startMinutes = int.Parse(comboBoxStart.Text.Split(':')[1]);
-
-            var start = new DateTime(timeEntry.Timestamp.Value.Year, timeEntry.Timestamp.Value.Month, timeEntry.Timestamp.Value.Day,
-                                       startHours,
-                                       startMinutes, 0);
-
-            var end = new DateTime(timeEntry.Timestamp.Value.Year, timeEntry.Timestamp.Value.Month, timeEntry.Timestamp.Value.Day,
-                                       int.Parse(comboBoxEnd.Text.Split(':')[0]),
-                                       int.Parse(comboBoxEnd.Text.Split(':')[1]), 0);
+            timeEntry.Description = textBoxDescription.Text;
+            timeEntry.EntryTypeId = addedTimeEntryType.Id;
 
             if (comboBoxProjects.SelectedIndex > -1)
             {
                 timeEntry.ProjectId = _projects[comboBoxProjects.SelectedIndex].Id;
             }
 
-            timeEntry.Description = textBoxDescription.Text;
-            timeEntry.Timestamp = start;
-            timeEntry.EntryMinutes = GetNumberOfMinutesFromDateSpan(start, end);
-            timeEntry.EntryTypeId = addedTimeEntryType?.Id ?? 0;
-
-            var success = await _timeEntryRepo.UpdateTimeEntryAsync(timeEntry);
+            bool success = await _timeEntryRepo.UpdateTimeEntryAsync(timeEntry);
             if (success)
             {
-                AppLogger.Information($"Zápis hodin {FormatHelper.FormatTimeEntryToString(timeEntry)} byl úspěšně proveden.");
+                AppLogger.Information($"Záznam {FormatHelper.FormatTimeEntryToString(timeEntry)} byl úspěšně aktualizován.");
                 await RenderCalendar();
             }
-            else
-            {
-                AppLogger.Error($"Zápis {FormatHelper.FormatTimeEntryToString(timeEntry)} nebyl proveden.");
-            }
         }
+
 
         private void buttonRemove_Click(object sender, EventArgs e)
         {
@@ -856,12 +879,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                 await LoadProjectsAsync(index);
                 await LoadTimeEntryTypesAsync(index);
             }
-        }
-
-
-        private void flowLayoutPanel2_Paint(object sender, PaintEventArgs e)
-        {
-
         }
     }
 }

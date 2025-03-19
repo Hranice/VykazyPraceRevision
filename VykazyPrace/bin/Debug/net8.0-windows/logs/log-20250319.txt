@@ -14,3 +14,7 @@
 2025-03-19 09:58:05.951 +01:00 [INF] Záznam 003A00 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
 2025-03-19 11:33:05.128 +01:00 [INF] Záznam 003A00 - Provoz Metalizace: 2,5 h -  byl smazán z databáze.
 2025-03-19 12:21:37.104 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 2,5 h - dva testy byl úspěšně proveden.
+2025-03-19 15:44:15.497 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Projekt
+2025-03-19 15:44:50.177 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Popis činnosti
+2025-03-19 15:46:03.417 +01:00 [INF] Zápis hodin 0 - Provoz Metalizace: 5,5 h -  byl úspěšně proveden.
+2025-03-19 16:22:40.139 +01:00 [INF] Záznam 0 - Ostatní: 2,5 h -  byl úspěšně aktualizován.

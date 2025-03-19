@@ -99,11 +99,11 @@
             comboBoxIndex = new ComboBox();
             panel4 = new Panel();
             tableLayoutPanel13 = new TableLayoutPanel();
-            comboBoxStart = new ComboBox();
+            comboBoxEnd = new ComboBox();
             label40 = new Label();
             tableLayoutPanel12 = new TableLayoutPanel();
+            comboBoxStart = new ComboBox();
             label38 = new Label();
-            comboBoxEnd = new ComboBox();
             tableLayoutPanel6 = new TableLayoutPanel();
             label4 = new Label();
             textBoxDescription = new TextBox();
@@ -916,7 +916,6 @@
             flowLayoutPanel2.Name = "flowLayoutPanel2";
             flowLayoutPanel2.Size = new Size(243, 594);
             flowLayoutPanel2.TabIndex = 146;
-            flowLayoutPanel2.Paint += flowLayoutPanel2_Paint;
             // 
             // radioButton1
             // 
@@ -1022,6 +1021,8 @@
             comboBoxProjects.Name = "comboBoxProjects";
             comboBoxProjects.Size = new Size(231, 33);
             comboBoxProjects.TabIndex = 148;
+            comboBoxProjects.SelectionChangeCommitted += comboBoxProjects_SelectionChangeCommitted;
+            comboBoxProjects.TextChanged += comboBoxProjects_TextChanged;
             // 
             // labelProject
             // 
@@ -1123,27 +1124,28 @@
             // 
             tableLayoutPanel13.ColumnCount = 1;
             tableLayoutPanel13.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel13.Controls.Add(comboBoxStart, 0, 1);
+            tableLayoutPanel13.Controls.Add(comboBoxEnd, 0, 2);
             tableLayoutPanel13.Controls.Add(label40, 0, 0);
             tableLayoutPanel13.Dock = DockStyle.Fill;
             tableLayoutPanel13.Location = new Point(111, 0);
             tableLayoutPanel13.Name = "tableLayoutPanel13";
-            tableLayoutPanel13.RowCount = 2;
+            tableLayoutPanel13.RowCount = 3;
             tableLayoutPanel13.RowStyles.Add(new RowStyle());
             tableLayoutPanel13.RowStyles.Add(new RowStyle());
             tableLayoutPanel13.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel13.Size = new Size(127, 65);
             tableLayoutPanel13.TabIndex = 146;
             // 
-            // comboBoxStart
+            // comboBoxEnd
             // 
-            comboBoxStart.Dock = DockStyle.Top;
-            comboBoxStart.FormattingEnabled = true;
-            comboBoxStart.Items.AddRange(new object[] { "0:00", "0:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30" });
-            comboBoxStart.Location = new Point(3, 28);
-            comboBoxStart.Name = "comboBoxStart";
-            comboBoxStart.Size = new Size(121, 33);
-            comboBoxStart.TabIndex = 133;
+            comboBoxEnd.Dock = DockStyle.Top;
+            comboBoxEnd.FormattingEnabled = true;
+            comboBoxEnd.Items.AddRange(new object[] { "0:00", "0:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30" });
+            comboBoxEnd.Location = new Point(3, 28);
+            comboBoxEnd.Name = "comboBoxEnd";
+            comboBoxEnd.Size = new Size(121, 33);
+            comboBoxEnd.TabIndex = 134;
+            comboBoxEnd.SelectionChangeCommitted += comboBoxEnd_SelectionChangeCommitted;
             // 
             // label40
             // 
@@ -1159,8 +1161,8 @@
             // 
             tableLayoutPanel12.ColumnCount = 1;
             tableLayoutPanel12.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel12.Controls.Add(comboBoxStart, 0, 1);
             tableLayoutPanel12.Controls.Add(label38, 0, 0);
-            tableLayoutPanel12.Controls.Add(comboBoxEnd, 0, 1);
             tableLayoutPanel12.Dock = DockStyle.Left;
             tableLayoutPanel12.Location = new Point(0, 0);
             tableLayoutPanel12.Name = "tableLayoutPanel12";
@@ -1171,6 +1173,17 @@
             tableLayoutPanel12.Size = new Size(111, 65);
             tableLayoutPanel12.TabIndex = 145;
             // 
+            // comboBoxStart
+            // 
+            comboBoxStart.Dock = DockStyle.Top;
+            comboBoxStart.FormattingEnabled = true;
+            comboBoxStart.Items.AddRange(new object[] { "0:00", "0:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30" });
+            comboBoxStart.Location = new Point(3, 28);
+            comboBoxStart.Name = "comboBoxStart";
+            comboBoxStart.Size = new Size(105, 33);
+            comboBoxStart.TabIndex = 134;
+            comboBoxStart.SelectedIndexChanged += comboBoxStart_SelectedIndexChanged;
+            // 
             // label38
             // 
             label38.AutoSize = true;
@@ -1180,16 +1193,6 @@
             label38.Size = new Size(105, 25);
             label38.TabIndex = 132;
             label38.Text = "Počátek*";
-            // 
-            // comboBoxEnd
-            // 
-            comboBoxEnd.Dock = DockStyle.Top;
-            comboBoxEnd.FormattingEnabled = true;
-            comboBoxEnd.Items.AddRange(new object[] { "0:00", "0:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30" });
-            comboBoxEnd.Location = new Point(3, 28);
-            comboBoxEnd.Name = "comboBoxEnd";
-            comboBoxEnd.Size = new Size(105, 33);
-            comboBoxEnd.TabIndex = 131;
             // 
             // tableLayoutPanel6
             // 
@@ -1273,6 +1276,7 @@
             buttonConfirm.TabIndex = 141;
             buttonConfirm.Text = "Potvrdit";
             buttonConfirm.UseVisualStyleBackColor = true;
+            buttonConfirm.Click += buttonConfirm_Click;
             // 
             // buttonRemove
             // 
@@ -1283,6 +1287,7 @@
             buttonRemove.TabIndex = 142;
             buttonRemove.Text = "Odstranit";
             buttonRemove.UseVisualStyleBackColor = true;
+            buttonRemove.Click += buttonRemove_Click;
             // 
             // CalendarV2
             // 
@@ -1398,11 +1403,9 @@
         private ComboBox comboBoxIndex;
         private Panel panel4;
         private TableLayoutPanel tableLayoutPanel13;
-        private ComboBox comboBoxStart;
         private Label label40;
         private TableLayoutPanel tableLayoutPanel12;
         private Label label38;
-        private ComboBox comboBoxEnd;
         private TableLayoutPanel tableLayoutPanel6;
         private Label label4;
         private TextBox textBoxDescription;
@@ -1411,5 +1414,7 @@
         private Button buttonPreviousWeek;
         private Button buttonConfirm;
         private Button buttonRemove;
+        private ComboBox comboBoxEnd;
+        private ComboBox comboBoxStart;
     }
 }

@@ -87,7 +87,7 @@
             listBoxProject.Name = "listBoxProject";
             listBoxProject.Size = new Size(476, 227);
             listBoxProject.TabIndex = 23;
-            listBoxProject.SelectedIndexChanged += listBoxProjectContract_SelectedIndexChanged;
+            listBoxProject.SelectedIndexChanged += listBoxProject_SelectedIndexChanged;
             // 
             // tabControl1
             // 
@@ -138,6 +138,7 @@
             buttonAddOperation.TabIndex = 50;
             buttonAddOperation.Text = "Přidat";
             buttonAddOperation.UseVisualStyleBackColor = true;
+            buttonAddOperation.Click += buttonAddOperation_Click;
             // 
             // listBoxOperation
             // 
@@ -148,6 +149,7 @@
             listBoxOperation.Name = "listBoxOperation";
             listBoxOperation.Size = new Size(476, 327);
             listBoxOperation.TabIndex = 45;
+            listBoxOperation.SelectedIndexChanged += listBoxOperation_SelectedIndexChanged;
             // 
             // label10
             // 
@@ -203,7 +205,6 @@
             // 
             // buttonArchiveProject
             // 
-            buttonArchiveProject.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             buttonArchiveProject.Location = new Point(240, 445);
             buttonArchiveProject.Margin = new Padding(4, 5, 4, 5);
             buttonArchiveProject.Name = "buttonArchiveProject";
@@ -211,6 +212,7 @@
             buttonArchiveProject.TabIndex = 56;
             buttonArchiveProject.Text = "Archivovat";
             buttonArchiveProject.UseVisualStyleBackColor = true;
+            buttonArchiveProject.Click += buttonArchiveProject_Click;
             // 
             // checkBoxPreProject
             // 
@@ -238,7 +240,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label3.Location = new Point(14, 307);
+            label3.Location = new Point(14, 293);
             label3.Margin = new Padding(4, 0, 4, 0);
             label3.Name = "label3";
             label3.Size = new Size(54, 21);
@@ -247,7 +249,6 @@
             // 
             // buttonAddProject
             // 
-            buttonAddProject.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             buttonAddProject.Location = new Point(369, 445);
             buttonAddProject.Margin = new Padding(4, 5, 4, 5);
             buttonAddProject.Name = "buttonAddProject";
@@ -255,14 +256,17 @@
             buttonAddProject.TabIndex = 41;
             buttonAddProject.Text = "Přidat";
             buttonAddProject.UseVisualStyleBackColor = true;
+            buttonAddProject.Click += buttonAddProject_Click;
             // 
             // comboBoxProjects
             // 
             comboBoxProjects.FormattingEnabled = true;
-            comboBoxProjects.Location = new Point(14, 331);
+            comboBoxProjects.Location = new Point(14, 317);
             comboBoxProjects.Name = "comboBoxProjects";
             comboBoxProjects.Size = new Size(476, 33);
             comboBoxProjects.TabIndex = 43;
+            comboBoxProjects.SelectionChangeCommitted += comboBoxProjects_SelectionChangeCommitted;
+            comboBoxProjects.TextChanged += comboBoxProjects_TextChanged;
             // 
             // label7
             // 
@@ -288,20 +292,20 @@
             // 
             // textBoxProjectDescription
             // 
-            textBoxProjectDescription.Location = new Point(169, 404);
+            textBoxProjectDescription.Location = new Point(14, 401);
             textBoxProjectDescription.Margin = new Padding(5, 8, 5, 8);
             textBoxProjectDescription.Name = "textBoxProjectDescription";
-            textBoxProjectDescription.PlaceholderText = "Projekt vývoje software na výkaz hodin";
-            textBoxProjectDescription.Size = new Size(321, 28);
+            textBoxProjectDescription.PlaceholderText = "000E00";
+            textBoxProjectDescription.Size = new Size(138, 28);
             textBoxProjectDescription.TabIndex = 39;
             // 
             // textBoxProjectTitle
             // 
-            textBoxProjectTitle.Location = new Point(14, 404);
+            textBoxProjectTitle.Location = new Point(169, 401);
             textBoxProjectTitle.Margin = new Padding(5, 8, 5, 8);
             textBoxProjectTitle.Name = "textBoxProjectTitle";
-            textBoxProjectTitle.PlaceholderText = "000E00";
-            textBoxProjectTitle.Size = new Size(138, 28);
+            textBoxProjectTitle.PlaceholderText = "Projekt vývoje software na výkaz hodin";
+            textBoxProjectTitle.Size = new Size(321, 28);
             textBoxProjectTitle.TabIndex = 37;
             // 
             // tabPage3
@@ -311,9 +315,9 @@
             tabPage3.Controls.Add(listBoxAbsence);
             tabPage3.Controls.Add(label11);
             tabPage3.Controls.Add(textBoxAbsence);
-            tabPage3.Location = new Point(4, 34);
+            tabPage3.Location = new Point(4, 24);
             tabPage3.Name = "tabPage3";
-            tabPage3.Size = new Size(504, 494);
+            tabPage3.Size = new Size(504, 504);
             tabPage3.TabIndex = 3;
             tabPage3.Text = "NEPŘÍTOMNOST";
             tabPage3.UseVisualStyleBackColor = true;
@@ -331,7 +335,6 @@
             // 
             // buttonAddAbsence
             // 
-            buttonAddAbsence.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             buttonAddAbsence.Location = new Point(369, 445);
             buttonAddAbsence.Margin = new Padding(4, 5, 4, 5);
             buttonAddAbsence.Name = "buttonAddAbsence";
@@ -339,6 +342,7 @@
             buttonAddAbsence.TabIndex = 57;
             buttonAddAbsence.Text = "Přidat";
             buttonAddAbsence.UseVisualStyleBackColor = true;
+            buttonAddAbsence.Click += buttonAddAbsence_Click;
             // 
             // listBoxAbsence
             // 
@@ -349,6 +353,7 @@
             listBoxAbsence.Name = "listBoxAbsence";
             listBoxAbsence.Size = new Size(476, 327);
             listBoxAbsence.TabIndex = 54;
+            listBoxAbsence.SelectedIndexChanged += listBoxAbsence_SelectedIndexChanged;
             // 
             // label11
             // 
@@ -377,9 +382,9 @@
             tabPage4.Controls.Add(listBoxOther);
             tabPage4.Controls.Add(label13);
             tabPage4.Controls.Add(textBoxOther);
-            tabPage4.Location = new Point(4, 34);
+            tabPage4.Location = new Point(4, 24);
             tabPage4.Name = "tabPage4";
-            tabPage4.Size = new Size(504, 494);
+            tabPage4.Size = new Size(504, 504);
             tabPage4.TabIndex = 4;
             tabPage4.Text = "OSTATNÍ";
             tabPage4.UseVisualStyleBackColor = true;
@@ -397,7 +402,6 @@
             // 
             // buttonAddOther
             // 
-            buttonAddOther.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             buttonAddOther.Location = new Point(369, 445);
             buttonAddOther.Margin = new Padding(4, 5, 4, 5);
             buttonAddOther.Name = "buttonAddOther";
@@ -405,6 +409,7 @@
             buttonAddOther.TabIndex = 64;
             buttonAddOther.Text = "Přidat";
             buttonAddOther.UseVisualStyleBackColor = true;
+            buttonAddOther.Click += buttonAddOther_Click;
             // 
             // listBoxOther
             // 
@@ -415,6 +420,7 @@
             listBoxOther.Name = "listBoxOther";
             listBoxOther.Size = new Size(476, 327);
             listBoxOther.TabIndex = 61;
+            listBoxOther.SelectedIndexChanged += listBoxOther_SelectedIndexChanged;
             // 
             // label13
             // 
@@ -449,6 +455,7 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Správa projektů";
             Load += ProjectManagementDialog_Load;
+            KeyDown += ProjectManagementDialog_KeyDown;
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();

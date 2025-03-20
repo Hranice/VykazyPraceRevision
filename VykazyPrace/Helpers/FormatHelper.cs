@@ -8,7 +8,22 @@ namespace VykazyPrace.Helpers
     {
         public static string FormatProjectToString(Project? project)
         {
-            return $"{project?.ProjectDescription} - {project?.ProjectTitle}";
+            if(project == null)
+            {
+                return "<NULL>";
+            }
+
+            switch (project?.ProjectType)
+            {
+                case 0:
+                    return $"{project?.ProjectTitle}";
+                case 1:
+                    return $"{(project.IsArchived == 1 ? "(ARCHIV): " : "")}{project?.ProjectDescription}: {project?.ProjectTitle}";
+                case 2:
+                    return $"(PŘEDPROJEKT): {project?.ProjectTitle}";
+                default:
+                    return $"{project?.ProjectTitle}";
+            }
         }
 
         public static string FormatTimeEntryToString(TimeEntry? timeEntry)

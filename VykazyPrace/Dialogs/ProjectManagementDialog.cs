@@ -1,4 +1,5 @@
-﻿using VykazyPrace.Core.Database.Models;
+﻿using System.Reflection.Metadata.Ecma335;
+using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Helpers;
 using VykazyPrace.Logging;
@@ -9,10 +10,9 @@ namespace VykazyPrace.Dialogs
     public partial class ProjectManagementDialog : Form
     {
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
-        private readonly TimeEntryTypeRepository _timeEntrTypeRepo = new TimeEntryTypeRepository();
+        private readonly TimeEntryTypeRepository _timeEntryTypeRepo = new TimeEntryTypeRepository();
         private readonly LoadingUC _loadingUC = new LoadingUC();
         private readonly User _currentUser;
-        //private List<Project> _projects = new List<Project>();
         private List<Project> _filteredProjects = new List<Project>();
         private List<TimeEntryType> _timeEntryTypes = new List<TimeEntryType>();
 
@@ -37,7 +37,7 @@ namespace VykazyPrace.Dialogs
 
         private async Task LoadTimeEntryTypes(int projectType)
         {
-            _timeEntryTypes = await _timeEntrTypeRepo.GetAllTimeEntryTypesByProjectTypeAsync(projectType);
+            _timeEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesByProjectTypeAsync(projectType);
         }
 
         private bool comboBoxProjectsLoading = false;
@@ -157,6 +157,8 @@ namespace VykazyPrace.Dialogs
                     }
 
                     _filteredProjects = filteredProjects.ToList();
+
+                    ClearSelection();
                 }));
             }
             catch (Exception ex)
@@ -168,56 +170,6 @@ namespace VykazyPrace.Dialogs
             }
         }
 
-
-        private async void buttonAdd_Click(object sender, EventArgs e)
-        {
-            if (_currentUser == null)
-            {
-                AppLogger.Error("Nepodařilo se načíst aktuálního uživatele, nelze přidat projekt do databáze.");
-                return;
-            }
-
-            //if (buttonAdd.Text == "Konec prohlížení")
-            //{
-            //    groupBox1.Text = "Přidání projektu";
-            //    textBoxProjectContractDescription.Enabled = true;
-            //    textBoxProjectContractNote.Enabled = true;
-            //    textBoxProjectContractTitle.Enabled = true;
-            //    ClearFields();
-            //    buttonAdd.Text = "Přidat";
-            //}
-            //else
-            //{
-            //    var (valid, reason) = CheckForEmptyOrIncorrectFields();
-            //    if (!valid)
-            //    {
-            //        AppLogger.Error($"Je třeba správně vyplnit všechna potřebná data! Chybný parametr: {reason}");
-            //        return;
-            //    }
-
-            //    var newProject = new Project
-            //    {
-            //        //ProjectDescription = textBoxProjectContractDescription.Text,
-            //        //ProjectTitle = textBoxProjectContractTitle.Text,
-            //        //Note = textBoxProjectContractNote.Text,
-            //        CreatedBy = _currentUser.Id
-            //    };
-
-            //    var addedProject = await _projectRepo.CreateProjectAsync(newProject);
-            //    if (addedProject is not null)
-            //    {
-            //        AppLogger.Information($"Projekt {FormatHelper.FormatProjectToString(addedProject)} byl úspěšně přidán.", true);
-            //        ClearFields();
-            //    }
-            //    else
-            //    {
-            //        AppLogger.Error($"Projekt {FormatHelper.FormatProjectToString(newProject)} nebyl přidán.");
-            //    }
-
-            //    //await LoadProjectsContractsAsync();
-            //}
-        }
-
         private void ClearFields()
         {
             //textBoxProjectContractTitle.Text = "";
@@ -227,37 +179,11 @@ namespace VykazyPrace.Dialogs
 
         private (bool, string) CheckForEmptyOrIncorrectFields()
         {
+
             //if (string.IsNullOrEmpty(textBoxProjectContractDescription.Text)) return (false, "Popis");
             //if (string.IsNullOrEmpty(textBoxProjectContractTitle.Text)) return (false, "Název");
 
             return (true, "");
-        }
-
-        private async void buttonArchive_Click(object sender, EventArgs e)
-        {
-            var project = _filteredProjects[listBoxProject.SelectedIndex];
-            project.IsArchived = 1;
-
-            if (project != null)
-            {
-                var dialogResult = MessageBox.Show($"Archivovat projekt {FormatHelper.FormatProjectToString(project)}?", "Archivovat?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-
-                if (dialogResult == DialogResult.Yes)
-                {
-                    if (await _projectRepo.UpdateProjectAsync(project))
-                    {
-                        AppLogger.Information($"Projekt {FormatHelper.FormatProjectToString(project)} byl archivován.");
-                        ClearFields();
-                    }
-
-                    else
-                    {
-                        AppLogger.Error($"Nepodařilo se smazat projekt {FormatHelper.FormatProjectToString(project)} z databáze.");
-                    }
-
-                    //await LoadProjectsContractsAsync();
-                }
-            }
         }
 
         private async void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -282,36 +208,191 @@ namespace VykazyPrace.Dialogs
         private async void checkBoxArchive_CheckedChanged(object sender, EventArgs e)
         {
             await LoadProjectsAsync(checkBoxPreProject.Checked ? 2 : 1);
+            buttonArchiveProject.Text = checkBoxArchive.Checked ? "Obnovit" : "Archivovat";
         }
 
         private async void checkBoxPreProject_CheckedChanged(object sender, EventArgs e)
         {
             await LoadProjectsAsync(checkBoxPreProject.Checked ? 2 : 1);
+            buttonSetAsPreProject.Text = checkBoxPreProject.Checked ? "Nastavit jako projekt" : "Nastavit jako předprojekt";
         }
 
-        private void buttonAddOperation_Click(object sender, EventArgs e)
+        private async void buttonAddOperation_Click(object sender, EventArgs e)
         {
+            var project = new Project()
+            {
+                ProjectType = 0,
+                CreatedBy = _currentUser.Id,
+                ProjectTitle = textBoxOperation.Text,
+                ProjectDescription = "",
+                IsArchived = 0
+            };
 
+            if (buttonAddOperation.Text == "Přidat")
+            {
+                await _projectRepo.CreateProjectAsync(project);
+            }
+
+            else
+            {
+                project.Id = _filteredProjects.Find(x => x.ProjectDescription == textBoxProjectDescription.Text).Id;
+                await _projectRepo.UpdateProjectAsync(project);
+            }
+
+            await LoadProjectsAsync(project.ProjectType);
+            ClearSelection();
         }
 
-        private void buttonAddProject_Click(object sender, EventArgs e)
+        private async void buttonAddProject_Click(object sender, EventArgs e)
         {
+            var project = new Project()
+            {
+                ProjectType = checkBoxPreProject.Checked ? 2 : 1,
+                CreatedBy = _currentUser.Id,
+                ProjectTitle = textBoxProjectTitle.Text,
+                ProjectDescription = textBoxProjectDescription.Text,
+                IsArchived = 0
+            };
 
+            if (buttonAddProject.Text == "Přidat")
+            {
+                await _projectRepo.CreateProjectAsync(project);
+            }
+
+            else
+            {
+                project.Id = _filteredProjects.Find(x => x.ProjectDescription == textBoxProjectDescription.Text).Id;
+                await _projectRepo.UpdateProjectAsync(project);
+            }
+
+            await LoadProjectsAsync(project.ProjectType);
+            ClearSelection();
         }
 
-        private void buttonArchiveProject_Click(object sender, EventArgs e)
+        private async void buttonArchiveProject_Click(object sender, EventArgs e)
         {
+            int isArchived = buttonSetAsPreProject.Text == "Archivovat" ? 1 : 0;
 
+            string textBoxDescription = textBoxProjectDescription.Text;
+
+            var project = _filteredProjects.Find(x => x.ProjectDescription == textBoxProjectDescription.Text);
+
+            if (project == null)
+            {
+                AppLogger.Error("Nepodařilo se najít zvolený záznam.");
+                return;
+            }
+
+            project.IsArchived = isArchived;
+
+            await _projectRepo.UpdateProjectAsync(project);
+            await LoadProjectsAsync(project.ProjectType);
+            ClearSelection();
         }
 
-        private void buttonAddAbsence_Click(object sender, EventArgs e)
+        private async void buttonSetAsPreProject_Click(object sender, EventArgs e)
         {
+            int projectType = buttonSetAsPreProject.Text == "Nastavit jako předprojekt" ? 2 : 1;
 
+            if (projectType == 1)
+            {
+                if (!CheckFoxValidProject()) return;
+            }
+
+            else
+            {
+                if (!CheckFoxValidPreProject()) return;
+            }
+
+            var project = _filteredProjects.Find(x => x.ProjectTitle == textBoxProjectTitle.Text && x.ProjectDescription == textBoxProjectDescription.Text);
+
+            if (project == null)
+            {
+                AppLogger.Error("Nepodařilo se najít zvolený záznam.");
+                return;
+            }
+
+            project.ProjectType = projectType;
+
+            await _projectRepo.UpdateProjectAsync(project);
+            await LoadProjectsAsync(project.ProjectType);
+            ClearSelection();
         }
 
-        private void buttonAddOther_Click(object sender, EventArgs e)
+        private bool CheckFoxValidProject()
         {
+            if (string.IsNullOrEmpty(textBoxProjectDescription.Text))
+            {
+                MessageBox.Show("Je třeba vyplnit popis projektu.");
+                return false;
+            }
 
+            if (string.IsNullOrEmpty(textBoxProjectTitle.Text))
+            {
+                MessageBox.Show("Je třeba vyplnit název projektu.");
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool CheckFoxValidPreProject()
+        {
+            if (string.IsNullOrEmpty(textBoxProjectTitle.Text))
+            {
+                MessageBox.Show("Je třeba vyplnit název projektu.");
+                return false;
+            }
+
+            return true;
+        }
+
+        private async void buttonAddAbsence_Click(object sender, EventArgs e)
+        {
+            var timeEntryType = new TimeEntryType()
+            {
+                Title = textBoxAbsence.Text,
+                Color = "#ADD8E6",
+                ForProjectType = 4
+            };
+
+            if (buttonAddAbsence.Text == "Přidat")
+            {
+                await _timeEntryTypeRepo.CreateTimeEntryTypeAsync(timeEntryType);
+            }
+
+            else
+            {
+                timeEntryType.Id = _timeEntryTypes[listBoxAbsence.SelectedIndex].Id;
+                await _timeEntryTypeRepo.UpdateTimeEntryTypeAsync(timeEntryType);
+            }
+
+            await LoadProjectsAsync((int)timeEntryType.ForProjectType);
+            ClearSelection();
+        }
+
+        private async void buttonAddOther_Click(object sender, EventArgs e)
+        {
+            var timeEntryType = new TimeEntryType()
+            {
+                Title = textBoxOther.Text,
+                Color = "#ADD8E6",
+                ForProjectType = 5
+            };
+
+            if (buttonAddOther.Text == "Přidat")
+            {
+                await _timeEntryTypeRepo.CreateTimeEntryTypeAsync(timeEntryType);
+            }
+
+            else
+            {
+                timeEntryType.Id = _timeEntryTypes[listBoxOther.SelectedIndex].Id;
+                await _timeEntryTypeRepo.UpdateTimeEntryTypeAsync(timeEntryType);
+            }
+
+            await LoadProjectsAsync((int)timeEntryType.ForProjectType);
+            ClearSelection();
         }
 
         private bool isUpdating;
@@ -411,6 +492,7 @@ namespace VykazyPrace.Dialogs
         {
             if (e.KeyCode == Keys.Escape)
             {
+                textBoxProjectDescription.Enabled = true;
                 ClearSelection();
             }
         }
@@ -432,6 +514,10 @@ namespace VykazyPrace.Dialogs
             buttonAddProject.Text = "Přidat";
             buttonAddAbsence.Text = "Přidat";
             buttonAddOther.Text = "Přidat";
+
+            textBoxProjectDescription.Enabled = true;
+            buttonArchiveProject.Visible = false;
+            buttonSetAsPreProject.Visible = false;
         }
 
         private void listBoxOperation_SelectedIndexChanged(object sender, EventArgs e)
@@ -456,28 +542,39 @@ namespace VykazyPrace.Dialogs
         {
             if (listBoxProject.SelectedItem is not null)
             {
+                textBoxProjectDescription.Enabled = false;
+                buttonArchiveProject.Visible = true;
+                buttonSetAsPreProject.Visible = true;
+
                 comboBoxProjectsLoading = true;
                 comboBoxProjects.SelectedIndex = comboBoxProjects.FindString(listBoxProject.SelectedItem.ToString());
                 comboBoxProjectsLoading = false;
 
-                textBoxProjectDescription.Text = listBoxProject.SelectedItem.ToString().Split(':')[0];
-                textBoxProjectTitle.Text = listBoxProject.SelectedItem.ToString().Split(':')[1].TrimStart(' ');
+                if (checkBoxArchive.Checked || checkBoxPreProject.Checked)
+                {
+                    if (checkBoxArchive.Checked && checkBoxPreProject.Checked)
+                    {
+                        textBoxProjectTitle.Text = listBoxProject.SelectedItem.ToString().Split(':')[1].TrimStart(' ');
+                        textBoxProjectDescription.Text = _filteredProjects.Find(x => x.ProjectTitle == textBoxProjectTitle.Text).ProjectDescription;
+                    }
+
+                    else
+                    {
+                        textBoxProjectTitle.Text = listBoxProject.SelectedItem.ToString().Split(':')[2].TrimStart(' ');
+                        textBoxProjectDescription.Text = listBoxProject.SelectedItem.ToString().Split(':')[1].TrimStart(' ');
+                    }
+                }
+
+                else
+                {
+                    textBoxProjectDescription.Text = listBoxProject.SelectedItem.ToString().Split(':')[0];
+                    textBoxProjectTitle.Text = listBoxProject.SelectedItem.ToString().Split(':')[1].TrimStart(' ');
+                }
+
                 buttonAddProject.Text = "Uložit";
 
-                var project = _filteredProjects[listBoxProject.SelectedIndex];
-
-                if (project != null)
-                {
-                    //groupBox1.Text = $"Zobrazení projektu ({project.Id})";
-                    //textBoxProjectContractDescription.Enabled = false;
-                    //textBoxProjectContractDescription.Text = project.ProjectDescription;
-                    //textBoxProjectContractTitle.Enabled = false;
-                    //textBoxProjectContractTitle.Text = project.ProjectTitle;
-                    //textBoxProjectContractNote.Enabled = false;
-                    //textBoxProjectContractNote.Text = project.Note;
-
-                    //buttonAdd.Text = "Konec prohlížení";
-                }
+                buttonArchiveProject.Text = checkBoxArchive.Checked ? "Obnovit" : "Archivovat";
+                buttonSetAsPreProject.Text = checkBoxPreProject.Checked ? "Nastavit jako plnohodnotný projekt" : "Nastavit jako předprojekt";
             }
         }
     }

@@ -38,6 +38,7 @@
             label10 = new Label();
             textBoxOperation = new TextBox();
             tabPage2 = new TabPage();
+            buttonSetAsPreProject = new Button();
             checkBoxArchive = new CheckBox();
             buttonArchiveProject = new Button();
             checkBoxPreProject = new CheckBox();
@@ -173,6 +174,7 @@
             // 
             // tabPage2
             // 
+            tabPage2.Controls.Add(buttonSetAsPreProject);
             tabPage2.Controls.Add(checkBoxArchive);
             tabPage2.Controls.Add(buttonArchiveProject);
             tabPage2.Controls.Add(checkBoxPreProject);
@@ -191,6 +193,18 @@
             tabPage2.TabIndex = 2;
             tabPage2.Text = "PROJEKT";
             tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // buttonSetAsPreProject
+            // 
+            buttonSetAsPreProject.Location = new Point(14, 445);
+            buttonSetAsPreProject.Margin = new Padding(4, 5, 4, 5);
+            buttonSetAsPreProject.Name = "buttonSetAsPreProject";
+            buttonSetAsPreProject.Size = new Size(218, 36);
+            buttonSetAsPreProject.TabIndex = 58;
+            buttonSetAsPreProject.Text = "Nastavit jako předprojekt";
+            buttonSetAsPreProject.UseVisualStyleBackColor = true;
+            buttonSetAsPreProject.Visible = false;
+            buttonSetAsPreProject.Click += buttonSetAsPreProject_Click;
             // 
             // checkBoxArchive
             // 
@@ -212,6 +226,7 @@
             buttonArchiveProject.TabIndex = 56;
             buttonArchiveProject.Text = "Archivovat";
             buttonArchiveProject.UseVisualStyleBackColor = true;
+            buttonArchiveProject.Visible = false;
             buttonArchiveProject.Click += buttonArchiveProject_Click;
             // 
             // checkBoxPreProject
@@ -446,7 +461,7 @@
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1011, 583);
+            ClientSize = new Size(533, 551);
             Controls.Add(tabControl1);
             Controls.Add(label6);
             Font = new Font("Reddit Sans", 12F);
@@ -503,5 +518,6 @@
         private Button buttonArchiveProject;
         private CheckBox checkBoxPreProject;
         private CheckBox checkBoxArchive;
+        private Button buttonSetAsPreProject;
     }
 }

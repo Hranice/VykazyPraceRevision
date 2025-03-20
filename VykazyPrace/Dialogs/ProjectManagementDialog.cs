@@ -20,44 +20,105 @@ namespace VykazyPrace.Dialogs
             _currentUser = currentUser;
         }
 
-        private void ProjectManagementDialog_Load(object sender, EventArgs e)
+        private async void ProjectManagementDialog_Load(object sender, EventArgs e)
         {
-            listBoxProjectContract.Items.Clear();
-            listBoxProjectContract.Items.Add("Načítání...");
+            listBoxProject.Items.Clear();
+            listBoxProject.Items.Add("Načítání...");
 
             _loadingUC.Size = this.Size;
             this.Controls.Add(_loadingUC);
 
-            Task.Run(() => LoadProjectsContractsAsync());
+            await LoadProjectsAsync(0);
         }
 
-        private async Task LoadProjectsContractsAsync()
-        {
-            Invoke(() => _loadingUC.BringToFront());
+        private bool comboBoxProjectsLoading = false;
 
+        private async Task LoadProjectsAsync(int projectType)
+        {
             try
             {
-                _projects = await _projectRepo.GetAllProjectsAndContractsAsync();
+                _projects = await _projectRepo.GetAllProjectsAndContractsAsync(true);
 
                 Invoke(new Action(() =>
                 {
-                    listBoxProjectContract.Items.Clear();
-                    listBoxProjectContract.Items.AddRange(_projects.Select(FormatHelper.FormatProjectToString).ToArray());
-                    _loadingUC.Visible = false;
+                    var filteredProjects = _projects
+                             .Where(p => p.ProjectType == projectType)
+                             .ToArray();
+
+                    switch (projectType)
+                    {
+                        case 0:
+                            // PROVOZ
+                            listBoxOperation.Items.Clear();
+                            listBoxOperation.Items.AddRange(filteredProjects.Select(FormatHelper.FormatProjectToString).ToArray());
+                            break;
+                        case 1:
+                            // PROJEKT
+                            comboBoxProjectsLoading = true;
+                            listBoxProject.Items.Clear();
+
+                            if (checkBoxArchive.Checked)
+                            {
+                                listBoxProject.Items.AddRange(filteredProjects
+                                    .Where(p => p.IsArchived == 1)
+                                    .Select(FormatHelper.FormatProjectToString)
+                                    .ToArray());
+                            }
+                            else
+                            {
+                                listBoxProject.Items.AddRange(filteredProjects
+                                    .Select(FormatHelper.FormatProjectToString)
+                                    .ToArray());
+                            }
+
+                            comboBoxProjectsLoading = false;
+                            break;
+                        case 2:
+                            // PŘEDPROJEKT
+                            comboBoxProjectsLoading = true;
+                            listBoxProject.Items.Clear();
+
+                            if (checkBoxArchive.Checked)
+                            {
+                                listBoxProject.Items.AddRange(filteredProjects
+                                    .Where(p => p.IsArchived == 1)
+                                    .Select(FormatHelper.FormatProjectToString)
+                                    .ToArray());
+                            }
+                            else
+                            {
+                                listBoxProject.Items.AddRange(filteredProjects
+                                    .Select(FormatHelper.FormatProjectToString)
+                                    .ToArray());
+                            }
+
+                            comboBoxProjectsLoading = false;
+                            break;
+                        case 3:
+                            // ŠKOLENÍ
+                            break;
+                        case 4:
+                            // NEPŘÍTOMNOST
+                            listBoxAbsence.Items.Clear();
+                            listBoxAbsence.Items.AddRange(filteredProjects.Select(FormatHelper.FormatProjectToString).ToArray());
+                            break;
+                        case 5:
+                            // OSTATNÍ
+                            listBoxOther.Items.Clear();
+                            listBoxOther.Items.AddRange(filteredProjects.Select(FormatHelper.FormatProjectToString).ToArray());
+                            break;
+                    }
                 }));
             }
-
             catch (Exception ex)
             {
                 Invoke(new Action(() =>
                 {
                     AppLogger.Error("Chyba při načítání projektů.", ex);
-                    _loadingUC.Visible = false;
                 }));
             }
-
-            Invoke(() => _loadingUC.Visible = false);
         }
+
 
         private async void buttonAdd_Click(object sender, EventArgs e)
         {
@@ -67,86 +128,86 @@ namespace VykazyPrace.Dialogs
                 return;
             }
 
-            if (buttonAdd.Text == "Konec prohlížení")
-            {
-                groupBox1.Text = "Přidání projektu";
-                textBoxProjectContractDescription.Enabled = true;
-                textBoxProjectContractNote.Enabled = true;
-                textBoxProjectContractTitle.Enabled = true;
-                ClearFields();
-                buttonAdd.Text = "Přidat";
-            }
-            else
-            {
-                var (valid, reason) = CheckForEmptyOrIncorrectFields();
-                if (!valid)
-                {
-                    AppLogger.Error($"Je třeba správně vyplnit všechna potřebná data! Chybný parametr: {reason}");
-                    return;
-                }
+            //if (buttonAdd.Text == "Konec prohlížení")
+            //{
+            //    groupBox1.Text = "Přidání projektu";
+            //    textBoxProjectContractDescription.Enabled = true;
+            //    textBoxProjectContractNote.Enabled = true;
+            //    textBoxProjectContractTitle.Enabled = true;
+            //    ClearFields();
+            //    buttonAdd.Text = "Přidat";
+            //}
+            //else
+            //{
+            //    var (valid, reason) = CheckForEmptyOrIncorrectFields();
+            //    if (!valid)
+            //    {
+            //        AppLogger.Error($"Je třeba správně vyplnit všechna potřebná data! Chybný parametr: {reason}");
+            //        return;
+            //    }
 
-                var newProject = new Project
-                {
-                    ProjectDescription = textBoxProjectContractDescription.Text,
-                    ProjectTitle = textBoxProjectContractTitle.Text,
-                    Note = textBoxProjectContractNote.Text,
-                    CreatedBy = _currentUser.Id
-                };
+            //    var newProject = new Project
+            //    {
+            //        //ProjectDescription = textBoxProjectContractDescription.Text,
+            //        //ProjectTitle = textBoxProjectContractTitle.Text,
+            //        //Note = textBoxProjectContractNote.Text,
+            //        CreatedBy = _currentUser.Id
+            //    };
 
-                var addedProject = await _projectRepo.CreateProjectAsync(newProject);
-                if (addedProject is not null)
-                {
-                    AppLogger.Information($"Projekt {FormatHelper.FormatProjectToString(addedProject)} byl úspěšně přidán.", true);
-                    ClearFields();
-                }
-                else
-                {
-                    AppLogger.Error($"Projekt {FormatHelper.FormatProjectToString(newProject)} nebyl přidán.");
-                }
+            //    var addedProject = await _projectRepo.CreateProjectAsync(newProject);
+            //    if (addedProject is not null)
+            //    {
+            //        AppLogger.Information($"Projekt {FormatHelper.FormatProjectToString(addedProject)} byl úspěšně přidán.", true);
+            //        ClearFields();
+            //    }
+            //    else
+            //    {
+            //        AppLogger.Error($"Projekt {FormatHelper.FormatProjectToString(newProject)} nebyl přidán.");
+            //    }
 
-                await LoadProjectsContractsAsync();
-            }
+            //    //await LoadProjectsContractsAsync();
+            //}
         }
 
         private void ClearFields()
         {
-            textBoxProjectContractTitle.Text = "";
-            textBoxProjectContractDescription.Text = "";
-            textBoxProjectContractNote.Text = "";
+            //textBoxProjectContractTitle.Text = "";
+            //textBoxProjectContractDescription.Text = "";
+            //textBoxProjectContractNote.Text = "";
         }
 
         private (bool, string) CheckForEmptyOrIncorrectFields()
         {
-            if (string.IsNullOrEmpty(textBoxProjectContractDescription.Text)) return (false, "Popis");
-            if (string.IsNullOrEmpty(textBoxProjectContractTitle.Text)) return (false, "Název");
+            //if (string.IsNullOrEmpty(textBoxProjectContractDescription.Text)) return (false, "Popis");
+            //if (string.IsNullOrEmpty(textBoxProjectContractTitle.Text)) return (false, "Název");
 
             return (true, "");
         }
 
         private void listBoxProjectContract_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listBoxProjectContract.SelectedItem is not null)
+            if (listBoxProject.SelectedItem is not null)
             {
-                var project = _projects[listBoxProjectContract.SelectedIndex];
+                var project = _projects[listBoxProject.SelectedIndex];
 
                 if (project != null)
                 {
-                    groupBox1.Text = $"Zobrazení projektu ({project.Id})";
-                    textBoxProjectContractDescription.Enabled = false;
-                    textBoxProjectContractDescription.Text = project.ProjectDescription;
-                    textBoxProjectContractTitle.Enabled = false;
-                    textBoxProjectContractTitle.Text = project.ProjectTitle;
-                    textBoxProjectContractNote.Enabled = false;
-                    textBoxProjectContractNote.Text = project.Note;
+                    //groupBox1.Text = $"Zobrazení projektu ({project.Id})";
+                    //textBoxProjectContractDescription.Enabled = false;
+                    //textBoxProjectContractDescription.Text = project.ProjectDescription;
+                    //textBoxProjectContractTitle.Enabled = false;
+                    //textBoxProjectContractTitle.Text = project.ProjectTitle;
+                    //textBoxProjectContractNote.Enabled = false;
+                    //textBoxProjectContractNote.Text = project.Note;
 
-                    buttonAdd.Text = "Konec prohlížení";
+                    //buttonAdd.Text = "Konec prohlížení";
                 }
             }
         }
 
         private async void buttonArchive_Click(object sender, EventArgs e)
         {
-            var project = _projects[listBoxProjectContract.SelectedIndex];
+            var project = _projects[listBoxProject.SelectedIndex];
             project.IsArchived = 1;
 
             if (project != null)
@@ -166,9 +227,38 @@ namespace VykazyPrace.Dialogs
                         AppLogger.Error($"Nepodařilo se smazat projekt {FormatHelper.FormatProjectToString(project)} z databáze.");
                     }
 
-                    await LoadProjectsContractsAsync();
+                    //await LoadProjectsContractsAsync();
                 }
             }
+        }
+
+        private async void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (tabControl1.SelectedTab.Text)
+            {
+                case "PROVOZ":
+                    await LoadProjectsAsync(0);
+                    break;
+                case "PROJEKT":
+                    await LoadProjectsAsync(checkBoxPreProject.Checked ? 2 : 1);
+                    break;
+                case "NEPŘÍTOMNOST":
+                    await LoadProjectsAsync(4);
+                    break;
+                case "OSTATNÍ":
+                    await LoadProjectsAsync(5);
+                    break;
+            }
+        }
+
+        private async void checkBoxArchive_CheckedChanged(object sender, EventArgs e)
+        {
+            await LoadProjectsAsync(checkBoxPreProject.Checked ? 2 : 1);
+        }
+
+        private async void checkBoxPreProject_CheckedChanged(object sender, EventArgs e)
+        {
+            await LoadProjectsAsync(checkBoxPreProject.Checked ? 2 : 1);
         }
     }
 }

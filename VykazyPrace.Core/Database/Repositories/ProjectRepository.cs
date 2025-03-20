@@ -39,12 +39,18 @@ namespace VykazyPrace.Core.Database.Repositories
         /// Získání všech projektů i zakázek, seřazených podle interního/externího označení,
         /// roku sestupně a pořadového čísla sestupně. Chybné záznamy jsou umístěny na konec.
         /// </summary>
-        public async Task<List<Project>> GetAllProjectsAndContractsAsync()
+        public async Task<List<Project>> GetAllProjectsAndContractsAsync(bool includeArchived = false)
         {
-            var projects = await _context.Projects
+            IQueryable<Project> projectsQuery = _context.Projects
                 .Include(p => p.CreatedByNavigation)
-                .Where(p => p.IsArchived == 0)
-                .ToListAsync(); // Asynchronní načtení dat do paměti
+                .AsQueryable();
+
+            if (!includeArchived)
+            {
+                projectsQuery = projectsQuery.Where(p => p.IsArchived == 0);
+            }
+
+            var projects = await projectsQuery.ToListAsync(); // Asynchronní načtení dat do paměti
 
             return projects
                 .OrderBy(p => IsValidProjectDescription(p.ProjectDescription) ? 1 : 0) // Ostatní první, seřazené na konec
@@ -53,6 +59,8 @@ namespace VykazyPrace.Core.Database.Repositories
                 .ThenByDescending(p => GetProjectNumber(p.ProjectDescription)) // Pořadové číslo sestupně
                 .ToList();
         }
+
+
 
         /// <summary>
         /// Získání všech projektů i zakázek, seřazených podle interního/externího označení,

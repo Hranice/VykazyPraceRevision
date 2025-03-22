@@ -276,7 +276,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             BeginInvoke((Action)(() =>
             {
-                AdjustIndicators(scrollPosition);
+                //AdjustIndicators(scrollPosition);
                 UpdateDateLabels();
 
                 panelContainer.AutoScroll = true;
@@ -820,7 +820,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void CalendarV2_Resize(object sender, EventArgs e)
         {
-            AdjustIndicators(panelContainer.AutoScrollPosition);
+            //AdjustIndicators(panelContainer.AutoScrollPosition);
         }
 
         private void tableLayoutPanel1_MouseClick(object sender, MouseEventArgs e)

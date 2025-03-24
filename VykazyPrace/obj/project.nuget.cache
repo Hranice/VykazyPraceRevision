@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "qgA5buDipIw=",
+  "dgSpecHash": "5vztLLe+Qyw=",
   "success": true,
   "projectFilePath": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\VykazyPrace.csproj",
   "expectedPackageFiles": [
@@ -21,6 +21,10 @@
     "C:\\Users\\jprochazka\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\9.0.2\\microsoft.extensions.logging.abstractions.9.0.2.nupkg.sha512",
     "C:\\Users\\jprochazka\\.nuget\\packages\\microsoft.extensions.options\\9.0.2\\microsoft.extensions.options.9.0.2.nupkg.sha512",
     "C:\\Users\\jprochazka\\.nuget\\packages\\microsoft.extensions.primitives\\9.0.2\\microsoft.extensions.primitives.9.0.2.nupkg.sha512",
+    "C:\\Users\\jprochazka\\.nuget\\packages\\runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
+    "C:\\Users\\jprochazka\\.nuget\\packages\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
+    "C:\\Users\\jprochazka\\.nuget\\packages\\runtime.win-x64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-x64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
+    "C:\\Users\\jprochazka\\.nuget\\packages\\runtime.win-x86.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-x86.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
     "C:\\Users\\jprochazka\\.nuget\\packages\\serilog\\4.2.0\\serilog.4.2.0.nupkg.sha512",
     "C:\\Users\\jprochazka\\.nuget\\packages\\serilog.sinks.console\\6.0.0\\serilog.sinks.console.6.0.0.nupkg.sha512",
     "C:\\Users\\jprochazka\\.nuget\\packages\\serilog.sinks.file\\6.0.0\\serilog.sinks.file.6.0.0.nupkg.sha512",
@@ -28,6 +32,7 @@
     "C:\\Users\\jprochazka\\.nuget\\packages\\sqlitepclraw.core\\2.1.10\\sqlitepclraw.core.2.1.10.nupkg.sha512",
     "C:\\Users\\jprochazka\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.1.10\\sqlitepclraw.lib.e_sqlite3.2.1.10.nupkg.sha512",
     "C:\\Users\\jprochazka\\.nuget\\packages\\sqlitepclraw.provider.e_sqlite3\\2.1.10\\sqlitepclraw.provider.e_sqlite3.2.1.10.nupkg.sha512",
+    "C:\\Users\\jprochazka\\.nuget\\packages\\system.data.sqlclient\\4.9.0\\system.data.sqlclient.4.9.0.nupkg.sha512",
     "C:\\Users\\jprochazka\\.nuget\\packages\\system.diagnostics.diagnosticsource\\9.0.2\\system.diagnostics.diagnosticsource.9.0.2.nupkg.sha512",
     "C:\\Users\\jprochazka\\.nuget\\packages\\system.io.pipelines\\9.0.2\\system.io.pipelines.9.0.2.nupkg.sha512",
     "C:\\Users\\jprochazka\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",

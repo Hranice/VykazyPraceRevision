@@ -48,6 +48,7 @@
             buttonPrevious = new Button();
             panelContainer = new Panel();
             panelCalendarContainer = new Panel();
+            testToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -73,7 +74,7 @@
             // exportToolStripMenuItem
             // 
             exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            exportToolStripMenuItem.Size = new Size(180, 22);
+            exportToolStripMenuItem.Size = new Size(108, 22);
             exportToolStripMenuItem.Text = "Export";
             exportToolStripMenuItem.Click += exportToolStripMenuItem_Click;
             // 
@@ -87,7 +88,7 @@
             // správaUživatelůToolStripMenuItem
             // 
             správaUživatelůToolStripMenuItem.Name = "správaUživatelůToolStripMenuItem";
-            správaUživatelůToolStripMenuItem.Size = new Size(180, 22);
+            správaUživatelůToolStripMenuItem.Size = new Size(159, 22);
             správaUživatelůToolStripMenuItem.Text = "Správa uživatelů";
             správaUživatelůToolStripMenuItem.Click += správaUživatelůToolStripMenuItem_Click;
             // 
@@ -101,13 +102,13 @@
             // správaProjektůToolStripMenuItem
             // 
             správaProjektůToolStripMenuItem.Name = "správaProjektůToolStripMenuItem";
-            správaProjektůToolStripMenuItem.Size = new Size(180, 22);
+            správaProjektůToolStripMenuItem.Size = new Size(156, 22);
             správaProjektůToolStripMenuItem.Text = "Správa projektů";
             správaProjektůToolStripMenuItem.Click += správaProjektůToolStripMenuItem_Click;
             // 
             // toolStripMenuItem1
             // 
-            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { nápovědaToolStripMenuItem, nastaveníToolStripMenuItem });
+            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { nápovědaToolStripMenuItem, nastaveníToolStripMenuItem, testToolStripMenuItem });
             toolStripMenuItem1.Name = "toolStripMenuItem1";
             toolStripMenuItem1.Size = new Size(24, 20);
             toolStripMenuItem1.Text = "?";
@@ -232,6 +233,13 @@
             panelCalendarContainer.Size = new Size(966, 769);
             panelCalendarContainer.TabIndex = 1;
             // 
+            // testToolStripMenuItem
+            // 
+            testToolStripMenuItem.Name = "testToolStripMenuItem";
+            testToolStripMenuItem.Size = new Size(180, 22);
+            testToolStripMenuItem.Text = "Test";
+            testToolStripMenuItem.Click += testToolStripMenuItem_Click_1;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
@@ -281,5 +289,6 @@
         private Label labelSelectedDate;
         private Button buttonNext;
         private Button buttonPrevious;
+        private ToolStripMenuItem testToolStripMenuItem;
     }
 }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VykazyPrace")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+71a997eea86ac2a536626982d2a022f453e58de1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+27f41ef6145b3196819e917f62fc8ddabe1b4ba3")]
 [assembly: System.Reflection.AssemblyProductAttribute("VykazyPrace")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VykazyPrace")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

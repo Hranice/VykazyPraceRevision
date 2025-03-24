@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
+using VykazyPrace.Dialogs;
 using VykazyPrace.Helpers;
 using VykazyPrace.Logging;
 using VykazyPrace.UserControls;
@@ -136,11 +137,6 @@ namespace VykazyPrace
             new Dialogs.SettingsDialog(_selectedUser).ShowDialog();
         }
 
-        private void testToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            new Dialogs.TestDialog(_selectedUser).ShowDialog();
-        }
-
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             bool showCalendarV2 = radioButton1.Checked;
@@ -180,6 +176,11 @@ namespace VykazyPrace
                 _selectedDate = await _calendar.ChangeToNextWeek();
                 labelSelectedDate.Text = FormatHelper.FormatDateTimeToMonthAndYear(_selectedDate);
             }
+        }
+
+        private void testToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            new TestDialog().ShowDialog();
         }
     }
 }

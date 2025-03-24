@@ -11,6 +11,7 @@ using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Dialogs;
 using VykazyPrace.Helpers;
 using VykazyPrace.Logging;
+using Timer = System.Windows.Forms.Timer;
 
 namespace VykazyPrace.UserControls.CalendarV2
 {
@@ -39,6 +40,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         private int startMouseX, startPanelX;
         private int originalColumn, originalColumnSpan;
         private const int ResizeThreshold = 7;
+        private Timer resizeTimer;
 
 
         public CalendarV2(User currentUser)
@@ -46,8 +48,18 @@ namespace VykazyPrace.UserControls.CalendarV2
             InitializeComponent();
             DoubleBuffered = true;
 
+            resizeTimer = new Timer();
+            resizeTimer.Interval = 50;
+            resizeTimer.Tick += ResizeTimer_Tick;
+
             _selectedDate = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
             _selectedUser = currentUser;
+        }
+
+        private void ResizeTimer_Tick(object? sender, EventArgs e)
+        {
+            resizeTimer.Stop();
+            AdjustIndicators(panelContainer.AutoScrollPosition);
         }
 
         private async void CalendarV2_Load(object sender, EventArgs e)
@@ -65,12 +77,31 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             try
             {
+                var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
+
+                bool afterCare;
+
+                if (timeEntry != null)
+                {
+                    afterCare = timeEntry.AfterCare == 1;
+                }
+
+                else
+                {
+                    afterCare = false;
+                }
+
                 _timeEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesByProjectTypeAsync(projectType);
 
                 Invoke((Delegate)(() =>
                 {
                     comboBoxEntryType.Items.Clear();
-                    comboBoxEntryType.Items.AddRange(_timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray());
+                    comboBoxEntryType
+                        .Items
+                        .AddRange(afterCare ?
+                            _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeWithAfterCareToString).ToArray() :
+                            _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray());
+
                     if (comboBoxEntryType.Items.Count > 0) comboBoxEntryType.SelectedIndex = 0;
                 }));
             }
@@ -109,7 +140,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             try
             {
-                _projects = await _projectRepo.GetAllProjectsAndContractsAsyncByProjectType(projectType);
+                _projects = await _projectRepo.GetAllProjectsAndContractsAsyncByProjectType(projectType, checkBoxArchivedProjects.Checked);
 
                 Invoke(new Action(() =>
                 {
@@ -169,7 +200,8 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                 if (lastPanel?.EntryId != -1)
                 {
-                    textBoxDescription.Text = timeEntry.Description;
+                    comboBoxIndex.Text = timeEntry.Description;
+                    textBoxNote.Text = timeEntry.Note;
                     comboBoxProjects.Text = FormatHelper.FormatProjectToString(timeEntry.Project);
                     var selectedType = _timeEntryTypes.FirstOrDefault(x => x.Id == timeEntry.EntryTypeId);
                     comboBoxEntryType.Text = selectedType != null ? FormatHelper.FormatTimeEntryTypeToString(selectedType) : "";
@@ -771,11 +803,20 @@ namespace VykazyPrace.UserControls.CalendarV2
                 return;
             }
 
+            var adddedTimeEntrySubType = await _timeEntrySubTypeRepo.CreateTimeEntrySubTypeAsync(
+                new TimeEntrySubType()
+                {
+                    Title = comboBoxIndex.Text,
+                    UserId = _selectedUser.Id
+                });
+
             var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
             if (timeEntry == null) return;
 
-            timeEntry.Description = textBoxDescription.Text;
+            timeEntry.Description = textBoxNote.Text;
             timeEntry.EntryTypeId = addedTimeEntryType.Id;
+            timeEntry.Description = adddedTimeEntrySubType.Title;
+            timeEntry.Note = textBoxNote.Text;
 
             if (comboBoxProjects.SelectedIndex > -1)
             {
@@ -820,6 +861,8 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void CalendarV2_Resize(object sender, EventArgs e)
         {
+            resizeTimer.Stop();
+            resizeTimer.Start();
             //AdjustIndicators(panelContainer.AutoScrollPosition);
         }
 
@@ -849,6 +892,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                         tableLayoutPanelProject.Visible = true;
                         tableLayoutPanelEntryType.Visible = true;
                         tableLayoutPanelEntrySubType.Visible = true;
+                        checkBoxArchivedProjects.Visible = false;
                         break;
                     case "PROJEKT":
                         index = 1;
@@ -857,6 +901,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                         tableLayoutPanelProject.Visible = true;
                         tableLayoutPanelEntryType.Visible = true;
                         tableLayoutPanelEntrySubType.Visible = true;
+                        checkBoxArchivedProjects.Visible = true;
                         break;
                     case "PŘEDPROJEKT":
                         index = 2;
@@ -865,18 +910,21 @@ namespace VykazyPrace.UserControls.CalendarV2
                         tableLayoutPanelProject.Visible = true;
                         tableLayoutPanelEntryType.Visible = true;
                         tableLayoutPanelEntrySubType.Visible = true;
+                        checkBoxArchivedProjects.Visible = false;
                         break;
                     case "ŠKOLENÍ":
                         index = 3;
                         tableLayoutPanelProject.Visible = false;
                         tableLayoutPanelEntryType.Visible = false;
                         tableLayoutPanelEntrySubType.Visible = false;
+                        checkBoxArchivedProjects.Visible = false;
                         break;
                     case "NEPŘÍTOMNOST":
                         labelType.Text = "Důvod*";
                         tableLayoutPanelProject.Visible = false;
                         tableLayoutPanelEntryType.Visible = true;
                         tableLayoutPanelEntrySubType.Visible = false;
+                        checkBoxArchivedProjects.Visible = false;
                         index = 4;
                         break;
                     default:
@@ -885,6 +933,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                         tableLayoutPanelProject.Visible = false;
                         tableLayoutPanelEntryType.Visible = true;
                         tableLayoutPanelEntrySubType.Visible = true;
+                        checkBoxArchivedProjects.Visible = false;
                         break;
                 }
 

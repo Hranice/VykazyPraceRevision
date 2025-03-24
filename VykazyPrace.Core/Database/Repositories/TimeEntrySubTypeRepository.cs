@@ -18,6 +18,13 @@ namespace VykazyPrace.Core.Database.Repositories
 
         public async Task<TimeEntrySubType> CreateTimeEntrySubTypeAsync(TimeEntrySubType subType)
         {
+            var existingEntry = await _context.TimeEntrySubTypes.FirstOrDefaultAsync(t => t.Title == subType.Title && t.UserId == subType.UserId);
+
+            if (existingEntry != null)
+            {
+                return existingEntry;
+            }
+
             _context.TimeEntrySubTypes.Add(subType);
             await _context.SaveChangesAsync();
             return subType;

@@ -67,11 +67,11 @@ namespace VykazyPrace.Core.Database.Repositories
         /// roku sestupně a pořadového čísla sestupně. Filtrováno podle typu projektu.
         /// Chybné záznamy jsou umístěny na konec.
         /// </summary>
-        public async Task<List<Project>> GetAllProjectsAndContractsAsyncByProjectType(int projectType)
+        public async Task<List<Project>> GetAllProjectsAndContractsAsyncByProjectType(int projectType, bool onlyArchived = false)
         {
             var projects = await _context.Projects
                 .Include(p => p.CreatedByNavigation)
-                .Where(p => p.IsArchived == 0 && p.ProjectType == projectType)
+                .Where(p => p.IsArchived == (onlyArchived ? 1 : 0) && p.ProjectType == projectType)
                 .ToListAsync(); // Asynchronní načtení dat do paměti
 
             return projects

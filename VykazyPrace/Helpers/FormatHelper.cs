@@ -8,7 +8,7 @@ namespace VykazyPrace.Helpers
     {
         public static string FormatProjectToString(Project? project)
         {
-            if(project == null)
+            if (project == null)
             {
                 return "<NULL>";
             }
@@ -34,6 +34,11 @@ namespace VykazyPrace.Helpers
         public static string FormatTimeEntryTypeToString(TimeEntryType? timeEntryType)
         {
             return $"{timeEntryType?.Title ?? "<>"}";
+        }
+
+        public static string FormatTimeEntryTypeWithAfterCareToString(TimeEntryType? timeEntryType)
+        {
+            return $"(AfterCare): {timeEntryType?.Title ?? "<>"}";
         }
 
         public static string FormatTimeEntrySubTypeToString(TimeEntrySubType? timeEntrySubType)

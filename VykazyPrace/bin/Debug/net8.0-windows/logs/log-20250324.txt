@@ -1,0 +1,5 @@
+2025-03-24 08:52:44.036 +01:00 [INF] Záznam 0 - Provoz Metalizace: 2,5 h -  byl úspěšně aktualizován.
+2025-03-24 09:03:50.271 +01:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 2,5 h - Oplocenka byl úspěšně aktualizován.
+2025-03-24 09:04:22.800 +01:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 2,5 h - test byl úspěšně aktualizován.
+2025-03-24 09:05:01.652 +01:00 [INF] Záznam 0273E25 - K14C - Brazílie #2: 2,5 h - test byl úspěšně aktualizován.
+2025-03-24 09:07:33.126 +01:00 [INF] Záznam 0273E25 - K14C - Brazílie #2: 2,5 h - test byl úspěšně aktualizován.

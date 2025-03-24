@@ -21,7 +21,7 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<TimeEntryType?> CreateTimeEntryTypeAsync(TimeEntryType timeEntryType)
         {
-            var existingEntry = await _context.TimeEntryTypes.FirstOrDefaultAsync(t => t.Title == timeEntryType.Title);
+            var existingEntry = await _context.TimeEntryTypes.FirstOrDefaultAsync(t => t.Title == timeEntryType.Title && t.ForProjectType == timeEntryType.ForProjectType);
 
             if (existingEntry != null)
             {
@@ -41,8 +41,8 @@ namespace VykazyPrace.Core.Database.Repositories
         public async Task<List<TimeEntryType>> GetAllTimeEntryTypesByProjectTypeAsync(int projectType)
         {
             return await _context.TimeEntryTypes
-                .Where(t => t.ForProjectType == projectType)
-                .ToListAsync();
+              .Where(t => t.ForProjectType == projectType)
+              .ToListAsync();
         }
 
         public async Task<TimeEntryType?> GetTimeEntryTypeByIdAsync(int id)

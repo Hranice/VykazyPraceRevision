@@ -195,9 +195,10 @@ namespace VykazyPrace.UserControls.CalendarV2
         private async Task LoadSidebar()
         {
             flowLayoutPanel2.Visible = _selectedTimeEntryId > -1;
-
             var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
             if (timeEntry == null) return;
+
+            flowLayoutPanel2.Enabled = timeEntry.IsLocked == 0;
 
             var proj = await _projectRepo.GetProjectByIdAsync(timeEntry.ProjectId ?? 0);
             if (proj == null) return;
@@ -229,6 +230,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                     comboBoxProjects.Text = FormatHelper.FormatProjectToString(timeEntry.Project);
                     var selectedType = _timeEntryTypes.FirstOrDefault(x => x.Id == timeEntry.EntryTypeId);
                     comboBoxEntryType.Text = selectedType != null ? FormatHelper.FormatTimeEntryTypeToString(selectedType) : "";
+                    checkBoxArchivedProjects.Checked = timeEntry.Project.IsArchived == 1;
                 }
 
                 comboBoxProjectsLoading = false;

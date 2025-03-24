@@ -20,6 +20,7 @@ public partial class TimeEntry
     public int EntryMinutes { get; set; }
     public int? AfterCare { get; set; }
     public string? Note { get; set; }
+    public int? IsLocked { get; set; }
 
     public virtual TimeEntryType? EntryType { get; set; }
 

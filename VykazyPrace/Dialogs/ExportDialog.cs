@@ -278,5 +278,14 @@ namespace VykazyPrace.Dialogs
 
             await LoadTimeEntriesSummaryAsync(dateTimePicker1.Value, dateTimePicker2.Value);
         }
+
+        private async void buttonLockEntries_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show($"Zamknout záznamy za měsíc {comboBoxMonth.Text}?", "Zamknout data?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes)
+            {
+                await _timeEntryRepo.LockAllEntriesInMonth(comboBoxMonth.Text);
+            }
+        }
     }
 }

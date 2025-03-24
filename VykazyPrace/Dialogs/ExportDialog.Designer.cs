@@ -36,6 +36,7 @@
             button2 = new Button();
             comboBoxMonth = new ComboBox();
             checkedListBoxUsers = new CheckedListBox();
+            buttonLockEntries = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -122,11 +123,22 @@
             checkedListBoxUsers.Size = new Size(309, 349);
             checkedListBoxUsers.TabIndex = 12;
             // 
+            // buttonLockEntries
+            // 
+            buttonLockEntries.Location = new Point(137, 9);
+            buttonLockEntries.Name = "buttonLockEntries";
+            buttonLockEntries.Size = new Size(192, 33);
+            buttonLockEntries.TabIndex = 13;
+            buttonLockEntries.Text = "ZAMKNOUT DATA";
+            buttonLockEntries.UseVisualStyleBackColor = true;
+            buttonLockEntries.Click += buttonLockEntries_Click;
+            // 
             // ExportDialog
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(881, 505);
+            Controls.Add(buttonLockEntries);
             Controls.Add(checkedListBoxUsers);
             Controls.Add(comboBoxMonth);
             Controls.Add(button2);
@@ -154,5 +166,6 @@
         private Button button2;
         private ComboBox comboBoxMonth;
         private CheckedListBox checkedListBoxUsers;
+        private Button buttonLockEntries;
     }
 }

@@ -39,7 +39,7 @@ namespace VykazyPrace.Core.Database.Repositories
         /// Získání všech projektů i zakázek, seřazených podle interního/externího označení,
         /// roku sestupně a pořadového čísla sestupně. Chybné záznamy jsou umístěny na konec.
         /// </summary>
-        public async Task<List<Project>> GetAllProjectsAndContractsAsync(bool includeArchived = false)
+        public async Task<List<Project>> GetAllProjectsAsync(bool includeArchived = false)
         {
             IQueryable<Project> projectsQuery = _context.Projects
                 .Include(p => p.CreatedByNavigation)
@@ -67,7 +67,7 @@ namespace VykazyPrace.Core.Database.Repositories
         /// roku sestupně a pořadového čísla sestupně. Filtrováno podle typu projektu.
         /// Chybné záznamy jsou umístěny na konec.
         /// </summary>
-        public async Task<List<Project>> GetAllProjectsAndContractsAsyncByProjectType(int projectType, bool onlyArchived = false)
+        public async Task<List<Project>> GetAllProjectsAsyncByProjectType(int projectType, bool onlyArchived = false)
         {
             var projects = await _context.Projects
                 .Include(p => p.CreatedByNavigation)

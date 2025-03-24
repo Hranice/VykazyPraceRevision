@@ -19,25 +19,25 @@ namespace VykazyPrace.Dialogs
             this.KeyDown += Form1_KeyDown;
         }
 
-        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        private async void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
             {
-                _calendar.DeleteRecord();
+                await _calendar.DeleteRecord();
             }
         }
 
         private void TestDialog_Load(object sender, EventArgs e)
         {
-            _calendar = new UserControls.CalendarV2.CalendarV2(_currentUser);
-            _calendar.Dock = DockStyle.Fill;
-            _calendar.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            _calendar.Location = new Point(0, 0);
-            _calendar.Name = "calendarV21";
-            _calendar.Size = new Size(1126, 620);
-            _calendar.TabIndex = 0;
+            //_calendar = new UserControls.CalendarV2.CalendarV2(_currentUser);
+            //_calendar.Dock = DockStyle.Fill;
+            //_calendar.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            //_calendar.Location = new Point(0, 0);
+            //_calendar.Name = "calendarV21";
+            //_calendar.Size = new Size(1126, 620);
+            //_calendar.TabIndex = 0;
 
-            panel3.Controls.Add(_calendar);
+            //panel3.Controls.Add(_calendar);
         }
     }
 }

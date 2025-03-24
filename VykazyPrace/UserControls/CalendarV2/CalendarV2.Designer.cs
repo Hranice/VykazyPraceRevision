@@ -1026,6 +1026,8 @@
             comboBoxProjects.Name = "comboBoxProjects";
             comboBoxProjects.Size = new Size(231, 33);
             comboBoxProjects.TabIndex = 150;
+            comboBoxProjects.SelectionChangeCommitted += comboBoxProjects_SelectionChangeCommitted;
+            comboBoxProjects.TextChanged += comboBoxProjects_TextChanged;
             // 
             // panel2
             // 

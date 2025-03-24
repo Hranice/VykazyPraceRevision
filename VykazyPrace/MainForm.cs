@@ -15,6 +15,10 @@ namespace VykazyPrace
         private readonly NotifyIcon _trayIcon = new NotifyIcon();
         private readonly ContextMenuStrip _trayMenu = new ContextMenuStrip();
         private readonly UserRepository _userRepo = new UserRepository();
+        private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
+        private readonly TimeEntryTypeRepository _timeEntryTypeRepo = new TimeEntryTypeRepository();
+        private readonly TimeEntrySubTypeRepository _timeEntrySubTypeRepo = new TimeEntrySubTypeRepository();
+        private readonly ProjectRepository _projectRepo = new ProjectRepository();
         private readonly LoadingUC _loadingUC = new LoadingUC();
         private User _selectedUser = new();
         private int _currentUserLoA = 0;
@@ -37,11 +41,11 @@ namespace VykazyPrace
             _ = Task.Run(LoadDataAsync);
         }
 
-        private void MainForm_KeyDown(object? sender, KeyEventArgs e)
+        private async void MainForm_KeyDown(object? sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
             {
-                _calendar?.DeleteRecord();
+                await _calendar.DeleteRecord();
             }
         }
 
@@ -72,7 +76,7 @@ namespace VykazyPrace
             panelCalendarContainer.Controls.Add(calendarUC);
 
             // Nový CalendarV2 do panelContainer
-            _calendar = new CalendarV2(_selectedUser)
+            _calendar = new CalendarV2(_selectedUser, _timeEntryRepo, _timeEntryTypeRepo, _timeEntrySubTypeRepo, _projectRepo, _userRepo)
             {
                 Dock = DockStyle.Fill,
                 Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238),

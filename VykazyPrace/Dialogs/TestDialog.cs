@@ -37,7 +37,7 @@ namespace VykazyPrace.Dialogs
             _calendar.Size = new Size(1126, 620);
             _calendar.TabIndex = 0;
 
-            this.Controls.Add(_calendar);
+            panel3.Controls.Add(_calendar);
         }
     }
 }

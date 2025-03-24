@@ -173,6 +173,8 @@ namespace VykazyPrace.Core.Database.Repositories
             existingEntry.Timestamp = timeEntry.Timestamp;
             existingEntry.UserId = timeEntry.UserId;
             existingEntry.ProjectId = timeEntry.ProjectId;
+            existingEntry.AfterCare = timeEntry.AfterCare;
+            existingEntry.Note = timeEntry.Note;
 
             await _context.SaveChangesAsync();
             return true;

@@ -69,5 +69,11 @@ namespace VykazyPrace.Helpers
 
             return sb.ToString().Normalize(NormalizationForm.FormC);
         }
+
+        public static string FormatDateTimeToMonthAndYear(DateTime dateTime)
+        {
+            CultureInfo czechCulture = new CultureInfo("cs-CZ");
+            return czechCulture.DateTimeFormat.GetMonthName(dateTime.Month).ToUpper() + " " + dateTime.Year;
+        }
     }
 }

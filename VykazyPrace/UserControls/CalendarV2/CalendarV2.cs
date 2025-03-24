@@ -22,11 +22,12 @@ namespace VykazyPrace.UserControls.CalendarV2
         private readonly TimeEntryTypeRepository _timeEntryTypeRepo = new TimeEntryTypeRepository();
         private readonly TimeEntrySubTypeRepository _timeEntrySubTypeRepo = new TimeEntrySubTypeRepository();
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
+        private UserRepository _userRepo = new UserRepository();
         private List<Project> _projects = new List<Project>();
         private List<TimeEntryType> _timeEntryTypes = new List<TimeEntryType>();
         private List<TimeEntrySubType> _timeEntrySubTypes = new List<TimeEntrySubType>();
-        private int _selectedTimeEntryId = 0;
-        private readonly User _selectedUser = new User();
+        private int _selectedTimeEntryId = -1;
+        private User _selectedUser = new User();
         private DateTime _selectedDate;
         private int arrivalColumn = 12;
         private int leaveColumn = 28;
@@ -54,6 +55,27 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             _selectedDate = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
             _selectedUser = currentUser;
+        }
+
+        public async void ChangeUser(User newUser)
+        {
+            _selectedUser = newUser;
+            await RenderCalendar();
+            await LoadSidebar();
+        }
+
+        public async Task<DateTime> ChangeToPreviousWeek()
+        {
+            _selectedDate = _selectedDate.AddDays(-7);
+            await RenderCalendar();
+            return _selectedDate;
+        }
+
+        public async Task<DateTime> ChangeToNextWeek()
+        {
+            _selectedDate = _selectedDate.AddDays(7);
+            await RenderCalendar();
+            return _selectedDate;
         }
 
         private void ResizeTimer_Tick(object? sender, EventArgs e)
@@ -172,11 +194,13 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async Task LoadSidebar()
         {
+            flowLayoutPanel2.Visible = _selectedTimeEntryId > -1;
+
             var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
-            if (timeEntry == null) return; // Přidána ochrana proti nulovým hodnotám
+            if (timeEntry == null) return;
 
             var proj = await _projectRepo.GetProjectByIdAsync(timeEntry.ProjectId ?? 0);
-            if (proj == null) return; // Přidána ochrana proti nulovým hodnotám
+            if (proj == null) return;
 
             await LoadTimeEntryTypesAsync(proj.ProjectType);
 
@@ -261,6 +285,10 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async Task RenderCalendar()
         {
+            var currentUser = await _userRepo.GetUserByWindowsUsernameAsync(Environment.UserName);
+            tableLayoutPanel1.Enabled = _selectedUser.WindowsUsername == currentUser.WindowsUsername;
+            flowLayoutPanel2.Enabled = _selectedUser.WindowsUsername == currentUser.WindowsUsername;
+
             tableLayoutPanel1.SuspendLayout();
             panelContainer.SuspendLayout();
 
@@ -289,7 +317,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                     EntryId = entry.Id
                 };
 
-                newPanel.UpdateUi("test", entry.Project?.ProjectTitle);
+                newPanel.UpdateUi($"{(entry.Project?.IsArchived == 1 ? "(AFTERCARE)" : "")} {entry.Project?.ProjectDescription}", entry.Description);
 
                 int column = GetColumnBasedOnTimeEntry(entry.Timestamp);
                 int row = GetRowBasedOnTimeEntry(entry.Timestamp);
@@ -818,10 +846,13 @@ namespace VykazyPrace.UserControls.CalendarV2
             timeEntry.Description = adddedTimeEntrySubType.Title;
             timeEntry.Note = textBoxNote.Text;
 
+
             if (comboBoxProjects.SelectedIndex > -1)
             {
                 timeEntry.ProjectId = _projects[(comboBoxProjects.SelectedIndex == -1 ? 0 : comboBoxProjects.SelectedIndex)].Id;
             }
+
+            timeEntry.AfterCare = _projects.Find(x => x.Id == timeEntry.ProjectId).IsArchived;
 
             bool success = await _timeEntryRepo.UpdateTimeEntryAsync(timeEntry);
             if (success)
@@ -856,7 +887,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                 }
             }
 
+            _selectedTimeEntryId = -1;
             await RenderCalendar();
+            await LoadSidebar();
         }
 
         private void CalendarV2_Resize(object sender, EventArgs e)
@@ -866,7 +899,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             //AdjustIndicators(panelContainer.AutoScrollPosition);
         }
 
-        private void tableLayoutPanel1_MouseClick(object sender, MouseEventArgs e)
+        private async void tableLayoutPanel1_MouseClick(object sender, MouseEventArgs e)
         {
             foreach (var ctrl in tableLayoutPanel1.Controls)
             {
@@ -875,6 +908,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                     pan.Deactivate();
                 }
             }
+
+            _selectedTimeEntryId = -1;
+            await LoadSidebar();
         }
 
         private async void radioButton_CheckedChanged(object sender, EventArgs e)
@@ -940,6 +976,11 @@ namespace VykazyPrace.UserControls.CalendarV2
                 await LoadProjectsAsync(index);
                 await LoadTimeEntryTypesAsync(index);
             }
+        }
+
+        private async void checkBoxArchivedProjects_CheckedChanged(object sender, EventArgs e)
+        {
+            await LoadProjectsAsync(1);
         }
     }
 }

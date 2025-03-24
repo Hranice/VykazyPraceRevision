@@ -919,6 +919,7 @@
             flowLayoutPanel2.Name = "flowLayoutPanel2";
             flowLayoutPanel2.Size = new Size(243, 585);
             flowLayoutPanel2.TabIndex = 146;
+            flowLayoutPanel2.Visible = false;
             // 
             // radioButton1
             // 
@@ -1046,6 +1047,7 @@
             checkBoxArchivedProjects.TabIndex = 158;
             checkBoxArchivedProjects.Text = "UKONČENÉ";
             checkBoxArchivedProjects.UseVisualStyleBackColor = true;
+            checkBoxArchivedProjects.CheckedChanged += checkBoxArchivedProjects_CheckedChanged;
             // 
             // labelProject
             // 

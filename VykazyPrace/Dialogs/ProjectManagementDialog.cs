@@ -271,7 +271,7 @@ namespace VykazyPrace.Dialogs
 
         private async void buttonArchiveProject_Click(object sender, EventArgs e)
         {
-            int isArchived = buttonSetAsPreProject.Text == "Archivovat" ? 1 : 0;
+            int isArchived = buttonArchiveProject.Text == "Archivovat" ? 1 : 0;
 
             string textBoxDescription = textBoxProjectDescription.Text;
 

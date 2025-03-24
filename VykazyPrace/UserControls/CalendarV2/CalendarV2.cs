@@ -350,31 +350,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 var entryType = _timeEntryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
                 string color = entryType?.Color ?? "#ADD8E6";
 
-                var newPanel = new DayPanel
-                {
-                    Dock = DockStyle.Fill,
-                    BackColor = ColorTranslator.FromHtml(color),
-                    BorderStyle = BorderStyle.FixedSingle,
-                    EntryId = entry.Id
-                };
-
-                newPanel.UpdateUi(
-                    (entry.Project?.IsArchived == 1 ? "(AFTERCARE) " : "") + entry.Project?.ProjectDescription,
-                    entry.Description);
-
-                int column = GetColumnBasedOnTimeEntry(entry.Timestamp);
-                int row = GetRowBasedOnTimeEntry(entry.Timestamp);
-                int columnSpan = GetColumnSpanBasedOnTimeEntry(entry.EntryMinutes);
-
-                newPanel.MouseMove += dayPanel_MouseMove;
-                newPanel.MouseDown += dayPanel_MouseDown;
-                newPanel.MouseUp += dayPanel_MouseUp;
-                newPanel.MouseLeave += dayPanel_MouseLeave;
-                newPanel.MouseClick += dayPanel_MouseClick;
-
-                tableLayoutPanel1.Controls.Add(newPanel, column, row);
-                tableLayoutPanel1.SetColumnSpan(newPanel, columnSpan);
-                panels.Add(newPanel);
+                CreatePanelForEntry(entry);
             }
 
             BeginInvoke((Action)(() =>
@@ -472,6 +448,58 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
+        private void AttachTooltipToPanel(DayPanel panel, TimeEntry entry)
+        {
+            string projectName = entry.Project?.ProjectTitle ?? "Projekt neznámý";
+            string note = string.IsNullOrWhiteSpace(entry.Note) ? "Bez poznámky" : entry.Note;
+
+            var tooltip = new ToolTip()
+            {
+                AutoPopDelay = 5000,
+                InitialDelay = 300,
+                ReshowDelay = 100,
+                ShowAlways = true
+            };
+
+            string text = $"{projectName}\n{note}";
+            tooltip.SetToolTip(panel, text);
+        }
+
+        private void CreatePanelForEntry(TimeEntry entry)
+        {
+            if (entry.Project == null) return;
+
+            var entryType = _timeEntryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
+            string color = entryType?.Color ?? "#ADD8E6";
+
+            var panel = new DayPanel
+            {
+                Dock = DockStyle.Fill,
+                BackColor = ColorTranslator.FromHtml(color),
+                BorderStyle = BorderStyle.FixedSingle,
+                EntryId = entry.Id
+            };
+
+            panel.UpdateUi(
+                (entry.Project?.IsArchived == 1 ? "(AFTERCARE) " : "") + entry.Project.ProjectDescription,
+                entry.Description);
+
+            panel.MouseMove += dayPanel_MouseMove;
+            panel.MouseDown += dayPanel_MouseDown;
+            panel.MouseUp += dayPanel_MouseUp;
+            panel.MouseLeave += dayPanel_MouseLeave;
+            panel.MouseClick += dayPanel_MouseClick;
+
+            AttachTooltipToPanel(panel, entry);
+
+            int column = GetColumnBasedOnTimeEntry(entry.Timestamp);
+            int row = GetRowBasedOnTimeEntry(entry.Timestamp);
+            int columnSpan = GetColumnSpanBasedOnTimeEntry(entry.EntryMinutes);
+
+            tableLayoutPanel1.Controls.Add(panel, column, row);
+            tableLayoutPanel1.SetColumnSpan(panel, columnSpan);
+            panels.Add(panel);
+        }
 
 
         #region DayPanel events

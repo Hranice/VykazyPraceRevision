@@ -481,7 +481,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             };
 
             panel.UpdateUi(
-                (entry.Project?.IsArchived == 1 ? "(AFTERCARE) " : "") + entry.Project.ProjectDescription,
+                (entry.Project?.IsArchived == 1 ? "(AFTERCARE) " : "") + (entry.Project.ProjectType == 1 ? entry.Project.ProjectDescription : entry.Project.ProjectTitle),
                 entry.Description);
 
             panel.MouseMove += dayPanel_MouseMove;
@@ -503,20 +503,24 @@ namespace VykazyPrace.UserControls.CalendarV2
 
 
         #region DayPanel events
-        private void dayPanel_MouseClick(object? sender, MouseEventArgs e)
+        private async void dayPanel_MouseClick(object? sender, MouseEventArgs e)
         {
             if (sender is not DayPanel panel) return;
 
             DeactivateAllPanels();
-
             panel.Activate();
-            tableLayoutPanel1.ClearSelection();
-
-
-
             _selectedTimeEntryId = panel.EntryId;
-            _ = LoadSidebar();
+
+            pasteTargetCell = new TableLayoutPanelCellPosition(
+                tableLayoutPanel1.GetColumn(panel),
+                tableLayoutPanel1.GetRow(panel)
+            );
+            {
+                await LoadSidebar();
+            }
         }
+
+
 
         private void DeactivateAllPanels()
         {
@@ -1064,6 +1068,73 @@ namespace VykazyPrace.UserControls.CalendarV2
         private TimeEntry? copiedEntry;
         private TableLayoutPanelCellPosition? pasteTargetCell;
         private ToolTip copyToolTip = new();
+
+        private async Task PasteCopiedPanelFromTarget(int column, int row)
+        {
+            if (copiedEntry == null) return;
+
+            int span = copiedEntry.EntryMinutes / TimeSlotLengthInMinutes;
+            int lastColumn = column + span - 1;
+
+            if (lastColumn >= tableLayoutPanel1.ColumnCount)
+            {
+                MessageBox.Show("Záznam nelze vložit, nevejde se do daného dne.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            bool overlapping = panels.Any(p =>
+            {
+                int r = tableLayoutPanel1.GetRow(p);
+                int c = tableLayoutPanel1.GetColumn(p);
+                int s = tableLayoutPanel1.GetColumnSpan(p);
+                return r == row && !(column + span - 1 < c || column > c + s - 1);
+            });
+
+            if (overlapping)
+            {
+                var dialog = MessageBox.Show(
+                    "Na této pozici již existuje záznam. Chcete ho nahradit, nebo posunout vše doprava?",
+                    "Kolize záznamu",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (dialog == DialogResult.Cancel) return;
+
+                if (dialog == DialogResult.No)
+                {
+                    bool success = await ShiftRightFrom(column, row, span);
+                    if (!success) return;
+                }
+                else if (dialog == DialogResult.Yes)
+                {
+                    await RemoveOverlappingPanels(column, span, row);
+                }
+            }
+
+            DateTime newTimestamp = _selectedDate
+                .AddDays(row)
+                .AddMinutes(column * TimeSlotLengthInMinutes);
+
+            var newEntry = new TimeEntry
+            {
+                EntryTypeId = copiedEntry.EntryTypeId,
+                ProjectId = copiedEntry.ProjectId,
+                Description = copiedEntry.Description,
+                Note = copiedEntry.Note,
+                EntryMinutes = copiedEntry.EntryMinutes,
+                AfterCare = copiedEntry.AfterCare,
+                UserId = _selectedUser.Id,
+                Timestamp = newTimestamp
+            };
+
+            var created = await _timeEntryRepo.CreateTimeEntryAsync(newEntry);
+            if (created != null)
+            {
+                _selectedTimeEntryId = created.Id;
+                await RenderCalendar();
+                await LoadSidebar();
+            }
+        }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {

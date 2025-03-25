@@ -11,5 +11,7 @@ public partial class TimeEntryType
 
     public string? Color { get; set; }
 
+    public int? ForProjectType { get; set; }
+
     public virtual ICollection<TimeEntry> TimeEntries { get; set; } = new List<TimeEntry>();
 }

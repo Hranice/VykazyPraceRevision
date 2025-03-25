@@ -9,7 +9,5 @@ public partial class UserGroup
 
     public string? Title { get; set; }
 
-    public virtual ICollection<TimeEntrySubType> TimeEntrySubTypes { get; set; } = new List<TimeEntrySubType>();
-
     public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

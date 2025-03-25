@@ -14,3 +14,21 @@
 2025-03-19 09:58:05.951 +01:00 [INF] Záznam 003A00 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
 2025-03-19 11:33:05.128 +01:00 [INF] Záznam 003A00 - Provoz Metalizace: 2,5 h -  byl smazán z databáze.
 2025-03-19 12:21:37.104 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 2,5 h - dva testy byl úspěšně proveden.
+2025-03-19 15:44:15.497 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Projekt
+2025-03-19 15:44:50.177 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Popis činnosti
+2025-03-19 15:46:03.417 +01:00 [INF] Zápis hodin 0 - Provoz Metalizace: 5,5 h -  byl úspěšně proveden.
+2025-03-19 16:22:40.139 +01:00 [INF] Záznam 0 - Ostatní: 2,5 h -  byl úspěšně aktualizován.
+2025-03-19 16:25:44.115 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Projekt
+2025-03-19 16:26:07.070 +01:00 [INF] Záznam 0 - Provoz Metalizace: 2,5 h -  byl úspěšně aktualizován.
+2025-03-19 16:30:12.157 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Projekt
+2025-03-19 16:32:35.526 +01:00 [INF] Záznam 0 - Provoz Metalizace: 2,5 h -  byl úspěšně aktualizován.
+2025-03-19 16:33:17.899 +01:00 [INF] Záznam 0 - Provoz Metalizace: 2,5 h -  byl úspěšně aktualizován.
+2025-03-19 16:34:07.623 +01:00 [INF] Záznam 0 - Provoz Metalizace: 2,5 h -  byl úspěšně aktualizován.
+2025-03-19 16:35:08.691 +01:00 [INF] Záznam 0 - Provoz Metalizace: 2,5 h -  byl úspěšně aktualizován.
+2025-03-19 16:37:25.686 +01:00 [INF] Záznam 0 - Ostatní: 5,5 h -  byl úspěšně aktualizován.
+2025-03-19 16:37:32.336 +01:00 [INF] Záznam 0 - Školení: 5,5 h -  byl úspěšně aktualizován.
+2025-03-19 16:38:40.482 +01:00 [INF] Záznam 0 - Školení: 2,5 h - B&R byl úspěšně aktualizován.
+2025-03-19 16:38:57.089 +01:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 5,5 h - Poznámkovitá byl úspěšně aktualizován.
+2025-03-19 16:39:24.359 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-19 16:41:11.626 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-19 16:43:00.621 +01:00 [INF] Záznam 0 - Provoz Metalizace: 2,5 h -  byl smazán z databáze.

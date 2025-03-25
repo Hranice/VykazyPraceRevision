@@ -36,6 +36,8 @@
             button2 = new Button();
             comboBoxMonth = new ComboBox();
             checkedListBoxUsers = new CheckedListBox();
+            buttonLockEntries = new Button();
+            label1 = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -116,17 +118,41 @@
             // 
             // checkedListBoxUsers
             // 
+            checkedListBoxUsers.Enabled = false;
             checkedListBoxUsers.FormattingEnabled = true;
             checkedListBoxUsers.Location = new Point(557, 90);
             checkedListBoxUsers.Name = "checkedListBoxUsers";
             checkedListBoxUsers.Size = new Size(309, 349);
             checkedListBoxUsers.TabIndex = 12;
+            checkedListBoxUsers.SelectedValueChanged += checkedListBoxUsers_SelectedValueChanged;
+            // 
+            // buttonLockEntries
+            // 
+            buttonLockEntries.Location = new Point(137, 9);
+            buttonLockEntries.Name = "buttonLockEntries";
+            buttonLockEntries.Size = new Size(192, 33);
+            buttonLockEntries.TabIndex = 13;
+            buttonLockEntries.Text = "ZAMKNOUT DATA";
+            buttonLockEntries.UseVisualStyleBackColor = true;
+            buttonLockEntries.Click += buttonLockEntries_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.ForeColor = Color.Red;
+            label1.Location = new Point(681, 219);
+            label1.Name = "label1";
+            label1.Size = new Size(40, 25);
+            label1.TabIndex = 14;
+            label1.Text = "WIP";
             // 
             // ExportDialog
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(881, 505);
+            Controls.Add(label1);
+            Controls.Add(buttonLockEntries);
             Controls.Add(checkedListBoxUsers);
             Controls.Add(comboBoxMonth);
             Controls.Add(button2);
@@ -136,8 +162,10 @@
             Controls.Add(dateTimePicker2);
             Controls.Add(dateTimePicker1);
             Font = new Font("Reddit Sans", 12F);
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Margin = new Padding(4, 5, 4, 5);
             Name = "ExportDialog";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Exportovat data";
             Load += ExportDialog_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
@@ -154,5 +182,7 @@
         private Button button2;
         private ComboBox comboBoxMonth;
         private CheckedListBox checkedListBoxUsers;
+        private Button buttonLockEntries;
+        private Label label1;
     }
 }

@@ -23,5 +23,7 @@ public partial class User
 
     public virtual ICollection<TimeEntry> TimeEntries { get; set; } = new List<TimeEntry>();
 
+    public virtual ICollection<TimeEntrySubType> TimeEntrySubTypes { get; set; } = new List<TimeEntrySubType>();
+
     public virtual UserGroup? UserGroup { get; set; }
 }

@@ -25,13 +25,14 @@ namespace VykazyPrace.Core.Database.Repositories
 
         public async Task<List<UserGroup>> GetAllUserGroupsAsync()
         {
-            return await _context.UserGroups.Include(ug => ug.TimeEntrySubTypes).ToListAsync();
+            return await _context.UserGroups.ToListAsync();
+            //return await _context.UserGroups.Include(ug => ug.TimeEntrySubTypes).ToListAsync();
         }
 
         public async Task<UserGroup?> GetUserGroupByIdAsync(int id)
         {
             return await _context.UserGroups
-                .Include(ug => ug.TimeEntrySubTypes)
+                //.Include(ug => ug.TimeEntrySubTypes)
                 .FirstOrDefaultAsync(ug => ug.Id == id);
         }
 

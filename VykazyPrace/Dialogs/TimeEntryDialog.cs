@@ -76,7 +76,7 @@ namespace VykazyPrace.Dialogs
         {
             try
             {
-                _projects = await _projectRepo.GetAllProjectsAndContractsAsync();
+                _projects = await _projectRepo.GetAllProjectsAsync();
 
                 Invoke(new Action(() =>
                 {

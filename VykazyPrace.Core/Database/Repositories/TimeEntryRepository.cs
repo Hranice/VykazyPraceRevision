@@ -173,6 +173,8 @@ namespace VykazyPrace.Core.Database.Repositories
             existingEntry.Timestamp = timeEntry.Timestamp;
             existingEntry.UserId = timeEntry.UserId;
             existingEntry.ProjectId = timeEntry.ProjectId;
+            existingEntry.AfterCare = timeEntry.AfterCare;
+            existingEntry.Note = timeEntry.Note;
 
             await _context.SaveChangesAsync();
             return true;
@@ -210,15 +212,47 @@ namespace VykazyPrace.Core.Database.Repositories
                 })
                 .ToListAsync();
         }
-    }
 
-    /// <summary>
-    /// Pomocná třída pro souhrnné záznamy.
-    /// </summary>
-    public class TimeEntrySummary
-    {
-        public int? UserId { get; set; }
-        public int? ProjectId { get; set; }
-        public double TotalHours { get; set; }
+        public async Task LockAllEntriesInMonth(string month)
+        {
+            var monthNumber = month switch
+            {
+                "Leden" => 1,
+                "Únor" => 2,
+                "Březen" => 3,
+                "Duben" => 4,
+                "Květen" => 5,
+                "Červen" => 6,
+                "Červenec" => 7,
+                "Srpen" => 8,
+                "Září" => 9,
+                "Říjen" => 10,
+                "Listopad" => 11,
+                "Prosinec" => 12,
+                _ => throw new ArgumentException("Neplatný měsíc: " + month)
+            };
+
+            var entries = await _context.TimeEntries
+                .Where(e => e.Timestamp.HasValue &&
+                            e.Timestamp.Value.Month == monthNumber)
+                .ToListAsync();
+
+            foreach (var entry in entries)
+            {
+                entry.IsLocked = 1;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Pomocná třída pro souhrnné záznamy.
+        /// </summary>
+        public class TimeEntrySummary
+        {
+            public int? UserId { get; set; }
+            public int? ProjectId { get; set; }
+            public double TotalHours { get; set; }
+        }
     }
 }

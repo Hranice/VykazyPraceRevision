@@ -60,17 +60,13 @@ public partial class VykazyPraceContext : DbContext
 
         modelBuilder.Entity<TimeEntrySubType>(entity =>
         {
-            entity.HasIndex(e => e.Id, "IX_TimeEntrySubTypes_Id").IsUnique();
-
-            entity.HasOne(d => d.Group).WithMany(p => p.TimeEntrySubTypes)
-                .HasForeignKey(d => d.GroupId)
+            entity.HasOne(d => d.User).WithMany(p => p.TimeEntrySubTypes)
+                .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<TimeEntryType>(entity =>
         {
-            entity.HasIndex(e => e.Id, "IX_TimeEntryTypes_ID").IsUnique();
-
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Color).HasDefaultValue("#ADD8E6");
         });

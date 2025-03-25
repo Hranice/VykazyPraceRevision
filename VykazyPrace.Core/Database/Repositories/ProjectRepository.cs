@@ -39,11 +39,39 @@ namespace VykazyPrace.Core.Database.Repositories
         /// Získání všech projektů i zakázek, seřazených podle interního/externího označení,
         /// roku sestupně a pořadového čísla sestupně. Chybné záznamy jsou umístěny na konec.
         /// </summary>
-        public async Task<List<Project>> GetAllProjectsAndContractsAsync()
+        public async Task<List<Project>> GetAllProjectsAsync(bool includeArchived = false)
+        {
+            IQueryable<Project> projectsQuery = _context.Projects
+                .Include(p => p.CreatedByNavigation)
+                .AsQueryable();
+
+            if (!includeArchived)
+            {
+                projectsQuery = projectsQuery.Where(p => p.IsArchived == 0);
+            }
+
+            var projects = await projectsQuery.ToListAsync(); // Asynchronní načtení dat do paměti
+
+            return projects
+                .OrderBy(p => IsValidProjectDescription(p.ProjectDescription) ? 1 : 0) // Ostatní první, seřazené na konec
+                .ThenBy(p => GetProjectType(p.ProjectDescription)) // I/E
+                .ThenByDescending(p => GetProjectYear(p.ProjectDescription)) // Rok sestupně
+                .ThenByDescending(p => GetProjectNumber(p.ProjectDescription)) // Pořadové číslo sestupně
+                .ToList();
+        }
+
+
+
+        /// <summary>
+        /// Získání všech projektů i zakázek, seřazených podle interního/externího označení,
+        /// roku sestupně a pořadového čísla sestupně. Filtrováno podle typu projektu.
+        /// Chybné záznamy jsou umístěny na konec.
+        /// </summary>
+        public async Task<List<Project>> GetAllProjectsAsyncByProjectType(int projectType, bool onlyArchived = false)
         {
             var projects = await _context.Projects
                 .Include(p => p.CreatedByNavigation)
-                .Where(p => p.IsArchived == 0)
+                .Where(p => p.IsArchived == (onlyArchived ? 1 : 0) && p.ProjectType == projectType)
                 .ToListAsync(); // Asynchronní načtení dat do paměti
 
             return projects

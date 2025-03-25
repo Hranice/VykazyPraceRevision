@@ -18,6 +18,13 @@ namespace VykazyPrace.Core.Database.Repositories
 
         public async Task<TimeEntrySubType> CreateTimeEntrySubTypeAsync(TimeEntrySubType subType)
         {
+            var existingEntry = await _context.TimeEntrySubTypes.FirstOrDefaultAsync(t => t.Title == subType.Title && t.UserId == subType.UserId);
+
+            if (existingEntry != null)
+            {
+                return existingEntry;
+            }
+
             _context.TimeEntrySubTypes.Add(subType);
             await _context.SaveChangesAsync();
             return subType;
@@ -25,21 +32,21 @@ namespace VykazyPrace.Core.Database.Repositories
 
         public async Task<List<TimeEntrySubType>> GetAllTimeEntrySubTypesAsync()
         {
-            return await _context.TimeEntrySubTypes.Include(t => t.Group).ToListAsync();
+            return await _context.TimeEntrySubTypes.Include(t => t.User).ToListAsync();
         }
 
-        public async Task<List<TimeEntrySubType>> GetAllTimeEntrySubTypesByGroupIdAsync(int groupId)
+        public async Task<List<TimeEntrySubType>> GetAllTimeEntrySubTypesByUserIdAsync(int userId)
         {
             return await _context.TimeEntrySubTypes
-                .Where(t => t.GroupId == groupId)
-                .Include(t => t.Group)
+                .Where(t => t.UserId == userId)
+                .Include(t => t.User)
                 .ToListAsync();
         }
 
 
         public async Task<TimeEntrySubType?> GetTimeEntrySubTypeByIdAsync(int id)
         {
-            return await _context.TimeEntrySubTypes.Include(t => t.Group).FirstOrDefaultAsync(t => t.Id == id);
+            return await _context.TimeEntrySubTypes.Include(t => t.User).FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public async Task<bool> UpdateTimeEntrySubTypeAsync(TimeEntrySubType subType)
@@ -48,7 +55,7 @@ namespace VykazyPrace.Core.Database.Repositories
             if (existingSubType == null) return false;
 
             existingSubType.Title = subType.Title;
-            existingSubType.GroupId = subType.GroupId;
+            existingSubType.UserId = subType.UserId;
             await _context.SaveChangesAsync();
             return true;
         }

@@ -24,3 +24,6 @@
 2025-03-25 10:29:43.034 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.
 2025-03-25 10:29:58.015 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.
 2025-03-25 10:30:16.144 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.
+2025-03-25 13:06:59.767 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.
+2025-03-25 13:07:12.972 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.
+2025-03-25 13:07:27.488 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 0,5 h - test byl smazán z databáze.

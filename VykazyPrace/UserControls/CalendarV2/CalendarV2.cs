@@ -1135,11 +1135,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             if (overlapping)
             {
-                var dialog = MessageBox.Show(
-                    "Na této pozici již existuje záznam. Chcete ho nahradit, nebo posunout vše doprava?",
-                    "Kolize záznamu",
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Question);
+                var dialog = new ReplaceOrMoveDialog().ShowDialog();
 
                 if (dialog == DialogResult.Cancel) return;
 

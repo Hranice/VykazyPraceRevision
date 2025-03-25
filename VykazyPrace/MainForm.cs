@@ -39,6 +39,9 @@ namespace VykazyPrace
             KeyPreview = true;
             KeyDown += MainForm_KeyDown;
 
+            _selectedDate = DateTime.Now;
+            labelSelectedDate.Text = FormatHelper.GetWeekNumberAndRange(_selectedDate);
+
             _ = Task.Run(LoadDataAsync);
         }
 
@@ -165,7 +168,7 @@ namespace VykazyPrace
             if (radioButton1.Checked)
             {
                 _selectedDate = await _calendar.ChangeToPreviousWeek();
-                labelSelectedDate.Text = FormatHelper.FormatDateTimeToMonthAndYear(_selectedDate);
+                labelSelectedDate.Text = FormatHelper.GetWeekNumberAndRange(_selectedDate);
             }
         }
 
@@ -174,7 +177,7 @@ namespace VykazyPrace
             if (radioButton1.Checked)
             {
                 _selectedDate = await _calendar.ChangeToNextWeek();
-                labelSelectedDate.Text = FormatHelper.FormatDateTimeToMonthAndYear(_selectedDate);
+                labelSelectedDate.Text = FormatHelper.GetWeekNumberAndRange(_selectedDate);
             }
         }
 

@@ -38,6 +38,7 @@
             toolStripMenuItem1 = new ToolStripMenuItem();
             nápovědaToolStripMenuItem = new ToolStripMenuItem();
             nastaveníToolStripMenuItem = new ToolStripMenuItem();
+            testToolStripMenuItem = new ToolStripMenuItem();
             radioButton1 = new RadioButton();
             radioButton2 = new RadioButton();
             comboBoxUsers = new ComboBox();
@@ -48,7 +49,6 @@
             buttonPrevious = new Button();
             panelContainer = new Panel();
             panelCalendarContainer = new Panel();
-            testToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -116,15 +116,22 @@
             // nápovědaToolStripMenuItem
             // 
             nápovědaToolStripMenuItem.Name = "nápovědaToolStripMenuItem";
-            nápovědaToolStripMenuItem.Size = new Size(180, 22);
+            nápovědaToolStripMenuItem.Size = new Size(128, 22);
             nápovědaToolStripMenuItem.Text = "Nápověda";
             // 
             // nastaveníToolStripMenuItem
             // 
             nastaveníToolStripMenuItem.Name = "nastaveníToolStripMenuItem";
-            nastaveníToolStripMenuItem.Size = new Size(180, 22);
+            nastaveníToolStripMenuItem.Size = new Size(128, 22);
             nastaveníToolStripMenuItem.Text = "Nastavení";
             nastaveníToolStripMenuItem.Click += nastaveníToolStripMenuItem_Click;
+            // 
+            // testToolStripMenuItem
+            // 
+            testToolStripMenuItem.Name = "testToolStripMenuItem";
+            testToolStripMenuItem.Size = new Size(128, 22);
+            testToolStripMenuItem.Text = "Test";
+            testToolStripMenuItem.Click += testToolStripMenuItem_Click_1;
             // 
             // radioButton1
             // 
@@ -189,14 +196,14 @@
             // 
             labelSelectedDate.Location = new Point(209, 7);
             labelSelectedDate.Name = "labelSelectedDate";
-            labelSelectedDate.Size = new Size(190, 32);
+            labelSelectedDate.Size = new Size(274, 32);
             labelSelectedDate.TabIndex = 3;
             labelSelectedDate.Text = "24.3. - 30.3.2025";
             labelSelectedDate.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // buttonNext
             // 
-            buttonNext.Location = new Point(405, 6);
+            buttonNext.Location = new Point(489, 6);
             buttonNext.Name = "buttonNext";
             buttonNext.Size = new Size(75, 33);
             buttonNext.TabIndex = 2;
@@ -232,13 +239,6 @@
             panelCalendarContainer.Name = "panelCalendarContainer";
             panelCalendarContainer.Size = new Size(966, 769);
             panelCalendarContainer.TabIndex = 1;
-            // 
-            // testToolStripMenuItem
-            // 
-            testToolStripMenuItem.Name = "testToolStripMenuItem";
-            testToolStripMenuItem.Size = new Size(180, 22);
-            testToolStripMenuItem.Text = "Test";
-            testToolStripMenuItem.Click += testToolStripMenuItem_Click_1;
             // 
             // MainForm
             // 

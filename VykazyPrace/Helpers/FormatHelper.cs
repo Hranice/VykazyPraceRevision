@@ -75,5 +75,23 @@ namespace VykazyPrace.Helpers
             CultureInfo czechCulture = new CultureInfo("cs-CZ");
             return czechCulture.DateTimeFormat.GetMonthName(dateTime.Month).ToUpper() + " " + dateTime.Year;
         }
+
+        public static string GetWeekNumberAndRange(DateTime date)
+        {
+            CultureInfo czechCulture = new CultureInfo("cs-CZ");
+            Calendar calendar = czechCulture.Calendar;
+            CalendarWeekRule weekRule = czechCulture.DateTimeFormat.CalendarWeekRule;
+            DayOfWeek firstDayOfWeek = czechCulture.DateTimeFormat.FirstDayOfWeek;
+
+            int weekNumber = calendar.GetWeekOfYear(date, weekRule, firstDayOfWeek);
+
+            int diff = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7;
+            DateTime startOfWeek = date.AddDays(-diff).Date;
+
+            DateTime endOfWeek = startOfWeek.AddDays(6);
+
+            return $"Týden {weekNumber} ({startOfWeek:dd. M.} – {endOfWeek:dd. M. yyyy})";
+        }
+
     }
 }

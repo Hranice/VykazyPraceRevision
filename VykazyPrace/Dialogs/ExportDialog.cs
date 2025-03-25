@@ -251,13 +251,28 @@ namespace VykazyPrace.Dialogs
                 pivotTable3.RefreshTable();
                 userSummarySheet.Columns.AutoFit();
 
-                workbook.Save();
+                workbook.SaveAs(filePath);
                 workbook.Close();
                 excelApp.Quit();
+                Marshal.ReleaseComObject(workbook);
+
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = filePath,
+                    UseShellExecute = true
+                });
+
             }
             catch (Exception ex)
             {
                 AppLogger.Error("Chyba při exportu do Excelu.", ex);
+            }
+
+            finally
+            {
+                Marshal.ReleaseComObject(excelApp);
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
             }
         }
 
@@ -286,6 +301,11 @@ namespace VykazyPrace.Dialogs
             {
                 await _timeEntryRepo.LockAllEntriesInMonth(comboBoxMonth.Text);
             }
+        }
+
+        private void checkedListBoxUsers_SelectedValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

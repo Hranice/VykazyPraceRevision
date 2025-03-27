@@ -617,48 +617,28 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void HandleMove(DayPanel panel, int deltaX, int columnWidth)
         {
-            int requestedColumn = originalColumn + deltaX / columnWidth;
-
-            // Výpočet nového řádku
+            int targetColumn = originalColumn + deltaX / columnWidth;
             int rowHeight = tableLayoutPanel1.Height / tableLayoutPanel1.RowCount;
             int currentMouseY = tableLayoutPanel1.PointToClient(Cursor.Position).Y;
-            int newRow = Math.Max(0, Math.Min(currentMouseY / rowHeight, tableLayoutPanel1.RowCount - 1));
+            int targetRow = Math.Max(0, Math.Min(currentMouseY / rowHeight, tableLayoutPanel1.RowCount - 1));
 
             int span = originalColumnSpan;
-            int maxColumn = tableLayoutPanel1.ColumnCount - span;
 
-            // Hledej první volný prostor bez kolize
-            for (int col = requestedColumn; col <= maxColumn; col++)
+            // Kontrola rozsahu tabulky
+            if (targetColumn < 0 || targetColumn + span > tableLayoutPanel1.ColumnCount)
+                return;
+
+            if (!IsOverlapping(targetColumn, span, targetRow, panel))
             {
-                if (!IsOverlapping(col, span, newRow, panel))
-                {
-                    tableLayoutPanel1.SuspendLayout();
-                    tableLayoutPanel1.SetColumn(panel, col);
-                    tableLayoutPanel1.SetRow(panel, newRow);
-                    tableLayoutPanel1.ResumeLayout();
-                    return;
-                }
-            }
+                tableLayoutPanel1.SuspendLayout();
 
-            // Pokud nenalezeno vpravo, zkus i doleva
-            for (int col = requestedColumn - 1; col >= 0; col--)
-            {
-                if (!IsOverlapping(col, span, newRow, panel))
-                {
-                    tableLayoutPanel1.SuspendLayout();
-                    tableLayoutPanel1.SetColumn(panel, col);
-                    tableLayoutPanel1.SetRow(panel, newRow);
-                    tableLayoutPanel1.ResumeLayout();
-                    return;
-                }
-            }
+                tableLayoutPanel1.SetColumn(panel, targetColumn);
+                tableLayoutPanel1.SetRow(panel, targetRow);
+                tableLayoutPanel1.SetColumnSpan(panel, span);
 
-            // Jinak neudělej nic
+                tableLayoutPanel1.ResumeLayout();
+            }
         }
-
-
-
-
 
         private void UpdateCursor(MouseEventArgs e, DayPanel panel)
         {
@@ -711,7 +691,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         }
         #endregion
 
-        private bool IsOverlapping(int newColumn, int newSpan, int row, DayPanel currentPanel)
+        private bool IsOverlapping(int column, int span, int row, DayPanel currentPanel)
         {
             foreach (DayPanel p in panels)
             {
@@ -723,12 +703,13 @@ namespace VykazyPrace.UserControls.CalendarV2
                 int pCol = tableLayoutPanel1.GetColumn(p);
                 int pSpan = tableLayoutPanel1.GetColumnSpan(p);
 
-                if ((newColumn >= pCol && newColumn < pCol + pSpan) ||
-                    (newColumn + newSpan > pCol && newColumn + newSpan <= pCol + pSpan))
-                {
-                    return true;
-                }
+                int pEnd = pCol + pSpan - 1;
+                int thisEnd = column + span - 1;
+
+                bool overlaps = !(thisEnd < pCol || column > pEnd);
+                if (overlaps) return true;
             }
+
             return false;
         }
 

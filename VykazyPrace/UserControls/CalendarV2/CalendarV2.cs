@@ -274,19 +274,46 @@ namespace VykazyPrace.UserControls.CalendarV2
             return new TableLayoutPanelCellPosition(col, row);
         }
 
+        // Fix pro TableLayoutPanel1_MouseDoubleClick, kde se vytváří nový záznam
+        // a je třeba ho při kolizi posunout na volné místo doprava
+
         private async void TableLayoutPanel1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             TableLayoutPanelCellPosition cell = GetCellAt(tableLayoutPanel1, e.Location);
-
-            DateTime clickedDate = _selectedDate
-                .AddDays(cell.Row)
-                .AddMinutes(cell.Column * 30);
 
             if (_projects.Count == 0 || _timeEntryTypes.Count == 0)
             {
                 AppLogger.Error("Nelze vytvořit záznam: nejsou načteny projekty nebo typy záznamů.");
                 return;
             }
+
+            int column = cell.Column;
+            int row = cell.Row;
+            int span = 1;
+
+            // Najdi první volné místo od zadané pozice doprava
+            while (column + span <= tableLayoutPanel1.ColumnCount)
+            {
+                bool overlapping = panels.Any(p =>
+                {
+                    int r = tableLayoutPanel1.GetRow(p);
+                    if (r != row) return false;
+                    int c = tableLayoutPanel1.GetColumn(p);
+                    int s = tableLayoutPanel1.GetColumnSpan(p);
+                    return !(column + span - 1 < c || column > c + s - 1);
+                });
+
+                if (!overlapping) break;
+                column++;
+            }
+
+            if (column + span > tableLayoutPanel1.ColumnCount)
+            {
+                MessageBox.Show("V daném řádku už není místo pro nový záznam.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            DateTime clickedDate = _selectedDate.AddDays(row).AddMinutes(column * 30);
 
             var newTimeEntry = new TimeEntry()
             {
@@ -303,8 +330,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
 
             newTimeEntry.AfterCare = _projects.Find(x => x.Id == newTimeEntry.ProjectId).IsArchived;
-            if (newTimeEntry.AfterCare == null) newTimeEntry.AfterCare = 0;
-
             newTimeEntry.IsLocked = 0;
 
             var addedTimeEntry = await _timeEntryRepo.CreateTimeEntryAsync(newTimeEntry);
@@ -990,28 +1015,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             return result == DialogResult.Yes;
         }
 
-
-        //private async void tableLayoutPanel1_MouseClick(object sender, MouseEventArgs e)
-        //{
-        //    //foreach (var ctrl in tableLayoutPanel1.Controls)
-        //    //{
-        //    //    if (ctrl is DayPanel pan)
-        //    //    {
-        //    //        pan.Deactivate();
-        //    //    }
-        //    //}
-
-        //    //_selectedTimeEntryId = -1;
-        //    //await LoadSidebar();
-
-        //    var cell = GetCellAt(tableLayoutPanel1, e.Location);
-        //    pasteTargetCell = cell;
-
-        //    DeactivateAllPanels();
-        //    _selectedTimeEntryId = -1;
-        //    _ = LoadSidebar();
-        //}
-
         private async void radioButton_CheckedChanged(object sender, EventArgs e)
         {
             if (sender is RadioButton rb && rb.Checked)
@@ -1081,78 +1084,12 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             await LoadProjectsAsync(1);
         }
-        // 🧠 Kompletní přepracování kopírování a vkládání DayPanelů s přesným posunem a přepočtem timestampů
 
         private TimeEntry? copiedEntry;
         private TableLayoutPanelCellPosition? pasteTargetCell;
         private ToolTip copyToolTip = new();
 
-        private async Task PasteCopiedPanelFromTarget(int column, int row)
-        {
-            if (copiedEntry == null) return;
-
-            int span = copiedEntry.EntryMinutes / TimeSlotLengthInMinutes;
-            int lastColumn = column + span - 1;
-
-            if (lastColumn >= tableLayoutPanel1.ColumnCount)
-            {
-                MessageBox.Show("Záznam nelze vložit, nevejde se do daného dne.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            bool overlapping = panels.Any(p =>
-            {
-                int r = tableLayoutPanel1.GetRow(p);
-                int c = tableLayoutPanel1.GetColumn(p);
-                int s = tableLayoutPanel1.GetColumnSpan(p);
-                return r == row && !(column + span - 1 < c || column > c + s - 1);
-            });
-
-            if (overlapping)
-            {
-                var dialog = MessageBox.Show(
-                    "Na této pozici již existuje záznam. Chcete ho nahradit, nebo posunout vše doprava?",
-                    "Kolize záznamu",
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Question);
-
-                if (dialog == DialogResult.Cancel) return;
-
-                if (dialog == DialogResult.No)
-                {
-                    bool success = await ShiftRightFrom(column, row, span);
-                    if (!success) return;
-                }
-                else if (dialog == DialogResult.Yes)
-                {
-                    await RemoveOverlappingPanels(column, span, row);
-                }
-            }
-
-            DateTime newTimestamp = _selectedDate
-                .AddDays(row)
-                .AddMinutes(column * TimeSlotLengthInMinutes);
-
-            var newEntry = new TimeEntry
-            {
-                EntryTypeId = copiedEntry.EntryTypeId,
-                ProjectId = copiedEntry.ProjectId,
-                Description = copiedEntry.Description,
-                Note = copiedEntry.Note,
-                EntryMinutes = copiedEntry.EntryMinutes,
-                AfterCare = copiedEntry.AfterCare,
-                UserId = _selectedUser.Id,
-                Timestamp = newTimestamp
-            };
-
-            var created = await _timeEntryRepo.CreateTimeEntryAsync(newEntry);
-            if (created != null)
-            {
-                _selectedTimeEntryId = created.Id;
-                await RenderCalendar();
-                await LoadSidebar();
-            }
-        }
+      
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {

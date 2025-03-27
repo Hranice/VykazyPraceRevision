@@ -342,6 +342,12 @@ namespace VykazyPrace.UserControls.CalendarV2
             _selectedTimeEntryId = addedTimeEntry.Id;
             await LoadSidebar();
             await RenderCalendar();
+
+            // Reset vybraného záznamu a sidebaru po vytvoření
+            DeactivateAllPanels();
+            _selectedTimeEntryId = -1;
+            _ = LoadSidebar();
+
         }
 
 

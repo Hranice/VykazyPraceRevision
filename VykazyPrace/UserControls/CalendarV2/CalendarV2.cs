@@ -537,6 +537,11 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             if (sender is not DayPanel panel) return;
 
+            int rowHeight = tableLayoutPanel1.Height / tableLayoutPanel1.RowCount;
+            int currentMouseY = tableLayoutPanel1.PointToClient(Cursor.Position).Y;
+            int newRow = Math.Max(0, Math.Min(currentMouseY / rowHeight, tableLayoutPanel1.RowCount - 1));
+
+
             int currentMouseX = Cursor.Position.X;
             int deltaX = currentMouseX - startMouseX;
             int columnWidth = tableLayoutPanel1.Width / tableLayoutPanel1.ColumnCount;
@@ -612,17 +617,48 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void HandleMove(DayPanel panel, int deltaX, int columnWidth)
         {
-            int newColumn = originalColumn + deltaX / columnWidth;
-            int minColumn = GetNearestLeftColumn(originalColumn, tableLayoutPanel1.GetRow(panel), panel);
-            int maxColumn = GetNearestRightColumn(originalColumn, originalColumnSpan, tableLayoutPanel1.GetRow(panel), panel) - originalColumnSpan;
+            int requestedColumn = originalColumn + deltaX / columnWidth;
 
-            if (newColumn >= minColumn && newColumn <= maxColumn)
+            // Výpočet nového řádku
+            int rowHeight = tableLayoutPanel1.Height / tableLayoutPanel1.RowCount;
+            int currentMouseY = tableLayoutPanel1.PointToClient(Cursor.Position).Y;
+            int newRow = Math.Max(0, Math.Min(currentMouseY / rowHeight, tableLayoutPanel1.RowCount - 1));
+
+            int span = originalColumnSpan;
+            int maxColumn = tableLayoutPanel1.ColumnCount - span;
+
+            // Hledej první volný prostor bez kolize
+            for (int col = requestedColumn; col <= maxColumn; col++)
             {
-                tableLayoutPanel1.SuspendLayout();
-                tableLayoutPanel1.SetColumn(panel, newColumn);
-                tableLayoutPanel1.ResumeLayout();
+                if (!IsOverlapping(col, span, newRow, panel))
+                {
+                    tableLayoutPanel1.SuspendLayout();
+                    tableLayoutPanel1.SetColumn(panel, col);
+                    tableLayoutPanel1.SetRow(panel, newRow);
+                    tableLayoutPanel1.ResumeLayout();
+                    return;
+                }
             }
+
+            // Pokud nenalezeno vpravo, zkus i doleva
+            for (int col = requestedColumn - 1; col >= 0; col--)
+            {
+                if (!IsOverlapping(col, span, newRow, panel))
+                {
+                    tableLayoutPanel1.SuspendLayout();
+                    tableLayoutPanel1.SetColumn(panel, col);
+                    tableLayoutPanel1.SetRow(panel, newRow);
+                    tableLayoutPanel1.ResumeLayout();
+                    return;
+                }
+            }
+
+            // Jinak neudělej nic
         }
+
+
+
+
 
         private void UpdateCursor(MouseEventArgs e, DayPanel panel)
         {
@@ -659,8 +695,9 @@ namespace VykazyPrace.UserControls.CalendarV2
             panel.BackColor = ColorTranslator.FromHtml(entryType?.Color ?? "#ADD8E6");
 
             var newTimestamp = _selectedDate
-                .AddMinutes(tableLayoutPanel1.GetColumn(panel) * TimeSlotLengthInMinutes)
-                .AddDays(tableLayoutPanel1.GetRow(panel));
+                .AddDays(tableLayoutPanel1.GetRow(panel))
+                .AddMinutes(tableLayoutPanel1.GetColumn(panel) * TimeSlotLengthInMinutes);
+
             var newDuration = GetEntryMinutesBasedOnColumnSpan(tableLayoutPanel1.GetColumnSpan(panel));
 
             if (entry.Timestamp != newTimestamp || entry.EntryMinutes != newDuration)

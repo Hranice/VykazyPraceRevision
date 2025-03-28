@@ -1,0 +1,11 @@
+2025-03-28 08:08:41.117 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - koblížek byl úspěšně aktualizován.
+2025-03-28 08:09:21.693 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - koblížek byl smazán z databáze.
+2025-03-28 08:09:28.112 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - větrníček byl úspěšně aktualizován.
+2025-03-28 08:10:21.337 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - puntík byl úspěšně aktualizován.
+2025-03-28 08:10:29.841 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - wfwefwe byl úspěšně aktualizován.
+2025-03-28 08:10:50.070 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - aaaaaaaaaaaaa byl úspěšně aktualizován.
+2025-03-28 08:11:01.574 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - aaaaaaaaaaaaa byl úspěšně aktualizován.
+2025-03-28 08:11:37.280 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - wfwefwe byl smazán z databáze.
+2025-03-28 08:11:37.988 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - aaaaaaaaaaaaa byl smazán z databáze.
+2025-03-28 08:11:38.625 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - puntík byl smazán z databáze.
+2025-03-28 08:11:39.169 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - větrníček byl smazán z databáze.

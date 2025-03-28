@@ -313,7 +313,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             if (column + span > tableLayoutPanel1.ColumnCount)
             {
-                MessageBox.Show("V daném řádku už není místo pro nový záznam.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                AppLogger.Error("V daném řádku už není místo pro nový záznam.");
                 return;
             }
 
@@ -969,7 +969,9 @@ namespace VykazyPrace.UserControls.CalendarV2
             if (success)
             {
                 AppLogger.Information($"Záznam {FormatHelper.FormatTimeEntryToString(timeEntry)} byl úspěšně aktualizován.");
+                await LoadTimeEntrySubTypesAsync();
                 await RenderCalendar();
+                await LoadSidebar();
             }
         }
 

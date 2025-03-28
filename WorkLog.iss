@@ -15,6 +15,8 @@ DisableFinishedPage=no
 AllowNoIcons=yes
 PrivilegesRequired=lowest
 SetupIconFile=WorkLog.ico
+CloseApplications=yes
+RestartApplications=yes
 
 [Files]
 Source: "VykazyPrace\bin\Release\net8.0-windows\win-x64\publish\WorkLog.exe"; DestDir: "{app}"; Flags: ignoreversion
@@ -23,3 +25,6 @@ Source: "VykazyPrace\bin\Release\net8.0-windows\win-x64\publish\latest.txt"; Des
 
 [Icons]
 Name: "{userdesktop}\WorkLog"; Filename: "{app}\WorkLog.exe"
+
+[Run]
+Filename: "{app}\WorkLog.exe"; Flags: nowait

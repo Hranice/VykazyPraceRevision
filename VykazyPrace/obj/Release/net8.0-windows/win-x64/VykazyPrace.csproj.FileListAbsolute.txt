@@ -523,3 +523,4 @@ C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-wind
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\win-x64\refint\WorkLog.dll
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\win-x64\WorkLog.pdb
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\win-x64\ref\WorkLog.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\win-x64\VykazyPrace.Dialogs.AboutDialog.resources

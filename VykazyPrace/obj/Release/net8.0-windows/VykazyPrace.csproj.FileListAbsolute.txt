@@ -1,8 +1,3 @@
-C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\VykazyPrace.exe
-C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\VykazyPrace.deps.json
-C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\VykazyPrace.runtimeconfig.json
-C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\VykazyPrace.dll
-C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\VykazyPrace.pdb
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\Microsoft.Data.Sqlite.dll
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\Microsoft.EntityFrameworkCore.dll
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\Microsoft.EntityFrameworkCore.Abstractions.dll
@@ -87,8 +82,14 @@ C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-wind
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\VykazyPrace.csproj.CoreCompileInputs.cache
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\VykazyPrace.sourcelink.json
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\VykazyPr.C6C5D9D0.Up2Date
-C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\VykazyPrace.dll
-C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\refint\VykazyPrace.dll
-C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\VykazyPrace.pdb
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\VykazyPrace.genruntimeconfig.cache
-C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\ref\VykazyPrace.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\WorkLog.exe
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\WorkLog.deps.json
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\WorkLog.runtimeconfig.json
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\WorkLog.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\WorkLog.pdb
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\VykazyPrace.Dialogs.AboutDialog.resources
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\WorkLog.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\refint\WorkLog.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\WorkLog.pdb
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\ref\WorkLog.dll

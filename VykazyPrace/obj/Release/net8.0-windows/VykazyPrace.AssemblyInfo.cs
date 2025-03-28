@@ -13,11 +13,11 @@ using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("WorkLog")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("1.1.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.1.0+c5163aa9c0e256587d618b46cef379be6998b31b")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.1.3.3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.1.3.3+490f211b89a0744f4da0ebc44b3302c85134201f")]
 [assembly: System.Reflection.AssemblyProductAttribute("WorkLog")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WorkLog")]
-[assembly: System.Reflection.AssemblyVersionAttribute("1.1.0.0")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.1.3.3")]
 [assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
 

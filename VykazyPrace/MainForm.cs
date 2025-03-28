@@ -33,7 +33,8 @@ namespace VykazyPrace
 
         private async void MainForm_Load(object sender, EventArgs e)
         {
-            await UpdateService.CheckForUpdateAsync();
+            UpdateService.CheckForUpdateMessage();
+            _ = Task.Run(async () => await UpdateService.CheckForUpdateAsync());
 
             _loadingUC.Size = Size;
             Controls.Add(_loadingUC);
@@ -44,7 +45,11 @@ namespace VykazyPrace
             _selectedDate = DateTime.Now;
             labelSelectedDate.Text = FormatHelper.GetWeekNumberAndRange(_selectedDate);
 
+            Enabled = false;
+
             _ = Task.Run(LoadDataAsync);
+
+            Enabled = true;
         }
 
         private async void MainForm_KeyDown(object? sender, KeyEventArgs e)

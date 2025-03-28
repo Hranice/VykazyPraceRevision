@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using VykazyPrace.Logging;
 
 namespace VykazyPrace
@@ -29,15 +24,18 @@ namespace VykazyPrace
                 Version latestVersion = new Version(latest.Trim());
                 Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
 
+
                 if (latestVersion > currentVersion)
                 {
+                    AppLogger.Information($"Byla zjištěna nová verze ({currentVersion} -> {latestVersion}), aplikace se nyní aktualizuje.", true);
+
                     string tempInstaller = Path.Combine(Path.GetTempPath(), InstallerFile);
                     File.Copy(installerPath, tempInstaller, true);
 
                     Process.Start(new ProcessStartInfo
                     {
                         FileName = tempInstaller,
-                        Arguments = "/verysilent",
+                        Arguments = "/silent /promptrestart /closeapplications /restartapplications",
                         UseShellExecute = true
                     });
 
@@ -49,5 +47,25 @@ namespace VykazyPrace
                 AppLogger.Error("Chyba při kontrole aktualizace.", ex);
             }
         }
+
+
+        public static void CheckForUpdateMessage()
+        {
+            string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WorkLog");
+            string versionFile = Path.Combine(appDataPath, "version.txt");
+            string currentVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.0";
+
+            if (!Directory.Exists(appDataPath))
+                Directory.CreateDirectory(appDataPath);
+
+            string lastVersion = File.Exists(versionFile) ? File.ReadAllText(versionFile).Trim() : "";
+
+            if (lastVersion != currentVersion)
+            {
+                AppLogger.Information($"Aktualizace na verzi {currentVersion} byla úspěšně dokončena.");
+                File.WriteAllText(versionFile, currentVersion);
+            }
+        }
+
     }
 }

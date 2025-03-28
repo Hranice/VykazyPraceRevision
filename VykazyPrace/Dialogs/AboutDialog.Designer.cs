@@ -31,7 +31,7 @@
             label2 = new Label();
             pictureBox1 = new PictureBox();
             label1 = new Label();
-            label3 = new Label();
+            labelVersion = new Label();
             label4 = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -66,15 +66,15 @@
             label1.TabIndex = 3;
             label1.Text = "Program na výkazy hodin";
             // 
-            // label3
+            // labelVersion
             // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Reddit Sans", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label3.Location = new Point(118, 42);
-            label3.Name = "label3";
-            label3.Size = new Size(85, 25);
-            label3.TabIndex = 4;
-            label3.Text = "Verze 1.0.1";
+            labelVersion.AutoSize = true;
+            labelVersion.Font = new Font("Reddit Sans", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            labelVersion.Location = new Point(118, 42);
+            labelVersion.Name = "labelVersion";
+            labelVersion.Size = new Size(85, 25);
+            labelVersion.TabIndex = 4;
+            labelVersion.Text = "Verze 1.0.1";
             // 
             // label4
             // 
@@ -92,7 +92,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(466, 117);
             Controls.Add(label4);
-            Controls.Add(label3);
+            Controls.Add(labelVersion);
             Controls.Add(label1);
             Controls.Add(pictureBox1);
             Controls.Add(label2);
@@ -101,6 +101,7 @@
             Name = "AboutDialog";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "O programu";
+            Load += AboutDialog_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -111,7 +112,7 @@
         private Label label2;
         private PictureBox pictureBox1;
         private Label label1;
-        private Label label3;
+        private Label labelVersion;
         private Label label4;
     }
 }

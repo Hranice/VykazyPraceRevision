@@ -55,6 +55,11 @@ namespace VykazyPrace.UserControls.CalendarV2
         private int originalColumn;
         private int originalColumnSpan;
 
+        // Copy & paste
+        private TimeEntry? copiedEntry;
+        private TableLayoutPanelCellPosition? pasteTargetCell;
+        private ToolTip copyToolTip = new();
+
         // Configuration
         private int arrivalColumn = 12;
         private int leaveColumn = 28;
@@ -1090,20 +1095,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             await LoadProjectsAsync(1);
             await LoadTimeEntryTypesAsync(1);
-                //comboBoxEntryType.Items.Clear();
-                //comboBoxEntryType.Items.AddRange(checkBoxArchivedProjects.Checked
-                //    ? _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeWithAfterCareToString).ToArray()
-                //    : _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray());
-
-                //if (comboBoxEntryType.Items.Count > 0)
-                //    comboBoxEntryType.SelectedIndex = 0;
         }
-
-        private TimeEntry? copiedEntry;
-        private TableLayoutPanelCellPosition? pasteTargetCell;
-        private ToolTip copyToolTip = new();
-
-
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {

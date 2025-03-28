@@ -246,7 +246,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             BeginInvoke((Action)(() =>
             {
                 comboBoxStart.SelectedIndex = minutesStart / 30;
-                comboBoxEnd.SelectedIndex = minutesEnd / 30;
+                comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
 
                 if (lastPanel?.EntryId != -1)
                 {

@@ -1,13 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+	<AssemblyName>WorkLog</AssemblyName>
+	<OutputName>WorkLog</OutputName>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+	<Version>1.1.0</Version>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="Serilog" Version="4.2.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
@@ -39,5 +42,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+ 
+
 
 </Project>

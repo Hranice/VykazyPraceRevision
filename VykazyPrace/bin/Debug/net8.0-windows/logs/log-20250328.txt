@@ -46,3 +46,5 @@
 2025-03-28 10:49:31.914 +01:00 [ERR] Nepodařilo se najít zvolený záznam.
 2025-03-28 10:51:07.358 +01:00 [ERR] Nepodařilo se najít zvolený záznam.
 2025-03-28 11:11:59.717 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - Oplocenka byl úspěšně aktualizován.
+2025-03-28 13:30:04.238 +01:00 [INF] Záznam 0 - Provoz Metalizace: 4 h - puntík byl úspěšně aktualizován.
+2025-03-28 13:30:21.286 +01:00 [INF] Záznam 0 - Provoz Metalizace: 4 h - puntík byl smazán z databáze.

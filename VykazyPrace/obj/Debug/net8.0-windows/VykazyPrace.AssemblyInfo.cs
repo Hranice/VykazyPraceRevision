@@ -11,13 +11,13 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("VykazyPrace")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("WorkLog")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e13dfb40b06623e6da480d4a4b69a567a7ea702a")]
-[assembly: System.Reflection.AssemblyProductAttribute("VykazyPrace")]
-[assembly: System.Reflection.AssemblyTitleAttribute("VykazyPrace")]
-[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.1.0+c5163aa9c0e256587d618b46cef379be6998b31b")]
+[assembly: System.Reflection.AssemblyProductAttribute("WorkLog")]
+[assembly: System.Reflection.AssemblyTitleAttribute("WorkLog")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.1.0.0")]
 [assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
 

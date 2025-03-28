@@ -31,8 +31,10 @@ namespace VykazyPrace
             InitializeComponent();
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private async void MainForm_Load(object sender, EventArgs e)
         {
+            await UpdateService.CheckForUpdateAsync();
+
             _loadingUC.Size = Size;
             Controls.Add(_loadingUC);
 

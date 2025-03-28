@@ -35,6 +35,7 @@
             správaUživatelůToolStripMenuItem = new ToolStripMenuItem();
             projektyToolStripMenuItem = new ToolStripMenuItem();
             správaProjektůToolStripMenuItem = new ToolStripMenuItem();
+            správaIndexůToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem1 = new ToolStripMenuItem();
             nápovědaToolStripMenuItem = new ToolStripMenuItem();
             nastaveníToolStripMenuItem = new ToolStripMenuItem();
@@ -49,7 +50,6 @@
             buttonPrevious = new Button();
             panelContainer = new Panel();
             panelCalendarContainer = new Panel();
-            správaIndexůToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -71,11 +71,12 @@
             dataToolStripMenuItem.Name = "dataToolStripMenuItem";
             dataToolStripMenuItem.Size = new Size(43, 20);
             dataToolStripMenuItem.Text = "Data";
+            dataToolStripMenuItem.Visible = false;
             // 
             // exportToolStripMenuItem
             // 
             exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            exportToolStripMenuItem.Size = new Size(108, 22);
+            exportToolStripMenuItem.Size = new Size(180, 22);
             exportToolStripMenuItem.Text = "Export";
             exportToolStripMenuItem.Click += exportToolStripMenuItem_Click;
             // 
@@ -85,11 +86,12 @@
             uživateléToolStripMenuItem.Name = "uživateléToolStripMenuItem";
             uživateléToolStripMenuItem.Size = new Size(66, 20);
             uživateléToolStripMenuItem.Text = "Uživatelé";
+            uživateléToolStripMenuItem.Visible = false;
             // 
             // správaUživatelůToolStripMenuItem
             // 
             správaUživatelůToolStripMenuItem.Name = "správaUživatelůToolStripMenuItem";
-            správaUživatelůToolStripMenuItem.Size = new Size(159, 22);
+            správaUživatelůToolStripMenuItem.Size = new Size(180, 22);
             správaUživatelůToolStripMenuItem.Text = "Správa uživatelů";
             správaUživatelůToolStripMenuItem.Click += správaUživatelůToolStripMenuItem_Click;
             // 
@@ -105,7 +107,15 @@
             správaProjektůToolStripMenuItem.Name = "správaProjektůToolStripMenuItem";
             správaProjektůToolStripMenuItem.Size = new Size(180, 22);
             správaProjektůToolStripMenuItem.Text = "Správa projektů";
+            správaProjektůToolStripMenuItem.Visible = false;
             správaProjektůToolStripMenuItem.Click += správaProjektůToolStripMenuItem_Click;
+            // 
+            // správaIndexůToolStripMenuItem
+            // 
+            správaIndexůToolStripMenuItem.Name = "správaIndexůToolStripMenuItem";
+            správaIndexůToolStripMenuItem.Size = new Size(180, 22);
+            správaIndexůToolStripMenuItem.Text = "Správa indexů";
+            správaIndexůToolStripMenuItem.Click += správaIndexůToolStripMenuItem_Click;
             // 
             // toolStripMenuItem1
             // 
@@ -117,21 +127,22 @@
             // nápovědaToolStripMenuItem
             // 
             nápovědaToolStripMenuItem.Name = "nápovědaToolStripMenuItem";
-            nápovědaToolStripMenuItem.Size = new Size(128, 22);
+            nápovědaToolStripMenuItem.Size = new Size(180, 22);
             nápovědaToolStripMenuItem.Text = "Nápověda";
             // 
             // nastaveníToolStripMenuItem
             // 
             nastaveníToolStripMenuItem.Name = "nastaveníToolStripMenuItem";
-            nastaveníToolStripMenuItem.Size = new Size(128, 22);
+            nastaveníToolStripMenuItem.Size = new Size(180, 22);
             nastaveníToolStripMenuItem.Text = "Nastavení";
             nastaveníToolStripMenuItem.Click += nastaveníToolStripMenuItem_Click;
             // 
             // testToolStripMenuItem
             // 
             testToolStripMenuItem.Name = "testToolStripMenuItem";
-            testToolStripMenuItem.Size = new Size(128, 22);
+            testToolStripMenuItem.Size = new Size(180, 22);
             testToolStripMenuItem.Text = "Test";
+            testToolStripMenuItem.Visible = false;
             testToolStripMenuItem.Click += testToolStripMenuItem_Click_1;
             // 
             // radioButton1
@@ -240,13 +251,6 @@
             panelCalendarContainer.Name = "panelCalendarContainer";
             panelCalendarContainer.Size = new Size(966, 769);
             panelCalendarContainer.TabIndex = 1;
-            // 
-            // správaIndexůToolStripMenuItem
-            // 
-            správaIndexůToolStripMenuItem.Name = "správaIndexůToolStripMenuItem";
-            správaIndexůToolStripMenuItem.Size = new Size(180, 22);
-            správaIndexůToolStripMenuItem.Text = "Správa indexů";
-            správaIndexůToolStripMenuItem.Click += správaIndexůToolStripMenuItem_Click;
             // 
             // MainForm
             // 

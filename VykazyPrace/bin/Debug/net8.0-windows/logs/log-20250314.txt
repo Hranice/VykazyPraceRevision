@@ -1,0 +1,18 @@
+2025-03-14 13:34:54.937 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 1,5 h - test update byl úspěšně proveden.
+2025-03-14 13:35:35.758 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 7,5 h - test update byl úspěšně proveden.
+2025-03-14 13:37:04.734 +01:00 [INF] Zápis hodin 0273E25 - K14C - Brazílie #2: 0,5 h - test update byl úspěšně proveden.
+2025-03-14 13:37:28.295 +01:00 [INF] Zápis hodin 0230I24 - Automatické balení po pecích a UV: 1,5 h - testok byl úspěšně proveden.
+2025-03-14 13:37:32.318 +01:00 [INF] Zápis hodin 0230I24 - Automatické balení po pecích a UV: 1,5 h - testok byl úspěšně proveden.
+2025-03-14 13:37:55.547 +01:00 [INF] Zápis hodin 0279I25 - Kobot: 2,5 h - Zapínání kávovaru2 byl úspěšně proveden.
+2025-03-14 13:39:50.012 +01:00 [INF] Zápis hodin 004A00 - Provoz Nová hala: 0,5 h - Zapínání kávovarutetst byl úspěšně proveden.
+2025-03-14 13:39:54.076 +01:00 [INF] Zápis hodin 004A00 - Provoz Nová hala: 0,5 h - Zapínání kávovarutetst byl úspěšně proveden.
+2025-03-14 14:08:49.949 +01:00 [INF] Záznam 003A00 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-14 14:09:12.605 +01:00 [INF] Záznam 003A00 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-14 14:09:48.956 +01:00 [INF] Záznam 002A00 - Provoz HP (Horká ražba): 0,5 h - Zapínání kávovaru byl smazán z databáze.
+2025-03-14 14:09:54.001 +01:00 [INF] Záznam 003A00 - Provoz Metalizace: 1 h -  byl smazán z databáze.
+2025-03-14 14:41:27.574 +01:00 [INF] Záznam 003A00 - Provoz Metalizace: 2,5 h -  byl smazán z databáze.
+2025-03-14 14:48:58.331 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Popis činnosti
+2025-03-14 14:49:02.436 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 3,5 h - test byl úspěšně proveden.
+2025-03-14 14:49:10.072 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 3,5 h - test byl úspěšně proveden.
+2025-03-14 14:51:05.575 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 3,5 h - test byl úspěšně proveden.
+2025-03-14 14:54:05.160 +01:00 [INF] Záznam 003A00 - Provoz Metalizace: 3,5 h - test byl smazán z databáze.

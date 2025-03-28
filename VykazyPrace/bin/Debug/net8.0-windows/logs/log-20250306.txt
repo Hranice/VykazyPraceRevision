@@ -1,0 +1,69 @@
+2025-03-06 10:32:04.462 +01:00 [ERR] Chyba při načítání seznamu zapsaných hodin.
+System.InvalidOperationException: An exception was thrown while attempting to evaluate a LINQ query parameter expression. See the inner exception for more information. To show additional information call 'DbContextOptionsBuilder.EnableSensitiveDataLogging'.
+ ---> System.NullReferenceException: Object reference not set to an instance of an object.
+   at System.Linq.Expressions.Interpreter.Instruction.NullCheck(Object o)
+   at System.Linq.Expressions.Interpreter.FuncCallInstruction`2.Run(InterpretedFrame frame)
+   at System.Linq.Expressions.Interpreter.Interpreter.Run(InterpretedFrame frame)
+   at System.Linq.Expressions.Interpreter.LightLambda.Run(Object[] arguments)
+   at System.Dynamic.Utils.DelegateHelpers.FuncThunk[TReturn](Func`2 handler)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.<Evaluate>g__EvaluateCore|73_0(Expression expression, String& parameterName, Boolean& isContextAccessor)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.<Evaluate>g__EvaluateCore|73_0(Expression expression, String& parameterName, Boolean& isContextAccessor)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.<Evaluate>g__EvaluateCore|73_0(Expression expression, String& parameterName, Boolean& isContextAccessor)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.Evaluate(Expression expression, String& parameterName, Boolean& isContextAccessor)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.ProcessEvaluatableRoot(Expression evaluatableRoot, State& state, Boolean forceEvaluation)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.VisitBinary(BinaryExpression binary)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.Visit(Expression expression, State& state)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.VisitBinary(BinaryExpression binary)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.Visit(Expression expression, State& state)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.VisitBinary(BinaryExpression binary)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.Visit(Expression expression, State& state)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.VisitBinary(BinaryExpression binary)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.Visit(Expression expression, State& state)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.VisitBinary(BinaryExpression binary)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.Visit(Expression expression, State& state)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.VisitLambda[T](Expression`1 lambda)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.Visit(Expression expression, State& state)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.VisitUnary(UnaryExpression unary)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.Visit(Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.Visit[T](ReadOnlyCollection`1 expressions, Func`2 elementVisitor, StateType& aggregateStateType, State[]& expressionStates, Boolean poolExpressionStates)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.Visit(ReadOnlyCollection`1 expressions, StateType& aggregateStateType, State[]& expressionStates, Boolean poolExpressionStates)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.VisitMethodCall(MethodCallExpression methodCall)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.Visit(Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.Visit[T](ReadOnlyCollection`1 expressions, Func`2 elementVisitor, StateType& aggregateStateType, State[]& expressionStates, Boolean poolExpressionStates)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.Visit(ReadOnlyCollection`1 expressions, StateType& aggregateStateType, State[]& expressionStates, Boolean poolExpressionStates)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.VisitMethodCall(MethodCallExpression methodCall)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.Visit(Expression expression, State& state)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.ExtractParameters(Expression expression, IParameterValues parameterValues, Boolean parameterize, Boolean clearParameterizedValues, Boolean precompiledQuery, IReadOnlySet`1& nonNullableReferenceTypeParameters)
+   at Microsoft.EntityFrameworkCore.Query.Internal.ExpressionTreeFuncletizer.ExtractParameters(Expression expression, IParameterValues parameterValues, Boolean parameterize, Boolean clearParameterizedValues)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExtractParameters(Expression query, IParameterValues parameterValues, IDiagnosticsLogger`1 logger, Boolean compiledQuery, Boolean generateContextAccessors)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteCore[TResult](Expression query, Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteAsync[TResult](Expression query, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.ExecuteAsync[TResult](Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable`1.GetAsyncEnumerator(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.IncludableQueryable`2.GetAsyncEnumerator(CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.ConfiguredCancelableAsyncEnumerable`1.GetAsyncEnumerator()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at VykazyPrace.Core.Database.Repositories.TimeEntryRepository.GetTimeEntriesByUserAndCurrentWeekAsync(User user, DateTime date) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\Repositories\TimeEntryRepository.cs:line 97
+   at VykazyPrace.UserControls.CalendarV2.CalendarV2.LoadTimeEntriesAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\UserControls\CalendarV2\CalendarV2.cs:line 287
+2025-03-06 10:50:58.909 +01:00 [ERR] Chyba při načítání seznamu zapsaných hodin.
+System.InvalidOperationException: Operace mezi vlákny není platná: Přístup k ovládacímu prvku tableLayoutPanel1 proběhl z jiného vlákna než z vlákna, v rámci kterého byl vytvořen.
+   at System.Windows.Forms.Control.get_Handle()
+   at System.Windows.Forms.Control.IHandle<Windows.Win32.Foundation.HWND>.get_Handle()
+   at Windows.Win32.PInvoke.GetWindowThreadProcessId[T](T hWnd, UInt32& lpdwProcessId)
+   at System.Windows.Forms.Control.get_CreateThreadId()
+   at System.Windows.Forms.Control.ControlCollection.Add(Control value)
+   at System.Windows.Forms.TableLayoutControlCollection.Add(Control control, Int32 column, Int32 row)
+   at VykazyPrace.UserControls.CalendarV2.CalendarV2.LoadTimeEntriesAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\UserControls\CalendarV2\CalendarV2.cs:line 298
+2025-03-06 15:05:59.284 +01:00 [INF] Zápis hodin  - : 1,5 h - test činnosti byl úspěšně proveden.
+2025-03-06 15:13:02.184 +01:00 [INF] Zápis hodin  - : 1,5 h - test činnosti byl úspěšně proveden.
+2025-03-06 15:15:09.216 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Projekt
+2025-03-06 15:17:01.779 +01:00 [INF] Zápis hodin  - : 1,5 h - test činnosti byl úspěšně proveden.
+2025-03-06 15:23:13.695 +01:00 [INF] Zápis hodin 001A00 - Provoz SD (Sítotisk): 1,5 h - test činnosti byl úspěšně proveden.
+2025-03-06 15:23:48.193 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Projekt
+2025-03-06 15:23:53.155 +01:00 [INF] Zápis hodin 002A00 - Provoz HP (Horká ražba): 0,5 h - test činnosti byl úspěšně proveden.
+2025-03-06 15:24:03.729 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Projekt
+2025-03-06 15:26:11.128 +01:00 [INF] Zápis hodin 0279I25 - Kobot: 1,5 h - test činnosti byl úspěšně proveden.
+2025-03-06 15:26:15.698 +01:00 [INF] Zápis hodin 0279I25 - Kobot: 1,5 h - test činnosti byl úspěšně proveden.
+2025-03-06 15:26:38.931 +01:00 [INF] Zápis hodin 0230I24 - Automatické balení po pecích a UV: 0,5 h - test činnosti byl úspěšně proveden.
+2025-03-06 15:26:51.516 +01:00 [INF] Zápis hodin 0230I24 - Automatické balení po pecích a UV: 4 h - test činnosti byl úspěšně proveden.

@@ -1,4 +1,6 @@
-﻿using VykazyPrace.Core.Database.Models;
+﻿using System.Globalization;
+using System.Text;
+using VykazyPrace.Core.Database.Models;
 
 namespace VykazyPrace.Helpers
 {
@@ -6,7 +8,22 @@ namespace VykazyPrace.Helpers
     {
         public static string FormatProjectToString(Project? project)
         {
-            return $"{project?.ProjectDescription} - {project?.ProjectTitle}";
+            if (project == null)
+            {
+                return "<NULL>";
+            }
+
+            switch (project?.ProjectType)
+            {
+                case 0:
+                    return $"{project?.ProjectTitle}";
+                case 1:
+                    return $"{(project.IsArchived == 1 ? "(ARCHIV): " : "")}{project?.ProjectDescription}: {project?.ProjectTitle}";
+                case 2:
+                    return $"(PŘEDPROJEKT): {project?.ProjectTitle}";
+                default:
+                    return $"{project?.ProjectTitle}";
+            }
         }
 
         public static string FormatTimeEntryToString(TimeEntry? timeEntry)
@@ -19,9 +36,62 @@ namespace VykazyPrace.Helpers
             return $"{timeEntryType?.Title ?? "<>"}";
         }
 
+        public static string FormatTimeEntryTypeWithAfterCareToString(TimeEntryType? timeEntryType)
+        {
+            return $"(AfterCare): {timeEntryType?.Title ?? "<>"}";
+        }
+
+        public static string FormatTimeEntrySubTypeToString(TimeEntrySubType? timeEntrySubType)
+        {
+            return $"{timeEntrySubType?.Title ?? "<>"}";
+        }
+
         public static string FormatUserToString(User? user)
         {
-            return $"{user?.Id ?? 0} ({user?.PersonalNumber}): {user?.FirstName} {user?.Surname}";
+            return $"({user?.PersonalNumber}): {user?.FirstName} {user?.Surname} - {user?.UserGroup?.Title}";
         }
+
+        public static string RemoveDiacritics(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            string normalized = text.Normalize(NormalizationForm.FormD);
+            StringBuilder sb = new StringBuilder();
+
+            foreach (char c in normalized)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(c);
+                }
+            }
+
+            return sb.ToString().Normalize(NormalizationForm.FormC);
+        }
+
+        public static string FormatDateTimeToMonthAndYear(DateTime dateTime)
+        {
+            CultureInfo czechCulture = new CultureInfo("cs-CZ");
+            return czechCulture.DateTimeFormat.GetMonthName(dateTime.Month).ToUpper() + " " + dateTime.Year;
+        }
+
+        public static string GetWeekNumberAndRange(DateTime date)
+        {
+            CultureInfo czechCulture = new CultureInfo("cs-CZ");
+            Calendar calendar = czechCulture.Calendar;
+            CalendarWeekRule weekRule = czechCulture.DateTimeFormat.CalendarWeekRule;
+            DayOfWeek firstDayOfWeek = czechCulture.DateTimeFormat.FirstDayOfWeek;
+
+            int weekNumber = calendar.GetWeekOfYear(date, weekRule, firstDayOfWeek);
+
+            int diff = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7;
+            DateTime startOfWeek = date.AddDays(-diff).Date;
+
+            DateTime endOfWeek = startOfWeek.AddDays(6);
+
+            return $"Týden {weekNumber} ({startOfWeek:dd. M.} – {endOfWeek:dd. M. yyyy})";
+        }
+
     }
 }

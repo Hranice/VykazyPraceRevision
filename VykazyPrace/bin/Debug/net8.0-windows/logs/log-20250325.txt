@@ -1,0 +1,35 @@
+2025-03-25 09:45:44.421 +01:00 [INF] Záznam 0273E25 - K14C - Brazílie #2: 3,5 h - pracovní náplň byl smazán z databáze.
+2025-03-25 09:46:28.948 +01:00 [INF] Záznam 0 - Provoz Metalizace: 2,5 h -  byl smazán z databáze.
+2025-03-25 09:47:42.582 +01:00 [INF] Záznam 0273E25 - K14C - Brazílie #2: 3,5 h - pracovní náplň byl smazán z databáze.
+2025-03-25 09:47:45.146 +01:00 [INF] Záznam 0273E25 - K14C - Brazílie #2: 3,5 h - pracovní náplň byl smazán z databáze.
+2025-03-25 10:00:37.680 +01:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 2 h - kafíčko nekafíčko byl smazán z databáze.
+2025-03-25 10:00:38.351 +01:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 2 h - kafíčko nekafíčko byl smazán z databáze.
+2025-03-25 10:00:39.303 +01:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 2 h - kafíčko nekafíčko byl smazán z databáze.
+2025-03-25 10:00:39.979 +01:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 2 h - kafíčko nekafíčko byl smazán z databáze.
+2025-03-25 10:00:40.684 +01:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 2 h - kafíčko nekafíčko byl smazán z databáze.
+2025-03-25 10:00:41.422 +01:00 [INF] Záznam 0273E25 - K14C - Brazílie #2: 3,5 h - pracovní náplň byl smazán z databáze.
+2025-03-25 10:01:07.283 +01:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 2 h - kafíčko nekafíčko byl smazán z databáze.
+2025-03-25 10:01:08.310 +01:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 2 h - kafíčko nekafíčko byl smazán z databáze.
+2025-03-25 10:01:10.142 +01:00 [INF] Záznam 0273E25 - K14C - Brazílie #2: 3,5 h - pracovní náplň byl smazán z databáze.
+2025-03-25 10:01:14.405 +01:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 2 h - kafíčko nekafíčko byl smazán z databáze.
+2025-03-25 10:01:15.125 +01:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 2 h - kafíčko nekafíčko byl smazán z databáze.
+2025-03-25 10:01:15.757 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 0,5 h - test byl smazán z databáze.
+2025-03-25 10:01:16.341 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 0,5 h - test byl smazán z databáze.
+2025-03-25 10:01:48.000 +01:00 [INF] Záznam 0230I24 - Automatické balení po pecích a UV: 2 h - AAAAAAAA byl smazán z databáze.
+2025-03-25 10:04:56.907 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.
+2025-03-25 10:07:54.342 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.
+2025-03-25 10:10:11.388 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.
+2025-03-25 10:13:17.984 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.
+2025-03-25 10:25:39.111 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.
+2025-03-25 10:29:43.034 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.
+2025-03-25 10:29:58.015 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.
+2025-03-25 10:30:16.144 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.
+2025-03-25 13:06:59.767 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.
+2025-03-25 13:07:12.972 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.
+2025-03-25 13:07:27.488 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 0,5 h - test byl smazán z databáze.
+2025-03-25 15:41:23.136 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.
+2025-03-25 15:42:48.602 +01:00 [INF] Záznam 0273E25 - K14C - Brazílie #2: 0,5 h - Diskuze o M4 byl úspěšně aktualizován.
+2025-03-25 15:43:03.310 +01:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 2,5 h - Diskuze o M4 byl smazán z databáze.
+2025-03-25 15:47:26.035 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.
+2025-03-25 15:47:26.598 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.
+2025-03-25 15:47:27.246 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - test-aftercare byl smazán z databáze.

@@ -1,0 +1,110 @@
+2025-03-17 08:16:00.833 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 2,5 h - rwarí byl úspěšně proveden.
+2025-03-17 08:44:21.991 +01:00 [INF] Export do Excelu dokončen.
+2025-03-17 10:22:10.080 +01:00 [INF] Export do Excelu dokončen.
+2025-03-17 10:52:10.115 +01:00 [INF] Export do Excelu dokončen.
+2025-03-17 10:55:21.592 +01:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x800A03EC): Soubor Export.xlsx není přístupný.
+   at Microsoft.Office.Interop.Excel.WorkbookClass.SaveAs(Object Filename, Object FileFormat, Object Password, Object WriteResPassword, Object ReadOnlyRecommended, Object CreateBackup, XlSaveAsAccessMode AccessMode, Object ConflictResolution, Object AddToMru, Object TextCodepage, Object TextVisualLayout, Object Local)
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 120
+2025-03-17 10:55:30.928 +01:00 [INF] Export do Excelu dokončen.
+2025-03-17 11:33:48.127 +01:00 [INF] Export do Excelu dokončen.
+2025-03-17 11:34:53.582 +01:00 [INF] Export do Excelu dokončen.
+2025-03-17 11:38:32.861 +01:00 [INF] Export do Excelu dokončen.
+2025-03-17 11:48:41.312 +01:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x800A03EC): Není možné nastavit vlastnost NumberFormat třídy PivotField.
+   at System.RuntimeType.InvokeMember(String name, BindingFlags bindingFlags, Binder binder, Object target, Object[] providedArgs, ParameterModifier[] modifiers, CultureInfo culture, String[] namedParams)
+   at System.RuntimeType.ForwardCallToInvokeMember(String memberName, BindingFlags flags, Object target, Object[] aArgs, Boolean[] aArgsIsByRef, Int32[] aArgsWrapperTypes, Type[] aArgsTypes, Type retType)
+   at Microsoft.Office.Interop.Excel.PivotField.set_NumberFormat(String )
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 171
+2025-03-17 12:03:33.841 +01:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x800A03EC): Není možné nastavit vlastnost NumberFormat třídy Range.
+   at System.RuntimeType.InvokeMember(String name, BindingFlags bindingFlags, Binder binder, Object target, Object[] providedArgs, ParameterModifier[] modifiers, CultureInfo culture, String[] namedParams)
+   at System.RuntimeType.ForwardCallToInvokeMember(String memberName, BindingFlags flags, Object target, Object[] aArgs, Boolean[] aArgsIsByRef, Int32[] aArgsWrapperTypes, Type[] aArgsTypes, Type retType)
+   at Microsoft.Office.Interop.Excel.Range.set_NumberFormat(Object )
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 175
+2025-03-17 12:04:48.829 +01:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x800A03EC): Není možné nastavit vlastnost NumberFormat třídy Range.
+   at System.RuntimeType.InvokeMember(String name, BindingFlags bindingFlags, Binder binder, Object target, Object[] providedArgs, ParameterModifier[] modifiers, CultureInfo culture, String[] namedParams)
+   at System.RuntimeType.ForwardCallToInvokeMember(String memberName, BindingFlags flags, Object target, Object[] aArgs, Boolean[] aArgsIsByRef, Int32[] aArgsWrapperTypes, Type[] aArgsTypes, Type retType)
+   at Microsoft.Office.Interop.Excel.Range.set_NumberFormat(Object )
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 177
+2025-03-17 12:06:17.248 +01:00 [INF] Export do Excelu s kontingenční tabulkou dokončen.
+2025-03-17 12:10:16.807 +01:00 [INF] Export do Excelu s kontingenční tabulkou dokončen.
+2025-03-17 12:14:41.591 +01:00 [INF] Export do Excelu s kontingenční tabulkou a automatickou úpravou sloupců dokončen.
+2025-03-17 12:22:14.257 +01:00 [INF] Export do Excelu s kontingenční tabulkou a náklady dokončen.
+2025-03-17 12:25:10.275 +01:00 [INF] Export do Excelu s kontingenční tabulkou a náklady dokončen.
+2025-03-17 12:26:50.941 +01:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x800A03EC): Soubor Export.xlsx není přístupný.
+   at Microsoft.Office.Interop.Excel.WorkbookClass.SaveAs(Object Filename, Object FileFormat, Object Password, Object WriteResPassword, Object ReadOnlyRecommended, Object CreateBackup, XlSaveAsAccessMode AccessMode, Object ConflictResolution, Object AddToMru, Object TextCodepage, Object TextVisualLayout, Object Local)
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 228
+2025-03-17 12:27:00.638 +01:00 [INF] Export do Excelu s náklady na projekt dokončen.
+2025-03-17 12:29:16.579 +01:00 [INF] Export do Excelu s náklady na projekt dokončen.
+2025-03-17 12:30:32.052 +01:00 [INF] Export do Excelu s náklady na projekt dokončen.
+2025-03-17 12:33:39.385 +01:00 [INF] Export do Excelu s náklady na projekt dokončen.
+2025-03-17 12:35:49.896 +01:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x800A03EC): 0x800A03EC
+   at Microsoft.Office.Interop.Excel.WorkbookClass.SaveAs(Object Filename, Object FileFormat, Object Password, Object WriteResPassword, Object ReadOnlyRecommended, Object CreateBackup, XlSaveAsAccessMode AccessMode, Object ConflictResolution, Object AddToMru, Object TextCodepage, Object TextVisualLayout, Object Local)
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 206
+2025-03-17 12:37:14.816 +01:00 [INF] Export do Excelu s náklady na projekt dokončen.
+2025-03-17 12:40:23.623 +01:00 [INF] Export do Excelu s náklady na projekt dokončen.
+2025-03-17 12:42:44.702 +01:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x800A03EC): Soubor Export.xlsx není přístupný.
+   at Microsoft.Office.Interop.Excel.WorkbookClass.SaveAs(Object Filename, Object FileFormat, Object Password, Object WriteResPassword, Object ReadOnlyRecommended, Object CreateBackup, XlSaveAsAccessMode AccessMode, Object ConflictResolution, Object AddToMru, Object TextCodepage, Object TextVisualLayout, Object Local)
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 245
+2025-03-17 12:42:52.418 +01:00 [INF] Export do Excelu s kontingenčními tabulkami dokončen.
+2025-03-17 12:45:42.018 +01:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x800A03EC): Soubor Export.xlsx není přístupný.
+   at Microsoft.Office.Interop.Excel.WorkbookClass.SaveAs(Object Filename, Object FileFormat, Object Password, Object WriteResPassword, Object ReadOnlyRecommended, Object CreateBackup, XlSaveAsAccessMode AccessMode, Object ConflictResolution, Object AddToMru, Object TextCodepage, Object TextVisualLayout, Object Local)
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 248
+2025-03-17 12:45:50.794 +01:00 [INF] Export do Excelu s automatickou aktualizací kontingenčních tabulek dokončen.
+2025-03-17 13:08:52.993 +01:00 [INF] Export s třemi kontingenčními tabulkami dokončen.
+2025-03-17 13:16:37.090 +01:00 [INF] Export s finálními kontingenčními tabulkami dokončen.
+2025-03-17 13:20:39.014 +01:00 [INF] Export s upraveným řazením v kontingenčních tabulkách dokončen.
+2025-03-17 13:27:20.472 +01:00 [INF] Export bez listu 'Náklady podle projektu' dokončen.
+2025-03-17 13:40:49.566 +01:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x800A03EC): Tento název pole kontingenční tabulky již existuje.
+   at System.RuntimeType.InvokeMember(String name, BindingFlags bindingFlags, Binder binder, Object target, Object[] providedArgs, ParameterModifier[] modifiers, CultureInfo culture, String[] namedParams)
+   at System.RuntimeType.ForwardCallToInvokeMember(String memberName, BindingFlags flags, Object target, Object[] aArgs, Boolean[] aArgsIsByRef, Int32[] aArgsWrapperTypes, Type[] aArgsTypes, Type retType)
+   at Microsoft.Office.Interop.Excel.PivotField.set_Name(String )
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 200
+2025-03-17 13:43:41.601 +01:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x800A03EC): Soubor Export.xlsx není přístupný.
+   at Microsoft.Office.Interop.Excel.WorkbookClass.SaveAs(Object Filename, Object FileFormat, Object Password, Object WriteResPassword, Object ReadOnlyRecommended, Object CreateBackup, XlSaveAsAccessMode AccessMode, Object ConflictResolution, Object AddToMru, Object TextCodepage, Object TextVisualLayout, Object Local)
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 176
+2025-03-17 13:44:59.053 +01:00 [INF] Export s opravou názvů kontingenčních polí dokončen.
+2025-03-17 13:52:54.294 +01:00 [INF] Export s EntryType a obarvením řádků dokončen!
+2025-03-17 14:05:05.950 +01:00 [INF] Export s EntryType, barvami a všemi původními tabulkami dokončen!
+2025-03-17 14:19:56.964 +01:00 [INF] Export s EntryType, barvami a původními tabulkami dokončen!
+2025-03-17 14:22:57.179 +01:00 [INF] Export s přidaným Typem záznamu dokončen.
+2025-03-17 14:24:10.328 +01:00 [INF] Export s přidaným Typem záznamu dokončen.
+2025-03-17 14:25:51.637 +01:00 [INF] Projekt 000A01 - Dovolená byl úspěšně přidán.
+2025-03-17 14:26:22.361 +01:00 [INF] Projekt 000A02 - Nemocenská byl úspěšně přidán.
+2025-03-17 14:26:41.339 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Popis činnosti
+2025-03-17 14:26:54.440 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Popis činnosti
+2025-03-17 14:27:07.733 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 4 h - Dovolená byl úspěšně proveden.
+2025-03-17 14:27:20.043 +01:00 [INF] Export s přidaným Typem záznamu dokončen.
+2025-03-17 14:28:15.596 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 4 h - Dovolená byl úspěšně proveden.
+2025-03-17 14:28:31.774 +01:00 [INF] Export s přidaným Typem záznamu dokončen.
+2025-03-17 14:37:49.455 +01:00 [INF] Export s přidaným Typem záznamu dokončen.
+2025-03-17 14:39:47.386 +01:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x800A03EC): Tento název pole kontingenční tabulky již existuje.
+   at System.RuntimeType.InvokeMember(String name, BindingFlags bindingFlags, Binder binder, Object target, Object[] providedArgs, ParameterModifier[] modifiers, CultureInfo culture, String[] namedParams)
+   at System.RuntimeType.ForwardCallToInvokeMember(String memberName, BindingFlags flags, Object target, Object[] aArgs, Boolean[] aArgsIsByRef, Int32[] aArgsWrapperTypes, Type[] aArgsTypes, Type retType)
+   at Microsoft.Office.Interop.Excel.PivotField.set_Name(String )
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 199
+2025-03-17 14:40:08.188 +01:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x800A03EC): Soubor Export.xlsx není přístupný.
+   at Microsoft.Office.Interop.Excel.WorkbookClass.SaveAs(Object Filename, Object FileFormat, Object Password, Object WriteResPassword, Object ReadOnlyRecommended, Object CreateBackup, XlSaveAsAccessMode AccessMode, Object ConflictResolution, Object AddToMru, Object TextCodepage, Object TextVisualLayout, Object Local)
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 174
+2025-03-17 14:40:30.348 +01:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x800A03EC): Tento název pole kontingenční tabulky již existuje.
+   at System.RuntimeType.InvokeMember(String name, BindingFlags bindingFlags, Binder binder, Object target, Object[] providedArgs, ParameterModifier[] modifiers, CultureInfo culture, String[] namedParams)
+   at System.RuntimeType.ForwardCallToInvokeMember(String memberName, BindingFlags flags, Object target, Object[] aArgs, Boolean[] aArgsIsByRef, Int32[] aArgsWrapperTypes, Type[] aArgsTypes, Type retType)
+   at Microsoft.Office.Interop.Excel.PivotField.set_Name(String )
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 199
+2025-03-17 14:41:16.798 +01:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x800A03EC): Soubor Export.xlsx není přístupný.
+   at Microsoft.Office.Interop.Excel.WorkbookClass.SaveAs(Object Filename, Object FileFormat, Object Password, Object WriteResPassword, Object ReadOnlyRecommended, Object CreateBackup, XlSaveAsAccessMode AccessMode, Object ConflictResolution, Object AddToMru, Object TextCodepage, Object TextVisualLayout, Object Local)
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 174
+2025-03-17 14:41:33.723 +01:00 [INF] Export s přidaným Typem záznamu dokončen.
+2025-03-17 14:43:05.438 +01:00 [INF] Export s přidaným Typem záznamu dokončen.

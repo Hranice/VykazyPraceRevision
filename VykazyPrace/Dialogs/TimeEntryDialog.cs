@@ -12,6 +12,7 @@ namespace VykazyPrace.Dialogs
         private readonly LoadingUC _loadingUC = new LoadingUC();
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
         private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
+        private readonly TimeEntryTypeRepository _timeEntryTypeRepo = new TimeEntryTypeRepository();
         private List<Project> _projects = new List<Project>();
         private List<TimeEntry> _timeEntries = new List<TimeEntry>();
         private readonly User _currentUser;
@@ -52,7 +53,7 @@ namespace VykazyPrace.Dialogs
         {
             try
             {
-                var timeEntryTypes = await _timeEntryRepo.GetAllTimeEntryTypesAsync();
+                var timeEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesAsync();
                 _timeEntries = await _timeEntryRepo.GetTimeEntriesByUserAndDateAsync(_currentUser, _currentDate);
 
                 Invoke(() =>
@@ -75,7 +76,7 @@ namespace VykazyPrace.Dialogs
         {
             try
             {
-                _projects = await _projectRepo.GetAllProjectsAndContractsAsync();
+                _projects = await _projectRepo.GetAllProjectsAsync();
 
                 Invoke(new Action(() =>
                 {
@@ -217,7 +218,7 @@ namespace VykazyPrace.Dialogs
                     Title = comboBoxEntryType.Text
                 };
 
-                var addedTimeEntryType = await _timeEntryRepo.CreateTimeEntryTypeAsync(newTimeEntryType);
+                var addedTimeEntryType = await _timeEntryTypeRepo.CreateTimeEntryTypeAsync(newTimeEntryType);
 
                 var newTimeEntry = new TimeEntry
                 {

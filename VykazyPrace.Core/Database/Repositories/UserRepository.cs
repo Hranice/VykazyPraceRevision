@@ -31,7 +31,11 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<List<User>> GetAllUsersAsync()
         {
-            return await _context.Users.Include(u => u.Projects).Include(u => u.TimeEntries).ToListAsync();
+            return await _context.Users
+                .Include(u => u.Projects)
+                .Include(u => u.TimeEntries)
+                .Include(u => u.UserGroup)
+                .ToListAsync();
         }
 
         /// <summary>
@@ -42,6 +46,7 @@ namespace VykazyPrace.Core.Database.Repositories
             return await _context.Users
                 .Include(u => u.Projects)
                 .Include(u => u.TimeEntries)
+                .Include(u => u.UserGroup)
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 
@@ -53,6 +58,7 @@ namespace VykazyPrace.Core.Database.Repositories
             return await _context.Users
                 .Include(u => u.Projects)
                 .Include(u => u.TimeEntries)
+                .Include(u => u.UserGroup)
                 .FirstOrDefaultAsync(u => u.WindowsUsername == windowsUsername);
         }
 

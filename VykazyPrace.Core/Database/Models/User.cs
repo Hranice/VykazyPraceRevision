@@ -17,7 +17,13 @@ public partial class User
 
     public int LevelOfAccess { get; set; }
 
+    public int? UserGroupId { get; set; }
+
     public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
 
     public virtual ICollection<TimeEntry> TimeEntries { get; set; } = new List<TimeEntry>();
+
+    public virtual ICollection<TimeEntrySubType> TimeEntrySubTypes { get; set; } = new List<TimeEntrySubType>();
+
+    public virtual UserGroup? UserGroup { get; set; }
 }

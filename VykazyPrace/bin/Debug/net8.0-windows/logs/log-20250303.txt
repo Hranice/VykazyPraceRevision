@@ -1,0 +1,18 @@
+2025-03-03 12:36:40.290 +01:00 [INF] Záznam 2 (test): 2 h - kafíčko byl smazán z databáze.
+2025-03-03 15:04:37.868 +01:00 [INF] Zápis hodin 10 (0230I24): 1 h - test byl úspěšně proveden.
+2025-03-03 15:06:56.970 +01:00 [INF] Zápis hodin 11 (): 1 h - test byl úspěšně proveden.
+2025-03-03 15:10:11.689 +01:00 [ERR] Chyba při načítání projektů.
+System.InvalidOperationException: An attempt was made to use the context instance while it is being configured. A DbContext instance cannot be used inside 'OnConfiguring' since it is still being configured at this point. This can happen if a second operation is started on this context instance before a previous operation completed. Any instance members are not guaranteed to be thread safe.
+   at Microsoft.EntityFrameworkCore.DbContext.get_ContextServices()
+   at Microsoft.EntityFrameworkCore.DbContext.get_Model()
+   at Microsoft.EntityFrameworkCore.Internal.InternalDbSet`1.get_EntityType()
+   at Microsoft.EntityFrameworkCore.Internal.InternalDbSet`1.CheckState()
+   at Microsoft.EntityFrameworkCore.Internal.InternalDbSet`1.get_EntityQueryable()
+   at Microsoft.EntityFrameworkCore.Internal.InternalDbSet`1.System.Linq.IQueryable.get_Provider()
+   at System.Linq.Queryable.Where[TSource](IQueryable`1 source, Expression`1 predicate)
+   at VykazyPrace.Core.Database.Repositories.ProjectRepository.GetAllProjectsAndContractsAsync(Int32 projectType) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\Repositories\ProjectRepository.cs:line 51
+   at VykazyPrace.Dialogs.TimeEntryDialog.LoadProjectsContractsAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\TimeEntryDialog.cs:line 76
+2025-03-03 15:12:09.857 +01:00 [INF] Zápis hodin 12 (): 2,5 h - test byl úspěšně proveden.
+2025-03-03 15:12:35.759 +01:00 [INF] Zápis hodin 13 (): 3,5 h - test byl úspěšně proveden.
+2025-03-03 15:13:25.048 +01:00 [INF] Zápis hodin 14 (): 1 h -  byl úspěšně proveden.
+2025-03-03 15:13:37.099 +01:00 [INF] Zápis hodin 15 (0230I24): 1 h -  byl úspěšně proveden.

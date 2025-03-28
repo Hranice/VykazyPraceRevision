@@ -1,0 +1,50 @@
+2025-03-28 08:08:41.117 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - koblížek byl úspěšně aktualizován.
+2025-03-28 08:09:21.693 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - koblížek byl smazán z databáze.
+2025-03-28 08:09:28.112 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - větrníček byl úspěšně aktualizován.
+2025-03-28 08:10:21.337 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - puntík byl úspěšně aktualizován.
+2025-03-28 08:10:29.841 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - wfwefwe byl úspěšně aktualizován.
+2025-03-28 08:10:50.070 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - aaaaaaaaaaaaa byl úspěšně aktualizován.
+2025-03-28 08:11:01.574 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - aaaaaaaaaaaaa byl úspěšně aktualizován.
+2025-03-28 08:11:37.280 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - wfwefwe byl smazán z databáze.
+2025-03-28 08:11:37.988 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - aaaaaaaaaaaaa byl smazán z databáze.
+2025-03-28 08:11:38.625 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - puntík byl smazán z databáze.
+2025-03-28 08:11:39.169 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - větrníček byl smazán z databáze.
+2025-03-28 08:13:11.574 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Index
+2025-03-28 08:13:15.933 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Index
+2025-03-28 08:13:18.288 +01:00 [INF] Záznam 0273E25 - K14C - Brazílie #2: 0,5 h - kafíčko nekafíčko byl úspěšně aktualizován.
+2025-03-28 08:23:07.661 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 2 h - kafíčko nekafíčko byl úspěšně aktualizován.
+2025-03-28 08:23:50.311 +01:00 [INF] Záznam 0230I24 - Automatické balení po pecích a UV: 2 h - kafíčko nekafíčko byl úspěšně aktualizován.
+2025-03-28 08:25:18.866 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 2 h - kafíčko nekafíčko byl úspěšně aktualizován.
+2025-03-28 08:27:59.778 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Index
+2025-03-28 08:28:03.531 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 0,5 h - test-aftercare byl úspěšně aktualizován.
+2025-03-28 08:29:28.793 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 2 h - kafíčko nekafíčko byl úspěšně aktualizován.
+2025-03-28 08:29:34.211 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 0,5 h - test-aftercare byl úspěšně aktualizován.
+2025-03-28 08:29:44.385 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Index
+2025-03-28 08:29:47.465 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - test-aftercare byl úspěšně aktualizován.
+2025-03-28 08:29:49.755 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 0,5 h -  byl smazán z databáze.
+2025-03-28 08:29:50.417 +01:00 [INF] Záznam 0273E25 - K14C - Brazílie #2: 0,5 h - test-aftercare byl smazán z databáze.
+2025-03-28 08:29:50.937 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 1 h - test-aftercare byl smazán z databáze.
+2025-03-28 08:29:51.530 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 1,5 h - test-aftercare byl smazán z databáze.
+2025-03-28 08:29:52.353 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 0,5 h - test-aftercare byl smazán z databáze.
+2025-03-28 08:29:52.793 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 2 h - kafíčko nekafíčko byl smazán z databáze.
+2025-03-28 08:29:54.830 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 0,5 h -  byl smazán z databáze.
+2025-03-28 08:29:55.281 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-28 08:30:18.510 +01:00 [INF] Záznam 0273E25 - K14C - Brazílie #2: 0,5 h - Obchůzka byl úspěšně aktualizován.
+2025-03-28 08:31:55.564 +01:00 [INF] Záznam 0 - Provoz ostatní: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-03-28 08:33:06.002 +01:00 [INF] Záznam  - Automatizace: 0,5 h - Školení KS byl úspěšně aktualizován.
+2025-03-28 08:33:17.404 +01:00 [INF] Záznam 0 - Provoz Nová hala: 0,5 h - Školení KS byl úspěšně aktualizován.
+2025-03-28 08:34:10.567 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - test-aftercare byl úspěšně aktualizován.
+2025-03-28 08:45:07.147 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 2,5 h - test-aftercare byl úspěšně aktualizován.
+2025-03-28 09:43:56.548 +01:00 [INF] Záznam 0 - Provoz Nová hala: 2 h -  byl smazán z databáze.
+2025-03-28 10:09:53.078 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 0,5 h -  byl smazán z databáze.
+2025-03-28 10:09:55.048 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 3 h - test-aftercare byl smazán z databáze.
+2025-03-28 10:10:01.109 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 3 h - test-aftercare byl úspěšně aktualizován.
+2025-03-28 10:35:36.994 +01:00 [INF] Záznam 0230I24 - Automatické balení po pecích a UV: 1,5 h - test-aftercare byl úspěšně aktualizován.
+2025-03-28 10:37:05.856 +01:00 [INF] Záznam 0230I24 - Automatické balení po pecích a UV: 2,5 h -  byl smazán z databáze.
+2025-03-28 10:49:05.261 +01:00 [ERR] Nepodařilo se najít zvolený záznam.
+2025-03-28 10:49:28.878 +01:00 [ERR] Nepodařilo se najít zvolený záznam.
+2025-03-28 10:49:31.914 +01:00 [ERR] Nepodařilo se najít zvolený záznam.
+2025-03-28 10:51:07.358 +01:00 [ERR] Nepodařilo se najít zvolený záznam.
+2025-03-28 11:11:59.717 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 4 h - Oplocenka byl úspěšně aktualizován.
+2025-03-28 13:30:04.238 +01:00 [INF] Záznam 0 - Provoz Metalizace: 4 h - puntík byl úspěšně aktualizován.
+2025-03-28 13:30:21.286 +01:00 [INF] Záznam 0 - Provoz Metalizace: 4 h - puntík byl smazán z databáze.

@@ -1,0 +1,21 @@
+2025-02-26 13:38:55.066 +01:00 [INF] Uživatel {FormatUserToString(addedUser)} byl přidán do databáze.
+2025-02-26 13:39:35.580 +01:00 [INF] Uživatel  byl smazán z databáze.
+2025-02-26 13:39:37.932 +01:00 [INF] Uživatel  byl smazán z databáze.
+2025-02-26 13:40:35.156 +01:00 [INF] Uživatel 3: Jan Procházka byl přidán do databáze.
+2025-02-26 13:43:36.291 +01:00 [ERR] Nepodařilo se smazat uživatele z databáze, id '3 (1250)' je neplatné.
+2025-02-26 13:43:58.164 +01:00 [INF] Uživatel  byl smazán z databáze.
+2025-02-26 13:54:57.510 +01:00 [INF] Uživatel 4 (1250): Jan Procházka byl přidán do databáze.
+2025-02-26 14:52:21.316 +01:00 [INF] Uživatel 5 (1250): Jan Procházka byl přidán do databáze.
+2025-02-26 14:52:42.600 +01:00 [INF] Uživatel 5 (1250): Jan Procházka byl smazán z databáze.
+2025-02-26 14:54:44.045 +01:00 [INF] Uživatel 6 (1250): test test byl přidán do databáze.
+2025-02-26 14:55:11.904 +01:00 [INF] Uživatel 6 (1250): test test byl smazán z databáze.
+2025-02-26 14:55:27.824 +01:00 [INF] Uživatel 7 (1250): test test byl přidán do databáze.
+2025-02-26 14:55:31.303 +01:00 [INF] Uživatel 7 (1250): test test byl smazán z databáze.
+2025-02-26 15:00:36.043 +01:00 [ERR] Je třeba vyplnit všechna potřebná data!
+2025-02-26 15:00:43.598 +01:00 [ERR] Je třeba vyplnit všechna potřebná data!
+2025-02-26 15:00:48.409 +01:00 [ERR] Je třeba vyplnit všechna potřebná data!
+2025-02-26 15:05:32.810 +01:00 [ERR] Je třeba vyplnit všechna potřebná data! Chybí parametr: Osobní číslo
+2025-02-26 15:06:02.039 +01:00 [INF] Uživatel 8 (5555): tset test byl přidán do databáze.
+2025-02-26 15:12:45.676 +01:00 [INF] Uživatel 8 (5555): tset test byl smazán z databáze.
+2025-02-26 15:14:41.774 +01:00 [INF] Uživatel 9 (6515): test test byl přidán do databáze.
+2025-02-26 15:14:47.746 +01:00 [INF] Uživatel 9 (6515): test test byl smazán z databáze.

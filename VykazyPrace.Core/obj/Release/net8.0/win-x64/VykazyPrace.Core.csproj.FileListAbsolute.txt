@@ -1,0 +1,15 @@
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\bin\Release\net8.0\win-x64\VykazyPrace.Core.deps.json
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\bin\Release\net8.0\win-x64\VykazyPrace.Core.runtimeconfig.json
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\bin\Release\net8.0\win-x64\VykazyPrace.Core.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\bin\Release\net8.0\win-x64\VykazyPrace.Core.pdb
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Release\net8.0\win-x64\VykazyPrace.Core.csproj.AssemblyReference.cache
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Release\net8.0\win-x64\VykazyPrace.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Release\net8.0\win-x64\VykazyPrace.Core.AssemblyInfoInputs.cache
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Release\net8.0\win-x64\VykazyPrace.Core.AssemblyInfo.cs
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Release\net8.0\win-x64\VykazyPrace.Core.csproj.CoreCompileInputs.cache
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Release\net8.0\win-x64\VykazyPrace.Core.sourcelink.json
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Release\net8.0\win-x64\VykazyPrace.Core.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Release\net8.0\win-x64\refint\VykazyPrace.Core.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Release\net8.0\win-x64\VykazyPrace.Core.pdb
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Release\net8.0\win-x64\VykazyPrace.Core.genruntimeconfig.cache
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\obj\Release\net8.0\win-x64\ref\VykazyPrace.Core.dll

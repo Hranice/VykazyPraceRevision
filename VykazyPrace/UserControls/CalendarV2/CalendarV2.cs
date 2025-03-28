@@ -85,6 +85,11 @@ namespace VykazyPrace.UserControls.CalendarV2
             };
         }
 
+        public async Task ForceReloadAsync()
+        {
+            await LoadInitialDataAsync();
+        }
+
         private void SafeInvoke(Action action)
         {
             if (InvokeRequired) Invoke(action);
@@ -1245,7 +1250,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 {
                     if (cursor + span > layoutWidth)
                     {
-                        MessageBox.Show("Posun není možný, došlo by k přetečení dne.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        AppLogger.Error("Posun není možný, došlo by k přetečení dne.");
                         return false;
                     }
                     shifts[panel] = (col, span);

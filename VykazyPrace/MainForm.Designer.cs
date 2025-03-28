@@ -49,6 +49,7 @@
             buttonPrevious = new Button();
             panelContainer = new Panel();
             panelCalendarContainer = new Panel();
+            správaIndexůToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -94,7 +95,7 @@
             // 
             // projektyToolStripMenuItem
             // 
-            projektyToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { správaProjektůToolStripMenuItem });
+            projektyToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { správaProjektůToolStripMenuItem, správaIndexůToolStripMenuItem });
             projektyToolStripMenuItem.Name = "projektyToolStripMenuItem";
             projektyToolStripMenuItem.Size = new Size(62, 20);
             projektyToolStripMenuItem.Text = "Projekty";
@@ -102,7 +103,7 @@
             // správaProjektůToolStripMenuItem
             // 
             správaProjektůToolStripMenuItem.Name = "správaProjektůToolStripMenuItem";
-            správaProjektůToolStripMenuItem.Size = new Size(156, 22);
+            správaProjektůToolStripMenuItem.Size = new Size(180, 22);
             správaProjektůToolStripMenuItem.Text = "Správa projektů";
             správaProjektůToolStripMenuItem.Click += správaProjektůToolStripMenuItem_Click;
             // 
@@ -240,6 +241,13 @@
             panelCalendarContainer.Size = new Size(966, 769);
             panelCalendarContainer.TabIndex = 1;
             // 
+            // správaIndexůToolStripMenuItem
+            // 
+            správaIndexůToolStripMenuItem.Name = "správaIndexůToolStripMenuItem";
+            správaIndexůToolStripMenuItem.Size = new Size(180, 22);
+            správaIndexůToolStripMenuItem.Text = "Správa indexů";
+            správaIndexůToolStripMenuItem.Click += správaIndexůToolStripMenuItem_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
@@ -290,5 +298,6 @@
         private Button buttonNext;
         private Button buttonPrevious;
         private ToolStripMenuItem testToolStripMenuItem;
+        private ToolStripMenuItem správaIndexůToolStripMenuItem;
     }
 }

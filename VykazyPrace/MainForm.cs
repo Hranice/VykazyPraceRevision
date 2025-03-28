@@ -185,5 +185,11 @@ namespace VykazyPrace
         {
             new TestDialog().ShowDialog();
         }
+
+        private async void správaIndexùToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new TimeEntrySubTypeManagement(_selectedUser, _timeEntrySubTypeRepo).ShowDialog();
+            await _calendar.ForceReloadAsync();
+        }
     }
 }

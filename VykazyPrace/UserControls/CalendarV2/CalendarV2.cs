@@ -932,22 +932,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                 return;
             }
 
-            //int selectedProjectIndex = comboBoxProjects.SelectedIndex >= 0 ? comboBoxProjects.SelectedIndex : 0;
-            //int projectType = _projects.ElementAtOrDefault(selectedProjectIndex)?.ProjectType ?? 0;
-
-            //var newType = new TimeEntryType
-            //{
-            //    Title = comboBoxEntryType.Text,
-            //    ForProjectType = projectType
-            //};
-
-            //var addedTimeEntryType = await _timeEntryTypeRepo.CreateTimeEntryTypeAsync(newType);
-            //if (addedTimeEntryType == null)
-            //{
-            //    AppLogger.Error("Chyba při vytváření typu časového záznamu.");
-            //    return;
-            //}
-
             var selectedEntryTypeId = _timeEntryTypes[comboBoxEntryType.SelectedIndex].Id;
 
             var newSubType = new TimeEntrySubType

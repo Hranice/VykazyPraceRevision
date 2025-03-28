@@ -34,3 +34,5 @@
 2025-03-28 08:33:06.002 +01:00 [INF] Záznam  - Automatizace: 0,5 h - Školení KS byl úspěšně aktualizován.
 2025-03-28 08:33:17.404 +01:00 [INF] Záznam 0 - Provoz Nová hala: 0,5 h - Školení KS byl úspěšně aktualizován.
 2025-03-28 08:34:10.567 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - test-aftercare byl úspěšně aktualizován.
+2025-03-28 08:45:07.147 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 2,5 h - test-aftercare byl úspěšně aktualizován.
+2025-03-28 09:43:56.548 +01:00 [INF] Záznam 0 - Provoz Nová hala: 2 h -  byl smazán z databáze.

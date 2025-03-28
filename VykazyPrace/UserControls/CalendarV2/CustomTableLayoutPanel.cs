@@ -8,8 +8,8 @@ public class CustomTableLayoutPanel : TableLayoutPanel
     private int selectedRow = -1;
     private int selectedColumn = -1;
 
-    private static readonly Color SelectedTodayColor = Color.FromArgb(225, 225, 225);
-    private static readonly Color SelectedColor = Color.FromArgb(255, 255, 255);
+    private static readonly Color SelectedTodayColor = Color.FromArgb(211, 225, 225);
+    private static readonly Color SelectedColor = Color.FromArgb(241, 255, 255);
     private static readonly Color ActiveDayColor = Color.FromArgb(200, 200, 200);
 
     public CustomTableLayoutPanel()

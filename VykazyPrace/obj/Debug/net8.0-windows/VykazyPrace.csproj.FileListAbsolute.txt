@@ -90,3 +90,4 @@ C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-window
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\runtimes\win-x86\native\sni.dll
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\runtimes\unix\lib\net8.0\System.Data.SqlClient.dll
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Data.SqlClient.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.Dialogs.ReplaceOrMoveDialog.resources

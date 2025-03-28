@@ -246,7 +246,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             BeginInvoke((Action)(() =>
             {
                 comboBoxStart.SelectedIndex = minutesStart / 30;
-                comboBoxEnd.SelectedIndex = minutesEnd / 30;
+                comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
 
                 if (lastPanel?.EntryId != -1)
                 {
@@ -274,19 +274,46 @@ namespace VykazyPrace.UserControls.CalendarV2
             return new TableLayoutPanelCellPosition(col, row);
         }
 
+        // Fix pro TableLayoutPanel1_MouseDoubleClick, kde se vytváří nový záznam
+        // a je třeba ho při kolizi posunout na volné místo doprava
+
         private async void TableLayoutPanel1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             TableLayoutPanelCellPosition cell = GetCellAt(tableLayoutPanel1, e.Location);
-
-            DateTime clickedDate = _selectedDate
-                .AddDays(cell.Row)
-                .AddMinutes(cell.Column * 30);
 
             if (_projects.Count == 0 || _timeEntryTypes.Count == 0)
             {
                 AppLogger.Error("Nelze vytvořit záznam: nejsou načteny projekty nebo typy záznamů.");
                 return;
             }
+
+            int column = cell.Column;
+            int row = cell.Row;
+            int span = 1;
+
+            // Najdi první volné místo od zadané pozice doprava
+            while (column + span <= tableLayoutPanel1.ColumnCount)
+            {
+                bool overlapping = panels.Any(p =>
+                {
+                    int r = tableLayoutPanel1.GetRow(p);
+                    if (r != row) return false;
+                    int c = tableLayoutPanel1.GetColumn(p);
+                    int s = tableLayoutPanel1.GetColumnSpan(p);
+                    return !(column + span - 1 < c || column > c + s - 1);
+                });
+
+                if (!overlapping) break;
+                column++;
+            }
+
+            if (column + span > tableLayoutPanel1.ColumnCount)
+            {
+                MessageBox.Show("V daném řádku už není místo pro nový záznam.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            DateTime clickedDate = _selectedDate.AddDays(row).AddMinutes(column * 30);
 
             var newTimeEntry = new TimeEntry()
             {
@@ -303,8 +330,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
 
             newTimeEntry.AfterCare = _projects.Find(x => x.Id == newTimeEntry.ProjectId).IsArchived;
-            if (newTimeEntry.AfterCare == null) newTimeEntry.AfterCare = 0;
-
             newTimeEntry.IsLocked = 0;
 
             var addedTimeEntry = await _timeEntryRepo.CreateTimeEntryAsync(newTimeEntry);
@@ -317,6 +342,12 @@ namespace VykazyPrace.UserControls.CalendarV2
             _selectedTimeEntryId = addedTimeEntry.Id;
             await LoadSidebar();
             await RenderCalendar();
+
+            // Reset vybraného záznamu a sidebaru po vytvoření
+            DeactivateAllPanels();
+            _selectedTimeEntryId = -1;
+            _ = LoadSidebar();
+
         }
 
 
@@ -481,7 +512,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             };
 
             panel.UpdateUi(
-                (entry.Project?.IsArchived == 1 ? "(AFTERCARE) " : "") + entry.Project.ProjectDescription,
+                (entry.Project?.IsArchived == 1 ? "(AFTERCARE) " : "") + (entry.Project.ProjectType == 1 ? entry.Project.ProjectDescription : entry.Project.ProjectTitle),
                 entry.Description);
 
             panel.MouseMove += dayPanel_MouseMove;
@@ -503,18 +534,24 @@ namespace VykazyPrace.UserControls.CalendarV2
 
 
         #region DayPanel events
-        private void dayPanel_MouseClick(object? sender, MouseEventArgs e)
+        private async void dayPanel_MouseClick(object? sender, MouseEventArgs e)
         {
             if (sender is not DayPanel panel) return;
 
             DeactivateAllPanels();
-
             panel.Activate();
-            tableLayoutPanel1.ClearSelection();
-
             _selectedTimeEntryId = panel.EntryId;
-            _ = LoadSidebar();
+
+            pasteTargetCell = new TableLayoutPanelCellPosition(
+                tableLayoutPanel1.GetColumn(panel),
+                tableLayoutPanel1.GetRow(panel)
+            );
+            {
+                await LoadSidebar();
+            }
         }
+
+
 
         private void DeactivateAllPanels()
         {
@@ -530,6 +567,11 @@ namespace VykazyPrace.UserControls.CalendarV2
         private void dayPanel_MouseMove(object? sender, MouseEventArgs e)
         {
             if (sender is not DayPanel panel) return;
+
+            int rowHeight = tableLayoutPanel1.Height / tableLayoutPanel1.RowCount;
+            int currentMouseY = tableLayoutPanel1.PointToClient(Cursor.Position).Y;
+            int newRow = Math.Max(0, Math.Min(currentMouseY / rowHeight, tableLayoutPanel1.RowCount - 1));
+
 
             int currentMouseX = Cursor.Position.X;
             int deltaX = currentMouseX - startMouseX;
@@ -606,14 +648,25 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void HandleMove(DayPanel panel, int deltaX, int columnWidth)
         {
-            int newColumn = originalColumn + deltaX / columnWidth;
-            int minColumn = GetNearestLeftColumn(originalColumn, tableLayoutPanel1.GetRow(panel), panel);
-            int maxColumn = GetNearestRightColumn(originalColumn, originalColumnSpan, tableLayoutPanel1.GetRow(panel), panel) - originalColumnSpan;
+            int targetColumn = originalColumn + deltaX / columnWidth;
+            int rowHeight = tableLayoutPanel1.Height / tableLayoutPanel1.RowCount;
+            int currentMouseY = tableLayoutPanel1.PointToClient(Cursor.Position).Y;
+            int targetRow = Math.Max(0, Math.Min(currentMouseY / rowHeight, tableLayoutPanel1.RowCount - 1));
 
-            if (newColumn >= minColumn && newColumn <= maxColumn)
+            int span = originalColumnSpan;
+
+            // Kontrola rozsahu tabulky
+            if (targetColumn < 0 || targetColumn + span > tableLayoutPanel1.ColumnCount)
+                return;
+
+            if (!IsOverlapping(targetColumn, span, targetRow, panel))
             {
                 tableLayoutPanel1.SuspendLayout();
-                tableLayoutPanel1.SetColumn(panel, newColumn);
+
+                tableLayoutPanel1.SetColumn(panel, targetColumn);
+                tableLayoutPanel1.SetRow(panel, targetRow);
+                tableLayoutPanel1.SetColumnSpan(panel, span);
+
                 tableLayoutPanel1.ResumeLayout();
             }
         }
@@ -653,8 +706,9 @@ namespace VykazyPrace.UserControls.CalendarV2
             panel.BackColor = ColorTranslator.FromHtml(entryType?.Color ?? "#ADD8E6");
 
             var newTimestamp = _selectedDate
-                .AddMinutes(tableLayoutPanel1.GetColumn(panel) * TimeSlotLengthInMinutes)
-                .AddDays(tableLayoutPanel1.GetRow(panel));
+                .AddDays(tableLayoutPanel1.GetRow(panel))
+                .AddMinutes(tableLayoutPanel1.GetColumn(panel) * TimeSlotLengthInMinutes);
+
             var newDuration = GetEntryMinutesBasedOnColumnSpan(tableLayoutPanel1.GetColumnSpan(panel));
 
             if (entry.Timestamp != newTimestamp || entry.EntryMinutes != newDuration)
@@ -668,7 +722,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         }
         #endregion
 
-        private bool IsOverlapping(int newColumn, int newSpan, int row, DayPanel currentPanel)
+        private bool IsOverlapping(int column, int span, int row, DayPanel currentPanel)
         {
             foreach (DayPanel p in panels)
             {
@@ -680,12 +734,13 @@ namespace VykazyPrace.UserControls.CalendarV2
                 int pCol = tableLayoutPanel1.GetColumn(p);
                 int pSpan = tableLayoutPanel1.GetColumnSpan(p);
 
-                if ((newColumn >= pCol && newColumn < pCol + pSpan) ||
-                    (newColumn + newSpan > pCol && newColumn + newSpan <= pCol + pSpan))
-                {
-                    return true;
-                }
+                int pEnd = pCol + pSpan - 1;
+                int thisEnd = column + span - 1;
+
+                bool overlaps = !(thisEnd < pCol || column > pEnd);
+                if (overlaps) return true;
             }
+
             return false;
         }
 
@@ -966,21 +1021,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             return result == DialogResult.Yes;
         }
 
-
-        private async void tableLayoutPanel1_MouseClick(object sender, MouseEventArgs e)
-        {
-            foreach (var ctrl in tableLayoutPanel1.Controls)
-            {
-                if (ctrl is DayPanel pan)
-                {
-                    pan.Deactivate();
-                }
-            }
-
-            _selectedTimeEntryId = -1;
-            await LoadSidebar();
-        }
-
         private async void radioButton_CheckedChanged(object sender, EventArgs e)
         {
             if (sender is RadioButton rb && rb.Checked)
@@ -1049,6 +1089,188 @@ namespace VykazyPrace.UserControls.CalendarV2
         private async void checkBoxArchivedProjects_CheckedChanged(object sender, EventArgs e)
         {
             await LoadProjectsAsync(1);
+        }
+
+        private TimeEntry? copiedEntry;
+        private TableLayoutPanelCellPosition? pasteTargetCell;
+        private ToolTip copyToolTip = new();
+
+      
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.Control | Keys.C))
+            {
+                CopySelectedPanel();
+                return true;
+            }
+
+            if (keyData == (Keys.Control | Keys.V))
+            {
+                PasteCopiedPanel();
+                return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void CopySelectedPanel()
+        {
+            if (_selectedTimeEntryId <= 0) return;
+
+            var entry = _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId).Result;
+            if (entry != null)
+            {
+                copiedEntry = new TimeEntry
+                {
+                    EntryTypeId = entry.EntryTypeId,
+                    ProjectId = entry.ProjectId,
+                    Description = entry.Description,
+                    Note = entry.Note,
+                    EntryMinutes = entry.EntryMinutes,
+                    AfterCare = entry.AfterCare,
+                    UserId = entry.UserId
+                };
+
+                var panel = panels.FirstOrDefault(p => p.EntryId == _selectedTimeEntryId);
+                if (panel != null)
+                {
+                    copyToolTip.ToolTipTitle = "Zkopírováno";
+                    copyToolTip.Show("Záznam byl zkopírován", panel, panel.Width / 2, panel.Height / 2, 2000);
+                }
+            }
+        }
+
+        private async void PasteCopiedPanel()
+        {
+            if (copiedEntry == null || pasteTargetCell == null) return;
+
+            int column = pasteTargetCell.Value.Column;
+            int row = pasteTargetCell.Value.Row;
+
+            int span = copiedEntry.EntryMinutes / TimeSlotLengthInMinutes;
+            int lastColumn = column + span - 1;
+
+            if (lastColumn >= tableLayoutPanel1.ColumnCount)
+            {
+                MessageBox.Show("Záznam nelze vložit, nevejde se do daného dne.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            bool overlapping = panels.Any(p =>
+            {
+                int r = tableLayoutPanel1.GetRow(p);
+                int c = tableLayoutPanel1.GetColumn(p);
+                int s = tableLayoutPanel1.GetColumnSpan(p);
+                return r == row && !(column + span - 1 < c || column > c + s - 1);
+            });
+
+            if (overlapping)
+            {
+                var dialog = new ReplaceOrMoveDialog().ShowDialog();
+
+                if (dialog == DialogResult.Cancel) return;
+
+                if (dialog == DialogResult.No)
+                {
+                    bool success = await ShiftRightFrom(column, row, span);
+                    if (!success) return;
+                }
+                else if (dialog == DialogResult.Yes)
+                {
+                    await RemoveOverlappingPanels(column, span, row);
+                }
+            }
+
+            DateTime newTimestamp = _selectedDate
+                .AddDays(row)
+                .AddMinutes(column * TimeSlotLengthInMinutes);
+
+            var newEntry = new TimeEntry
+            {
+                EntryTypeId = copiedEntry.EntryTypeId,
+                ProjectId = copiedEntry.ProjectId,
+                Description = copiedEntry.Description,
+                Note = copiedEntry.Note,
+                EntryMinutes = copiedEntry.EntryMinutes,
+                AfterCare = copiedEntry.AfterCare,
+                UserId = _selectedUser.Id,
+                Timestamp = newTimestamp
+            };
+
+            var created = await _timeEntryRepo.CreateTimeEntryAsync(newEntry);
+            if (created != null)
+            {
+                _selectedTimeEntryId = created.Id;
+                await RenderCalendar();
+                await LoadSidebar();
+            }
+        }
+
+        private async Task RemoveOverlappingPanels(int fromCol, int span, int row)
+        {
+            var toRemove = panels.Where(p =>
+            {
+                int r = tableLayoutPanel1.GetRow(p);
+                int c = tableLayoutPanel1.GetColumn(p);
+                int s = tableLayoutPanel1.GetColumnSpan(p);
+                return r == row && !(fromCol + span - 1 < c || fromCol > c + s - 1);
+            }).ToList();
+
+            foreach (var panel in toRemove)
+            {
+                await _timeEntryRepo.DeleteTimeEntryAsync(panel.EntryId);
+            }
+        }
+
+        private async Task<bool> ShiftRightFrom(int fromCol, int row, int requiredSpan)
+        {
+            var toShift = panels
+                .Where(p => tableLayoutPanel1.GetRow(p) == row)
+                .OrderBy(p => tableLayoutPanel1.GetColumn(p))
+                .ToList();
+
+            var layoutWidth = tableLayoutPanel1.ColumnCount;
+            Dictionary<DayPanel, (int oldCol, int span)> shifts = new();
+            int cursor = fromCol + requiredSpan;
+
+            foreach (var panel in toShift)
+            {
+                int col = tableLayoutPanel1.GetColumn(panel);
+                int span = tableLayoutPanel1.GetColumnSpan(panel);
+                if (col >= fromCol)
+                {
+                    if (cursor + span > layoutWidth)
+                    {
+                        MessageBox.Show("Posun není možný, došlo by k přetečení dne.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return false;
+                    }
+                    shifts[panel] = (col, span);
+                    cursor += span;
+                    tableLayoutPanel1.SetColumn(panel, cursor - span);
+                }
+            }
+
+            foreach (var kvp in shifts)
+            {
+                var panel = kvp.Key;
+                var (newCol, span) = (tableLayoutPanel1.GetColumn(panel), kvp.Value.span);
+                var entry = await _timeEntryRepo.GetTimeEntryByIdAsync(panel.EntryId);
+                if (entry == null) continue;
+                entry.Timestamp = _selectedDate.AddDays(row).AddMinutes(newCol * TimeSlotLengthInMinutes);
+                await _timeEntryRepo.UpdateTimeEntryAsync(entry);
+            }
+
+            return true;
+        }
+
+        private void tableLayoutPanel1_MouseClick(object sender, MouseEventArgs e)
+        {
+            var cell = GetCellAt(tableLayoutPanel1, e.Location);
+            pasteTargetCell = cell;
+            DeactivateAllPanels();
+            _selectedTimeEntryId = -1;
+            _ = LoadSidebar();
         }
     }
 }

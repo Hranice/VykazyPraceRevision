@@ -19,7 +19,7 @@ namespace VykazyPrace.Core.Database.Repositories
         public async Task<UserGroup> CreateUserGroupAsync(UserGroup userGroup)
         {
             _context.UserGroups.Add(userGroup);
-            await _context.SaveChangesAsync();
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return userGroup;
         }
 
@@ -42,7 +42,7 @@ namespace VykazyPrace.Core.Database.Repositories
             if (existingGroup == null) return false;
 
             existingGroup.Title = userGroup.Title;
-            await _context.SaveChangesAsync();
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return true;
         }
 
@@ -52,7 +52,7 @@ namespace VykazyPrace.Core.Database.Repositories
             if (userGroup == null) return false;
 
             _context.UserGroups.Remove(userGroup);
-            await _context.SaveChangesAsync();
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return true;
         }
     }

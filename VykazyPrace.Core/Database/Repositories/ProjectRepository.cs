@@ -31,7 +31,7 @@ namespace VykazyPrace.Core.Database.Repositories
             project.CreatedByNavigation = user;
 
             _context.Projects.Add(project);
-            await _context.SaveChangesAsync();
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return project;
         }
 
@@ -144,7 +144,7 @@ namespace VykazyPrace.Core.Database.Repositories
             existingProject.ProjectType = project.ProjectType;
             existingProject.Note = project.Note;
 
-            await _context.SaveChangesAsync();
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return true;
         }
 
@@ -158,7 +158,7 @@ namespace VykazyPrace.Core.Database.Repositories
                 return false;
 
             _context.Projects.Remove(project);
-            await _context.SaveChangesAsync();
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return true;
         }
     }

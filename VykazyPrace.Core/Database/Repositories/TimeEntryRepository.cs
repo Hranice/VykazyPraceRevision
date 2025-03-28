@@ -25,7 +25,7 @@ namespace VykazyPrace.Core.Database.Repositories
         public async Task<TimeEntry> CreateTimeEntryAsync(TimeEntry timeEntry)
         {
             _context.TimeEntries.Add(timeEntry);
-            await _context.SaveChangesAsync();
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return timeEntry;
         }
 
@@ -176,7 +176,7 @@ namespace VykazyPrace.Core.Database.Repositories
             existingEntry.AfterCare = timeEntry.AfterCare;
             existingEntry.Note = timeEntry.Note;
 
-            await _context.SaveChangesAsync();
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return true;
         }
 
@@ -190,7 +190,7 @@ namespace VykazyPrace.Core.Database.Repositories
                 return false;
 
             _context.TimeEntries.Remove(entry);
-            await _context.SaveChangesAsync();
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return true;
         }
 
@@ -242,7 +242,7 @@ namespace VykazyPrace.Core.Database.Repositories
                 entry.IsLocked = 1;
             }
 
-            await _context.SaveChangesAsync();
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
         }
 
         /// <summary>

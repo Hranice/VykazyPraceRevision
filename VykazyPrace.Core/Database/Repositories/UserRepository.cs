@@ -22,7 +22,7 @@ namespace VykazyPrace.Core.Database.Repositories
         public async Task<User> CreateUserAsync(User user)
         {
             _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return user;
         }
 
@@ -77,7 +77,7 @@ namespace VykazyPrace.Core.Database.Repositories
             existingUser.WindowsUsername = user.WindowsUsername;
             existingUser.LevelOfAccess = user.LevelOfAccess;
 
-            await _context.SaveChangesAsync();
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return true;
         }
 
@@ -91,7 +91,7 @@ namespace VykazyPrace.Core.Database.Repositories
                 return false;
 
             _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return true;
         }
     }

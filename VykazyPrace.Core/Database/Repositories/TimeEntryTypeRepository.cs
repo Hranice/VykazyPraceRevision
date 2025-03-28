@@ -29,7 +29,7 @@ namespace VykazyPrace.Core.Database.Repositories
             }
 
             _context.TimeEntryTypes.Add(timeEntryType);
-            await _context.SaveChangesAsync();
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return timeEntryType;
         }
 
@@ -57,7 +57,7 @@ namespace VykazyPrace.Core.Database.Repositories
 
             existingType.Title = type.Title;
             existingType.Color = type.Color;
-            await _context.SaveChangesAsync();
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return true;
         }
 
@@ -67,7 +67,7 @@ namespace VykazyPrace.Core.Database.Repositories
             if (type == null) return false;
 
             _context.TimeEntryTypes.Remove(type);
-            await _context.SaveChangesAsync();
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return true;
         }
     }

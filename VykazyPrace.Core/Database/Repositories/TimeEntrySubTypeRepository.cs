@@ -26,7 +26,7 @@ namespace VykazyPrace.Core.Database.Repositories
             }
 
             _context.TimeEntrySubTypes.Add(subType);
-            await _context.SaveChangesAsync();
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return subType;
         }
 
@@ -66,7 +66,7 @@ namespace VykazyPrace.Core.Database.Repositories
             if (subType == null) return false;
 
             _context.TimeEntrySubTypes.Remove(subType);
-            await _context.SaveChangesAsync();
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return true;
         }
     }

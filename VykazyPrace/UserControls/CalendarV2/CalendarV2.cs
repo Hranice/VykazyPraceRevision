@@ -145,14 +145,14 @@ namespace VykazyPrace.UserControls.CalendarV2
             try
             {
                 var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
-                bool afterCare = timeEntry?.AfterCare == 1;
+                bool isArchived = timeEntry?.AfterCare == 1;
 
                 _timeEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesByProjectTypeAsync(projectType);
 
                 SafeInvoke(() =>
                 {
                     comboBoxEntryType.Items.Clear();
-                    comboBoxEntryType.Items.AddRange(afterCare
+                    comboBoxEntryType.Items.AddRange(checkBoxArchivedProjects.Checked
                         ? _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeWithAfterCareToString).ToArray()
                         : _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray());
 
@@ -227,6 +227,8 @@ namespace VykazyPrace.UserControls.CalendarV2
             var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
             if (timeEntry == null) return;
 
+            checkBoxArchivedProjects.Checked = timeEntry.Project.IsArchived == 1;
+
             flowLayoutPanel2.Enabled = timeEntry.IsLocked == 0;
 
             var proj = await _projectRepo.GetProjectByIdAsync(timeEntry.ProjectId ?? 0);
@@ -258,8 +260,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                     textBoxNote.Text = timeEntry.Note;
                     comboBoxProjects.Text = FormatHelper.FormatProjectToString(timeEntry.Project);
                     var selectedType = _timeEntryTypes.FirstOrDefault(x => x.Id == timeEntry.EntryTypeId);
-                    comboBoxEntryType.Text = selectedType != null ? FormatHelper.FormatTimeEntryTypeToString(selectedType) : "";
-                    checkBoxArchivedProjects.Checked = timeEntry.Project.IsArchived == 1;
+                    comboBoxEntryType.Text = timeEntry.AfterCare == 1
+                        ? FormatHelper.FormatTimeEntryTypeWithAfterCareToString(selectedType)
+                        : FormatHelper.FormatTimeEntryTypeToString(selectedType);
                 }
 
                 comboBoxProjectsLoading = false;
@@ -929,21 +932,23 @@ namespace VykazyPrace.UserControls.CalendarV2
                 return;
             }
 
-            int selectedProjectIndex = comboBoxProjects.SelectedIndex >= 0 ? comboBoxProjects.SelectedIndex : 0;
-            int projectType = _projects.ElementAtOrDefault(selectedProjectIndex)?.ProjectType ?? 0;
+            //int selectedProjectIndex = comboBoxProjects.SelectedIndex >= 0 ? comboBoxProjects.SelectedIndex : 0;
+            //int projectType = _projects.ElementAtOrDefault(selectedProjectIndex)?.ProjectType ?? 0;
 
-            var newType = new TimeEntryType
-            {
-                Title = comboBoxEntryType.Text,
-                ForProjectType = projectType
-            };
+            //var newType = new TimeEntryType
+            //{
+            //    Title = comboBoxEntryType.Text,
+            //    ForProjectType = projectType
+            //};
 
-            var addedTimeEntryType = await _timeEntryTypeRepo.CreateTimeEntryTypeAsync(newType);
-            if (addedTimeEntryType == null)
-            {
-                AppLogger.Error("Chyba při vytváření typu časového záznamu.");
-                return;
-            }
+            //var addedTimeEntryType = await _timeEntryTypeRepo.CreateTimeEntryTypeAsync(newType);
+            //if (addedTimeEntryType == null)
+            //{
+            //    AppLogger.Error("Chyba při vytváření typu časového záznamu.");
+            //    return;
+            //}
+
+            var selectedEntryTypeId = _timeEntryTypes[comboBoxEntryType.SelectedIndex].Id;
 
             var newSubType = new TimeEntrySubType
             {
@@ -957,7 +962,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             if (timeEntry == null) return;
 
             timeEntry.Description = addedTimeEntrySubType.Title;
-            timeEntry.EntryTypeId = addedTimeEntryType.Id;
+            timeEntry.EntryTypeId = selectedEntryTypeId;
             timeEntry.Note = textBoxNote.Text;
 
             if (comboBoxProjects.SelectedIndex >= 0)
@@ -1095,13 +1100,21 @@ namespace VykazyPrace.UserControls.CalendarV2
         private async void checkBoxArchivedProjects_CheckedChanged(object sender, EventArgs e)
         {
             await LoadProjectsAsync(1);
+            await LoadTimeEntryTypesAsync(1);
+                //comboBoxEntryType.Items.Clear();
+                //comboBoxEntryType.Items.AddRange(checkBoxArchivedProjects.Checked
+                //    ? _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeWithAfterCareToString).ToArray()
+                //    : _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray());
+
+                //if (comboBoxEntryType.Items.Count > 0)
+                //    comboBoxEntryType.SelectedIndex = 0;
         }
 
         private TimeEntry? copiedEntry;
         private TableLayoutPanelCellPosition? pasteTargetCell;
         private ToolTip copyToolTip = new();
 
-      
+
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {

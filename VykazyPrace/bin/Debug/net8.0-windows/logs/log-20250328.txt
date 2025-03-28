@@ -36,3 +36,12 @@
 2025-03-28 08:34:10.567 +01:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - test-aftercare byl úspěšně aktualizován.
 2025-03-28 08:45:07.147 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 2,5 h - test-aftercare byl úspěšně aktualizován.
 2025-03-28 09:43:56.548 +01:00 [INF] Záznam 0 - Provoz Nová hala: 2 h -  byl smazán z databáze.
+2025-03-28 10:09:53.078 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 0,5 h -  byl smazán z databáze.
+2025-03-28 10:09:55.048 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 3 h - test-aftercare byl smazán z databáze.
+2025-03-28 10:10:01.109 +01:00 [INF] Záznam 0268I25 - Karuselový stroj s kamerovým systémem: 3 h - test-aftercare byl úspěšně aktualizován.
+2025-03-28 10:35:36.994 +01:00 [INF] Záznam 0230I24 - Automatické balení po pecích a UV: 1,5 h - test-aftercare byl úspěšně aktualizován.
+2025-03-28 10:37:05.856 +01:00 [INF] Záznam 0230I24 - Automatické balení po pecích a UV: 2,5 h -  byl smazán z databáze.
+2025-03-28 10:49:05.261 +01:00 [ERR] Nepodařilo se najít zvolený záznam.
+2025-03-28 10:49:28.878 +01:00 [ERR] Nepodařilo se najít zvolený záznam.
+2025-03-28 10:49:31.914 +01:00 [ERR] Nepodařilo se najít zvolený záznam.
+2025-03-28 10:51:07.358 +01:00 [ERR] Nepodařilo se najít zvolený záznam.

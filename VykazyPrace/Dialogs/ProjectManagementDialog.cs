@@ -304,7 +304,8 @@ namespace VykazyPrace.Dialogs
                 if (!CheckFoxValidPreProject()) return;
             }
 
-            var project = _filteredProjects.Find(x => x.ProjectTitle == textBoxProjectTitle.Text && x.ProjectDescription == textBoxProjectDescription.Text);
+            var project = _filteredProjects[comboBoxProjects.SelectedIndex];
+            //var project = _filteredProjects.Find(x => x.ProjectTitle == textBoxProjectTitle.Text && x.ProjectDescription == textBoxProjectDescription.Text);
 
             if (project == null)
             {
@@ -560,8 +561,16 @@ namespace VykazyPrace.Dialogs
 
                     else
                     {
-                        textBoxProjectTitle.Text = listBoxProject.SelectedItem.ToString().Split(':')[2].TrimStart(' ');
-                        textBoxProjectDescription.Text = listBoxProject.SelectedItem.ToString().Split(':')[1].TrimStart(' ');
+                        if (checkBoxPreProject.Checked)
+                        {
+                            textBoxProjectTitle.Text = listBoxProject.SelectedItem.ToString().Split(':')[1].TrimStart(' ');
+                            textBoxProjectDescription.Text = listBoxProject.SelectedItem.ToString().Split(':')[1].TrimStart(' ');
+                        }
+                        else
+                        {
+                            textBoxProjectTitle.Text = listBoxProject.SelectedItem.ToString().Split(':')[2].TrimStart(' ');
+                            textBoxProjectDescription.Text = listBoxProject.SelectedItem.ToString().Split(':')[1].TrimStart(' ');
+                        }
                     }
                 }
 

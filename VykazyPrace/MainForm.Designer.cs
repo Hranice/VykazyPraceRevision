@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             menuStrip1 = new MenuStrip();
             dataToolStripMenuItem = new ToolStripMenuItem();
             exportToolStripMenuItem = new ToolStripMenuItem();
@@ -37,9 +38,9 @@
             správaProjektůToolStripMenuItem = new ToolStripMenuItem();
             správaIndexůToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem1 = new ToolStripMenuItem();
-            nápovědaToolStripMenuItem = new ToolStripMenuItem();
             nastaveníToolStripMenuItem = new ToolStripMenuItem();
             testToolStripMenuItem = new ToolStripMenuItem();
+            oProgramuToolStripMenuItem = new ToolStripMenuItem();
             radioButton1 = new RadioButton();
             radioButton2 = new RadioButton();
             comboBoxUsers = new ComboBox();
@@ -76,7 +77,7 @@
             // exportToolStripMenuItem
             // 
             exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            exportToolStripMenuItem.Size = new Size(180, 22);
+            exportToolStripMenuItem.Size = new Size(108, 22);
             exportToolStripMenuItem.Text = "Export";
             exportToolStripMenuItem.Click += exportToolStripMenuItem_Click;
             // 
@@ -91,7 +92,7 @@
             // správaUživatelůToolStripMenuItem
             // 
             správaUživatelůToolStripMenuItem.Name = "správaUživatelůToolStripMenuItem";
-            správaUživatelůToolStripMenuItem.Size = new Size(180, 22);
+            správaUživatelůToolStripMenuItem.Size = new Size(159, 22);
             správaUživatelůToolStripMenuItem.Text = "Správa uživatelů";
             správaUživatelůToolStripMenuItem.Click += správaUživatelůToolStripMenuItem_Click;
             // 
@@ -105,7 +106,7 @@
             // správaProjektůToolStripMenuItem
             // 
             správaProjektůToolStripMenuItem.Name = "správaProjektůToolStripMenuItem";
-            správaProjektůToolStripMenuItem.Size = new Size(180, 22);
+            správaProjektůToolStripMenuItem.Size = new Size(156, 22);
             správaProjektůToolStripMenuItem.Text = "Správa projektů";
             správaProjektůToolStripMenuItem.Visible = false;
             správaProjektůToolStripMenuItem.Click += správaProjektůToolStripMenuItem_Click;
@@ -113,22 +114,16 @@
             // správaIndexůToolStripMenuItem
             // 
             správaIndexůToolStripMenuItem.Name = "správaIndexůToolStripMenuItem";
-            správaIndexůToolStripMenuItem.Size = new Size(180, 22);
+            správaIndexůToolStripMenuItem.Size = new Size(156, 22);
             správaIndexůToolStripMenuItem.Text = "Správa indexů";
             správaIndexůToolStripMenuItem.Click += správaIndexůToolStripMenuItem_Click;
             // 
             // toolStripMenuItem1
             // 
-            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { nápovědaToolStripMenuItem, nastaveníToolStripMenuItem, testToolStripMenuItem });
+            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { nastaveníToolStripMenuItem, testToolStripMenuItem, oProgramuToolStripMenuItem });
             toolStripMenuItem1.Name = "toolStripMenuItem1";
             toolStripMenuItem1.Size = new Size(24, 20);
             toolStripMenuItem1.Text = "?";
-            // 
-            // nápovědaToolStripMenuItem
-            // 
-            nápovědaToolStripMenuItem.Name = "nápovědaToolStripMenuItem";
-            nápovědaToolStripMenuItem.Size = new Size(180, 22);
-            nápovědaToolStripMenuItem.Text = "Nápověda";
             // 
             // nastaveníToolStripMenuItem
             // 
@@ -144,6 +139,13 @@
             testToolStripMenuItem.Text = "Test";
             testToolStripMenuItem.Visible = false;
             testToolStripMenuItem.Click += testToolStripMenuItem_Click_1;
+            // 
+            // oProgramuToolStripMenuItem
+            // 
+            oProgramuToolStripMenuItem.Name = "oProgramuToolStripMenuItem";
+            oProgramuToolStripMenuItem.Size = new Size(180, 22);
+            oProgramuToolStripMenuItem.Text = "O programu";
+            oProgramuToolStripMenuItem.Click += oProgramuToolStripMenuItem_Click;
             // 
             // radioButton1
             // 
@@ -263,11 +265,13 @@
             Controls.Add(panel2);
             Controls.Add(menuStrip1);
             Font = new Font("Reddit Sans", 12F);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
             Margin = new Padding(4, 5, 4, 5);
             MinimumSize = new Size(1295, 710);
             Name = "MainForm";
             Padding = new Padding(0, 0, 10, 10);
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Výkazy práce";
             Load += MainForm_Load;
             menuStrip1.ResumeLayout(false);
@@ -289,7 +293,7 @@
         private ToolStripMenuItem správaUživatelůToolStripMenuItem;
         private ToolStripMenuItem správaProjektůToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItem1;
-        private ToolStripMenuItem nápovědaToolStripMenuItem;
+        private ToolStripMenuItem oProgramuToolStripMenuItem;
         private ToolStripMenuItem nastaveníToolStripMenuItem;
         private RadioButton radioButton1;
         private RadioButton radioButton2;

@@ -69,8 +69,8 @@ namespace VykazyPrace
                 uživateléToolStripMenuItem.Visible = true;
                 správaProjektùToolStripMenuItem.Visible = true;
             }
-            
-            else if(_currentUserLoA == 2)
+
+            else if (_currentUserLoA == 2)
             {
                 dataToolStripMenuItem.Visible = true;
                 správaProjektùToolStripMenuItem.Visible = true;
@@ -206,6 +206,11 @@ namespace VykazyPrace
         {
             new TimeEntrySubTypeManagement(_selectedUser, _timeEntrySubTypeRepo).ShowDialog();
             await _calendar.ForceReloadAsync();
+        }
+
+        private void oProgramuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new AboutDialog().ShowDialog();
         }
     }
 }

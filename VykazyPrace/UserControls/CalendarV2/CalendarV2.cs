@@ -114,11 +114,15 @@ namespace VykazyPrace.UserControls.CalendarV2
             );
         }
 
-        public async void ChangeUser(User newUser)
+        public async Task ChangeUser(User newUser)
         {
             _selectedUser = newUser;
             await RenderCalendar();
-            await LoadSidebar();
+
+            // Reset vybraného záznamu a sidebaru po změně uživatele
+            DeactivateAllPanels();
+            _selectedTimeEntryId = -1;
+            _ = LoadSidebar();
         }
 
         public async Task<DateTime> ChangeToPreviousWeek()

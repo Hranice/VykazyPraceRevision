@@ -62,3 +62,4 @@
 2025-03-31 13:10:36.938 +02:00 [INF] Záznam  - Automatizace: 3 h -  byl smazán z databáze.
 2025-03-31 13:12:10.026 +02:00 [INF] Záznam  - Automatizace: 2 h - SW - Výkazy hodin byl smazán z databáze.
 2025-03-31 14:43:03.947 +02:00 [INF] Záznam 0 - Provoz Metalizace: 2,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-03-31 14:46:12.524 +02:00 [INF] Záznam 0 - Provoz Metalizace: 10 h - SW - Výkazy hodin byl smazán z databáze.

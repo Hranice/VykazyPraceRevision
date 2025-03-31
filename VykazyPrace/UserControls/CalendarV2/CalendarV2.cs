@@ -291,7 +291,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                     {
                         comboBoxIndex.Text = timeEntry.Description;
                         textBoxNote.Text = timeEntry.Note;
+                        suppressDropdownTemporarily = true;
                         comboBoxProjects.Text = FormatHelper.FormatProjectToString(timeEntry.Project);
+                        suppressDropdownTemporarily = false;
                         var selectedType = _timeEntryTypes.FirstOrDefault(x => x.Id == timeEntry.EntryTypeId);
                         comboBoxEntryType.Text = timeEntry.AfterCare == 1
                             ? FormatHelper.FormatTimeEntryTypeWithAfterCareToString(selectedType)
@@ -995,6 +997,9 @@ namespace VykazyPrace.UserControls.CalendarV2
             finally { isUpdating = false; }
         }
 
+        private bool suppressDropdownTemporarily = false;
+
+
         private void comboBoxProjects_TextChanged(object sender, EventArgs e)
         {
             if (comboBoxProjectsLoading || isUpdating || !comboBoxProjects.Enabled) return;
@@ -1025,14 +1030,17 @@ namespace VykazyPrace.UserControls.CalendarV2
                     comboBoxProjects.SelectionStart = selectionStart;
                     comboBoxProjects.SelectionLength = 0;
 
-                    if (!comboBoxProjects.DroppedDown)
+                    if (!comboBoxProjects.DroppedDown && !suppressDropdownTemporarily)
                     {
                         BeginInvoke(() =>
                         {
-                            comboBoxProjects.DroppedDown = true;
+                            if (!suppressDropdownTemporarily) // double check inside async invoke
+                                comboBoxProjects.DroppedDown = true;
+
                             Cursor = Cursors.Default;
                         });
                     }
+
                 }
                 else
                 {

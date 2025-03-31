@@ -35,8 +35,10 @@ namespace VykazyPrace.Core.Database.Repositories
                 .Include(u => u.Projects)
                 .Include(u => u.TimeEntries)
                 .Include(u => u.UserGroup)
+                .OrderBy(u => u.UserGroupId)
                 .ToListAsync();
         }
+
 
         /// <summary>
         /// Získání uživatele podle ID.

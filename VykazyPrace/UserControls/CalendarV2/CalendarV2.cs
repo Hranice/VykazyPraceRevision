@@ -607,9 +607,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                 tableLayoutPanel1.GetColumn(panel),
                 tableLayoutPanel1.GetRow(panel)
             );
-            {
-                await LoadSidebar();
-            }
+
+            tableLayoutPanel1.ClearSelection();
+            await LoadSidebar();
         }
 
         private void DeactivateAllPanels()

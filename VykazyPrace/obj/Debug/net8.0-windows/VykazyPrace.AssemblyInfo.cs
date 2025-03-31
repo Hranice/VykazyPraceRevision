@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WorkLog")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.1.4.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.1.4+13838af0f7b63e6d4d6ececff31183b8d61f601d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.1.4+9bcc4ae9475f710eb4dd5e2a0278685b54fb7c40")]
 [assembly: System.Reflection.AssemblyProductAttribute("WorkLog")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WorkLog")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.1.4.0")]

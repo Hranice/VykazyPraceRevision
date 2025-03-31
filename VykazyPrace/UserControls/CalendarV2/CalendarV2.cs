@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -1008,6 +1009,51 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private (bool valid, string reason) CheckForEmptyOrIncorrectFields()
         {
+            var rb = flowLayoutPanel2.Controls
+               .OfType<RadioButton>()
+               .FirstOrDefault(r => r.Checked);
+
+
+            switch (rb?.Text)
+            {
+                case "PROVOZ":
+                    if (string.IsNullOrWhiteSpace(comboBoxProjects.Text))
+                        return (false, "Nákladové středisko");
+                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text))
+                        return (false, "Typ záznamu");
+                    if (string.IsNullOrWhiteSpace(comboBoxIndex.Text))
+                        return (false, "Index");
+                    break;
+                case "PROJEKT":
+                    if (string.IsNullOrWhiteSpace(comboBoxProjects.Text))
+                        return (false, "Projekt");
+                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text))
+                        return (false, "Typ záznamu");
+                    if (string.IsNullOrWhiteSpace(comboBoxIndex.Text))
+                        return (false, "Index");
+                    break;
+                case "PŘEDPROJEKT":
+                    if (string.IsNullOrWhiteSpace(comboBoxProjects.Text))
+                        return (false, "Předprojekt");
+                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text))
+                        return (false, "Typ záznamu");
+                    if (string.IsNullOrWhiteSpace(comboBoxIndex.Text))
+                        return (false, "Index");
+                    break;
+                case "ŠKOLENÍ":
+                    if (string.IsNullOrWhiteSpace(textBoxNote.Text))
+                        return (false, "Poznámka");
+                    break;
+                case "NEPŘÍTOMNOST":
+                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text))
+                        return (false, "Důvod");
+                    break;
+                default:
+                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text))
+                        return (false, "Činnost");
+                    break;
+            }
+
             if (string.IsNullOrWhiteSpace(comboBoxProjects.Text))
                 return (false, "Projekt");
             if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text))
@@ -1063,6 +1109,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             if (sender is RadioButton rb && rb.Checked)
             {
                 int index = 0;
+                label4.Text = "Poznámka";
 
                 switch (rb.Text)
                 {
@@ -1099,6 +1146,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                         tableLayoutPanelEntryType.Visible = false;
                         tableLayoutPanelEntrySubType.Visible = false;
                         checkBoxArchivedProjects.Visible = false;
+                        label4.Text = "Poznámka*";
                         break;
                     case "NEPŘÍTOMNOST":
                         labelType.Text = "Důvod*";

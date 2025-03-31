@@ -36,3 +36,4 @@
 2025-03-31 09:51:57.732 +02:00 [INF] Záznam  - Automatizace: 0,5 h -  byl smazán z databáze.
 2025-03-31 09:52:01.837 +02:00 [INF] Záznam 0 - Provoz Metalizace: 2 h -  byl smazán z databáze.
 2025-03-31 09:53:25.722 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 10:01:22.145 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Poznámka

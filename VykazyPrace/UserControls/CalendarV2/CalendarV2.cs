@@ -298,6 +298,13 @@ namespace VykazyPrace.UserControls.CalendarV2
                     {
                         radio.Checked = false;
                     }
+
+                    tableLayoutPanel4.Visible = false;
+                    tableLayoutPanel6.Visible = false;
+                    tableLayoutPanelProject.Visible = false;
+                    tableLayoutPanelEntryType.Visible = false;
+                    tableLayoutPanelEntrySubType.Visible = false;
+                    panel4.Visible = false;
                 }));
             }
         }
@@ -1121,6 +1128,13 @@ namespace VykazyPrace.UserControls.CalendarV2
                 int index = 0;
                 label4.Text = "Poznámka";
 
+                tableLayoutPanel4.Visible = true;
+                tableLayoutPanel6.Visible = true;
+                tableLayoutPanelProject.Visible = true;
+                tableLayoutPanelEntryType.Visible = true;
+                tableLayoutPanelEntrySubType.Visible = true;
+                panel4.Visible = true;
+
                 switch (rb.Text)
                 {
                     case "PROVOZ":
@@ -1178,6 +1192,8 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                 await LoadProjectsAsync(index);
                 await LoadTimeEntryTypesAsync(index);
+
+
             }
         }
 

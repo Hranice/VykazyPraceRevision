@@ -17,3 +17,15 @@
 2025-03-31 07:06:07.375 +02:00 [INF] Uživatel (1996): Martin Erban - KONSTRUKCE byl přidán do databáze.
 2025-03-31 07:20:10.433 +02:00 [INF] Uživatel (2012): Štěpán Tuček - ELEKTRO byl přidán do databáze.
 2025-03-31 07:21:34.490 +02:00 [INF] Uživatel (2071): Syed Tabish Karim - ELEKTRO byl přidán do databáze.
+2025-03-31 09:08:22.642 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:08:24.250 +02:00 [INF] Záznam  - Automatizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:12:16.458 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:16:21.496 +02:00 [INF] Záznam  - Automatizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:16:23.440 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:26:59.778 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Projekt
+2025-03-31 09:27:06.722 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Typ zápisu
+2025-03-31 09:27:10.540 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Index
+2025-03-31 09:27:14.522 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - Obchůzka byl úspěšně aktualizován.
+2025-03-31 09:27:17.919 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - Obchůzka byl smazán z databáze.
+2025-03-31 09:27:19.965 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:27:22.830 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.

@@ -166,8 +166,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                         ? _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeWithAfterCareToString).ToArray()
                         : _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray());
 
-                    if (comboBoxEntryType.Items.Count > 0)
-                        comboBoxEntryType.SelectedIndex = 0;
+                    comboBoxEntryType.Text = string.Empty;
                 });
             }
             catch (Exception ex)
@@ -213,14 +212,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                     comboBoxProjects.Items.AddRange(
                         _projects.Select(FormatHelper.FormatProjectToString).ToArray());
 
-                    if (_projects.Count > 0)
-                    {
-                        comboBoxProjects.SelectedIndex = 0;
-                    }
-                    else
-                    {
-                        comboBoxProjects.Text = string.Empty;
-                    }
+                    comboBoxProjects.Text = string.Empty;
 
                     comboBoxProjectsLoading = false;
                 });
@@ -231,52 +223,67 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
-        private async Task LoadSidebar()
+        private async Task LoadSidebar(bool newRecord = false)
         {
-            flowLayoutPanel2.Visible = _selectedTimeEntryId > -1;
-            var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
-            if (timeEntry == null) return;
-
-            checkBoxArchivedProjects.Checked = timeEntry.Project.IsArchived == 1;
-
-            flowLayoutPanel2.Enabled = timeEntry.IsLocked == 0;
-
-            var proj = await _projectRepo.GetProjectByIdAsync(timeEntry.ProjectId ?? 0);
-            if (proj == null) return;
-
-            await LoadTimeEntryTypesAsync(proj.ProjectType);
-
-            int index = proj.ProjectType + 1;
-            var radioButton = flowLayoutPanel2.Controls.Find($"radioButton{index}", false).FirstOrDefault() as RadioButton;
-            if (radioButton != null)
-                radioButton.Checked = true;
-
             comboBoxProjectsLoading = true;
 
             string[] days = { "Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota" };
+            flowLayoutPanel2.Visible = _selectedTimeEntryId > -1;
+
+            var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
+            if (timeEntry == null) return;
 
             DateTime timeStamp = timeEntry.Timestamp ?? _selectedDate;
             int minutesStart = timeStamp.Hour * 60 + timeStamp.Minute;
             int minutesEnd = minutesStart + timeEntry.EntryMinutes;
 
-            BeginInvoke((Action)(() =>
+            if (!newRecord)
             {
-                comboBoxStart.SelectedIndex = minutesStart / 30;
-                comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
+                checkBoxArchivedProjects.Checked = timeEntry.Project.IsArchived == 1;
+                flowLayoutPanel2.Enabled = timeEntry.IsLocked == 0;
 
-                if (lastPanel?.EntryId != -1)
+                var proj = await _projectRepo.GetProjectByIdAsync(timeEntry.ProjectId ?? 0);
+                if (proj == null) return;
+
+                await LoadTimeEntryTypesAsync(proj.ProjectType);
+
+                int index = proj.ProjectType + 1;
+                if (flowLayoutPanel2.Controls.Find($"radioButton{index}", false).FirstOrDefault() is RadioButton radioButton)
+                    radioButton.Checked = true;
+
+                BeginInvoke((Action)(() =>
                 {
-                    comboBoxIndex.Text = timeEntry.Description;
-                    textBoxNote.Text = timeEntry.Note;
-                    comboBoxProjects.Text = FormatHelper.FormatProjectToString(timeEntry.Project);
-                    var selectedType = _timeEntryTypes.FirstOrDefault(x => x.Id == timeEntry.EntryTypeId);
-                    comboBoxEntryType.Text = timeEntry.AfterCare == 1
-                        ? FormatHelper.FormatTimeEntryTypeWithAfterCareToString(selectedType)
-                        : FormatHelper.FormatTimeEntryTypeToString(selectedType);
-                }
+                    comboBoxStart.SelectedIndex = minutesStart / 30;
+                    comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
 
-                comboBoxProjectsLoading = false;
-            }));
+                    if (lastPanel?.EntryId != -1)
+                    {
+                        comboBoxIndex.Text = timeEntry.Description;
+                        textBoxNote.Text = timeEntry.Note;
+                        comboBoxProjects.Text = FormatHelper.FormatProjectToString(timeEntry.Project);
+                        var selectedType = _timeEntryTypes.FirstOrDefault(x => x.Id == timeEntry.EntryTypeId);
+                        comboBoxEntryType.Text = timeEntry.AfterCare == 1
+                            ? FormatHelper.FormatTimeEntryTypeWithAfterCareToString(selectedType)
+                            : FormatHelper.FormatTimeEntryTypeToString(selectedType);
+                    }
+                    comboBoxProjectsLoading = false;
+                }));
+            }
+
+            else
+            {
+                BeginInvoke((Action)(() =>
+                {
+                    comboBoxStart.SelectedIndex = minutesStart / 30;
+                    comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
+
+                    comboBoxIndex.Text = string.Empty;
+                    textBoxNote.Text = string.Empty;
+                    comboBoxProjects.Text = string.Empty;
+                    comboBoxEntryType.Text = string.Empty;
+                    comboBoxProjectsLoading = false;
+                }));
+            }
         }
 
 
@@ -291,8 +298,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             return new TableLayoutPanelCellPosition(col, row);
         }
 
-        // Fix pro TableLayoutPanel1_MouseDoubleClick, kde se vytváří nový záznam
-        // a je třeba ho při kolizi posunout na volné místo doprava
 
         private async void TableLayoutPanel1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
@@ -357,13 +362,15 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
 
             _selectedTimeEntryId = addedTimeEntry.Id;
-            await LoadSidebar();
             await RenderCalendar();
+            await LoadSidebar(true);
+
+
 
             // Reset vybraného záznamu a sidebaru po vytvoření
-            DeactivateAllPanels();
-            _selectedTimeEntryId = -1;
-            _ = LoadSidebar();
+            //DeactivateAllPanels();
+            //_selectedTimeEntryId = -1;
+            //_ = LoadSidebar();
 
         }
 
@@ -406,6 +413,14 @@ namespace VykazyPrace.UserControls.CalendarV2
                 UpdateDateLabels();
                 panelContainer.AutoScroll = true;
                 panelContainer.AutoScrollPosition = new Point(Math.Abs(scrollPosition.X), 0);
+
+                DeactivateAllPanels();
+
+                var panelToActivate = tableLayoutPanel1.Controls
+                  .OfType<DayPanel>()
+                  .FirstOrDefault(p => p.EntryId == _selectedTimeEntryId);
+
+                panelToActivate?.Activate();
 
                 tableLayoutPanel1.ResumeLayout(true);
                 panelContainer.ResumeLayout(true);
@@ -567,8 +582,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                 await LoadSidebar();
             }
         }
-
-
 
         private void DeactivateAllPanels()
         {

@@ -2,14 +2,23 @@
 
   <PropertyGroup>
 	<AssemblyName>WorkLog</AssemblyName>
+	<Company>Heinz-Glas Decor s.r.o.</Company>
+	<Authors>Jan Procházka</Authors>
+	<Description>Výkazy hodin</Description>
+	<Copyright>© 2025 Jan Procházka</Copyright>
 	<OutputName>WorkLog</OutputName>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-	<Version>1.1.5.0</Version>
+	<Version>1.1.5.1</Version>
+	<ApplicationIcon>WorkLog.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="WorkLog.ico" />
+  </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="Serilog" Version="4.2.0" />

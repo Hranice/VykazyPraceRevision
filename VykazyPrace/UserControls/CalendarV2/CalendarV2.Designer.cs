@@ -110,8 +110,6 @@
             label4 = new Label();
             textBoxNote = new TextBox();
             tableLayoutPanel4 = new TableLayoutPanel();
-            buttonNextWeek = new Button();
-            buttonPreviousWeek = new Button();
             buttonConfirm = new Button();
             buttonRemove = new Button();
             tableLayoutPanel2.SuspendLayout();
@@ -917,7 +915,7 @@
             flowLayoutPanel2.Font = new Font("Reddit Sans", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
             flowLayoutPanel2.Location = new Point(880, 3);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
-            flowLayoutPanel2.Size = new Size(243, 585);
+            flowLayoutPanel2.Size = new Size(243, 583);
             flowLayoutPanel2.TabIndex = 146;
             flowLayoutPanel2.Visible = false;
             // 
@@ -1022,7 +1020,7 @@
             comboBoxProjects.FormattingEnabled = true;
             comboBoxProjects.IntegralHeight = false;
             comboBoxProjects.ItemHeight = 25;
-            comboBoxProjects.Location = new Point(3, 46);
+            comboBoxProjects.Location = new Point(3, 36);
             comboBoxProjects.Name = "comboBoxProjects";
             comboBoxProjects.Size = new Size(231, 33);
             comboBoxProjects.TabIndex = 150;
@@ -1234,7 +1232,7 @@
             tableLayoutPanel6.RowCount = 2;
             tableLayoutPanel6.RowStyles.Add(new RowStyle());
             tableLayoutPanel6.RowStyles.Add(new RowStyle());
-            tableLayoutPanel6.Size = new Size(238, 72);
+            tableLayoutPanel6.Size = new Size(238, 111);
             tableLayoutPanel6.TabIndex = 153;
             // 
             // label4
@@ -1254,7 +1252,7 @@
             textBoxNote.Margin = new Padding(5);
             textBoxNote.Multiline = true;
             textBoxNote.Name = "textBoxNote";
-            textBoxNote.Size = new Size(228, 42);
+            textBoxNote.Size = new Size(228, 75);
             textBoxNote.TabIndex = 4;
             // 
             // tableLayoutPanel4
@@ -1262,43 +1260,21 @@
             tableLayoutPanel4.ColumnCount = 2;
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel4.Controls.Add(buttonNextWeek, 1, 0);
-            tableLayoutPanel4.Controls.Add(buttonPreviousWeek, 0, 0);
-            tableLayoutPanel4.Controls.Add(buttonConfirm, 1, 1);
-            tableLayoutPanel4.Controls.Add(buttonRemove, 0, 1);
+            tableLayoutPanel4.Controls.Add(buttonConfirm, 1, 0);
+            tableLayoutPanel4.Controls.Add(buttonRemove, 0, 0);
             tableLayoutPanel4.Dock = DockStyle.Top;
-            tableLayoutPanel4.Location = new Point(3, 500);
+            tableLayoutPanel4.Location = new Point(3, 539);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
-            tableLayoutPanel4.RowCount = 2;
+            tableLayoutPanel4.RowCount = 1;
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel4.Size = new Size(238, 82);
+            tableLayoutPanel4.Size = new Size(238, 41);
             tableLayoutPanel4.TabIndex = 154;
-            // 
-            // buttonNextWeek
-            // 
-            buttonNextWeek.Dock = DockStyle.Fill;
-            buttonNextWeek.Location = new Point(122, 3);
-            buttonNextWeek.Name = "buttonNextWeek";
-            buttonNextWeek.Size = new Size(113, 35);
-            buttonNextWeek.TabIndex = 139;
-            buttonNextWeek.Text = ">";
-            buttonNextWeek.UseVisualStyleBackColor = true;
-            // 
-            // buttonPreviousWeek
-            // 
-            buttonPreviousWeek.Dock = DockStyle.Fill;
-            buttonPreviousWeek.Location = new Point(3, 3);
-            buttonPreviousWeek.Name = "buttonPreviousWeek";
-            buttonPreviousWeek.Size = new Size(113, 35);
-            buttonPreviousWeek.TabIndex = 140;
-            buttonPreviousWeek.Text = "<";
-            buttonPreviousWeek.UseVisualStyleBackColor = true;
             // 
             // buttonConfirm
             // 
             buttonConfirm.Dock = DockStyle.Fill;
-            buttonConfirm.Location = new Point(122, 44);
+            buttonConfirm.Location = new Point(122, 3);
             buttonConfirm.Name = "buttonConfirm";
             buttonConfirm.Size = new Size(113, 35);
             buttonConfirm.TabIndex = 141;
@@ -1309,7 +1285,7 @@
             // buttonRemove
             // 
             buttonRemove.Dock = DockStyle.Fill;
-            buttonRemove.Location = new Point(3, 44);
+            buttonRemove.Location = new Point(3, 3);
             buttonRemove.Name = "buttonRemove";
             buttonRemove.Size = new Size(113, 35);
             buttonRemove.TabIndex = 142;
@@ -1436,8 +1412,6 @@
         private Label label4;
         private TextBox textBoxNote;
         private TableLayoutPanel tableLayoutPanel4;
-        private Button buttonNextWeek;
-        private Button buttonPreviousWeek;
         private Button buttonConfirm;
         private Button buttonRemove;
         private ComboBox comboBoxEnd;

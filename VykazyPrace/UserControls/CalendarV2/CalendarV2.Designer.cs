@@ -205,12 +205,12 @@
             // labelDate07
             // 
             labelDate07.Dock = DockStyle.Bottom;
-            labelDate07.Location = new Point(0, 24);
+            labelDate07.Location = new Point(0, 20);
             labelDate07.Name = "labelDate07";
-            labelDate07.Size = new Size(63, 21);
+            labelDate07.Size = new Size(63, 25);
             labelDate07.TabIndex = 35;
             labelDate07.Text = "9.3.2025";
-            labelDate07.TextAlign = ContentAlignment.TopRight;
+            labelDate07.TextAlign = ContentAlignment.MiddleRight;
             // 
             // panel1
             // 
@@ -265,12 +265,12 @@
             // labelDate01
             // 
             labelDate01.Dock = DockStyle.Bottom;
-            labelDate01.Location = new Point(0, 24);
+            labelDate01.Location = new Point(0, 20);
             labelDate01.Name = "labelDate01";
-            labelDate01.Size = new Size(63, 21);
+            labelDate01.Size = new Size(63, 25);
             labelDate01.TabIndex = 35;
             labelDate01.Text = "4.3.2025";
-            labelDate01.TextAlign = ContentAlignment.TopRight;
+            labelDate01.TextAlign = ContentAlignment.MiddleRight;
             // 
             // panelDay3
             // 
@@ -295,12 +295,12 @@
             // labelDate04
             // 
             labelDate04.Dock = DockStyle.Bottom;
-            labelDate04.Location = new Point(0, 24);
+            labelDate04.Location = new Point(0, 20);
             labelDate04.Name = "labelDate04";
-            labelDate04.Size = new Size(63, 21);
+            labelDate04.Size = new Size(63, 25);
             labelDate04.TabIndex = 35;
             labelDate04.Text = "7.3.2025";
-            labelDate04.TextAlign = ContentAlignment.TopRight;
+            labelDate04.TextAlign = ContentAlignment.MiddleRight;
             // 
             // panelDay5
             // 
@@ -325,12 +325,12 @@
             // labelDate06
             // 
             labelDate06.Dock = DockStyle.Bottom;
-            labelDate06.Location = new Point(0, 24);
+            labelDate06.Location = new Point(0, 20);
             labelDate06.Name = "labelDate06";
-            labelDate06.Size = new Size(63, 21);
+            labelDate06.Size = new Size(63, 25);
             labelDate06.TabIndex = 35;
             labelDate06.Text = "9.3.2025";
-            labelDate06.TextAlign = ContentAlignment.TopRight;
+            labelDate06.TextAlign = ContentAlignment.MiddleRight;
             // 
             // panelDay4
             // 
@@ -355,12 +355,12 @@
             // labelDate05
             // 
             labelDate05.Dock = DockStyle.Bottom;
-            labelDate05.Location = new Point(0, 24);
+            labelDate05.Location = new Point(0, 20);
             labelDate05.Name = "labelDate05";
-            labelDate05.Size = new Size(63, 21);
+            labelDate05.Size = new Size(63, 25);
             labelDate05.TabIndex = 35;
             labelDate05.Text = "8.3.2025";
-            labelDate05.TextAlign = ContentAlignment.TopRight;
+            labelDate05.TextAlign = ContentAlignment.MiddleRight;
             // 
             // panelDay2
             // 
@@ -385,12 +385,12 @@
             // labelDate03
             // 
             labelDate03.Dock = DockStyle.Bottom;
-            labelDate03.Location = new Point(0, 24);
+            labelDate03.Location = new Point(0, 20);
             labelDate03.Name = "labelDate03";
-            labelDate03.Size = new Size(63, 21);
+            labelDate03.Size = new Size(63, 25);
             labelDate03.TabIndex = 35;
             labelDate03.Text = "6.3.2025";
-            labelDate03.TextAlign = ContentAlignment.TopRight;
+            labelDate03.TextAlign = ContentAlignment.MiddleRight;
             // 
             // panelDay1
             // 
@@ -415,12 +415,12 @@
             // labelDate02
             // 
             labelDate02.Dock = DockStyle.Bottom;
-            labelDate02.Location = new Point(0, 24);
+            labelDate02.Location = new Point(0, 20);
             labelDate02.Name = "labelDate02";
-            labelDate02.Size = new Size(63, 21);
+            labelDate02.Size = new Size(63, 25);
             labelDate02.TabIndex = 35;
             labelDate02.Text = "5.3.2025";
-            labelDate02.TextAlign = ContentAlignment.TopRight;
+            labelDate02.TextAlign = ContentAlignment.MiddleRight;
             // 
             // panelContainer
             // 

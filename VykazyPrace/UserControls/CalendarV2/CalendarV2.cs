@@ -223,7 +223,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
-        private async Task LoadSidebar(bool newRecord = false)
+        private async Task LoadSidebar()
         {
             comboBoxProjectsLoading = true;
 
@@ -237,7 +237,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             int minutesStart = timeStamp.Hour * 60 + timeStamp.Minute;
             int minutesEnd = minutesStart + timeEntry.EntryMinutes;
 
-            if (!newRecord)
+            if (timeEntry.IsValid == 1)
             {
                 checkBoxArchivedProjects.Checked = timeEntry.Project.IsArchived == 1;
                 flowLayoutPanel2.Enabled = timeEntry.IsLocked == 0;
@@ -282,6 +282,11 @@ namespace VykazyPrace.UserControls.CalendarV2
                     comboBoxProjects.Text = string.Empty;
                     comboBoxEntryType.Text = string.Empty;
                     comboBoxProjectsLoading = false;
+
+                    foreach (var radio in flowLayoutPanel2.Controls.OfType<RadioButton>())
+                    {
+                        radio.Checked = false;
+                    }
                 }));
             }
         }
@@ -363,7 +368,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             _selectedTimeEntryId = addedTimeEntry.Id;
             await RenderCalendar();
-            await LoadSidebar(true);
+            await LoadSidebar();
 
 
 
@@ -400,10 +405,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             {
                 if (entry.Project == null)
                     continue;
-
-
-                var entryType = _timeEntryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
-                string color = entryType?.Color ?? "#ADD8E6";
 
                 CreatePanelForEntry(entry);
             }
@@ -513,19 +514,22 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void AttachTooltipToPanel(DayPanel panel, TimeEntry entry)
         {
-            string projectName = entry.Project?.ProjectTitle ?? "Projekt neznámý";
-            string note = string.IsNullOrWhiteSpace(entry.Note) ? "Bez poznámky" : entry.Note;
-
-            var tooltip = new ToolTip()
+            if(entry.IsValid == 1)
             {
-                AutoPopDelay = 5000,
-                InitialDelay = 300,
-                ReshowDelay = 100,
-                ShowAlways = true
-            };
+                string projectName = entry.Project?.ProjectTitle ?? "Projekt neznámý";
+                string note = string.IsNullOrWhiteSpace(entry.Note) ? "Bez poznámky" : entry.Note;
 
-            string text = $"{projectName}\n{note}";
-            tooltip.SetToolTip(panel, text);
+                var tooltip = new ToolTip()
+                {
+                    AutoPopDelay = 5000,
+                    InitialDelay = 300,
+                    ReshowDelay = 100,
+                    ShowAlways = true
+                };
+
+                string text = $"{projectName}\n{note}";
+                tooltip.SetToolTip(panel, text);
+            }
         }
 
         private void CreatePanelForEntry(TimeEntry entry)
@@ -534,6 +538,10 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             var entryType = _timeEntryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
             string color = entryType?.Color ?? "#ADD8E6";
+            if (entry.IsValid == 0)
+            {
+                color = "#FF6957";
+            }
 
             var panel = new DayPanel
             {
@@ -543,9 +551,12 @@ namespace VykazyPrace.UserControls.CalendarV2
                 EntryId = entry.Id
             };
 
-            panel.UpdateUi(
-                (entry.Project?.IsArchived == 1 ? "(AFTERCARE) " : "") + (entry.Project.ProjectType == 1 ? entry.Project.ProjectDescription : entry.Project.ProjectTitle),
-                entry.Description);
+            if (entry.IsValid == 1)
+            {
+                panel.UpdateUi(
+              (entry.Project?.IsArchived == 1 ? "(AFTERCARE) " : "") + (entry.Project.ProjectType == 1 ? entry.Project.ProjectDescription : entry.Project.ProjectTitle),
+              entry.Description);
+            }
 
             panel.MouseMove += dayPanel_MouseMove;
             panel.MouseDown += dayPanel_MouseDown;
@@ -733,7 +744,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             if (entry == null) return;
 
             var entryType = _timeEntryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
-            panel.BackColor = ColorTranslator.FromHtml(entryType?.Color ?? "#ADD8E6");
 
             var newTimestamp = _selectedDate
                 .AddDays(tableLayoutPanel1.GetRow(panel))
@@ -747,6 +757,14 @@ namespace VykazyPrace.UserControls.CalendarV2
                 entry.EntryMinutes = newDuration;
                 await _timeEntryRepo.UpdateTimeEntryAsync(entry);
             }
+
+            string color = entryType?.Color ?? "#ADD8E6";
+
+            if (entry.IsValid == 0)
+            {
+                color = "#FF6957";
+            }
+            panel.BackColor = ColorTranslator.FromHtml(color);
 
             await LoadSidebar();
         }
@@ -976,6 +994,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 timeEntry.ProjectId = _projects[comboBoxProjects.SelectedIndex].Id;
 
             timeEntry.AfterCare = _projects.FirstOrDefault(x => x.Id == timeEntry.ProjectId)?.IsArchived ?? 0;
+            timeEntry.IsValid = 1;
 
             bool success = await _timeEntryRepo.UpdateTimeEntryAsync(timeEntry);
             if (success)
@@ -1031,7 +1050,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         private bool ShowDeleteConfirmation(TimeEntry entry)
         {
             var result = MessageBox.Show(
-                $"Smazat záznam {FormatHelper.FormatTimeEntryToString(entry)}?",
+                $"Smazat záznam {(entry.IsValid == 1 ? FormatHelper.FormatTimeEntryToString(entry) : "")}?",
                 "Smazat?",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Exclamation);

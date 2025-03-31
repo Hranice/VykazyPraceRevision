@@ -29,3 +29,10 @@
 2025-03-31 09:27:17.919 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - Obchůzka byl smazán z databáze.
 2025-03-31 09:27:19.965 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
 2025-03-31 09:27:22.830 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:30:09.543 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-03-31 09:30:26.116 +02:00 [INF] Záznam 053I23 - Překladač pro pec Antonini: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:30:26.815 +02:00 [INF] Záznam 053I23 - Překladač pro pec Antonini: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:34:01.005 +02:00 [INF] Záznam 053I23 - Překladač pro pec Antonini: 0,5 h - SW - Výkazy hodin byl smazán z databáze.
+2025-03-31 09:51:57.732 +02:00 [INF] Záznam  - Automatizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:52:01.837 +02:00 [INF] Záznam 0 - Provoz Metalizace: 2 h -  byl smazán z databáze.
+2025-03-31 09:53:25.722 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.

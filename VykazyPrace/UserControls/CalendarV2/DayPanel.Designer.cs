@@ -39,9 +39,9 @@
             label2.Enabled = false;
             label2.Location = new Point(3, 175);
             label2.Name = "label2";
-            label2.Size = new Size(30, 22);
+            label2.Size = new Size(14, 22);
             label2.TabIndex = 3;
-            label2.Text = "0 h";
+            label2.Text = "!";
             // 
             // label1
             // 
@@ -50,14 +50,15 @@
             label1.Enabled = false;
             label1.Location = new Point(3, 3);
             label1.Name = "label1";
-            label1.Size = new Size(55, 22);
+            label1.Size = new Size(14, 22);
             label1.TabIndex = 2;
-            label1.Text = "Projekt";
+            label1.Text = "!";
             // 
             // DayPanel
             // 
             AutoScaleDimensions = new SizeF(8F, 21F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(255, 105, 87);
             Controls.Add(label2);
             Controls.Add(label1);
             Font = new Font("Reddit Sans", 10F);

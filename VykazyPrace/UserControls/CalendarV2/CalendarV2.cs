@@ -193,7 +193,10 @@ namespace VykazyPrace.UserControls.CalendarV2
                 {
                     comboBoxIndex.Items.Clear();
                     comboBoxIndex.Items.AddRange(
-                        _timeEntrySubTypes.Select(FormatHelper.FormatTimeEntrySubTypeToString).ToArray());
+                        _timeEntrySubTypes
+                                .Where(t => t.IsArchived == 0)
+                                .Select(FormatHelper.FormatTimeEntrySubTypeToString)
+                                .ToArray());
 
                     if (comboBoxIndex.Items.Count > 0)
                         comboBoxIndex.SelectedIndex = 0;

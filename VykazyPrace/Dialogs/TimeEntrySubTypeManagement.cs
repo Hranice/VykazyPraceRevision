@@ -31,12 +31,18 @@ namespace VykazyPrace.Dialogs
         {
             listBoxTimeEntrySubTypes.Items.Clear();
             _timeEntrySubTypes = await _timeEntrySubTypeRepo.GetAllTimeEntrySubTypesByUserIdAsync(_selectedUser.Id);
-            listBoxTimeEntrySubTypes.Items.AddRange(_timeEntrySubTypes.Select(FormatHelper.FormatTimeEntrySubTypeToString).ToArray());
+            listBoxTimeEntrySubTypes.Items.AddRange(
+                _timeEntrySubTypes
+                    .Where(t => t.IsArchived == 0)
+                    .Select(FormatHelper.FormatTimeEntrySubTypeToString)
+                    .ToArray());
+
         }
 
         private async void buttonRemove_Click(object sender, EventArgs e)
         {
-            _timeEntrySubTypeRepo.DeleteTimeEntrySubTypeAsync(_timeEntrySubTypes[listBoxTimeEntrySubTypes.SelectedIndex].Id);
+            _timeEntrySubTypes[listBoxTimeEntrySubTypes.SelectedIndex].IsArchived = 1;
+            _timeEntrySubTypeRepo.UpdateTimeEntrySubTypeAsync(_timeEntrySubTypes[listBoxTimeEntrySubTypes.SelectedIndex]);
             await LoadTimeEntrySubTypesAsync();
         }
 

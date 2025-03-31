@@ -18,10 +18,17 @@ namespace VykazyPrace.Core.Database.Repositories
 
         public async Task<TimeEntrySubType> CreateTimeEntrySubTypeAsync(TimeEntrySubType subType)
         {
-            var existingEntry = await _context.TimeEntrySubTypes.FirstOrDefaultAsync(t => t.Title == subType.Title && t.UserId == subType.UserId);
+            var existingEntry = await _context.TimeEntrySubTypes
+                .FirstOrDefaultAsync(t => t.Title == subType.Title && t.UserId == subType.UserId);
 
             if (existingEntry != null)
             {
+                if (existingEntry.IsArchived == 1)
+                {
+                    existingEntry.IsArchived = 0;
+                    await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+                }
+
                 return existingEntry;
             }
 
@@ -29,6 +36,7 @@ namespace VykazyPrace.Core.Database.Repositories
             await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return subType;
         }
+
 
         public async Task<List<TimeEntrySubType>> GetAllTimeEntrySubTypesAsync()
         {

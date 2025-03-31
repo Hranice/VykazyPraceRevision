@@ -17,3 +17,42 @@
 2025-03-31 07:06:07.375 +02:00 [INF] Uživatel (1996): Martin Erban - KONSTRUKCE byl přidán do databáze.
 2025-03-31 07:20:10.433 +02:00 [INF] Uživatel (2012): Štěpán Tuček - ELEKTRO byl přidán do databáze.
 2025-03-31 07:21:34.490 +02:00 [INF] Uživatel (2071): Syed Tabish Karim - ELEKTRO byl přidán do databáze.
+2025-03-31 09:08:22.642 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:08:24.250 +02:00 [INF] Záznam  - Automatizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:12:16.458 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:16:21.496 +02:00 [INF] Záznam  - Automatizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:16:23.440 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:26:59.778 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Projekt
+2025-03-31 09:27:06.722 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Typ zápisu
+2025-03-31 09:27:10.540 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Index
+2025-03-31 09:27:14.522 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - Obchůzka byl úspěšně aktualizován.
+2025-03-31 09:27:17.919 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - Obchůzka byl smazán z databáze.
+2025-03-31 09:27:19.965 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:27:22.830 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:30:09.543 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-03-31 09:30:26.116 +02:00 [INF] Záznam 053I23 - Překladač pro pec Antonini: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:30:26.815 +02:00 [INF] Záznam 053I23 - Překladač pro pec Antonini: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:34:01.005 +02:00 [INF] Záznam 053I23 - Překladač pro pec Antonini: 0,5 h - SW - Výkazy hodin byl smazán z databáze.
+2025-03-31 09:51:57.732 +02:00 [INF] Záznam  - Automatizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 09:52:01.837 +02:00 [INF] Záznam 0 - Provoz Metalizace: 2 h -  byl smazán z databáze.
+2025-03-31 09:53:25.722 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 10:01:22.145 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Poznámka
+2025-03-31 10:23:08.153 +02:00 [INF] Záznam  - Automatizace: 1,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-03-31 10:23:20.042 +02:00 [INF] Záznam  - Automatizace: 1,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-03-31 10:24:29.113 +02:00 [INF] Záznam  - Automatizace: 1,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-03-31 10:26:41.277 +02:00 [INF] Záznam  - Automatizace: 1,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-03-31 10:27:03.091 +02:00 [INF] Záznam  - Automatizace: 1,5 h - test byl úspěšně aktualizován.
+2025-03-31 10:27:13.504 +02:00 [INF] Záznam  - Automatizace: 1,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-03-31 10:32:18.551 +02:00 [INF] Záznam  - Automatizace: 1,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-03-31 10:39:30.458 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 10:39:31.099 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 10:39:41.465 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-03-31 11:01:34.443 +02:00 [INF] Záznam 051I23 - HD sítotiskový stroj 2.generace: 0,5 h - Obchůzka byl úspěšně aktualizován.
+2025-03-31 11:01:54.706 +02:00 [INF] Záznam 031I21 - Vývoj nových greiferů: 0,5 h - Obchůzka byl úspěšně aktualizován.
+2025-03-31 11:02:02.830 +02:00 [INF] Záznam 031I21 - Vývoj nových greiferů: 0,5 h - Obchůzka byl smazán z databáze.
+2025-03-31 11:02:03.860 +02:00 [INF] Záznam 0230I24 - Automatické balení po pecích a UV: 0,5 h - Obchůzka byl smazán z databáze.
+2025-03-31 11:03:56.538 +02:00 [INF] Záznam  - Automatizace: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-03-31 11:04:07.396 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Projekt
+2025-03-31 11:04:12.043 +02:00 [INF] Záznam 0 - Provoz Nová hala: 2 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-03-31 11:04:17.110 +02:00 [INF] Záznam 027I21 - Kompletace Lancome: 2 h - SW - Výkazy hodin byl smazán z databáze.
+2025-03-31 11:10:03.833 +02:00 [INF] Záznam  - Automatizace: 0,5 h - Přednatáčení byl úspěšně aktualizován.

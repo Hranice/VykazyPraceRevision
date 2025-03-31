@@ -46,6 +46,7 @@
             comboBoxUsers = new ComboBox();
             panel1 = new Panel();
             panel2 = new Panel();
+            buttonNow = new Button();
             labelSelectedDate = new Label();
             buttonNext = new Button();
             buttonPrevious = new Button();
@@ -197,6 +198,7 @@
             // 
             // panel2
             // 
+            panel2.Controls.Add(buttonNow);
             panel2.Controls.Add(labelSelectedDate);
             panel2.Controls.Add(buttonNext);
             panel2.Controls.Add(buttonPrevious);
@@ -207,8 +209,19 @@
             panel2.Size = new Size(1269, 45);
             panel2.TabIndex = 6;
             // 
+            // buttonNow
+            // 
+            buttonNow.Location = new Point(10, 6);
+            buttonNow.Name = "buttonNow";
+            buttonNow.Size = new Size(106, 33);
+            buttonNow.TabIndex = 4;
+            buttonNow.Text = "Dnes";
+            buttonNow.UseVisualStyleBackColor = true;
+            buttonNow.Click += buttonNow_Click;
+            // 
             // labelSelectedDate
             // 
+            labelSelectedDate.Font = new Font("Reddit Sans", 12F, FontStyle.Bold, GraphicsUnit.Point, 238);
             labelSelectedDate.Location = new Point(209, 7);
             labelSelectedDate.Name = "labelSelectedDate";
             labelSelectedDate.Size = new Size(274, 32);
@@ -308,5 +321,6 @@
         private Button buttonPrevious;
         private ToolStripMenuItem testToolStripMenuItem;
         private ToolStripMenuItem správaIndexůToolStripMenuItem;
+        private Button buttonNow;
     }
 }

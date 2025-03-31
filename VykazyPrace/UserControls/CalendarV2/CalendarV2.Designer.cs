@@ -110,8 +110,6 @@
             label4 = new Label();
             textBoxNote = new TextBox();
             tableLayoutPanel4 = new TableLayoutPanel();
-            buttonNextWeek = new Button();
-            buttonPreviousWeek = new Button();
             buttonConfirm = new Button();
             buttonRemove = new Button();
             tableLayoutPanel2.SuspendLayout();
@@ -205,12 +203,12 @@
             // labelDate07
             // 
             labelDate07.Dock = DockStyle.Bottom;
-            labelDate07.Location = new Point(0, 24);
+            labelDate07.Location = new Point(0, 20);
             labelDate07.Name = "labelDate07";
-            labelDate07.Size = new Size(63, 21);
+            labelDate07.Size = new Size(63, 25);
             labelDate07.TabIndex = 35;
             labelDate07.Text = "9.3.2025";
-            labelDate07.TextAlign = ContentAlignment.TopRight;
+            labelDate07.TextAlign = ContentAlignment.MiddleRight;
             // 
             // panel1
             // 
@@ -265,12 +263,12 @@
             // labelDate01
             // 
             labelDate01.Dock = DockStyle.Bottom;
-            labelDate01.Location = new Point(0, 24);
+            labelDate01.Location = new Point(0, 20);
             labelDate01.Name = "labelDate01";
-            labelDate01.Size = new Size(63, 21);
+            labelDate01.Size = new Size(63, 25);
             labelDate01.TabIndex = 35;
             labelDate01.Text = "4.3.2025";
-            labelDate01.TextAlign = ContentAlignment.TopRight;
+            labelDate01.TextAlign = ContentAlignment.MiddleRight;
             // 
             // panelDay3
             // 
@@ -295,12 +293,12 @@
             // labelDate04
             // 
             labelDate04.Dock = DockStyle.Bottom;
-            labelDate04.Location = new Point(0, 24);
+            labelDate04.Location = new Point(0, 20);
             labelDate04.Name = "labelDate04";
-            labelDate04.Size = new Size(63, 21);
+            labelDate04.Size = new Size(63, 25);
             labelDate04.TabIndex = 35;
             labelDate04.Text = "7.3.2025";
-            labelDate04.TextAlign = ContentAlignment.TopRight;
+            labelDate04.TextAlign = ContentAlignment.MiddleRight;
             // 
             // panelDay5
             // 
@@ -325,12 +323,12 @@
             // labelDate06
             // 
             labelDate06.Dock = DockStyle.Bottom;
-            labelDate06.Location = new Point(0, 24);
+            labelDate06.Location = new Point(0, 20);
             labelDate06.Name = "labelDate06";
-            labelDate06.Size = new Size(63, 21);
+            labelDate06.Size = new Size(63, 25);
             labelDate06.TabIndex = 35;
             labelDate06.Text = "9.3.2025";
-            labelDate06.TextAlign = ContentAlignment.TopRight;
+            labelDate06.TextAlign = ContentAlignment.MiddleRight;
             // 
             // panelDay4
             // 
@@ -355,12 +353,12 @@
             // labelDate05
             // 
             labelDate05.Dock = DockStyle.Bottom;
-            labelDate05.Location = new Point(0, 24);
+            labelDate05.Location = new Point(0, 20);
             labelDate05.Name = "labelDate05";
-            labelDate05.Size = new Size(63, 21);
+            labelDate05.Size = new Size(63, 25);
             labelDate05.TabIndex = 35;
             labelDate05.Text = "8.3.2025";
-            labelDate05.TextAlign = ContentAlignment.TopRight;
+            labelDate05.TextAlign = ContentAlignment.MiddleRight;
             // 
             // panelDay2
             // 
@@ -385,12 +383,12 @@
             // labelDate03
             // 
             labelDate03.Dock = DockStyle.Bottom;
-            labelDate03.Location = new Point(0, 24);
+            labelDate03.Location = new Point(0, 20);
             labelDate03.Name = "labelDate03";
-            labelDate03.Size = new Size(63, 21);
+            labelDate03.Size = new Size(63, 25);
             labelDate03.TabIndex = 35;
             labelDate03.Text = "6.3.2025";
-            labelDate03.TextAlign = ContentAlignment.TopRight;
+            labelDate03.TextAlign = ContentAlignment.MiddleRight;
             // 
             // panelDay1
             // 
@@ -415,12 +413,12 @@
             // labelDate02
             // 
             labelDate02.Dock = DockStyle.Bottom;
-            labelDate02.Location = new Point(0, 24);
+            labelDate02.Location = new Point(0, 20);
             labelDate02.Name = "labelDate02";
-            labelDate02.Size = new Size(63, 21);
+            labelDate02.Size = new Size(63, 25);
             labelDate02.TabIndex = 35;
             labelDate02.Text = "5.3.2025";
-            labelDate02.TextAlign = ContentAlignment.TopRight;
+            labelDate02.TextAlign = ContentAlignment.MiddleRight;
             // 
             // panelContainer
             // 
@@ -917,7 +915,7 @@
             flowLayoutPanel2.Font = new Font("Reddit Sans", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
             flowLayoutPanel2.Location = new Point(880, 3);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
-            flowLayoutPanel2.Size = new Size(243, 585);
+            flowLayoutPanel2.Size = new Size(243, 583);
             flowLayoutPanel2.TabIndex = 146;
             flowLayoutPanel2.Visible = false;
             // 
@@ -1234,7 +1232,7 @@
             tableLayoutPanel6.RowCount = 2;
             tableLayoutPanel6.RowStyles.Add(new RowStyle());
             tableLayoutPanel6.RowStyles.Add(new RowStyle());
-            tableLayoutPanel6.Size = new Size(238, 72);
+            tableLayoutPanel6.Size = new Size(238, 111);
             tableLayoutPanel6.TabIndex = 153;
             // 
             // label4
@@ -1254,7 +1252,7 @@
             textBoxNote.Margin = new Padding(5);
             textBoxNote.Multiline = true;
             textBoxNote.Name = "textBoxNote";
-            textBoxNote.Size = new Size(228, 42);
+            textBoxNote.Size = new Size(228, 75);
             textBoxNote.TabIndex = 4;
             // 
             // tableLayoutPanel4
@@ -1262,43 +1260,21 @@
             tableLayoutPanel4.ColumnCount = 2;
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel4.Controls.Add(buttonNextWeek, 1, 0);
-            tableLayoutPanel4.Controls.Add(buttonPreviousWeek, 0, 0);
-            tableLayoutPanel4.Controls.Add(buttonConfirm, 1, 1);
-            tableLayoutPanel4.Controls.Add(buttonRemove, 0, 1);
+            tableLayoutPanel4.Controls.Add(buttonConfirm, 1, 0);
+            tableLayoutPanel4.Controls.Add(buttonRemove, 0, 0);
             tableLayoutPanel4.Dock = DockStyle.Top;
-            tableLayoutPanel4.Location = new Point(3, 500);
+            tableLayoutPanel4.Location = new Point(3, 539);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
-            tableLayoutPanel4.RowCount = 2;
+            tableLayoutPanel4.RowCount = 1;
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel4.Size = new Size(238, 82);
+            tableLayoutPanel4.Size = new Size(238, 41);
             tableLayoutPanel4.TabIndex = 154;
-            // 
-            // buttonNextWeek
-            // 
-            buttonNextWeek.Dock = DockStyle.Fill;
-            buttonNextWeek.Location = new Point(122, 3);
-            buttonNextWeek.Name = "buttonNextWeek";
-            buttonNextWeek.Size = new Size(113, 35);
-            buttonNextWeek.TabIndex = 139;
-            buttonNextWeek.Text = ">";
-            buttonNextWeek.UseVisualStyleBackColor = true;
-            // 
-            // buttonPreviousWeek
-            // 
-            buttonPreviousWeek.Dock = DockStyle.Fill;
-            buttonPreviousWeek.Location = new Point(3, 3);
-            buttonPreviousWeek.Name = "buttonPreviousWeek";
-            buttonPreviousWeek.Size = new Size(113, 35);
-            buttonPreviousWeek.TabIndex = 140;
-            buttonPreviousWeek.Text = "<";
-            buttonPreviousWeek.UseVisualStyleBackColor = true;
             // 
             // buttonConfirm
             // 
             buttonConfirm.Dock = DockStyle.Fill;
-            buttonConfirm.Location = new Point(122, 44);
+            buttonConfirm.Location = new Point(122, 3);
             buttonConfirm.Name = "buttonConfirm";
             buttonConfirm.Size = new Size(113, 35);
             buttonConfirm.TabIndex = 141;
@@ -1309,7 +1285,7 @@
             // buttonRemove
             // 
             buttonRemove.Dock = DockStyle.Fill;
-            buttonRemove.Location = new Point(3, 44);
+            buttonRemove.Location = new Point(3, 3);
             buttonRemove.Name = "buttonRemove";
             buttonRemove.Size = new Size(113, 35);
             buttonRemove.TabIndex = 142;
@@ -1436,8 +1412,6 @@
         private Label label4;
         private TextBox textBoxNote;
         private TableLayoutPanel tableLayoutPanel4;
-        private Button buttonNextWeek;
-        private Button buttonPreviousWeek;
         private Button buttonConfirm;
         private Button buttonRemove;
         private ComboBox comboBoxEnd;

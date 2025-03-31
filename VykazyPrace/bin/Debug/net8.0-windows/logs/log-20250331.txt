@@ -1,0 +1,2 @@
+2025-03-31 06:39:06.913 +02:00 [INF] Uživatel (11): Martin Braťka -  byl přidán do databáze.
+2025-03-31 06:39:39.716 +02:00 [ERR] Nepodařilo se získat uživatele (11): Martin Braťka -  z databáze, id '(11):' je neplatné.

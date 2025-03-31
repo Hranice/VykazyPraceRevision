@@ -11,13 +11,15 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("WorkLog")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("Heinz-Glas Decor s.r.o.")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("1.1.5.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.1.5.0+350a83da424643fa9f9affd0d316dfc16e3d0838")]
+[assembly: System.Reflection.AssemblyCopyrightAttribute("© 2025 Jan Procházka")]
+[assembly: System.Reflection.AssemblyDescriptionAttribute("Výkazy hodin")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.1.5.1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.1.5.1+ec8dde6fff34d0ae3471e52ec1f14276461efe8e")]
 [assembly: System.Reflection.AssemblyProductAttribute("WorkLog")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WorkLog")]
-[assembly: System.Reflection.AssemblyVersionAttribute("1.1.5.0")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.1.5.1")]
 [assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
 

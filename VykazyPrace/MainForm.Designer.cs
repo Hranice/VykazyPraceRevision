@@ -262,7 +262,6 @@
             // 
             // panelCalendarContainer
             // 
-            panelCalendarContainer.Enabled = false;
             panelCalendarContainer.Location = new Point(0, 0);
             panelCalendarContainer.Name = "panelCalendarContainer";
             panelCalendarContainer.Size = new Size(966, 769);

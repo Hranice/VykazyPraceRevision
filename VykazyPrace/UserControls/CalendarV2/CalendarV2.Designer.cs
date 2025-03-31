@@ -499,6 +499,7 @@
             tableLayoutPanel1.TabIndex = 149;
             tableLayoutPanel1.MouseClick += tableLayoutPanel1_MouseClick;
             tableLayoutPanel1.MouseDoubleClick += TableLayoutPanel1_MouseDoubleClick;
+            tableLayoutPanel1.MouseUp += tableLayoutPanel1_MouseUp;
             // 
             // customTableLayoutPanel1
             // 

@@ -74,7 +74,7 @@ namespace VykazyPrace.UserControls.Calendar
             Task.Run(ReloadCalendar);
         }
 
-        private async Task ReloadCalendar()
+        public async Task ReloadCalendar()
         {
             Invoke(() => _loadingUC.BringToFront());
 
@@ -226,18 +226,15 @@ namespace VykazyPrace.UserControls.Calendar
 
         private void labelPreviousMonth_Click(object sender, EventArgs e)
         {
-            _currentMonth--;
-
-            if (_currentMonth < 1)
-            {
-                _currentMonth = 12;
-                _currentYear--;
-            }
-
-            Task.Run(ReloadCalendar);
+            ChangeToPreviousMonth();
         }
 
         private void labelNextMonth_Click(object sender, EventArgs e)
+        {
+            ChangeToNextMonth(); 
+        }
+
+        private void ChangeToNextMonth()
         {
             _currentMonth++;
 
@@ -245,6 +242,19 @@ namespace VykazyPrace.UserControls.Calendar
             {
                 _currentMonth = 1;
                 _currentYear++;
+            }
+
+            Task.Run(ReloadCalendar);
+        }
+
+        private void ChangeToPreviousMonth()
+        {
+            _currentMonth--;
+
+            if (_currentMonth < 1)
+            {
+                _currentMonth = 12;
+                _currentYear--;
             }
 
             Task.Run(ReloadCalendar);

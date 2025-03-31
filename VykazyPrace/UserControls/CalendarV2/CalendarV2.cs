@@ -62,6 +62,10 @@ namespace VykazyPrace.UserControls.CalendarV2
         private TableLayoutPanelCellPosition? pasteTargetCell;
         private ToolTip copyToolTip = new();
 
+        // Right click context
+        private ContextMenuStrip dayPanelMenu;
+        private ContextMenuStrip tableLayoutMenu;
+
         // Configuration
         private int arrivalColumn = 12;
         private int leaveColumn = 28;
@@ -92,6 +96,17 @@ namespace VykazyPrace.UserControls.CalendarV2
             };
         }
 
+        private void InitializeContextMenus()
+        {
+            dayPanelMenu = new ContextMenuStrip();
+            dayPanelMenu.Items.Add("Kopírovat", null, (_, _) => CopySelectedPanel());
+            dayPanelMenu.Items.Add("Odstranit", null, async (_, _) => await DeleteRecord());
+
+            tableLayoutMenu = new ContextMenuStrip();
+            tableLayoutMenu.Items.Add("Vložit", null, (_, _) => PasteCopiedPanel());
+        }
+
+
         public async Task ForceReloadAsync()
         {
             await LoadInitialDataAsync();
@@ -111,6 +126,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async void CalendarV2_Load(object sender, EventArgs e)
         {
+            InitializeContextMenus();
             _loadingUC.Size = Size;
             Controls.Add(_loadingUC);
             await LoadInitialDataAsync();
@@ -153,10 +169,13 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         internal async Task<DateTime> ChangeToTodaysWeek()
         {
-            _selectedDate = DateTime.Now;
+            DateTime today = DateTime.Today;
+            int offset = ((int)today.DayOfWeek + 6) % 7;
+            _selectedDate = today.AddDays(-offset);
             await RenderCalendar();
             return _selectedDate;
         }
+
 
 
         private async Task LoadTimeEntryTypesAsync(int projectType)
@@ -278,6 +297,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                             ? FormatHelper.FormatTimeEntryTypeWithAfterCareToString(selectedType)
                             : FormatHelper.FormatTimeEntryTypeToString(selectedType);
                     }
+
                     comboBoxProjectsLoading = false;
                 }));
             }
@@ -293,7 +313,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                     textBoxNote.Text = string.Empty;
                     comboBoxProjects.Text = string.Empty;
                     comboBoxEntryType.Text = string.Empty;
-                    comboBoxProjectsLoading = false;
 
                     foreach (var radio in flowLayoutPanel2.Controls.OfType<RadioButton>())
                     {
@@ -306,8 +325,12 @@ namespace VykazyPrace.UserControls.CalendarV2
                     tableLayoutPanelEntryType.Visible = false;
                     tableLayoutPanelEntrySubType.Visible = false;
                     panel4.Visible = false;
+
+                    comboBoxProjectsLoading = false;
                 }));
             }
+
+
         }
 
 
@@ -322,6 +345,30 @@ namespace VykazyPrace.UserControls.CalendarV2
             return new TableLayoutPanelCellPosition(col, row);
         }
 
+        private void tableLayoutPanel1_MouseClick(object sender, MouseEventArgs e)
+        {
+            var cell = GetCellAt(tableLayoutPanel1, e.Location);
+            pasteTargetCell = cell;
+            DeactivateAllPanels();
+            _selectedTimeEntryId = -1;
+            _ = LoadSidebar();
+        }
+
+        private void tableLayoutPanel1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                pasteTargetCell = GetCellAt(tableLayoutPanel1, e.Location);
+
+                if (tableLayoutMenu.Items.Count > 0)
+                {
+                    var pasteItem = tableLayoutMenu.Items[0];
+                    pasteItem.Enabled = copiedEntry != null;
+                }
+
+                tableLayoutMenu.Show(tableLayoutPanel1, e.Location);
+            }
+        }
 
         private async void TableLayoutPanel1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
@@ -577,6 +624,8 @@ namespace VykazyPrace.UserControls.CalendarV2
               entry.Description);
             }
 
+            panel.ContextMenuStrip = dayPanelMenu;
+
             panel.MouseMove += dayPanel_MouseMove;
             panel.MouseDown += dayPanel_MouseDown;
             panel.MouseUp += dayPanel_MouseUp;
@@ -795,7 +844,15 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
             panel.BackColor = ColorTranslator.FromHtml(color);
 
-            //await LoadSidebar();
+            BeginInvoke(() =>
+            {
+                int minutesStart = entry.Timestamp?.Hour * 60 + entry.Timestamp?.Minute ?? 0;
+                int minutesEnd = minutesStart + entry.EntryMinutes;
+
+                comboBoxStart.SelectedIndex = minutesStart / 30;
+                comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
+            });
+
         }
         #endregion
 
@@ -1378,15 +1435,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
 
             return true;
-        }
-
-        private void tableLayoutPanel1_MouseClick(object sender, MouseEventArgs e)
-        {
-            var cell = GetCellAt(tableLayoutPanel1, e.Location);
-            pasteTargetCell = cell;
-            DeactivateAllPanels();
-            _selectedTimeEntryId = -1;
-            _ = LoadSidebar();
         }
     }
 }

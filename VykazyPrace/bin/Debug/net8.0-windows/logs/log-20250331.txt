@@ -59,3 +59,6 @@
 2025-03-31 12:03:56.262 +02:00 [INF] Záznam 053I23 - Překladač pro pec Antonini: 0,5 h - Obchůzka byl úspěšně aktualizován.
 2025-03-31 12:04:15.968 +02:00 [INF] Záznam 0229E24 - K14C - Peru: 0,5 h - Obchůzka byl úspěšně aktualizován.
 2025-03-31 12:51:04.664 +02:00 [INF] Záznam  - Automatizace: 2,5 h -  byl smazán z databáze.
+2025-03-31 13:10:36.938 +02:00 [INF] Záznam  - Automatizace: 3 h -  byl smazán z databáze.
+2025-03-31 13:12:10.026 +02:00 [INF] Záznam  - Automatizace: 2 h - SW - Výkazy hodin byl smazán z databáze.
+2025-03-31 14:43:03.947 +02:00 [INF] Záznam 0 - Provoz Metalizace: 2,5 h - SW - Výkazy hodin byl úspěšně aktualizován.

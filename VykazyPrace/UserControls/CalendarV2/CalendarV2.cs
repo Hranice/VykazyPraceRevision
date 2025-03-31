@@ -1008,8 +1008,14 @@ namespace VykazyPrace.UserControls.CalendarV2
             timeEntry.EntryTypeId = selectedEntryTypeId;
             timeEntry.Note = textBoxNote.Text;
 
-            if (comboBoxProjects.SelectedIndex >= 0)
-                timeEntry.ProjectId = _projects[comboBoxProjects.SelectedIndex].Id;
+            var selectedProject = _projects.FirstOrDefault(p =>
+                FormatHelper.FormatProjectToString(p).Equals(comboBoxProjects.Text, StringComparison.InvariantCultureIgnoreCase));
+
+            if (selectedProject != null)
+            {
+                timeEntry.ProjectId = selectedProject.Id;
+            }
+
 
             timeEntry.AfterCare = _projects.FirstOrDefault(x => x.Id == timeEntry.ProjectId)?.IsArchived ?? 0;
             timeEntry.IsValid = 1;

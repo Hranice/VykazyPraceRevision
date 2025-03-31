@@ -11,6 +11,9 @@ namespace VykazyPrace.Dialogs
     public partial class UserManagementDialog : Form
     {
         private readonly UserRepository _userRepo = new UserRepository();
+        private readonly UserGroupRepository _userGroupRepo = new UserGroupRepository();
+        private List<User> _users = new List<User>();
+        private List<UserGroup> _userGroups = new List<UserGroup>();
         private readonly LoadingUC _loadingUC = new LoadingUC();
 
         public UserManagementDialog()
@@ -34,26 +37,38 @@ namespace VykazyPrace.Dialogs
         {
             try
             {
-                var users = await _userRepo.GetAllUsersAsync();
+                _users = await _userRepo.GetAllUsersAsync();
+                _userGroups = await _userGroupRepo.GetAllUserGroupsAsync();
 
-                Invoke(new Action(() =>
+                Invoke(() =>
                 {
                     listBoxUsers.Items.Clear();
-                    foreach (var user in users)
-                    {
-                        listBoxUsers.Items.Add(FormatHelper.FormatUserToString(user));
-                    }
+                    listBoxUsers.Items.AddRange(_users.Select(FormatHelper.FormatUserToString).ToArray());
+
+                    comboBoxGroup.Items.Clear();
+                    comboBoxGroup.Items.AddRange(_userGroups.Select(FormatHelper.FormatUserGroupToString).ToArray());
+                    comboBoxGroup.SelectedIndex = 0;
+
                     _loadingUC.Visible = false;
-                }));
+                });
             }
             catch (Exception ex)
             {
-                Invoke(new Action(() =>
+                Invoke(() =>
                 {
                     AppLogger.Error($"Chyba při načítání uživatelů.", ex);
                     _loadingUC.Visible = false;
-                }));
+                });
             }
+        }
+
+        private User? GetUserBySelectedItem()
+        {
+            int index = listBoxUsers.SelectedIndex;
+            if (index >= 0 && index < _users.Count)
+                return _users[index];
+
+            return null;
         }
 
         private async void buttonAdd_Click(object sender, EventArgs e)
@@ -66,6 +81,7 @@ namespace VykazyPrace.Dialogs
                 textBoxWindowsUsername.Enabled = true;
                 maskedTextBoxPersonalNumber.Enabled = true;
                 numericUpDownLevelOfAccess.Enabled = true;
+                comboBoxGroup.Enabled = true;
                 ClearFields();
                 buttonAdd.Text = "Přidat";
             }
@@ -76,14 +92,26 @@ namespace VykazyPrace.Dialogs
 
                 if (dataCheck.Item1)
                 {
+                    UserGroup? selectedGroup = comboBoxGroup.SelectedIndex >= 0 && comboBoxGroup.SelectedIndex < _userGroups.Count
+                        ? _userGroups[comboBoxGroup.SelectedIndex]
+                        : null;
+
+                    if (selectedGroup == null)
+                    {
+                        AppLogger.Error("Není vybrána žádná platná skupina.");
+                        return;
+                    }
+
                     var newUser = new User
                     {
                         FirstName = textBoxFirstName.Text,
                         Surname = textBoxSurname.Text,
-                        PersonalNumber = Int32.Parse(maskedTextBoxPersonalNumber.Text),
+                        PersonalNumber = int.Parse(maskedTextBoxPersonalNumber.Text),
                         WindowsUsername = textBoxWindowsUsername.Text,
-                        LevelOfAccess = (int)numericUpDownLevelOfAccess.Value
+                        LevelOfAccess = (int)numericUpDownLevelOfAccess.Value,
+                        UserGroupId = selectedGroup.Id
                     };
+
 
                     var addedUser = await _userRepo.CreateUserAsync(newUser);
                     if (addedUser is not null)
@@ -109,7 +137,7 @@ namespace VykazyPrace.Dialogs
 
         private async void buttonRemove_Click(object sender, EventArgs e)
         {
-            var user = await GetUserBySelectedItem();
+            var user = GetUserBySelectedItem();
 
             if (user != null)
             {
@@ -131,34 +159,6 @@ namespace VykazyPrace.Dialogs
                     await LoadUsersAsync();
                 }
             }
-        }
-
-        private async Task<User?> GetUserBySelectedItem()
-        {
-            User? user = new User();
-
-            if (listBoxUsers.SelectedItem != null)
-            {
-                string? selectedItem = listBoxUsers.SelectedItem?.ToString();
-                string? idString = selectedItem?.Split(' ')[0];
-
-                if (int.TryParse(idString, out int userId))
-                {
-                    user = await _userRepo.GetUserByIdAsync(userId);
-                }
-
-                else
-                {
-                    AppLogger.Error($"Nepodařilo se získat uživatele {selectedItem} z databáze, id '{idString}' je neplatné.");
-                }
-
-                if (user == null)
-                {
-                    AppLogger.Error($"Nepodařilo se získat uživatele {selectedItem} z databáze.");
-                }
-            }
-
-            return user;
         }
 
         private void GenerateWindowsUsername()
@@ -205,28 +205,28 @@ namespace VykazyPrace.Dialogs
 
         private async void listBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listBoxUsers.SelectedItem is not null)
+            var user = GetUserBySelectedItem();
+            if (user != null)
             {
-                var user = await GetUserBySelectedItem();
+                groupBox1.Text = $"Zobrazení uživatele ({user.Id})";
+                textBoxFirstName.Text = user.FirstName;
+                textBoxFirstName.Enabled = false;
+                textBoxSurname.Text = user.Surname;
+                textBoxSurname.Enabled = false;
+                textBoxWindowsUsername.Text = user.WindowsUsername;
+                textBoxWindowsUsername.Enabled = false;
+                maskedTextBoxPersonalNumber.Text = user.PersonalNumber.ToString();
+                maskedTextBoxPersonalNumber.Enabled = false;
+                numericUpDownLevelOfAccess.Value = user.LevelOfAccess;
+                numericUpDownLevelOfAccess.Enabled = false;
 
-                if (user != null)
-                {
-                    groupBox1.Text = $"Zobrazení uživatele ({user.Id})";
-                    textBoxFirstName.Text = user.FirstName;
-                    textBoxFirstName.Enabled = false;
-                    textBoxSurname.Text = user.Surname;
-                    textBoxSurname.Enabled = false;
-                    textBoxWindowsUsername.Text = user.WindowsUsername;
-                    textBoxWindowsUsername.Enabled = false;
-                    maskedTextBoxPersonalNumber.Text = user.PersonalNumber.ToString();
-                    maskedTextBoxPersonalNumber.Enabled = false;
-                    numericUpDownLevelOfAccess.Value = user.LevelOfAccess;
-                    numericUpDownLevelOfAccess.Enabled = false;
+                comboBoxGroup.SelectedIndex = _userGroups.FindIndex(g => g.Id == user.UserGroupId);
+                comboBoxGroup.Enabled = false;
 
-                    buttonAdd.Text = "Konec prohlížení";
-                }
+                buttonAdd.Text = "Konec prohlížení";
             }
         }
+
 
         private (bool, string) CheckForEmptyOrIncorrectFields()
         {
@@ -245,6 +245,8 @@ namespace VykazyPrace.Dialogs
             textBoxWindowsUsername.Text = "";
             maskedTextBoxPersonalNumber.Text = "";
             numericUpDownLevelOfAccess.Value = 0;
+            comboBoxGroup.Text = "";
+            comboBoxGroup.SelectedIndex = 0;
         }
     }
 }

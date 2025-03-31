@@ -44,13 +44,15 @@
             buttonRemove = new Button();
             label8 = new Label();
             textBoxSurname = new TextBox();
+            comboBoxGroup = new ComboBox();
+            label2 = new Label();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDownLevelOfAccess).BeginInit();
             SuspendLayout();
             // 
             // buttonAdd
             // 
-            buttonAdd.Location = new Point(12, 163);
+            buttonAdd.Location = new Point(12, 232);
             buttonAdd.Margin = new Padding(4, 5, 4, 5);
             buttonAdd.Name = "buttonAdd";
             buttonAdd.Size = new Size(147, 36);
@@ -101,6 +103,8 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(label2);
+            groupBox1.Controls.Add(comboBoxGroup);
             groupBox1.Controls.Add(buttonGenerateWindowsUsername);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(numericUpDownLevelOfAccess);
@@ -116,7 +120,7 @@
             groupBox1.Controls.Add(textBoxFirstName);
             groupBox1.Location = new Point(14, 112);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(277, 206);
+            groupBox1.Size = new Size(277, 276);
             groupBox1.TabIndex = 26;
             groupBox1.TabStop = false;
             groupBox1.Text = "Přidání uživatele";
@@ -196,7 +200,7 @@
             // 
             // buttonRemove
             // 
-            buttonRemove.Location = new Point(167, 162);
+            buttonRemove.Location = new Point(167, 232);
             buttonRemove.Margin = new Padding(4, 5, 4, 5);
             buttonRemove.Name = "buttonRemove";
             buttonRemove.Size = new Size(97, 36);
@@ -224,11 +228,30 @@
             textBoxSurname.Size = new Size(121, 28);
             textBoxSurname.TabIndex = 15;
             // 
+            // comboBoxGroup
+            // 
+            comboBoxGroup.FormattingEnabled = true;
+            comboBoxGroup.Location = new Point(12, 181);
+            comboBoxGroup.Name = "comboBoxGroup";
+            comboBoxGroup.Size = new Size(246, 33);
+            comboBoxGroup.TabIndex = 29;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label2.Location = new Point(12, 157);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(56, 21);
+            label2.TabIndex = 30;
+            label2.Text = "Skupina";
+            // 
             // UserManagementDialog
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(304, 323);
+            ClientSize = new Size(304, 400);
             Controls.Add(label6);
             Controls.Add(listBoxUsers);
             Controls.Add(groupBox1);
@@ -262,5 +285,7 @@
         private Label label1;
         private NumericUpDown numericUpDownLevelOfAccess;
         private Button buttonGenerateWindowsUsername;
+        private Label label2;
+        private ComboBox comboBoxGroup;
     }
 }

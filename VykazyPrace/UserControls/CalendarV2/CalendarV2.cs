@@ -1071,13 +1071,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                     break;
             }
 
-            if (string.IsNullOrWhiteSpace(comboBoxProjects.Text))
-                return (false, "Projekt");
-            if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text))
-                return (false, "Typ zápisu");
-            if (string.IsNullOrWhiteSpace(comboBoxIndex.Text))
-                return (false, "Index");
-
             return (true, "");
         }
 

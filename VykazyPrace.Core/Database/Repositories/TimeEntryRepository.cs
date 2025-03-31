@@ -174,6 +174,7 @@ namespace VykazyPrace.Core.Database.Repositories
             existingEntry.UserId = timeEntry.UserId;
             existingEntry.ProjectId = timeEntry.ProjectId;
             existingEntry.AfterCare = timeEntry.AfterCare;
+            existingEntry.IsValid = timeEntry.IsValid;
             existingEntry.Note = timeEntry.Note;
 
             await VykazyPraceContextExtensions.SafeSaveAsync(_context);

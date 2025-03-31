@@ -68,28 +68,32 @@ namespace VykazyPrace
             _selectedUser = await _userRepo.GetUserByWindowsUsernameAsync(Environment.UserName) ?? new User();
             _currentUserLoA = _selectedUser.LevelOfAccess;
 
-            if (_currentUserLoA == 3)
-            {
-                dataToolStripMenuItem.Visible = true;
-                uživateléToolStripMenuItem.Visible = true;
-                správaProjektùToolStripMenuItem.Visible = true;
-            }
-
-            else if (_currentUserLoA == 2)
-            {
-                dataToolStripMenuItem.Visible = true;
-                správaProjektùToolStripMenuItem.Visible = true;
-            }
-
             if (_selectedUser.Id == 0)
             {
                 AppLogger.Error("Nepodaøilo se naèíst aktuálního uživatele, pøístup bude omezen.");
                 return;
             }
 
+            Invoke(() =>
+            {
+                if (_currentUserLoA == 3)
+                {
+                    dataToolStripMenuItem.Visible = true;
+                    uživateléToolStripMenuItem.Visible = true;
+                    správaProjektùToolStripMenuItem.Visible = true;
+                    comboBoxUsers.Visible = true;
+                }
+                else if (_currentUserLoA == 2)
+                {
+                    dataToolStripMenuItem.Visible = true;
+                    správaProjektùToolStripMenuItem.Visible = true;
+                    comboBoxUsers.Visible = true;
+                }
 
-            Invoke(() => InitializeCalendar(users));
+                InitializeCalendar(users);
+            });
         }
+
 
         private void InitializeCalendar(List<User> users)
         {

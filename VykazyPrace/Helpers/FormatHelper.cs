@@ -76,6 +76,11 @@ namespace VykazyPrace.Helpers
             return czechCulture.DateTimeFormat.GetMonthName(dateTime.Month).ToUpper() + " " + dateTime.Year;
         }
 
+        public static string FormatUserGroupToString(UserGroup userGroup)
+        {
+            return $"{userGroup.Title}";
+        }
+
         public static string GetWeekNumberAndRange(DateTime date)
         {
             CultureInfo czechCulture = new CultureInfo("cs-CZ");

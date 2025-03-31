@@ -1,0 +1,19 @@
+2025-03-31 06:39:06.913 +02:00 [INF] Uživatel (11): Martin Braťka -  byl přidán do databáze.
+2025-03-31 06:39:39.716 +02:00 [ERR] Nepodařilo se získat uživatele (11): Martin Braťka -  z databáze, id '(11):' je neplatné.
+2025-03-31 06:48:03.797 +02:00 [ERR] Nepodařilo se získat uživatele (1792): Martin Drapák - default z databáze, id '(1792):' je neplatné.
+2025-03-31 06:48:10.116 +02:00 [ERR] Nepodařilo se získat uživatele (1250): Jan Procházka - KAMERY z databáze, id '(1250):' je neplatné.
+2025-03-31 06:59:56.694 +02:00 [INF] Uživatel (1550): Zdeněk Dostál -  byl přidán do databáze.
+2025-03-31 07:00:17.542 +02:00 [ERR] Není vybrána žádná platná skupina.
+2025-03-31 07:00:22.597 +02:00 [INF] Uživatel (721): Tomáš Erban - KONSTRUKCE byl přidán do databáze.
+2025-03-31 07:03:22.499 +02:00 [INF] Uživatel (997): Petr Künzel -  byl přidán do databáze.
+2025-03-31 07:03:40.657 +02:00 [INF] Uživatel (978): František Nový - ELEKTRO byl přidán do databáze.
+2025-03-31 07:04:01.391 +02:00 [INF] Uživatel (995): Petr Procházka - ELEKTRO byl přidán do databáze.
+2025-03-31 07:04:20.173 +02:00 [INF] Uživatel (314): Ladislav Šrámek - ELEKTRO byl přidán do databáze.
+2025-03-31 07:04:37.274 +02:00 [INF] Uživatel (1581): Jiří Tomášek - MONTÁŽ byl přidán do databáze.
+2025-03-31 07:04:52.824 +02:00 [INF] Uživatel (1552): Antonín Veselý - KONSTRUKCE byl přidán do databáze.
+2025-03-31 07:05:09.597 +02:00 [INF] Uživatel (551): Martin Voják -  byl přidán do databáze.
+2025-03-31 07:05:33.464 +02:00 [INF] Uživatel (1962): Ladislav Švehla - ELEKTRO byl přidán do databáze.
+2025-03-31 07:05:48.932 +02:00 [INF] Uživatel (1971): Lukáš Vaníček - default byl přidán do databáze.
+2025-03-31 07:06:07.375 +02:00 [INF] Uživatel (1996): Martin Erban - KONSTRUKCE byl přidán do databáze.
+2025-03-31 07:20:10.433 +02:00 [INF] Uživatel (2012): Štěpán Tuček - ELEKTRO byl přidán do databáze.
+2025-03-31 07:21:34.490 +02:00 [INF] Uživatel (2071): Syed Tabish Karim - ELEKTRO byl přidán do databáze.

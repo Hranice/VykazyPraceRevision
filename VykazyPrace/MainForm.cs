@@ -25,6 +25,7 @@ namespace VykazyPrace
         private int _currentUserLoA = 0;
         private DateTime _selectedDate;
         private CalendarV2 _calendar;
+        private CalendarUC _monthlyCalendar;
 
         public MainForm()
         {
@@ -98,11 +99,11 @@ namespace VykazyPrace
         private void InitializeCalendar(List<User> users)
         {
             // Pùvodní CalendarUC do panelCalendarContainer
-            var calendarUC = new CalendarUC(_selectedUser)
+            _monthlyCalendar = new CalendarUC(_selectedUser)
             {
                 Dock = DockStyle.Fill
             };
-            panelCalendarContainer.Controls.Add(calendarUC);
+            panelCalendarContainer.Controls.Add(_monthlyCalendar);
 
             // Nový CalendarV2 do panelContainer
             _calendar = new CalendarV2(_selectedUser, _timeEntryRepo, _timeEntryTypeRepo, _timeEntrySubTypeRepo, _projectRepo, _userRepo)
@@ -165,7 +166,7 @@ namespace VykazyPrace
             new Dialogs.SettingsDialog(_selectedUser).ShowDialog();
         }
 
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        private async void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             bool showCalendarV2 = radioButton1.Checked;
 
@@ -173,9 +174,22 @@ namespace VykazyPrace
             panelCalendarContainer.Visible = !showCalendarV2;
 
             if (showCalendarV2)
+            {
                 _calendar.BringToFront();
+                buttonPrevious.Visible = true;
+                buttonNext.Visible = true;
+                labelSelectedDate.Visible = true;
+                buttonNow.Visible = true;
+            }
             else
+            {
+                buttonPrevious.Visible = false;
+                buttonNext.Visible = false;
+                labelSelectedDate.Visible = false;
+                buttonNow.Visible = false;
+                await _monthlyCalendar.ReloadCalendar();
                 panelCalendarContainer.BringToFront();
+            }
         }
 
         private async void comboBoxUsers_SelectedIndexChanged(object sender, EventArgs e)

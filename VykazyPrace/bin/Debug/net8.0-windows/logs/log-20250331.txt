@@ -63,3 +63,14 @@
 2025-03-31 13:12:10.026 +02:00 [INF] Záznam  - Automatizace: 2 h - SW - Výkazy hodin byl smazán z databáze.
 2025-03-31 14:43:03.947 +02:00 [INF] Záznam 0 - Provoz Metalizace: 2,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
 2025-03-31 14:46:12.524 +02:00 [INF] Záznam 0 - Provoz Metalizace: 10 h - SW - Výkazy hodin byl smazán z databáze.
+2025-03-31 15:12:53.588 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-03-31 15:13:10.594 +02:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 2,5 h -  byl smazán z databáze.
+2025-03-31 15:16:55.221 +02:00 [INF] Záznam 0 - Provoz Metalizace: 3 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-03-31 15:17:12.727 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 15:18:30.842 +02:00 [INF] Záznam 0 - Provoz Metalizace: 1 h -  byl smazán z databáze.
+2025-03-31 15:18:31.285 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 15:18:31.748 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-03-31 15:18:33.966 +02:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 3 h - SW - Výkazy hodin byl smazán z databáze.
+2025-03-31 15:18:34.772 +02:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 0,5 h - SW - Výkazy hodin byl smazán z databáze.
+2025-03-31 15:18:57.344 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - Video byl úspěšně aktualizován.
+2025-03-31 15:19:25.380 +02:00 [INF] Záznam  - Automatizace: 0,5 h - Přednatáčení byl úspěšně aktualizován.

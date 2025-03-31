@@ -194,6 +194,15 @@ namespace VykazyPrace
             {
                 _selectedDate = await _calendar.ChangeToPreviousWeek();
                 labelSelectedDate.Text = FormatHelper.GetWeekNumberAndRange(_selectedDate);
+                if (_selectedDate.Date == DateTime.Today)
+                {
+                    labelSelectedDate.Font = new Font(labelSelectedDate.Font, FontStyle.Bold);
+                }
+
+                else
+                {
+                    labelSelectedDate.Font = new Font(labelSelectedDate.Font, FontStyle.Regular);
+                }
             }
         }
 
@@ -203,6 +212,33 @@ namespace VykazyPrace
             {
                 _selectedDate = await _calendar.ChangeToNextWeek();
                 labelSelectedDate.Text = FormatHelper.GetWeekNumberAndRange(_selectedDate);
+                if (_selectedDate.Date == DateTime.Today)
+                {
+                    labelSelectedDate.Font = new Font(labelSelectedDate.Font, FontStyle.Bold);
+                }
+
+                else
+                {
+                    labelSelectedDate.Font = new Font(labelSelectedDate.Font, FontStyle.Regular);
+                }
+            }
+        }
+
+        private async void buttonNow_Click(object sender, EventArgs e)
+        {
+            if (radioButton1.Checked)
+            {
+                _selectedDate = await _calendar.ChangeToTodaysWeek();
+                labelSelectedDate.Text = FormatHelper.GetWeekNumberAndRange(_selectedDate);
+                if (_selectedDate.Date == DateTime.Today)
+                {
+                    labelSelectedDate.Font = new Font(labelSelectedDate.Font, FontStyle.Bold);
+                }
+
+                else
+                {
+                    labelSelectedDate.Font = new Font(labelSelectedDate.Font, FontStyle.Regular);
+                }
             }
         }
 

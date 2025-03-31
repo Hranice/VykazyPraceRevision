@@ -136,16 +136,23 @@ namespace VykazyPrace.UserControls.CalendarV2
             _ = LoadSidebar();
         }
 
-        public async Task<DateTime> ChangeToPreviousWeek()
+        internal async Task<DateTime> ChangeToPreviousWeek()
         {
             _selectedDate = _selectedDate.AddDays(-7);
             await RenderCalendar();
             return _selectedDate;
         }
 
-        public async Task<DateTime> ChangeToNextWeek()
+        internal async Task<DateTime> ChangeToNextWeek()
         {
             _selectedDate = _selectedDate.AddDays(7);
+            await RenderCalendar();
+            return _selectedDate;
+        }
+
+        internal async Task<DateTime> ChangeToTodaysWeek()
+        {
+            _selectedDate = DateTime.Now;
             await RenderCalendar();
             return _selectedDate;
         }
@@ -515,7 +522,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void AttachTooltipToPanel(DayPanel panel, TimeEntry entry)
         {
-            if(entry.IsValid == 1)
+            if (entry.IsValid == 1)
             {
                 string projectName = entry.Project?.ProjectTitle ?? "Projekt neznámý";
                 string note = string.IsNullOrWhiteSpace(entry.Note) ? "Bez poznámky" : entry.Note;

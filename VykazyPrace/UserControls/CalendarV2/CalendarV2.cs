@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -597,6 +598,8 @@ namespace VykazyPrace.UserControls.CalendarV2
         #region DayPanel events
         private async void dayPanel_MouseClick(object? sender, MouseEventArgs e)
         {
+            if (mouseMoved) return;
+
             if (sender is not DayPanel panel) return;
 
             DeactivateAllPanels();
@@ -612,6 +615,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             await LoadSidebar();
         }
 
+
         private void DeactivateAllPanels()
         {
             foreach (var ctrl in tableLayoutPanel1.Controls)
@@ -625,12 +629,13 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void dayPanel_MouseMove(object? sender, MouseEventArgs e)
         {
+            mouseMoved = true;
+
             if (sender is not DayPanel panel) return;
 
             int rowHeight = tableLayoutPanel1.Height / tableLayoutPanel1.RowCount;
             int currentMouseY = tableLayoutPanel1.PointToClient(Cursor.Position).Y;
             int newRow = Math.Max(0, Math.Min(currentMouseY / rowHeight, tableLayoutPanel1.RowCount - 1));
-
 
             int currentMouseX = Cursor.Position.X;
             int deltaX = currentMouseX - startMouseX;
@@ -650,9 +655,14 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
+
+        private bool mouseMoved = false;
+
         private void dayPanel_MouseDown(object? sender, MouseEventArgs e)
         {
             if (sender is not DayPanel panel) return;
+
+            mouseMoved = false;
 
             isResizing = Cursor == Cursors.SizeWE;
             isMoving = !isResizing;
@@ -665,6 +675,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             panel.Capture = true;
             panel.BackColor = Color.LightCoral;
         }
+
 
         private void dayPanel_MouseLeave(object? sender, EventArgs e)
         {
@@ -784,7 +795,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
             panel.BackColor = ColorTranslator.FromHtml(color);
 
-            await LoadSidebar();
+            //await LoadSidebar();
         }
         #endregion
 

@@ -1310,7 +1310,8 @@ namespace VykazyPrace.UserControls.CalendarV2
                     Note = entry.Note,
                     EntryMinutes = entry.EntryMinutes,
                     AfterCare = entry.AfterCare,
-                    UserId = entry.UserId
+                    UserId = entry.UserId,
+                    IsValid = entry.IsValid
                 };
 
                 var panel = panels.FirstOrDefault(p => p.EntryId == _selectedTimeEntryId);
@@ -1376,7 +1377,8 @@ namespace VykazyPrace.UserControls.CalendarV2
                 EntryMinutes = copiedEntry.EntryMinutes,
                 AfterCare = copiedEntry.AfterCare,
                 UserId = _selectedUser.Id,
-                Timestamp = newTimestamp
+                Timestamp = newTimestamp,
+                IsValid = copiedEntry.IsValid
             };
 
             var created = await _timeEntryRepo.CreateTimeEntryAsync(newEntry);

@@ -74,3 +74,5 @@
 2025-03-31 15:18:34.772 +02:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 0,5 h - SW - Výkazy hodin byl smazán z databáze.
 2025-03-31 15:18:57.344 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - Video byl úspěšně aktualizován.
 2025-03-31 15:19:25.380 +02:00 [INF] Záznam  - Automatizace: 0,5 h - Přednatáčení byl úspěšně aktualizován.
+2025-03-31 15:31:19.515 +02:00 [INF] Záznam  - Automatizace: 1 h - SW - Výkazy hodin byl smazán z databáze.
+2025-03-31 15:31:20.178 +02:00 [INF] Záznam  - Automatizace: 0,5 h - Video byl smazán z databáze.

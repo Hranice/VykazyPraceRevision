@@ -493,7 +493,6 @@ namespace VykazyPrace.Dialogs
         {
             if (e.KeyCode == Keys.Escape)
             {
-                textBoxProjectDescription.Enabled = true;
                 ClearSelection();
             }
         }
@@ -516,7 +515,6 @@ namespace VykazyPrace.Dialogs
             buttonAddAbsence.Text = "Přidat";
             buttonAddOther.Text = "Přidat";
 
-            textBoxProjectDescription.Enabled = true;
             buttonArchiveProject.Visible = false;
             buttonSetAsPreProject.Visible = false;
         }
@@ -543,7 +541,6 @@ namespace VykazyPrace.Dialogs
         {
             if (listBoxProject.SelectedItem is not null)
             {
-                textBoxProjectDescription.Enabled = false;
                 buttonArchiveProject.Visible = true;
                 buttonSetAsPreProject.Visible = true;
 
@@ -551,34 +548,10 @@ namespace VykazyPrace.Dialogs
                 comboBoxProjects.SelectedIndex = comboBoxProjects.FindString(listBoxProject.SelectedItem.ToString());
                 comboBoxProjectsLoading = false;
 
-                if (checkBoxArchive.Checked || checkBoxPreProject.Checked)
-                {
-                    if (checkBoxArchive.Checked && checkBoxPreProject.Checked)
-                    {
-                        textBoxProjectTitle.Text = listBoxProject.SelectedItem.ToString().Split(':')[1].TrimStart(' ');
-                        textBoxProjectDescription.Text = _filteredProjects.Find(x => x.ProjectTitle == textBoxProjectTitle.Text).ProjectDescription;
-                    }
+                textBoxProjectTitle.Text = listBoxProject.SelectedItem.ToString().Split(':')[1].TrimStart(' ');
+                textBoxProjectDescription.Text = _filteredProjects.Find(x => x.ProjectTitle == textBoxProjectTitle.Text).ProjectDescription;
 
-                    else
-                    {
-                        if (checkBoxPreProject.Checked)
-                        {
-                            textBoxProjectTitle.Text = listBoxProject.SelectedItem.ToString().Split(':')[1].TrimStart(' ');
-                            textBoxProjectDescription.Text = listBoxProject.SelectedItem.ToString().Split(':')[1].TrimStart(' ');
-                        }
-                        else
-                        {
-                            textBoxProjectTitle.Text = listBoxProject.SelectedItem.ToString().Split(':')[2].TrimStart(' ');
-                            textBoxProjectDescription.Text = listBoxProject.SelectedItem.ToString().Split(':')[1].TrimStart(' ');
-                        }
-                    }
-                }
-
-                else
-                {
-                    textBoxProjectDescription.Text = listBoxProject.SelectedItem.ToString().Split(':')[0];
-                    textBoxProjectTitle.Text = listBoxProject.SelectedItem.ToString().Split(':')[1].TrimStart(' ');
-                }
+             
 
                 buttonAddProject.Text = "Uložit";
 

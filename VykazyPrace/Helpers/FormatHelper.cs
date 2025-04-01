@@ -13,16 +13,14 @@ namespace VykazyPrace.Helpers
                 return "<NULL>";
             }
 
-            switch (project?.ProjectType)
+            if (project?.ProjectType == 1 || project?.ProjectType == 2)
             {
-                case 0:
-                    return $"{project?.ProjectTitle}";
-                case 1:
-                    return $"{(project.IsArchived == 1 ? "(ARCHIV): " : "")}{project?.ProjectDescription}: {project?.ProjectTitle}";
-                case 2:
-                    return $"(PŘEDPROJEKT): {project?.ProjectTitle}";
-                default:
-                    return $"{project?.ProjectTitle}";
+                return $"({project?.ProjectDescription}):{project?.ProjectTitle}";
+            }
+
+            else
+            {
+                return $"{project?.ProjectTitle}";
             }
         }
 

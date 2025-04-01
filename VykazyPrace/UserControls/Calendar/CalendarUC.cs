@@ -11,14 +11,14 @@ namespace VykazyPrace.UserControls.Calendar
         private int _currentYear = DateTime.Now.Year;
         private readonly LoadingUC _loadingUC = new LoadingUC();
         private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
-        private readonly User _currentUser;
+        private User _selectedUser;
         private Dictionary<int, int> _minutesDict = new Dictionary<int, int>();
         private List<DayUC> _dayCells = new List<DayUC>();
 
         public CalendarUC(User currentUser)
         {
             InitializeComponent();
-            _currentUser = currentUser;
+            _selectedUser = currentUser;
             InitializeCalendarCells();
         }
 
@@ -44,7 +44,7 @@ namespace VykazyPrace.UserControls.Calendar
         {
             _minutesDict.Clear();
 
-            var timeEntries = await _timeEntryRepo.GetAllTimeEntriesByUserAsync(_currentUser);
+            var timeEntries = await _timeEntryRepo.GetAllTimeEntriesByUserAsync(_selectedUser);
 
             foreach (var entry in timeEntries)
             {
@@ -218,7 +218,7 @@ namespace VykazyPrace.UserControls.Calendar
             var dayCell = sender as DayUC;
             if (int.TryParse(dayCell?.labelDay.Text, out int day))
             {
-                new TimeEntryDialog(_currentUser, new DateTime(_currentYear, _currentMonth, day)).ShowDialog();
+                new TimeEntryDialog(_selectedUser, new DateTime(_currentYear, _currentMonth, day)).ShowDialog();
             }
 
             Task.Run(ReloadCalendar);
@@ -257,6 +257,12 @@ namespace VykazyPrace.UserControls.Calendar
                 _currentYear--;
             }
 
+            Task.Run(ReloadCalendar);
+        }
+
+        public void ChangeUser(User user)
+        {
+            _selectedUser = user;
             Task.Run(ReloadCalendar);
         }
     }

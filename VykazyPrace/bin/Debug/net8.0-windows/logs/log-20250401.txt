@@ -24,3 +24,4 @@
 2025-04-01 10:58:48.233 +02:00 [INF] Záznam 031I21 - Vývoj nových greiferů: 1,5 h - Přednatáčení byl úspěšně aktualizován.
 2025-04-01 10:58:54.526 +02:00 [INF] Záznam 0280I25 - Vzorovací linka postřiku: 1,5 h - Přednatáčení byl úspěšně aktualizován.
 2025-04-01 10:58:58.062 +02:00 [INF] Záznam 0279I25 - Kobot: 1,5 h - Přednatáčení byl smazán z databáze.
+2025-04-01 12:22:14.291 +02:00 [INF] Záznam 0 - Provoz Metalizace: 5 h - SW - Výkazy hodin byl úspěšně aktualizován.

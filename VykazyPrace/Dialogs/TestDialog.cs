@@ -66,19 +66,6 @@ namespace VykazyPrace.Dialogs
             }
         }
 
-        private void TestDialog_Load(object sender, EventArgs e)
-        {
-            //_calendar = new UserControls.CalendarV2.CalendarV2(_currentUser);
-            //_calendar.Dock = DockStyle.Fill;
-            //_calendar.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            //_calendar.Location = new Point(0, 0);
-            //_calendar.Name = "calendarV21";
-            //_calendar.Size = new Size(1126, 620);
-            //_calendar.TabIndex = 0;
-
-            //panel3.Controls.Add(_calendar);
-        }
-
         private void DropView()
         {
             string connectionString = "Server=10.130.10.100;Database=powerkey;User Id=vykazprace;Password=!Vykaz2025!;TrustServerCertificate=True;";

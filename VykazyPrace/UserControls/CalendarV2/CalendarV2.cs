@@ -19,7 +19,7 @@ namespace VykazyPrace.UserControls.CalendarV2
     public partial class CalendarV2 : UserControl
     {
         // Constants
-        private const int ResizeThreshold = 7;
+        private const int ResizeThreshold = 12;
         private const int TimeSlotLengthInMinutes = 30;
         private const int DefaultProjectType = 0;
 

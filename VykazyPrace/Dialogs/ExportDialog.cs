@@ -141,7 +141,7 @@ namespace VykazyPrace.Dialogs
                     worksheet.Cells[i + 2, 2] = entry.User?.UserGroup?.Title?.Trim() ?? "CHYBÍ DATA";
                     worksheet.Cells[i + 2, 3] = entry.Project?.ProjectTitle ?? "N/A";
                     worksheet.Cells[i + 2, 4] = entry.EntryType?.Title ?? "Neznámý typ";
-                    worksheet.Cells[i + 2, 5] = entry.Timestamp?.ToString("yyyy-MM-dd HH:mm:ss") ?? "N/A";
+                    worksheet.Cells[i + 2, 5] = entry.Timestamp?.ToString("yyyy-MM-dd") ?? "N/A";
                     worksheet.Cells[i + 2, 6] = entry.Description ?? "N/A";
                     worksheet.Cells[i + 2, 7] = entry.EntryMinutes / 60.0;
 

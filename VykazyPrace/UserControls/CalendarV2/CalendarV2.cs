@@ -674,7 +674,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
 
         #region DayPanel events
-        private async void dayPanel_MouseClick(object? sender, MouseEventArgs e)
+        private void dayPanel_MouseClick(object? sender, MouseEventArgs e)
         {
             if (mouseMoved) return;
 
@@ -693,7 +693,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             );
 
             tableLayoutPanel1.ClearSelection();
-            await LoadSidebar();
+            //await LoadSidebar();
         }
 
 
@@ -896,6 +896,10 @@ namespace VykazyPrace.UserControls.CalendarV2
                 comboBoxStart.SelectedIndex = minutesStart / 30;
                 comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
             });
+
+            if (panel.Tag as string == "snack")
+                return;
+            await LoadSidebar();
 
         }
         #endregion

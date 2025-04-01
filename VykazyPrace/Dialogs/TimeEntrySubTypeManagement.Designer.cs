@@ -28,38 +28,40 @@
         /// </summary>
         private void InitializeComponent()
         {
-            listBoxTimeEntrySubTypes = new ListBox();
             buttonRemove = new Button();
+            listBoxTimeEntrySubTypes = new ListBox();
             SuspendLayout();
-            // 
-            // listBoxTimeEntrySubTypes
-            // 
-            listBoxTimeEntrySubTypes.FormattingEnabled = true;
-            listBoxTimeEntrySubTypes.ItemHeight = 25;
-            listBoxTimeEntrySubTypes.Location = new Point(13, 14);
-            listBoxTimeEntrySubTypes.Margin = new Padding(4, 5, 4, 5);
-            listBoxTimeEntrySubTypes.Name = "listBoxTimeEntrySubTypes";
-            listBoxTimeEntrySubTypes.Size = new Size(262, 279);
-            listBoxTimeEntrySubTypes.TabIndex = 0;
             // 
             // buttonRemove
             // 
-            buttonRemove.Location = new Point(179, 303);
+            buttonRemove.Dock = DockStyle.Bottom;
+            buttonRemove.Location = new Point(0, 317);
             buttonRemove.Margin = new Padding(4, 5, 4, 5);
             buttonRemove.Name = "buttonRemove";
-            buttonRemove.Size = new Size(96, 42);
+            buttonRemove.Size = new Size(288, 42);
             buttonRemove.TabIndex = 1;
             buttonRemove.Text = "Smazat";
             buttonRemove.UseVisualStyleBackColor = true;
             buttonRemove.Click += buttonRemove_Click;
+            // 
+            // listBoxTimeEntrySubTypes
+            // 
+            listBoxTimeEntrySubTypes.Dock = DockStyle.Fill;
+            listBoxTimeEntrySubTypes.FormattingEnabled = true;
+            listBoxTimeEntrySubTypes.ItemHeight = 25;
+            listBoxTimeEntrySubTypes.Location = new Point(0, 0);
+            listBoxTimeEntrySubTypes.Margin = new Padding(4, 5, 4, 5);
+            listBoxTimeEntrySubTypes.Name = "listBoxTimeEntrySubTypes";
+            listBoxTimeEntrySubTypes.Size = new Size(288, 317);
+            listBoxTimeEntrySubTypes.TabIndex = 2;
             // 
             // TimeEntrySubTypeManagement
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(288, 359);
-            Controls.Add(buttonRemove);
             Controls.Add(listBoxTimeEntrySubTypes);
+            Controls.Add(buttonRemove);
             Font = new Font("Reddit Sans", 12F);
             Margin = new Padding(4, 5, 4, 5);
             Name = "TimeEntrySubTypeManagement";
@@ -69,8 +71,7 @@
         }
 
         #endregion
-
-        private ListBox listBoxTimeEntrySubTypes;
         private Button buttonRemove;
+        private ListBox listBoxTimeEntrySubTypes;
     }
 }

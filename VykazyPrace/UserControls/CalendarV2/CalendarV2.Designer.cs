@@ -51,6 +51,7 @@
             panelDay1 = new Panel();
             label88 = new Label();
             labelDate02 = new Label();
+            comboBox1 = new ComboBox();
             panelContainer = new Panel();
             tableLayoutPanel1 = new CustomTableLayoutPanel();
             customTableLayoutPanel1 = new CustomTableLayoutPanel();
@@ -160,6 +161,7 @@
             tableLayoutPanel3.Controls.Add(panelDay4, 0, 5);
             tableLayoutPanel3.Controls.Add(panelDay2, 0, 3);
             tableLayoutPanel3.Controls.Add(panelDay1, 0, 2);
+            tableLayoutPanel3.Controls.Add(comboBox1, 0, 0);
             tableLayoutPanel3.Dock = DockStyle.Left;
             tableLayoutPanel3.Location = new Point(3, 3);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -384,6 +386,16 @@
             labelDate02.TabIndex = 35;
             labelDate02.Text = "5.3.2025";
             labelDate02.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // comboBox1
+            // 
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Items.AddRange(new object[] { "100%", "200%", "300%" });
+            comboBox1.Location = new Point(3, 3);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(63, 29);
+            comboBox1.TabIndex = 127;
+            comboBox1.Visible = false;
             // 
             // panelContainer
             // 
@@ -986,7 +998,7 @@
             comboBoxProjects.FormattingEnabled = true;
             comboBoxProjects.IntegralHeight = false;
             comboBoxProjects.ItemHeight = 25;
-            comboBoxProjects.Location = new Point(3, 36);
+            comboBoxProjects.Location = new Point(3, 46);
             comboBoxProjects.Name = "comboBoxProjects";
             comboBoxProjects.Size = new Size(231, 33);
             comboBoxProjects.TabIndex = 150;
@@ -1382,5 +1394,6 @@
         private Panel panel2;
         private CheckBox checkBoxArchivedProjects;
         private Label labelProject;
+        private ComboBox comboBox1;
     }
 }

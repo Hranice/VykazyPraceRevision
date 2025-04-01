@@ -1,0 +1,15 @@
+2025-04-01 08:42:15.617 +02:00 [INF] Záznam  - Svačina: 0,5 h -  byl smazán z databáze.
+2025-04-01 08:42:19.183 +02:00 [INF] Záznam  - Svačina: 0,5 h -  byl smazán z databáze.
+2025-04-01 08:43:00.487 +02:00 [INF] Záznam  - Svačina: 0,5 h -  byl smazán z databáze.
+2025-04-01 08:43:03.819 +02:00 [INF] Záznam  - Svačina: 0,5 h -  byl smazán z databáze.
+2025-04-01 08:43:20.844 +02:00 [INF] Záznam  - Automatizace: 0,5 h - SW - Výkazy hodin byl smazán z databáze.
+2025-04-01 08:49:34.732 +02:00 [INF] Záznam  - Svačina: 0,5 h -  byl smazán z databáze.
+2025-04-01 09:17:38.487 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - IT byl úspěšně aktualizován.
+2025-04-01 09:17:52.259 +02:00 [INF] Záznam  - Automatizace: 0,5 h -  byl smazán z databáze.
+2025-04-01 09:18:16.601 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - 3D tisk byl úspěšně aktualizován.
+2025-04-01 09:18:36.616 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - 3D tisk byl úspěšně aktualizován.
+2025-04-01 09:20:57.310 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - 3D tisk byl smazán z databáze.
+2025-04-01 09:21:06.514 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - 3D tisk byl úspěšně aktualizován.
+2025-04-01 09:21:14.508 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - 3D tisk byl smazán z databáze.
+2025-04-01 09:48:47.435 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - Video byl úspěšně aktualizován.
+2025-04-01 09:48:50.225 +02:00 [INF] Záznam 0 - Ostatní: 0,5 h - Video byl smazán z databáze.

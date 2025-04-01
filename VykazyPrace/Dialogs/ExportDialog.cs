@@ -135,12 +135,13 @@ namespace VykazyPrace.Dialogs
                 for (int i = 0; i < timeEntries.Count; i++)
                 {
                     var entry = timeEntries[i];
+                    if (entry.ProjectId == 132 && entry.EntryTypeId == 24) continue;
                     string userDisplay = $"{entry.User?.PersonalNumber ?? 0} - {entry.User?.FirstName ?? "N/A"} {entry.User?.Surname ?? "N/A"}";
                     worksheet.Cells[i + 2, 1] = userDisplay;
                     worksheet.Cells[i + 2, 2] = entry.User?.UserGroup?.Title?.Trim() ?? "CHYBÍ DATA";
                     worksheet.Cells[i + 2, 3] = entry.Project?.ProjectTitle ?? "N/A";
                     worksheet.Cells[i + 2, 4] = entry.EntryType?.Title ?? "Neznámý typ";
-                    worksheet.Cells[i + 2, 5] = entry.Timestamp?.ToString("yyyy-MM-dd HH:mm:ss") ?? "N/A";
+                    worksheet.Cells[i + 2, 5] = entry.Timestamp?.ToString("yyyy-MM-dd") ?? "N/A";
                     worksheet.Cells[i + 2, 6] = entry.Description ?? "N/A";
                     worksheet.Cells[i + 2, 7] = entry.EntryMinutes / 60.0;
 
@@ -276,12 +277,12 @@ namespace VykazyPrace.Dialogs
             }
         }
 
-        private void ButtonSaveAs_Click(object sender, EventArgs e)
+        private async void ButtonSaveAs_Click(object sender, EventArgs e)
         {
             using SaveFileDialog sfd = new SaveFileDialog { Filter = "Excel Files|*.xlsx", FileName = "Export.xlsx" };
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                ExportToExcel(sfd.FileName);
+                await ExportToExcel(sfd.FileName);
             }
         }
 

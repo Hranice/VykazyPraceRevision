@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using VykazyPrace.Core.Database.Models;
@@ -437,14 +438,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             _selectedTimeEntryId = addedTimeEntry.Id;
             await RenderCalendar();
             await LoadSidebar();
-
-
-
-            // Reset vybraného záznamu a sidebaru po vytvoření
-            //DeactivateAllPanels();
-            //_selectedTimeEntryId = -1;
-            //_ = LoadSidebar();
-
         }
 
 
@@ -469,12 +462,42 @@ namespace VykazyPrace.UserControls.CalendarV2
             var allProjects = await _projectRepo.GetAllProjectsAsync();
             var projectDict = allProjects.ToDictionary(p => p.Id);
 
+            // snack entries
+            for (int row = 0; row < 7; row++)
+            {
+                bool snackExists = entries.Any(entry =>
+                    entry.ProjectId == 132 &&
+                    entry.EntryTypeId == 24 &&
+                    GetRowBasedOnTimeEntry(entry.Timestamp) == row);
+
+                if (snackExists) continue;
+
+                DateTime defaultSnackTime = _selectedDate.AddDays(row).AddMinutes(18 * 30);
+
+                var newSnack = new TimeEntry
+                {
+                    ProjectId = 132,
+                    EntryTypeId = 24,
+                    UserId = _selectedUser.Id,
+                    Timestamp = defaultSnackTime,
+                    EntryMinutes = 30,
+                    IsValid = 1,
+                    IsLocked = 1
+                };
+
+                var created = await _timeEntryRepo.CreateTimeEntryAsync(newSnack);
+                if (created == null)
+                {
+                    AppLogger.Error($"Nepodařilo se vytvořit výchozí svačinu pro den {defaultSnackTime.ToShortDateString()}.");
+                }
+            }
+
             foreach (var entry in entries)
             {
                 if (entry.Project == null)
                     continue;
 
-                CreatePanelForEntry(entry);
+                await CreatePanelForEntry(entry);
             }
 
             BeginInvoke((Action)(() =>
@@ -600,12 +623,14 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
-        private void CreatePanelForEntry(TimeEntry entry)
+        private async Task CreatePanelForEntry(TimeEntry entry)
         {
             if (entry.Project == null) return;
 
-            var entryType = _timeEntryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
+            var entryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesAsync();
+            var entryType = entryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
             string color = entryType?.Color ?? "#ADD8E6";
+
             if (entry.IsValid == 0)
             {
                 color = "#FF6957";
@@ -642,6 +667,8 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             tableLayoutPanel1.Controls.Add(panel, column, row);
             tableLayoutPanel1.SetColumnSpan(panel, columnSpan);
+            panel.Tag = (entry.ProjectId == 132 && entry.EntryTypeId == 24) ? "snack" : null;
+
             panels.Add(panel);
         }
 
@@ -652,6 +679,9 @@ namespace VykazyPrace.UserControls.CalendarV2
             if (mouseMoved) return;
 
             if (sender is not DayPanel panel) return;
+
+            if (panel.Tag as string == "snack")
+                return;
 
             DeactivateAllPanels();
             panel.Activate();
@@ -724,6 +754,10 @@ namespace VykazyPrace.UserControls.CalendarV2
             originalColumnSpan = tableLayoutPanel1.GetColumnSpan(panel);
 
             panel.Capture = true;
+
+            if (panel.Tag as string == "snack")
+                return;
+
             panel.BackColor = Color.LightCoral;
         }
 
@@ -785,7 +819,8 @@ namespace VykazyPrace.UserControls.CalendarV2
                 tableLayoutPanel1.SuspendLayout();
 
                 tableLayoutPanel1.SetColumn(panel, targetColumn);
-                tableLayoutPanel1.SetRow(panel, targetRow);
+                if (panel.Tag as string != "snack")
+                    tableLayoutPanel1.SetRow(panel, targetRow);
                 tableLayoutPanel1.SetColumnSpan(panel, span);
 
                 tableLayoutPanel1.ResumeLayout();
@@ -794,6 +829,12 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void UpdateCursor(MouseEventArgs e, DayPanel panel)
         {
+            if (panel.Tag as string == "snack")
+            {
+                Cursor = Cursors.SizeAll;
+                return;
+            }
+
             if (e.X <= ResizeThreshold)
             {
                 Cursor = Cursors.SizeWE;
@@ -823,7 +864,8 @@ namespace VykazyPrace.UserControls.CalendarV2
             var entry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
             if (entry == null) return;
 
-            var entryType = _timeEntryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
+            var entryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesAsync();
+            var entryType = entryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
 
             var newTimestamp = _selectedDate
                 .AddDays(tableLayoutPanel1.GetRow(panel))
@@ -1090,6 +1132,21 @@ namespace VykazyPrace.UserControls.CalendarV2
             if (selectedProject != null)
             {
                 timeEntry.ProjectId = selectedProject.Id;
+            }
+
+            if (radioButton6.Checked)
+            {
+                timeEntry.ProjectId = 25;
+            }
+
+            else if (radioButton5.Checked)
+            {
+                timeEntry.ProjectId = 23;
+            }
+
+            else if (radioButton4.Checked)
+            {
+                timeEntry.ProjectId = 26;
             }
 
 

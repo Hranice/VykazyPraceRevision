@@ -19,24 +19,24 @@ namespace VykazyPrace.Core.Database.Services
 
         public async Task SyncAsync(int personalNumber)
         {
-            var records = _viewManager.LoadByPersonalNumber(personalNumber);
+            //var records = _viewManager.LoadByPersonalNumber(personalNumber);
 
-            await _sqliteRepository.ClearAllAsync();
+            //await _sqliteRepository.ClearAllAsync();
 
-            var entities = records.Select(r => new WorkTimeTransfer
-            {
-                PersonId = r.PersonId,
-                PersonalNumber = r.PersonalNumber,
-                Arrival = r.Arrival,
-                Departure = r.Departure,
-                DepartureReason = r.DepartureReason,
-                StandardHours = r.StandardHours,
-                OvertimeHours = r.OvertimeHours,
-                WorkDate = r.WorkDate,
-                ApprovalState = r.ApprovalState
-            }).ToList();
+            //var entities = records.Select(r => new WorkTimeTransfer
+            //{
+            //    PersonId = r.PersonId,
+            //    PersonalNumber = r.PersonalNumber,
+            //    Arrival = r.Arrival,
+            //    Departure = r.Departure,
+            //    DepartureReason = r.DepartureReason,
+            //    StandardHours = r.StandardHours,
+            //    OvertimeHours = r.OvertimeHours,
+            //    WorkDate = r.WorkDate,
+            //    ApprovalState = r.ApprovalState
+            //}).ToList();
 
-            await _sqliteRepository.SaveRangeAsync(entities);
+            //await _sqliteRepository.SaveRangeAsync(entities);
         }
     }
 }

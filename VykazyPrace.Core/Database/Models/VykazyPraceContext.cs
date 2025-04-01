@@ -26,7 +26,8 @@ public partial class VykazyPraceContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<UserGroup> UserGroups { get; set; }
-    public DbSet<WorkTimeTransfer> WorkTimeTransfers { get; set; }
+
+    public virtual DbSet<WorkTimeTransfer> WorkTimeTransfers { get; set; }
 
 #if DEBUG
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -51,7 +52,10 @@ public partial class VykazyPraceContext : DbContext
         {
             entity.HasIndex(e => e.Id, "IX_TimeEntries_Id").IsUnique();
 
+            entity.Property(e => e.AfterCare).HasDefaultValue(0);
             entity.Property(e => e.EntryMinutes).HasDefaultValue(30);
+            entity.Property(e => e.IsLocked).HasDefaultValue(0);
+            entity.Property(e => e.IsValid).HasDefaultValue(0);
             entity.Property(e => e.Timestamp)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("DATETIME");
@@ -65,6 +69,8 @@ public partial class VykazyPraceContext : DbContext
 
         modelBuilder.Entity<TimeEntrySubType>(entity =>
         {
+            entity.Property(e => e.IsArchived).HasDefaultValue(0);
+
             entity.HasOne(d => d.User).WithMany(p => p.TimeEntrySubTypes)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull);

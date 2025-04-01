@@ -10,7 +10,8 @@ public partial class TimeEntrySubType
     public string? Title { get; set; }
 
     public int UserId { get; set; }
-    public int? IsArchived { get; set; } = 0;
+
+    public int? IsArchived { get; set; }
 
     public virtual User User { get; set; } = null!;
 }

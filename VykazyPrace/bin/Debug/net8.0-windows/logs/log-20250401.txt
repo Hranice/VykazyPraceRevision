@@ -19,3 +19,4 @@
 2025-04-01 09:57:43.400 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Poznámka
 2025-04-01 09:59:03.642 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Poznámka
 2025-04-01 09:59:39.339 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl úspěšně aktualizován.
+2025-04-01 10:04:28.408 +02:00 [INF] Záznam 0 - Školení: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.

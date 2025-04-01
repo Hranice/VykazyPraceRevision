@@ -46,12 +46,25 @@ namespace VykazyPrace.Core.Database.Repositories
         /// <summary>
         /// Získání všech časových záznamů pro konkrétního uživatele.
         /// </summary>
-        public async Task<List<TimeEntry>> GetAllTimeEntriesByUserAsync(User user)
+        public async Task<List<TimeEntry>> GetAllTimeEntriesByUserAsync(User user, bool includeSnacks = false)
         {
-            return await _context.TimeEntries
-                .Where(te => te.UserId == user.Id)
-                .Include(te => te.Project)
-                .ToListAsync();
+            if (includeSnacks)
+            {
+                return await _context.TimeEntries
+               .Where(te => te.UserId == user.Id)
+               .Include(te => te.Project)
+               .ToListAsync();
+            }
+
+            else
+            {
+                return await _context.TimeEntries
+            .Where(te => te.UserId == user.Id &&
+                        !(te.ProjectId == 132 && te.EntryTypeId == 24))
+            .Include(te => te.Project)
+            .ToListAsync();
+
+            }
         }
 
         /// <summary>

@@ -13,3 +13,9 @@
 2025-04-01 09:21:14.508 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - 3D tisk byl smazán z databáze.
 2025-04-01 09:48:47.435 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - Video byl úspěšně aktualizován.
 2025-04-01 09:48:50.225 +02:00 [INF] Záznam 0 - Ostatní: 0,5 h - Video byl smazán z databáze.
+2025-04-01 09:54:16.688 +02:00 [INF] Aktualizace na verzi 1.1.6.1 byla úspěšně dokončena.
+2025-04-01 09:54:24.663 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Poznámka
+2025-04-01 09:54:38.911 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Poznámka
+2025-04-01 09:57:43.400 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Poznámka
+2025-04-01 09:59:03.642 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Poznámka
+2025-04-01 09:59:39.339 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl úspěšně aktualizován.

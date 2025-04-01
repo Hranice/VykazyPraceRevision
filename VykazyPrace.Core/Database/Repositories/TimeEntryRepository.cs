@@ -216,7 +216,8 @@ namespace VykazyPrace.Core.Database.Repositories
             return await _context.TimeEntries
                 .Where(te => te.Timestamp.HasValue
                              && te.Timestamp.Value.Date >= fromDate.Date
-                             && te.Timestamp.Value.Date <= toDate.Date)
+                             && te.Timestamp.Value.Date <= toDate.Date
+                             && !(te.ProjectId == 132 && te.EntryTypeId == 24))
                 .GroupBy(te => new { te.UserId, te.ProjectId })
                 .Select(g => new TimeEntrySummary
                 {
@@ -226,6 +227,7 @@ namespace VykazyPrace.Core.Database.Repositories
                 })
                 .ToListAsync();
         }
+
 
         public async Task LockAllEntriesInMonth(string month)
         {

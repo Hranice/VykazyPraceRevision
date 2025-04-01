@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
+using VykazyPrace.Core.Database.Services;
 using VykazyPrace.Dialogs;
 using VykazyPrace.Helpers;
 using VykazyPrace.Logging;
@@ -39,6 +40,8 @@ namespace VykazyPrace.UserControls.CalendarV2
         private List<TimeEntryType> _timeEntryTypes = new();
         private List<TimeEntrySubType> _timeEntrySubTypes = new();
         private List<DayPanel> panels = new();
+        private int _personalNumber;
+        private readonly WorkTimeTransferSyncService _workTimeSyncService;
 
         // Context
         private User _selectedUser;
@@ -76,13 +79,16 @@ namespace VykazyPrace.UserControls.CalendarV2
                           TimeEntryTypeRepository timeEntryTypeRepo,
                           TimeEntrySubTypeRepository timeEntrySubTypeRepo,
                           ProjectRepository projectRepo,
-                          UserRepository userRepo)
+                          UserRepository userRepo,
+                          WorkTimeTransferSyncService workTimeSyncService)
         {
             InitializeComponent();
             DoubleBuffered = true;
 
             _selectedDate = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
             _selectedUser = currentUser;
+            _personalNumber = currentUser.PersonalNumber;
+            _workTimeSyncService = workTimeSyncService;
 
             _timeEntryRepo = timeEntryRepo;
             _timeEntryTypeRepo = timeEntryTypeRepo;
@@ -548,9 +554,8 @@ namespace VykazyPrace.UserControls.CalendarV2
         }
 
 
-        private void AdjustIndicators(Point scrollPosition)
+        private async void AdjustIndicators(Point scrollPosition)
         {
-            // Odstranění starých indikátorů
             var oldIndicators = panelContainer.Controls.OfType<Panel>().Where(p => p.Name == "indicator").ToList();
             foreach (var ctrl in oldIndicators)
             {
@@ -562,38 +567,52 @@ namespace VykazyPrace.UserControls.CalendarV2
             int[] columnWidths = tableLayoutPanel1.GetColumnWidths();
             int[] headerRowHeights = customTableLayoutPanel1.GetRowHeights();
 
-            int todayIndex = (int)DateTime.Now.DayOfWeek - 1;
-            if (todayIndex < 0) todayIndex = 6; // Oprava, aby pondělí bylo 0 a neděle 6
-
-            // Přidání indikátorů
-            for (int j = 0; j < 7; j++)
+            for (int row = 0; row < 7; row++)
             {
-                int rowHeight = (j < rowHeights.Length) ? rowHeights[j] : 69;
-                int yPos = tableLayoutPanel1.GetRowHeights().Take(j).Sum() + headerRowHeights[0];
+                DateTime currentDay = _selectedDate.AddDays(row);
+                var transfers = await _workTimeSyncService.GetOrSyncByDateAsync(currentDay, _personalNumber);
 
-                int arrivalXPos = (columnWidths[0] * arrivalColumn) - Math.Abs(scrollPosition.X);
+                    AppLogger.Error($"Žádné záznamy o příchodu/odchodu pro {currentDay:yyyy-MM-dd} a osobní číslo {_personalNumber}.");
+                if (transfers == null || transfers.Count == 0)
+                    continue;
 
-                var arrivalIndicator = new Panel
+
+                var transfer = transfers.FirstOrDefault(); // 1 user = 1 záznam na den
+
+
+
+                int yPos = rowHeights.Take(row).Sum() + headerRowHeights[0];
+                int rowHeight = (row < rowHeights.Length) ? rowHeights[row] : 69;
+
+                if (DateTime.TryParse(transfer.Arrival, out var arrivalTime))
                 {
-                    Name = "indicator",
-                    Size = new Size(2, rowHeight),
-                    Location = new Point(arrivalXPos, yPos),
-                    BackColor = Color.Green
-                };
+                    int minutes = arrivalTime.Hour * 60 + arrivalTime.Minute;
+                    int column = minutes / TimeSlotLengthInMinutes;
+                    int x = (columnWidths[0] * column) - Math.Abs(scrollPosition.X);
 
-                panelContainer.Controls.Add(arrivalIndicator);
-                arrivalIndicator.BringToFront();
+                    var arrivalIndicator = new Panel
+                    {
+                        Name = "indicator",
+                        Size = new Size(2, rowHeight),
+                        Location = new Point(x, yPos),
+                        BackColor = Color.Green
+                    };
 
-                // Vykreslení leaveColumn pouze pokud to není aktuální den
-                if (j != todayIndex)
+                    panelContainer.Controls.Add(arrivalIndicator);
+                    arrivalIndicator.BringToFront();
+                }
+
+                if (DateTime.TryParse(transfer.Departure, out var leaveTime))
                 {
-                    int leaveXPos = (columnWidths[0] * leaveColumn) - Math.Abs(scrollPosition.X);
+                    int minutes = leaveTime.Hour * 60 + leaveTime.Minute;
+                    int column = minutes / TimeSlotLengthInMinutes;
+                    int x = (columnWidths[0] * column) - Math.Abs(scrollPosition.X);
 
                     var leaveIndicator = new Panel
                     {
                         Name = "indicator",
                         Size = new Size(2, rowHeight),
-                        Location = new Point(leaveXPos, yPos),
+                        Location = new Point(x, yPos),
                         BackColor = Color.Red
                     };
 
@@ -602,6 +621,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 }
             }
         }
+
 
         private void AttachTooltipToPanel(DayPanel panel, TimeEntry entry)
         {

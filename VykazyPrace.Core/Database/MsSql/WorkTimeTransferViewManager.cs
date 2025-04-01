@@ -13,30 +13,30 @@ namespace VykazyPrace.Core.Database.MsSql
 
         public void DropView()
         {
-            _sqlService.ExecuteNonQuery("DROP VIEW IF EXISTS pwk.WorkTimeTransfer");
+            _sqlService.ExecuteNonQuery("DROP VIEW IF EXISTS pwk.Prenos_pracovni_doby");
         }
 
         public void CreateView()
         {
             string setDateFormat = "SET DATEFORMAT DMY;";
             string createView = @"
-CREATE VIEW [pwk].[WorkTimeTransfer]
+CREATE VIEW [pwk].[Prenos_pracovni_doby]
 AS
 SELECT
-    [PE].[PersonID] AS [PersonId],
-    [PE].[PersonalNum] AS [PersonalNumber],
-    CASE [PB].[RegistrationTime] WHEN [D2].[RegistrationTime] THEN NULL ELSE [PB].[RegistrationTime] END AS [Arrival],
-    [D2].[RegistrationTime] AS [Departure],
-    [pwk].[GetLocalName] ([PB].[DenoteName],5) as [DepartureReason],
-    [AD].[WorkedHours]/60. AS [StandardHours],
-    [AD].[BalanceHours]/60. AS [OvertimeHours],
-    [pwk].[DayNumberToDate] ([AD].[DayNumber]) AS [WorkDate],
+    [PE].[PersonID] AS [Klíč_pracovníka (PersonID)],
+    [PE].[PersonalNum] AS [Id_pracovníka (Os. číslo)],
+    CASE [PB].[RegistrationTime] WHEN [D2].[RegistrationTime] THEN NULL ELSE [PB].[RegistrationTime] END AS [Příchod],
+    [D2].[RegistrationTime] AS [Odchod],
+    [pwk].[GetLocalName] ([PB].[DenoteName],5) as [Důvod odchodu],
+    [AD].[WorkedHours]/60. AS [Počet hodin (standard)],
+    [AD].[BalanceHours]/60. AS [Počet hodin (přesčas)],
+    [pwk].[DayNumberToDate] ([AD].[DayNumber]) AS [Datum směny],
     CASE [AM].[ApproveState]
-        WHEN 0 THEN 'Unprocessed'
-        WHEN 1 THEN 'Processed'
-        WHEN 4 THEN 'Approved by Supervisor'
-        WHEN 7 THEN 'Approved by HR'
-    END AS [ApprovalState]
+        WHEN 0 THEN 'Nezpracováno'
+        WHEN 1 THEN 'Zpracováno'
+        WHEN 4 THEN 'Schváleno vedoucím'
+        WHEN 7 THEN 'Schváleno HR'
+    END AS [Stav schválení měsíce]
 FROM [pwk].[Person] [PE]
 INNER JOIN [pwk].[AttnMonth] [AM] ON [AM].[PersonID] = [PE].[PersonID]
 INNER JOIN [pwk].[AttnDay] [AD] ON [AD].[AttnMonthID] = [AM].[AttnMonthID]
@@ -54,7 +54,8 @@ CROSS APPLY (
     ORDER BY [AR2].[RegistrationTime] ASC
 ) AS [PB]
 WHERE [PE].[DeletedID] = 0
-AND [AM].[MonthNumber] = ([pwk].[DateToMonthNumber](GETDATE()))";
+AND [AM].[MonthNumber] = ([pwk].[DateToMonthNumber](GETDATE()))
+";
 
             _sqlService.ExecuteNonQueryMultiple(setDateFormat, createView);
         }
@@ -63,26 +64,31 @@ AND [AM].[MonthNumber] = ([pwk].[DateToMonthNumber](GETDATE()))";
         {
             string sql = @"
 SELECT * 
-FROM pwk.WorkTimeTransfer
-WHERE [PersonalNumber] = @PersonalNumber";
+FROM pwk.Prenos_pracovni_doby
+WHERE [Id_pracovníka (Os. číslo)] = @OsCislo";
 
             var table = _sqlService.ExecuteQuery(sql, new Dictionary<string, object>
-            {
-                { "@PersonalNumber", personalNumber }
-            });
+    {
+        { "@OsCislo", personalNumber }
+    });
+
+            if (table == null || table.Rows.Count == 0)
+                return new List<WorkTimeTransferRecord>(); // 👈 bezpečný návrat
 
             return table.AsEnumerable().Select(row => new WorkTimeTransferRecord
             {
-                PersonId = row.Field<int>("PersonId"),
-                PersonalNumber = row.Field<int>("PersonalNumber"),
-                Arrival = row.Field<DateTime?>("Arrival"),
-                Departure = row.Field<DateTime?>("Departure"),
-                DepartureReason = row.Field<string>("DepartureReason"),
-                StandardHours = row.Field<double>("StandardHours"),
-                OvertimeHours = row.Field<double>("OvertimeHours"),
-                WorkDate = row.Field<DateTime>("WorkDate"),
-                ApprovalState = row.Field<string>("ApprovalState")
+                PersonId = Convert.ToInt32(row["Klíč_pracovníka (PersonID)"]),
+                PersonalNumber = Convert.ToInt32(row["Id_pracovníka (Os. číslo)"]),
+                Arrival = row.Field<DateTime?>("Příchod"),
+                Departure = row.Field<DateTime?>("Odchod"),
+                DepartureReason = row["Důvod odchodu"]?.ToString(),
+                StandardHours = Convert.ToDouble(row["Počet hodin (standard)"]),
+                OvertimeHours = Convert.ToDouble(row["Počet hodin (přesčas)"]),
+                WorkDate = Convert.ToDateTime(row["Datum směny"]),
+                ApprovalState = row["Stav schválení měsíce"]?.ToString()
             }).ToList();
+
         }
+
     }
 }

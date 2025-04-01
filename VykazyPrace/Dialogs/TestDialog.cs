@@ -128,7 +128,7 @@ WHERE [AR2].[AttnDayID]=[D2].[AttnDayID] AND [D].[InOutType]=2 AND [AR2].[Delete
 ORDER BY [AR2].[RegistrationTime] ASC) AS [PB]
 
 WHERE [PE].[DeletedID] = 0 
-AND [AM].[MonthNumber] = ([pwk].[DateToMonthNumber] (GETDATE()))";
+AND [AM].[MonthNumber] = ([pwk].[DateToMonthNumber] (GETDATE() - 1))";
 
             try
             {

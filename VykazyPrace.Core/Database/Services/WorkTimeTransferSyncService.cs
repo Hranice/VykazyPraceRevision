@@ -17,26 +17,50 @@ namespace VykazyPrace.Core.Database.Services
             _viewManager = viewManager;
         }
 
-        public async Task SyncAsync(int personalNumber)
+        /// <summary>
+        /// Vrátí záznamy z SQLite nebo je dotáhne z MSSQL view a uloží
+        /// </summary>
+        public async Task<List<WorkTimeTransfer>> GetOrSyncByDateAsync(DateTime date, int personalNumber)
         {
-            //var records = _viewManager.LoadByPersonalNumber(personalNumber);
+            string formattedDate = date.ToString("yyyy-MM-dd");
 
-            //await _sqliteRepository.ClearAllAsync();
+            // 1. Zkontroluj, jestli už máme data v SQLite
+            bool exists = await _sqliteRepository.HasRecordsForDateAsync(date);
+            if (exists)
+            {
+                return (await _sqliteRepository.GetByPersonalNumberAsync(personalNumber))
+                    .Where(r => r.WorkDate == formattedDate)
+                    .ToList();
+            }
 
-            //var entities = records.Select(r => new WorkTimeTransfer
-            //{
-            //    PersonId = r.PersonId,
-            //    PersonalNumber = r.PersonalNumber,
-            //    Arrival = r.Arrival,
-            //    Departure = r.Departure,
-            //    DepartureReason = r.DepartureReason,
-            //    StandardHours = r.StandardHours,
-            //    OvertimeHours = r.OvertimeHours,
-            //    WorkDate = r.WorkDate,
-            //    ApprovalState = r.ApprovalState
-            //}).ToList();
+            // 2. Dotáhni všechna data z MSSQL pro daného uživatele (view obsahuje celý měsíc)
+            var allFromView = _viewManager.LoadByPersonalNumber(personalNumber);
 
-            //await _sqliteRepository.SaveRangeAsync(entities);
+            var filtered = allFromView
+                .Where(x => x.WorkDate.Date == date.Date)
+                .ToList();
+
+            if (filtered.Count == 0)
+                return new List<WorkTimeTransfer>();
+
+            // 3. Převod na SQLite entity
+            var toSave = filtered.Select(r => new WorkTimeTransfer
+            {
+                PersonId = r.PersonId,
+                PersonalNumber = r.PersonalNumber,
+                Arrival = r.Arrival?.ToString("s"),
+                Departure = r.Departure?.ToString("s"),
+                DepartureReason = r.DepartureReason,
+                StandardHours = r.StandardHours,
+                OvertimeHours = r.OvertimeHours,
+                WorkDate = r.WorkDate.ToString("yyyy-MM-dd"),
+                ApprovalState = r.ApprovalState
+            }).ToList();
+
+            // 4. Ulož do SQLite
+            await _sqliteRepository.SaveRangeAsync(toSave);
+
+            return toSave;
         }
     }
 }

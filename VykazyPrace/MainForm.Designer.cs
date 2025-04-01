@@ -129,22 +129,21 @@
             // nastaveníToolStripMenuItem
             // 
             nastaveníToolStripMenuItem.Name = "nastaveníToolStripMenuItem";
-            nastaveníToolStripMenuItem.Size = new Size(139, 22);
+            nastaveníToolStripMenuItem.Size = new Size(180, 22);
             nastaveníToolStripMenuItem.Text = "Nastavení";
             nastaveníToolStripMenuItem.Click += nastaveníToolStripMenuItem_Click;
             // 
             // testToolStripMenuItem
             // 
             testToolStripMenuItem.Name = "testToolStripMenuItem";
-            testToolStripMenuItem.Size = new Size(139, 22);
+            testToolStripMenuItem.Size = new Size(180, 22);
             testToolStripMenuItem.Text = "Test";
-            testToolStripMenuItem.Visible = false;
             testToolStripMenuItem.Click += testToolStripMenuItem_Click_1;
             // 
             // oProgramuToolStripMenuItem
             // 
             oProgramuToolStripMenuItem.Name = "oProgramuToolStripMenuItem";
-            oProgramuToolStripMenuItem.Size = new Size(139, 22);
+            oProgramuToolStripMenuItem.Size = new Size(180, 22);
             oProgramuToolStripMenuItem.Text = "O programu";
             oProgramuToolStripMenuItem.Click += oProgramuToolStripMenuItem_Click;
             // 

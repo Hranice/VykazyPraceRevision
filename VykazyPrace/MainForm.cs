@@ -1,7 +1,9 @@
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using VykazyPrace.Core.Database.Models;
+using VykazyPrace.Core.Database.MsSql;
 using VykazyPrace.Core.Database.Repositories;
+using VykazyPrace.Core.Database.Services;
 using VykazyPrace.Dialogs;
 using VykazyPrace.Helpers;
 using VykazyPrace.Logging;
@@ -26,6 +28,7 @@ namespace VykazyPrace
         private DateTime _selectedDate;
         private CalendarV2 _calendar;
         private CalendarUC _monthlyCalendar;
+        private WorkTimeTransferSyncService _workTimeSyncService;
 
         public MainForm()
         {
@@ -64,6 +67,14 @@ namespace VykazyPrace
         private async Task LoadDataAsync()
         {
             Invoke(() => _loadingUC.BringToFront());
+
+            var mssqlService = new MsSqlService("Server=10.130.10.100;Database=powerkey;User Id=vykazprace;Password=!Vykaz2025!;TrustServerCertificate=True;");
+            var viewManager = new WorkTimeTransferViewManager(mssqlService);
+
+            var workTransferRepo = new WorkTimeTransferRepository(new VykazyPraceContext());
+
+            _workTimeSyncService = new WorkTimeTransferSyncService(workTransferRepo, viewManager);
+
 
             var users = await _userRepo.GetAllUsersAsync();
             _selectedUser = await _userRepo.GetUserByWindowsUsernameAsync(Environment.UserName) ?? new User();
@@ -106,7 +117,13 @@ namespace VykazyPrace
             panelCalendarContainer.Controls.Add(_monthlyCalendar);
 
             // Nový CalendarV2 do panelContainer
-            _calendar = new CalendarV2(_selectedUser, _timeEntryRepo, _timeEntryTypeRepo, _timeEntrySubTypeRepo, _projectRepo, _userRepo)
+            _calendar = new CalendarV2(_selectedUser,
+                                _timeEntryRepo,
+                                _timeEntryTypeRepo,
+                                _timeEntrySubTypeRepo,
+                                _projectRepo,
+                                _userRepo,
+                                _workTimeSyncService)
             {
                 Dock = DockStyle.Fill,
                 Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238),

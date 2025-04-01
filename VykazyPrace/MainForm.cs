@@ -200,6 +200,7 @@ namespace VykazyPrace
             _selectedUser = users.FirstOrDefault(x => FormatHelper.FormatUserToString(x) == selectedName) ?? new User();
 
             _calendar?.ChangeUser(_selectedUser);
+            _monthlyCalendar.ChangeUser(_selectedUser);
         }
 
         private async void buttonPrevious_Click(object sender, EventArgs e)

@@ -1109,7 +1109,11 @@ namespace VykazyPrace.UserControls.CalendarV2
                 return;
             }
 
-            var selectedEntryTypeId = _timeEntryTypes[comboBoxEntryType.SelectedIndex].Id;
+            int selectedEntryTypeId = 0;
+            if (comboBoxEntryType.SelectedIndex > 0)
+            {
+                selectedEntryTypeId = _timeEntryTypes[comboBoxEntryType.SelectedIndex].Id;
+            }
 
             var newSubType = new TimeEntrySubType
             {
@@ -1147,8 +1151,8 @@ namespace VykazyPrace.UserControls.CalendarV2
             else if (radioButton4.Checked)
             {
                 timeEntry.ProjectId = 26;
+                timeEntry.EntryTypeId = 16;
             }
-
 
             timeEntry.AfterCare = _projects.FirstOrDefault(x => x.Id == timeEntry.ProjectId)?.IsArchived ?? 0;
             timeEntry.IsValid = 1;

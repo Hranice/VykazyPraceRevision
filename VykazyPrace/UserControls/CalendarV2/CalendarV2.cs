@@ -1110,7 +1110,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
 
             int selectedEntryTypeId = 0;
-            if (comboBoxEntryType.SelectedIndex > 0)
+            if (comboBoxEntryType.SelectedIndex > -1)
             {
                 selectedEntryTypeId = _timeEntryTypes[comboBoxEntryType.SelectedIndex].Id;
             }

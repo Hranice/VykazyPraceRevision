@@ -746,6 +746,8 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             if (sender is not DayPanel panel) return;
 
+            DeactivateAllPanels();
+            panel.Activate();
             mouseMoved = false;
 
             isResizing = Cursor == Cursors.SizeWE;
@@ -1344,6 +1346,12 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
+            // Zjisti aktuálně fokusovaný prvek uvnitř tohoto UserControl
+            Control? focused = this.ContainsFocus ? this.GetFocusedControl(this) : null;
+
+            if (focused is TextBoxBase or ComboBox)
+                return base.ProcessCmdKey(ref msg, keyData);
+
             if (keyData == (Keys.Control | Keys.C))
             {
                 CopySelectedPanel();
@@ -1358,6 +1366,25 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             return base.ProcessCmdKey(ref msg, keyData);
         }
+
+        private Control? GetFocusedControl(Control control)
+        {
+            foreach (Control child in control.Controls)
+            {
+                if (child.ContainsFocus)
+                {
+                    if (child.HasChildren)
+                        return GetFocusedControl(child);
+                    else
+                        return child;
+                }
+            }
+
+            return control.Focused ? control : null;
+        }
+
+
+
 
         private async void CopySelectedPanel()
         {

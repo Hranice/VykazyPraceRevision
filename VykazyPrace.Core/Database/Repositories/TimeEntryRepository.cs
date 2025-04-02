@@ -51,18 +51,20 @@ namespace VykazyPrace.Core.Database.Repositories
             if (includeSnacks)
             {
                 return await _context.TimeEntries
-               .Where(te => te.UserId == user.Id)
-               .Include(te => te.Project)
-               .ToListAsync();
+                    .AsNoTracking()
+                    .Where(te => te.UserId == user.Id)
+                    .Include(te => te.Project)
+                    .ToListAsync();
             }
 
             else
             {
                 return await _context.TimeEntries
-            .Where(te => te.UserId == user.Id &&
-                        !(te.ProjectId == 132 && te.EntryTypeId == 24))
-            .Include(te => te.Project)
-            .ToListAsync();
+                    .AsNoTracking()
+                    .Where(te => te.UserId == user.Id &&
+                                !(te.ProjectId == 132 && te.EntryTypeId == 24))
+                    .Include(te => te.Project)
+                    .ToListAsync();
 
             }
         }

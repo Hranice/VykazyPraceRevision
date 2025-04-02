@@ -158,6 +158,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             _selectedDate = _selectedDate.AddDays(-7);
             await RenderCalendar();
+            this.Focus();
             return _selectedDate;
         }
 
@@ -165,6 +166,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             _selectedDate = _selectedDate.AddDays(7);
             await RenderCalendar();
+            this.Focus();
             return _selectedDate;
         }
 
@@ -174,6 +176,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             int offset = ((int)today.DayOfWeek + 6) % 7;
             _selectedDate = today.AddDays(-offset);
             await RenderCalendar();
+            this.Focus();
             return _selectedDate;
         }
 
@@ -743,6 +746,8 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             if (sender is not DayPanel panel) return;
 
+            DeactivateAllPanels();
+            panel.Activate();
             mouseMoved = false;
 
             isResizing = Cursor == Cursors.SizeWE;
@@ -1341,6 +1346,12 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
+            // Zjisti aktuálně fokusovaný prvek uvnitř tohoto UserControl
+            Control? focused = this.ContainsFocus ? this.GetFocusedControl(this) : null;
+
+            if (focused is TextBoxBase or ComboBox)
+                return base.ProcessCmdKey(ref msg, keyData);
+
             if (keyData == (Keys.Control | Keys.C))
             {
                 CopySelectedPanel();
@@ -1356,11 +1367,30 @@ namespace VykazyPrace.UserControls.CalendarV2
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private void CopySelectedPanel()
+        private Control? GetFocusedControl(Control control)
+        {
+            foreach (Control child in control.Controls)
+            {
+                if (child.ContainsFocus)
+                {
+                    if (child.HasChildren)
+                        return GetFocusedControl(child);
+                    else
+                        return child;
+                }
+            }
+
+            return control.Focused ? control : null;
+        }
+
+
+
+
+        private async void CopySelectedPanel()
         {
             if (_selectedTimeEntryId <= 0) return;
 
-            var entry = _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId).Result;
+            var entry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
             if (entry != null)
             {
                 copiedEntry = new TimeEntry

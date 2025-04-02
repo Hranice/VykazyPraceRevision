@@ -19,6 +19,7 @@ CloseApplications=yes
 RestartApplications=yes
 
 [Files]
+Source: "Changelog.docx"; DestDir: "{app}"; Flags: ignoreversion
 Source: "VykazyPrace\bin\Release\net8.0-windows\win-x64\publish\WorkLog.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "VykazyPrace\bin\Release\net8.0-windows\win-x64\publish\*.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "VykazyPrace\bin\Release\net8.0-windows\win-x64\publish\latest.txt"; DestDir: "{app}"; Flags: ignoreversion

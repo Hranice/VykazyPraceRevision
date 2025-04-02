@@ -158,6 +158,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             _selectedDate = _selectedDate.AddDays(-7);
             await RenderCalendar();
+            this.Focus();
             return _selectedDate;
         }
 
@@ -165,6 +166,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             _selectedDate = _selectedDate.AddDays(7);
             await RenderCalendar();
+            this.Focus();
             return _selectedDate;
         }
 
@@ -174,6 +176,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             int offset = ((int)today.DayOfWeek + 6) % 7;
             _selectedDate = today.AddDays(-offset);
             await RenderCalendar();
+            this.Focus();
             return _selectedDate;
         }
 
@@ -1356,11 +1359,11 @@ namespace VykazyPrace.UserControls.CalendarV2
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private void CopySelectedPanel()
+        private async void CopySelectedPanel()
         {
             if (_selectedTimeEntryId <= 0) return;
 
-            var entry = _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId).Result;
+            var entry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
             if (entry != null)
             {
                 copiedEntry = new TimeEntry

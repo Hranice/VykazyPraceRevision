@@ -187,8 +187,8 @@ namespace VykazyPrace
                 buttonNext.Visible = false;
                 labelSelectedDate.Visible = false;
                 buttonNow.Visible = false;
-                await _monthlyCalendar.ReloadCalendar();
                 panelCalendarContainer.BringToFront();
+                await _monthlyCalendar.ReloadCalendar();
             }
         }
 

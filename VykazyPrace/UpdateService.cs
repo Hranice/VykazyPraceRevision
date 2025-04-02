@@ -62,10 +62,43 @@ namespace VykazyPrace
 
             if (lastVersion != currentVersion)
             {
-                AppLogger.Information($"Aktualizace na verzi {currentVersion} byla úspěšně dokončena.");
                 File.WriteAllText(versionFile, currentVersion);
+
+                string changelogPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Changelog.docx");
+                string message = $"Aplikace byla aktualizována na verzi {currentVersion}.";
+
+                if (File.Exists(changelogPath))
+                {
+                    DialogResult result = MessageBox.Show(
+                        message + "\n\nChcete si zobrazit seznam změn (changelog)?",
+                        "Aktualizace dokončena",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Information
+                    );
+
+                    if (result == DialogResult.Yes)
+                    {
+                        try
+                        {
+                            Process.Start(new ProcessStartInfo
+                            {
+                                FileName = changelogPath,
+                                UseShellExecute = true
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            AppLogger.Error("Nepodařilo se otevřít Changelog.docx", ex);
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(message, "Aktualizace dokončena", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
         }
+
 
     }
 }

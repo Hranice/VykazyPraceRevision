@@ -268,6 +268,11 @@ namespace VykazyPrace.UserControls.CalendarV2
             var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
             if (timeEntry == null) return;
 
+            if(timeEntry.ProjectId == 132 && timeEntry.EntryTypeId == 24)
+            {
+                flowLayoutPanel2.Visible = false;
+            }
+
             DateTime timeStamp = timeEntry.Timestamp ?? _selectedDate;
             int minutesStart = timeStamp.Hour * 60 + timeStamp.Minute;
             int minutesEnd = minutesStart + timeEntry.EntryMinutes;
@@ -706,9 +711,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             if (sender is not DayPanel panel) return;
 
-            if (panel.Tag as string == "snack")
-                return;
-
             DeactivateAllPanels();
             panel.Activate();
             _selectedTimeEntryId = panel.EntryId;
@@ -883,12 +885,14 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             if (sender is not DayPanel panel) return;
 
+            mouseMoved = false;
             isResizing = false;
             isMoving = false;
             activePanel = null;
             Cursor = Cursors.Default;
 
             _selectedTimeEntryId = panel.EntryId;
+
             var entry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
             if (entry == null) return;
 

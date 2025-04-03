@@ -7,3 +7,8 @@
 2025-04-03 08:47:43.728 +02:00 [INF] Záznam 0 - Ostatní: 0,5 h - test byl smazán z databáze.
 2025-04-03 08:47:44.349 +02:00 [INF] Záznam 0 - Nepřítomnost: 0,5 h -  byl smazán z databáze.
 2025-04-03 08:47:44.917 +02:00 [INF] Záznam 0291 - Náhon výstupního pásu: 0,5 h - SW - Výkazy hodin byl smazán z databáze.
+2025-04-03 12:05:00.554 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-04-03 12:05:23.315 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - tgff byl úspěšně aktualizován.
+2025-04-03 12:05:54.498 +02:00 [INF] Záznam 017I21 - Kamerový systém pro K15-3: 0,5 h -  byl smazán z databáze.
+2025-04-03 12:05:57.499 +02:00 [INF] Záznam 031I21 - Vývoj nových greiferů: 0,5 h - tgff byl smazán z databáze.
+2025-04-03 12:05:59.472 +02:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 0,5 h - SW - Výkazy hodin byl smazán z databáze.

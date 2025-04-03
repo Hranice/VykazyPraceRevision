@@ -1208,9 +1208,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                 FormatHelper.FormatTimeEntryTypeToString(t).Equals(comboBoxEntryType.Text, StringComparison.InvariantCultureIgnoreCase) ||
                 FormatHelper.FormatTimeEntryTypeWithAfterCareToString(t).Equals(comboBoxEntryType.Text, StringComparison.InvariantCultureIgnoreCase));
 
-            bool SubTypeMatches = _timeEntrySubTypes.Any(s =>
-                FormatHelper.FormatTimeEntrySubTypeToString(s).Equals(comboBoxIndex.Text, StringComparison.InvariantCultureIgnoreCase));
-
             switch (rb?.Text)
             {
                 case "PROVOZ":
@@ -1223,8 +1220,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                         return (false, "Projekt neodpovídá žádné možnosti");
                     if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text) || !EntryTypeMatches)
                         return (false, "Typ záznamu neodpovídá žádné možnosti");
-                    if (string.IsNullOrWhiteSpace(comboBoxIndex.Text) || !SubTypeMatches)
-                        return (false, "Index neodpovídá žádné možnosti");
                     break;
                 case "ŠKOLENÍ":
                     if (string.IsNullOrWhiteSpace(textBoxNote.Text))

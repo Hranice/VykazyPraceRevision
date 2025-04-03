@@ -2,6 +2,8 @@ $projectName = "VykazyPrace"
 $publishDir = ".\$projectName\bin\Release\net8.0-windows\win-x64\publish"
 $networkUpdatePath = "Z:\TS\jprochazka-sw\WorkLog\Updates"
 $issPath = ".\WorkLog.iss"
+# Set environment variable for Inno Setup
+[System.Environment]::SetEnvironmentVariable("APP_VERSION", $version, "Process")
 $innoSetupCompiler = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
 $installerExe = "WorkLog_Installer.exe"
 $installerBuiltPath = ".\Output\$installerExe"

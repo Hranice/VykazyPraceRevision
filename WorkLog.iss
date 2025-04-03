@@ -1,6 +1,8 @@
+#define AppVersion GetEnv("APP_VERSION")
+
 [Setup]
 AppName=WorkLog
-AppVersion=1.0.0
+AppVersion={#AppVersion}
 AppVerName=WorkLog
 OutputBaseFilename=WorkLog_Installer
 OutputDir=Output

@@ -282,9 +282,24 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                 await LoadTimeEntryTypesAsync(proj.ProjectType);
 
-                int index = proj.ProjectType + 1;
-                if (flowLayoutPanel2.Controls.Find($"radioButton{index}", false).FirstOrDefault() is RadioButton radioButton)
-                    radioButton.Checked = true;
+                // Speciální projekty – override radio button
+                switch (proj.Id)
+                {
+                    case 25:
+                        SelectRadioButtonByText("OSTATNÍ");
+                        break;
+                    case 23:
+                        SelectRadioButtonByText("NEPŘÍTOMNOST");
+                        break;
+                    case 26:
+                        SelectRadioButtonByText("ŠKOLENÍ");
+                        break;
+                    default:
+                        int index = proj.ProjectType + 1;
+                        if (flowLayoutPanel2.Controls.Find($"radioButton{index}", false).FirstOrDefault() is RadioButton rb)
+                            rb.Checked = true;
+                        break;
+                }
 
                 BeginInvoke((Action)(() =>
                 {
@@ -335,9 +350,17 @@ namespace VykazyPrace.UserControls.CalendarV2
                     comboBoxProjectsLoading = false;
                 }));
             }
-
-
         }
+
+        private void SelectRadioButtonByText(string text)
+        {
+            var rb = flowLayoutPanel2.Controls
+                .OfType<RadioButton>()
+                .FirstOrDefault(r => r.Text.Equals(text, StringComparison.InvariantCultureIgnoreCase));
+
+            if (rb != null) rb.Checked = true;
+        }
+
 
 
         private TableLayoutPanelCellPosition GetCellAt(TableLayoutPanel panel, Point clickPosition)

@@ -282,9 +282,24 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                 await LoadTimeEntryTypesAsync(proj.ProjectType);
 
-                int index = proj.ProjectType + 1;
-                if (flowLayoutPanel2.Controls.Find($"radioButton{index}", false).FirstOrDefault() is RadioButton radioButton)
-                    radioButton.Checked = true;
+                // Speciální projekty – override radio button
+                switch (proj.Id)
+                {
+                    case 25:
+                        SelectRadioButtonByText("OSTATNÍ");
+                        break;
+                    case 23:
+                        SelectRadioButtonByText("NEPŘÍTOMNOST");
+                        break;
+                    case 26:
+                        SelectRadioButtonByText("ŠKOLENÍ");
+                        break;
+                    default:
+                        int index = proj.ProjectType + 1;
+                        if (flowLayoutPanel2.Controls.Find($"radioButton{index}", false).FirstOrDefault() is RadioButton rb)
+                            rb.Checked = true;
+                        break;
+                }
 
                 BeginInvoke((Action)(() =>
                 {
@@ -335,9 +350,17 @@ namespace VykazyPrace.UserControls.CalendarV2
                     comboBoxProjectsLoading = false;
                 }));
             }
-
-
         }
+
+        private void SelectRadioButtonByText(string text)
+        {
+            var rb = flowLayoutPanel2.Controls
+                .OfType<RadioButton>()
+                .FirstOrDefault(r => r.Text.Equals(text, StringComparison.InvariantCultureIgnoreCase));
+
+            if (rb != null) rb.Checked = true;
+        }
+
 
 
         private TableLayoutPanelCellPosition GetCellAt(TableLayoutPanel panel, Point clickPosition)
@@ -1178,49 +1201,48 @@ namespace VykazyPrace.UserControls.CalendarV2
                .OfType<RadioButton>()
                .FirstOrDefault(r => r.Checked);
 
+            bool ProjectTextMatches = _projects.Any(p =>
+                FormatHelper.FormatProjectToString(p).Equals(comboBoxProjects.Text, StringComparison.InvariantCultureIgnoreCase));
+
+            bool EntryTypeMatches = _timeEntryTypes.Any(t =>
+                FormatHelper.FormatTimeEntryTypeToString(t).Equals(comboBoxEntryType.Text, StringComparison.InvariantCultureIgnoreCase) ||
+                FormatHelper.FormatTimeEntryTypeWithAfterCareToString(t).Equals(comboBoxEntryType.Text, StringComparison.InvariantCultureIgnoreCase));
+
+            bool SubTypeMatches = _timeEntrySubTypes.Any(s =>
+                FormatHelper.FormatTimeEntrySubTypeToString(s).Equals(comboBoxIndex.Text, StringComparison.InvariantCultureIgnoreCase));
 
             switch (rb?.Text)
             {
                 case "PROVOZ":
-                    if (string.IsNullOrWhiteSpace(comboBoxProjects.Text))
-                        return (false, "Nákladové středisko");
-                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text))
-                        return (false, "Typ záznamu");
-                    if (string.IsNullOrWhiteSpace(comboBoxIndex.Text))
-                        return (false, "Index");
+                    if (string.IsNullOrWhiteSpace(comboBoxProjects.Text) || !ProjectTextMatches)
+                        return (false, "Nákladové středisko neodpovídá žádné možnosti");
                     break;
                 case "PROJEKT":
-                    if (string.IsNullOrWhiteSpace(comboBoxProjects.Text))
-                        return (false, "Projekt");
-                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text))
-                        return (false, "Typ záznamu");
-                    if (string.IsNullOrWhiteSpace(comboBoxIndex.Text))
-                        return (false, "Index");
-                    break;
                 case "PŘEDPROJEKT":
-                    if (string.IsNullOrWhiteSpace(comboBoxProjects.Text))
-                        return (false, "Předprojekt");
-                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text))
-                        return (false, "Typ záznamu");
-                    if (string.IsNullOrWhiteSpace(comboBoxIndex.Text))
-                        return (false, "Index");
+                    if (string.IsNullOrWhiteSpace(comboBoxProjects.Text) || !ProjectTextMatches)
+                        return (false, "Projekt neodpovídá žádné možnosti");
+                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text) || !EntryTypeMatches)
+                        return (false, "Typ záznamu neodpovídá žádné možnosti");
+                    if (string.IsNullOrWhiteSpace(comboBoxIndex.Text) || !SubTypeMatches)
+                        return (false, "Index neodpovídá žádné možnosti");
                     break;
                 case "ŠKOLENÍ":
                     if (string.IsNullOrWhiteSpace(textBoxNote.Text))
                         return (false, "Poznámka");
                     break;
                 case "NEPŘÍTOMNOST":
-                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text))
-                        return (false, "Důvod");
+                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text) || !EntryTypeMatches)
+                        return (false, "Důvod neodpovídá žádné možnosti");
                     break;
                 default:
-                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text))
-                        return (false, "Činnost");
+                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text) || !EntryTypeMatches)
+                        return (false, "Činnost neodpovídá žádné možnosti");
                     break;
             }
 
             return (true, "");
         }
+
 
 
         private async void buttonRemove_Click(object sender, EventArgs e)
@@ -1232,6 +1254,9 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
             if (timeEntry == null) return;
+
+            // svačina
+            if (timeEntry.ProjectId == 132 && timeEntry.EntryTypeId == 24) return;
 
             bool confirmed = ShowDeleteConfirmation(timeEntry);
             if (!confirmed) return;
@@ -1391,6 +1416,10 @@ namespace VykazyPrace.UserControls.CalendarV2
             if (_selectedTimeEntryId <= 0) return;
 
             var entry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
+
+            // svačina
+            if (entry.ProjectId == 132 && entry.EntryTypeId == 24) return;
+
             if (entry != null)
             {
                 copiedEntry = new TimeEntry

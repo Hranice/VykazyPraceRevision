@@ -1233,6 +1233,9 @@ namespace VykazyPrace.UserControls.CalendarV2
             var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
             if (timeEntry == null) return;
 
+            // svačina
+            if (timeEntry.ProjectId == 132 && timeEntry.EntryTypeId == 24) return;
+
             bool confirmed = ShowDeleteConfirmation(timeEntry);
             if (!confirmed) return;
 
@@ -1391,6 +1394,10 @@ namespace VykazyPrace.UserControls.CalendarV2
             if (_selectedTimeEntryId <= 0) return;
 
             var entry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
+
+            // svačina
+            if (entry.ProjectId == 132 && entry.EntryTypeId == 24) return;
+
             if (entry != null)
             {
                 copiedEntry = new TimeEntry

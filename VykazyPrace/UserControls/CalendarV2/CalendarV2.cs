@@ -833,6 +833,8 @@ namespace VykazyPrace.UserControls.CalendarV2
                     tableLayoutPanel1.ResumeLayout();
                 }
             }
+
+            mouseMoved = false;
         }
 
         private void HandleMove(DayPanel panel, int deltaX, int columnWidth)

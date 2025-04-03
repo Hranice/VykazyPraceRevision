@@ -1577,7 +1577,7 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "1.1.6.7",
+    "version": "1.1.6.8",
     "restore": {
       "projectUniqueName": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\VykazyPrace.csproj",
       "projectName": "WorkLog",

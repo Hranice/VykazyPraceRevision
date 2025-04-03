@@ -641,3 +641,6 @@
 2025-04-03 13:12:06.541 +02:00 [INF] LoadSidebar - flowLayoutPnale2.Visible = True.
 2025-04-03 13:12:06.541 +02:00 [INF] LoadSidebar - timeEntry.IsValid = 1.
 2025-04-03 13:12:06.543 +02:00 [INF] LoadSidebar - projectId = 31.
+2025-04-03 13:51:15.832 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-04-03 13:51:46.849 +02:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 1,5 h - SW - Výkazy hodin byl smazán z databáze.
+2025-04-03 13:51:47.572 +02:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 1,5 h - SW - Výkazy hodin byl smazán z databáze.

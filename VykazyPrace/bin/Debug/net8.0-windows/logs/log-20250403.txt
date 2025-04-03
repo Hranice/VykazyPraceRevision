@@ -12,3 +12,4 @@
 2025-04-03 12:05:54.498 +02:00 [INF] Záznam 017I21 - Kamerový systém pro K15-3: 0,5 h -  byl smazán z databáze.
 2025-04-03 12:05:57.499 +02:00 [INF] Záznam 031I21 - Vývoj nových greiferů: 0,5 h - tgff byl smazán z databáze.
 2025-04-03 12:05:59.472 +02:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 0,5 h - SW - Výkazy hodin byl smazán z databáze.
+2025-04-03 12:23:45.834 +02:00 [INF] Byla zjištěna nová verze (1.1.6.6 -> 1.1.6.7), aplikace se nyní aktualizuje.

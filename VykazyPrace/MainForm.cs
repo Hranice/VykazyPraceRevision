@@ -35,7 +35,7 @@ namespace VykazyPrace
         private async void MainForm_Load(object sender, EventArgs e)
         {
             UpdateService.CheckForUpdateMessage();
-            _ = Task.Run(async () => await UpdateService.CheckForUpdateAsync());
+            await UpdateService.CheckForUpdateAsync();
 
             _loadingUC.Size = Size;
             Controls.Add(_loadingUC);

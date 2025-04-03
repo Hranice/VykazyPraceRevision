@@ -266,9 +266,10 @@ namespace VykazyPrace.UserControls.CalendarV2
             flowLayoutPanel2.Visible = _selectedTimeEntryId > -1;
 
             var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
+
             if (timeEntry == null) return;
 
-            if(timeEntry.ProjectId == 132 && timeEntry.EntryTypeId == 24)
+            if (timeEntry.ProjectId == 132 && timeEntry.EntryTypeId == 24)
             {
                 flowLayoutPanel2.Visible = false;
             }
@@ -279,6 +280,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             if (timeEntry.IsValid == 1)
             {
+
                 checkBoxArchivedProjects.Checked = timeEntry.Project.IsArchived == 1;
                 flowLayoutPanel2.Enabled = timeEntry.IsLocked == 0;
 
@@ -305,6 +307,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                             rb.Checked = true;
                         break;
                 }
+
 
                 BeginInvoke((Action)(() =>
                 {
@@ -721,6 +724,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             );
 
             tableLayoutPanel1.ClearSelection();
+
             await LoadSidebar();
         }
 
@@ -738,7 +742,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void dayPanel_MouseMove(object? sender, MouseEventArgs e)
         {
-            mouseMoved = true;
+
 
             if (sender is not DayPanel panel) return;
 
@@ -771,9 +775,9 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             if (sender is not DayPanel panel) return;
 
+            mouseMoved = false;
             DeactivateAllPanels();
             panel.Activate();
-            mouseMoved = false;
 
             isResizing = Cursor == Cursors.SizeWE;
             isMoving = !isResizing;
@@ -846,16 +850,29 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             if (!IsOverlapping(targetColumn, span, targetRow, panel))
             {
-                tableLayoutPanel1.SuspendLayout();
+                // Zjisti aktuální pozici panelu
+                int currentColumn = tableLayoutPanel1.GetColumn(panel);
+                int currentRow = tableLayoutPanel1.GetRow(panel);
 
-                tableLayoutPanel1.SetColumn(panel, targetColumn);
-                if (panel.Tag as string != "snack")
-                    tableLayoutPanel1.SetRow(panel, targetRow);
-                tableLayoutPanel1.SetColumnSpan(panel, span);
+                // Pokud se opravdu mění pozice
+                bool hasMoved = currentColumn != targetColumn || currentRow != targetRow;
 
-                tableLayoutPanel1.ResumeLayout();
+                if (hasMoved)
+                {
+                    tableLayoutPanel1.SuspendLayout();
+
+                    tableLayoutPanel1.SetColumn(panel, targetColumn);
+                    if (panel.Tag as string != "snack")
+                        tableLayoutPanel1.SetRow(panel, targetRow);
+                    tableLayoutPanel1.SetColumnSpan(panel, span);
+
+                    mouseMoved = true;
+
+                    tableLayoutPanel1.ResumeLayout();
+                }
             }
         }
+
 
         private void UpdateCursor(MouseEventArgs e, DayPanel panel)
         {
@@ -928,6 +945,8 @@ namespace VykazyPrace.UserControls.CalendarV2
                 comboBoxStart.SelectedIndex = minutesStart / 30;
                 comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
             });
+
+            await LoadSidebar();
 
         }
         #endregion

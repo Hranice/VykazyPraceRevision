@@ -1,0 +1,2 @@
+2025-04-03 08:22:16.861 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Projekt neodpovídá žádné možnosti
+2025-04-03 08:22:26.023 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Typ záznamu neodpovídá žádné možnosti

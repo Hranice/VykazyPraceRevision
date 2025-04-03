@@ -1178,49 +1178,48 @@ namespace VykazyPrace.UserControls.CalendarV2
                .OfType<RadioButton>()
                .FirstOrDefault(r => r.Checked);
 
+            bool ProjectTextMatches = _projects.Any(p =>
+                FormatHelper.FormatProjectToString(p).Equals(comboBoxProjects.Text, StringComparison.InvariantCultureIgnoreCase));
+
+            bool EntryTypeMatches = _timeEntryTypes.Any(t =>
+                FormatHelper.FormatTimeEntryTypeToString(t).Equals(comboBoxEntryType.Text, StringComparison.InvariantCultureIgnoreCase) ||
+                FormatHelper.FormatTimeEntryTypeWithAfterCareToString(t).Equals(comboBoxEntryType.Text, StringComparison.InvariantCultureIgnoreCase));
+
+            bool SubTypeMatches = _timeEntrySubTypes.Any(s =>
+                FormatHelper.FormatTimeEntrySubTypeToString(s).Equals(comboBoxIndex.Text, StringComparison.InvariantCultureIgnoreCase));
 
             switch (rb?.Text)
             {
                 case "PROVOZ":
-                    if (string.IsNullOrWhiteSpace(comboBoxProjects.Text))
-                        return (false, "Nákladové středisko");
-                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text))
-                        return (false, "Typ záznamu");
-                    if (string.IsNullOrWhiteSpace(comboBoxIndex.Text))
-                        return (false, "Index");
+                    if (string.IsNullOrWhiteSpace(comboBoxProjects.Text) || !ProjectTextMatches)
+                        return (false, "Nákladové středisko neodpovídá žádné možnosti");
                     break;
                 case "PROJEKT":
-                    if (string.IsNullOrWhiteSpace(comboBoxProjects.Text))
-                        return (false, "Projekt");
-                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text))
-                        return (false, "Typ záznamu");
-                    if (string.IsNullOrWhiteSpace(comboBoxIndex.Text))
-                        return (false, "Index");
-                    break;
                 case "PŘEDPROJEKT":
-                    if (string.IsNullOrWhiteSpace(comboBoxProjects.Text))
-                        return (false, "Předprojekt");
-                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text))
-                        return (false, "Typ záznamu");
-                    if (string.IsNullOrWhiteSpace(comboBoxIndex.Text))
-                        return (false, "Index");
+                    if (string.IsNullOrWhiteSpace(comboBoxProjects.Text) || !ProjectTextMatches)
+                        return (false, "Projekt neodpovídá žádné možnosti");
+                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text) || !EntryTypeMatches)
+                        return (false, "Typ záznamu neodpovídá žádné možnosti");
+                    if (string.IsNullOrWhiteSpace(comboBoxIndex.Text) || !SubTypeMatches)
+                        return (false, "Index neodpovídá žádné možnosti");
                     break;
                 case "ŠKOLENÍ":
                     if (string.IsNullOrWhiteSpace(textBoxNote.Text))
                         return (false, "Poznámka");
                     break;
                 case "NEPŘÍTOMNOST":
-                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text))
-                        return (false, "Důvod");
+                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text) || !EntryTypeMatches)
+                        return (false, "Důvod neodpovídá žádné možnosti");
                     break;
                 default:
-                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text))
-                        return (false, "Činnost");
+                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text) || !EntryTypeMatches)
+                        return (false, "Činnost neodpovídá žádné možnosti");
                     break;
             }
 
             return (true, "");
         }
+
 
 
         private async void buttonRemove_Click(object sender, EventArgs e)

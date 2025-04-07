@@ -40,22 +40,17 @@ if ((Test-Path $innoSetupCompiler) -and (Test-Path $issPath)) {
     exit 1
 }
 
-# Rename installer after build
+# Skip renaming installer — keep default name
 $installerBaseName = "WorkLog_Installer"
 $installerBuiltPath = ".\Output\$installerBaseName.exe"
-$installerRenamed = ".\Output\${installerBaseName}_$version.exe"
-if (Test-Path $installerRenamed) {
-    Remove-Item $installerRenamed -Force
-}
-Rename-Item -Path $installerBuiltPath -NewName "${installerBaseName}_$version.exe"
 
 # Copy installer and latest.txt to network path
-$installerDest = Join-Path $networkUpdatePath "${installerBaseName}_$version.exe"
+$installerDest = Join-Path $networkUpdatePath "$installerBaseName.exe"
 Write-Host ""
 Write-Host "Copying files to: $networkUpdatePath"
 
 Copy-Item $latestTxtPath "$networkUpdatePath\latest.txt" -Force
-Copy-Item $installerRenamed $installerDest -Force
+Copy-Item $installerBuiltPath $installerDest -Force
 
 Write-Host ""
-Write-Host "Installer uploaded as: ${installerBaseName}_$version.exe"
+Write-Host "Installer uploaded as: $installerBaseName.exe"

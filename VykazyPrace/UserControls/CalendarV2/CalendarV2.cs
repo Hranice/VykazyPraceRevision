@@ -708,7 +708,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
 
         #region DayPanel events
-        private async void dayPanel_MouseClick(object? sender, MouseEventArgs e)
+        private void dayPanel_MouseClick(object? sender, MouseEventArgs e)
         {
             if (mouseMoved) return;
 
@@ -716,7 +716,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             DeactivateAllPanels();
             panel.Activate();
-            //_selectedTimeEntryId = panel.EntryId;
 
             pasteTargetCell = new TableLayoutPanelCellPosition(
                 tableLayoutPanel1.GetColumn(panel),
@@ -724,8 +723,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             );
 
             tableLayoutPanel1.ClearSelection();
-
-            //await LoadSidebar();
         }
 
 
@@ -942,19 +939,10 @@ namespace VykazyPrace.UserControls.CalendarV2
             int minutesStart = newTimestamp.Hour * 60 + newTimestamp.Minute;
             int minutesEnd = minutesStart + entry.EntryMinutes;
 
-            Debug.WriteLine("");
-            Debug.WriteLine(minutesStart);
-            Debug.WriteLine(comboBoxStart.SelectedIndex);
-
             int index = minutesStart / 30;
-            Debug.WriteLine(index);
 
             comboBoxStart.SelectedIndex = index;
             comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
-
-            Debug.WriteLine(comboBoxStart.SelectedIndex);
-            Debug.WriteLine(comboBoxStart.Text);
-
 
             if (_selectedTimeEntryId != previousTimeEntryId)
             {

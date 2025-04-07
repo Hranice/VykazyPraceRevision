@@ -278,11 +278,12 @@ namespace VykazyPrace.UserControls.CalendarV2
             int minutesStart = timeStamp.Hour * 60 + timeStamp.Minute;
             int minutesEnd = minutesStart + timeEntry.EntryMinutes;
 
+            flowLayoutPanel2.Enabled = timeEntry.IsLocked == 0;
+
             if (timeEntry.IsValid == 1)
             {
 
                 checkBoxArchivedProjects.Checked = timeEntry.Project.IsArchived == 1;
-                flowLayoutPanel2.Enabled = timeEntry.IsLocked == 0;
 
                 var proj = await _projectRepo.GetProjectByIdAsync(timeEntry.ProjectId ?? 0);
                 if (proj == null) return;

@@ -48,10 +48,24 @@ namespace VykazyPrace
 
             Enabled = false;
 
+            try
+            {
+                using var testContext = new VykazyPraceContext();
+                VykazyPrace.Core.Database.DatabaseValidator.ValidateStructure(testContext);
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("Databáze je neplatná nebo ji nelze naèíst.", ex);
+                ShowSettingsDialog("Databáze je neplatná nebo ji nelze naèíst. Chcete otevøít nastavení?", "Chyba databáze");
+                Close(); // nebo return;
+                return;
+            }
+
             _ = Task.Run(LoadDataAsync);
 
             Enabled = true;
         }
+
 
         private async void MainForm_KeyDown(object? sender, KeyEventArgs e)
         {
@@ -63,37 +77,67 @@ namespace VykazyPrace
 
         private async Task LoadDataAsync()
         {
-            Invoke(() => _loadingUC.BringToFront());
-
-            var users = await _userRepo.GetAllUsersAsync();
-            _selectedUser = await _userRepo.GetUserByWindowsUsernameAsync(Environment.UserName) ?? new User();
-            _currentUserLoA = _selectedUser.LevelOfAccess;
-
-            if (_selectedUser.Id == 0)
+            try
             {
-                AppLogger.Error("Nepodaøilo se naèíst aktuálního uživatele, pøístup bude omezen.");
-                return;
-            }
+                Invoke(() => _loadingUC.BringToFront());
 
+                var users = await _userRepo.GetAllUsersAsync();
+                _selectedUser = await _userRepo.GetUserByWindowsUsernameAsync(Environment.UserName) ?? new User();
+                _currentUserLoA = _selectedUser.LevelOfAccess;
+
+                if (_selectedUser.Id == 0)
+                {
+                    AppLogger.Error("Nepodaøilo se naèíst aktuálního uživatele, pøístup bude omezen.");
+                    return;
+                }
+
+                Invoke(() =>
+                {
+                    SetupUiForAccessLevel(_currentUserLoA);
+                    InitializeCalendar(users);
+                });
+            }
+            catch (Microsoft.Data.Sqlite.SqliteException ex)
+            {
+                AppLogger.Error("Databáze není dostupná nebo se ji nepodaøilo otevøít.", ex);
+                ShowSettingsDialog("Pøejete si otevøít nastavení?", "Databáze není dostupná.");
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("Došlo k neoèekávané chybì pøi naèítání dat.", ex);
+                ShowSettingsDialog("Pøejete si otevøít nastavení?", "Chyba pøi naèítání dat.");
+            }
+        }
+
+        private void SetupUiForAccessLevel(int levelOfAccess)
+        {
+            if (levelOfAccess == 3)
+            {
+                dataToolStripMenuItem.Visible = true;
+                uživateléToolStripMenuItem.Visible = true;
+                správaProjektùToolStripMenuItem.Visible = true;
+                comboBoxUsers.Visible = true;
+            }
+            else if (levelOfAccess == 2)
+            {
+                dataToolStripMenuItem.Visible = true;
+                správaProjektùToolStripMenuItem.Visible = true;
+                comboBoxUsers.Visible = true;
+            }
+        }
+
+        private void ShowSettingsDialog(string message, string caption)
+        {
             Invoke(() =>
             {
-                if (_currentUserLoA == 3)
+                var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
                 {
-                    dataToolStripMenuItem.Visible = true;
-                    uživateléToolStripMenuItem.Visible = true;
-                    správaProjektùToolStripMenuItem.Visible = true;
-                    comboBoxUsers.Visible = true;
+                    new Dialogs.SettingsDialog(_selectedUser).ShowDialog();
                 }
-                else if (_currentUserLoA == 2)
-                {
-                    dataToolStripMenuItem.Visible = true;
-                    správaProjektùToolStripMenuItem.Visible = true;
-                    comboBoxUsers.Visible = true;
-                }
-
-                InitializeCalendar(users);
             });
         }
+
 
 
         private void InitializeCalendar(List<User> users)

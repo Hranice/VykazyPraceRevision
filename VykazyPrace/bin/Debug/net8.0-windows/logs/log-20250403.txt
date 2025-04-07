@@ -644,3 +644,4 @@
 2025-04-03 13:51:15.832 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
 2025-04-03 13:51:46.849 +02:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 1,5 h - SW - Výkazy hodin byl smazán z databáze.
 2025-04-03 13:51:47.572 +02:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 1,5 h - SW - Výkazy hodin byl smazán z databáze.
+2025-04-03 14:03:50.452 +02:00 [INF] Záznam 0 - Provoz Nová hala: 4,5 h - Kontrola kvality kroužků Hugo Boss byl smazán z databáze.

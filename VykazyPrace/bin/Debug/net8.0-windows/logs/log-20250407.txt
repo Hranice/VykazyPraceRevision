@@ -1,0 +1,6 @@
+2025-04-07 08:52:25.417 +02:00 [ERR] Databáze je neplatná nebo ji nelze načíst.
+System.InvalidOperationException: Chybí tabulka 'Users' v databázi.
+   at VykazyPrace.Core.Database.DatabaseValidator.ValidateStructure(VykazyPraceContext context) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\DatabaseValidator.cs:line 43
+   at VykazyPrace.MainForm.MainForm_Load(Object sender, EventArgs e) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 54
+2025-04-07 08:54:52.421 +02:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 2,5 h -  byl smazán z databáze.
+2025-04-07 09:36:24.917 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - 3D tisk byl úspěšně aktualizován.

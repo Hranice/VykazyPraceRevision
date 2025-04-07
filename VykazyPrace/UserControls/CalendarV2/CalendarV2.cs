@@ -716,7 +716,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             DeactivateAllPanels();
             panel.Activate();
-            _selectedTimeEntryId = panel.EntryId;
+            //_selectedTimeEntryId = panel.EntryId;
 
             pasteTargetCell = new TableLayoutPanelCellPosition(
                 tableLayoutPanel1.GetColumn(panel),
@@ -725,7 +725,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             tableLayoutPanel1.ClearSelection();
 
-            await LoadSidebar();
+            //await LoadSidebar();
         }
 
 
@@ -833,8 +833,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                     tableLayoutPanel1.ResumeLayout();
                 }
             }
-
-            mouseMoved = false;
         }
 
         private void HandleMove(DayPanel panel, int deltaX, int columnWidth)
@@ -910,6 +908,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             activePanel = null;
             Cursor = Cursors.Default;
 
+            var previousTimeEntryId = _selectedTimeEntryId;
             _selectedTimeEntryId = panel.EntryId;
 
             var entry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
@@ -939,16 +938,28 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
             panel.BackColor = ColorTranslator.FromHtml(color);
 
-            BeginInvoke(() =>
+
+            int minutesStart = newTimestamp.Hour * 60 + newTimestamp.Minute;
+            int minutesEnd = minutesStart + entry.EntryMinutes;
+
+            Debug.WriteLine("");
+            Debug.WriteLine(minutesStart);
+            Debug.WriteLine(comboBoxStart.SelectedIndex);
+
+            int index = minutesStart / 30;
+            Debug.WriteLine(index);
+
+            comboBoxStart.SelectedIndex = index;
+            comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
+
+            Debug.WriteLine(comboBoxStart.SelectedIndex);
+            Debug.WriteLine(comboBoxStart.Text);
+
+
+            if (_selectedTimeEntryId != previousTimeEntryId)
             {
-                int minutesStart = entry.Timestamp?.Hour * 60 + entry.Timestamp?.Minute ?? 0;
-                int minutesEnd = minutesStart + entry.EntryMinutes;
-
-                comboBoxStart.SelectedIndex = minutesStart / 30;
-                comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
-            });
-
-            await LoadSidebar();
+                await LoadSidebar();
+            }
 
         }
         #endregion
@@ -1043,24 +1054,24 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void comboBoxEnd_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (comboBoxStart.SelectedIndex > 0)
-            {
-                if (TimeDifferenceOutOfRange())
-                {
-                    comboBoxEnd.SelectedIndex = comboBoxStart.SelectedIndex + 1;
-                }
-            }
+            //if (comboBoxStart.SelectedIndex > 0)
+            //{
+            //    if (TimeDifferenceOutOfRange())
+            //    {
+            //        comboBoxEnd.SelectedIndex = comboBoxStart.SelectedIndex + 1;
+            //    }
+            //}
         }
 
         private void comboBoxStart_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxEnd.SelectedIndex > 0)
-            {
-                if (TimeDifferenceOutOfRange())
-                {
-                    comboBoxStart.SelectedIndex = comboBoxEnd.SelectedIndex - 1;
-                }
-            }
+            //if (comboBoxEnd.SelectedIndex > 0)
+            //{
+            //    if (TimeDifferenceOutOfRange())
+            //    {
+            //        comboBoxStart.SelectedIndex = comboBoxEnd.SelectedIndex - 1;
+            //    }
+            //}
         }
 
         private bool TimeDifferenceOutOfRange()

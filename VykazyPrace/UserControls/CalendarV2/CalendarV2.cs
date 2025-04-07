@@ -266,16 +266,24 @@ namespace VykazyPrace.UserControls.CalendarV2
             flowLayoutPanel2.Visible = _selectedTimeEntryId > -1;
 
             var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
+
             if (timeEntry == null) return;
+
+            if (timeEntry.ProjectId == 132 && timeEntry.EntryTypeId == 24)
+            {
+                flowLayoutPanel2.Visible = false;
+            }
 
             DateTime timeStamp = timeEntry.Timestamp ?? _selectedDate;
             int minutesStart = timeStamp.Hour * 60 + timeStamp.Minute;
             int minutesEnd = minutesStart + timeEntry.EntryMinutes;
 
+            flowLayoutPanel2.Enabled = timeEntry.IsLocked == 0;
+
             if (timeEntry.IsValid == 1)
             {
+
                 checkBoxArchivedProjects.Checked = timeEntry.Project.IsArchived == 1;
-                flowLayoutPanel2.Enabled = timeEntry.IsLocked == 0;
 
                 var proj = await _projectRepo.GetProjectByIdAsync(timeEntry.ProjectId ?? 0);
                 if (proj == null) return;
@@ -300,6 +308,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                             rb.Checked = true;
                         break;
                 }
+
 
                 BeginInvoke((Action)(() =>
                 {
@@ -700,18 +709,14 @@ namespace VykazyPrace.UserControls.CalendarV2
 
 
         #region DayPanel events
-        private async void dayPanel_MouseClick(object? sender, MouseEventArgs e)
+        private void dayPanel_MouseClick(object? sender, MouseEventArgs e)
         {
             if (mouseMoved) return;
 
             if (sender is not DayPanel panel) return;
 
-            if (panel.Tag as string == "snack")
-                return;
-
             DeactivateAllPanels();
             panel.Activate();
-            _selectedTimeEntryId = panel.EntryId;
 
             pasteTargetCell = new TableLayoutPanelCellPosition(
                 tableLayoutPanel1.GetColumn(panel),
@@ -719,7 +724,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             );
 
             tableLayoutPanel1.ClearSelection();
-            await LoadSidebar();
         }
 
 
@@ -736,7 +740,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void dayPanel_MouseMove(object? sender, MouseEventArgs e)
         {
-            mouseMoved = true;
+
 
             if (sender is not DayPanel panel) return;
 
@@ -769,9 +773,9 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             if (sender is not DayPanel panel) return;
 
+            mouseMoved = false;
             DeactivateAllPanels();
             panel.Activate();
-            mouseMoved = false;
 
             isResizing = Cursor == Cursors.SizeWE;
             isMoving = !isResizing;
@@ -844,16 +848,29 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             if (!IsOverlapping(targetColumn, span, targetRow, panel))
             {
-                tableLayoutPanel1.SuspendLayout();
+                // Zjisti aktuální pozici panelu
+                int currentColumn = tableLayoutPanel1.GetColumn(panel);
+                int currentRow = tableLayoutPanel1.GetRow(panel);
 
-                tableLayoutPanel1.SetColumn(panel, targetColumn);
-                if (panel.Tag as string != "snack")
-                    tableLayoutPanel1.SetRow(panel, targetRow);
-                tableLayoutPanel1.SetColumnSpan(panel, span);
+                // Pokud se opravdu mění pozice
+                bool hasMoved = currentColumn != targetColumn || currentRow != targetRow;
 
-                tableLayoutPanel1.ResumeLayout();
+                if (hasMoved)
+                {
+                    tableLayoutPanel1.SuspendLayout();
+
+                    tableLayoutPanel1.SetColumn(panel, targetColumn);
+                    if (panel.Tag as string != "snack")
+                        tableLayoutPanel1.SetRow(panel, targetRow);
+                    tableLayoutPanel1.SetColumnSpan(panel, span);
+
+                    mouseMoved = true;
+
+                    tableLayoutPanel1.ResumeLayout();
+                }
             }
         }
+
 
         private void UpdateCursor(MouseEventArgs e, DayPanel panel)
         {
@@ -883,12 +900,15 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             if (sender is not DayPanel panel) return;
 
+            mouseMoved = false;
             isResizing = false;
             isMoving = false;
             activePanel = null;
             Cursor = Cursors.Default;
 
+            var previousTimeEntryId = _selectedTimeEntryId;
             _selectedTimeEntryId = panel.EntryId;
+
             var entry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
             if (entry == null) return;
 
@@ -916,14 +936,19 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
             panel.BackColor = ColorTranslator.FromHtml(color);
 
-            BeginInvoke(() =>
-            {
-                int minutesStart = entry.Timestamp?.Hour * 60 + entry.Timestamp?.Minute ?? 0;
-                int minutesEnd = minutesStart + entry.EntryMinutes;
 
-                comboBoxStart.SelectedIndex = minutesStart / 30;
-                comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
-            });
+            int minutesStart = newTimestamp.Hour * 60 + newTimestamp.Minute;
+            int minutesEnd = minutesStart + entry.EntryMinutes;
+
+            int index = minutesStart / 30;
+
+            comboBoxStart.SelectedIndex = index;
+            comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
+
+            if (_selectedTimeEntryId != previousTimeEntryId)
+            {
+                await LoadSidebar();
+            }
 
         }
         #endregion
@@ -1018,24 +1043,24 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void comboBoxEnd_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (comboBoxStart.SelectedIndex > 0)
-            {
-                if (TimeDifferenceOutOfRange())
-                {
-                    comboBoxEnd.SelectedIndex = comboBoxStart.SelectedIndex + 1;
-                }
-            }
+            //if (comboBoxStart.SelectedIndex > 0)
+            //{
+            //    if (TimeDifferenceOutOfRange())
+            //    {
+            //        comboBoxEnd.SelectedIndex = comboBoxStart.SelectedIndex + 1;
+            //    }
+            //}
         }
 
         private void comboBoxStart_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxEnd.SelectedIndex > 0)
-            {
-                if (TimeDifferenceOutOfRange())
-                {
-                    comboBoxStart.SelectedIndex = comboBoxEnd.SelectedIndex - 1;
-                }
-            }
+            //if (comboBoxEnd.SelectedIndex > 0)
+            //{
+            //    if (TimeDifferenceOutOfRange())
+            //    {
+            //        comboBoxStart.SelectedIndex = comboBoxEnd.SelectedIndex - 1;
+            //    }
+            //}
         }
 
         private bool TimeDifferenceOutOfRange()
@@ -1208,9 +1233,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                 FormatHelper.FormatTimeEntryTypeToString(t).Equals(comboBoxEntryType.Text, StringComparison.InvariantCultureIgnoreCase) ||
                 FormatHelper.FormatTimeEntryTypeWithAfterCareToString(t).Equals(comboBoxEntryType.Text, StringComparison.InvariantCultureIgnoreCase));
 
-            bool SubTypeMatches = _timeEntrySubTypes.Any(s =>
-                FormatHelper.FormatTimeEntrySubTypeToString(s).Equals(comboBoxIndex.Text, StringComparison.InvariantCultureIgnoreCase));
-
             switch (rb?.Text)
             {
                 case "PROVOZ":
@@ -1223,8 +1245,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                         return (false, "Projekt neodpovídá žádné možnosti");
                     if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text) || !EntryTypeMatches)
                         return (false, "Typ záznamu neodpovídá žádné možnosti");
-                    if (string.IsNullOrWhiteSpace(comboBoxIndex.Text) || !SubTypeMatches)
-                        return (false, "Index neodpovídá žádné možnosti");
                     break;
                 case "ŠKOLENÍ":
                     if (string.IsNullOrWhiteSpace(textBoxNote.Text))

@@ -1586,5 +1586,33 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             return true;
         }
+
+        private void flowLayoutPanel2_SizeChanged(object sender, EventArgs e)
+        {
+            int newWidth = flowLayoutPanel2.ClientSize.Width - 10;
+            tableLayoutPanelProject.Width = newWidth;
+            tableLayoutPanelEntryType.Width = newWidth;
+            tableLayoutPanelEntrySubType.Width = newWidth;
+            tableLayoutPanel6.Width = newWidth;
+
+            ClearComboBoxSelections(flowLayoutPanel2);
+        }
+
+        private void ClearComboBoxSelections(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is ComboBox cb)
+                {
+                    cb.SelectionStart = cb.Text.Length;
+                    cb.SelectionLength = 0;
+                }
+                else
+                {
+                    ClearComboBoxSelections(control);
+                }
+            }
+        }
+
     }
 }

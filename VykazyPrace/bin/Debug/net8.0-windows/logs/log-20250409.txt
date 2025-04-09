@@ -2,3 +2,9 @@
 2025-04-09 08:36:37.705 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
 2025-04-09 08:36:50.355 +02:00 [INF] Záznam 0 - Provoz Metalizace: 1 h -  byl smazán z databáze.
 2025-04-09 08:36:58.933 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-04-09 10:12:20.777 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-04-09 10:12:51.375 +02:00 [INF] Záznam  - Automatizace: 0,5 h -  byl smazán z databáze.
+2025-04-09 10:41:15.214 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - test byl úspěšně aktualizován.
+2025-04-09 10:41:26.240 +02:00 [INF] Záznam 0277E25 - Stěhování linek KLT-SPEC: 0,5 h - test byl úspěšně aktualizován.
+2025-04-09 10:41:32.880 +02:00 [INF] Záznam 027I21 - Kompletace Lancome: 0,5 h - test byl úspěšně aktualizován.
+2025-04-09 10:41:37.414 +02:00 [INF] Záznam 027I21 - Kompletace Lancome: 0,5 h - test byl smazán z databáze.

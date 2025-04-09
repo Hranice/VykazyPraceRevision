@@ -1,4 +1,5 @@
 ﻿using System.Reflection.Metadata.Ecma335;
+using System.Text.RegularExpressions;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Helpers;
@@ -114,6 +115,7 @@ namespace VykazyPrace.Dialogs
 
                     _filteredProjects = filteredProjects.ToList();
                     ClearSelection();
+                    GenerateNextDescription();
                 }));
             }
             catch (Exception ex)
@@ -397,8 +399,44 @@ namespace VykazyPrace.Dialogs
             if (e.KeyCode == Keys.Escape)
             {
                 ClearSelection();
+                GenerateNextDescription();
             }
         }
+
+        private void GenerateNextDescription()
+        {
+
+            if (_filteredProjects == null || !_filteredProjects.Any())
+            {
+                textBoxProjectDescription.Text = "0001";
+                return;
+            }
+
+            var maxNumber = _filteredProjects
+                .Select(p => GetLeadingNumber(p.ProjectDescription))
+                .Where(n => n.HasValue)
+                .Select(n => n.Value)
+                .DefaultIfEmpty(0)
+                .Max();
+
+            var nextNumber = maxNumber + 1;
+            textBoxProjectDescription.Text = nextNumber.ToString("D4");
+        }
+
+        private int? GetLeadingNumber(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return null;
+
+            // Vezme všechny počáteční číslice (např. z "0255E24" udělá "0255")
+            var match = Regex.Match(input, @"^\d+");
+            if (match.Success && int.TryParse(match.Value, out int result))
+                return result;
+
+            return null;
+        }
+
+
 
         private void ClearSelection()
         {

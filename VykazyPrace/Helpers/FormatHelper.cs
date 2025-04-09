@@ -14,16 +14,17 @@ namespace VykazyPrace.Helpers
                 return "<NULL>";
             }
 
-            if (project?.ProjectType == 1 || project?.ProjectType == 2)
+            if (project.ProjectType == 1 || project.ProjectType == 2)
             {
-                return $"({project?.ProjectDescription}):{project?.ProjectTitle}";
+                string desc = project.ProjectDescription?.PadLeft(7) ?? "".PadLeft(8);
+                return $"{(project.IsArchived == 1 ? "(A)": "")} {desc}: {project.ProjectTitle}";
             }
-
             else
             {
-                return $"{project?.ProjectTitle}";
+                return project.ProjectTitle ?? "";
             }
         }
+
 
         public static string FormatTimeEntryToString(TimeEntry? timeEntry)
         {

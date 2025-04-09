@@ -16,8 +16,8 @@ namespace VykazyPrace.Helpers
 
             if (project.ProjectType == 1 || project.ProjectType == 2)
             {
-                string desc = project.ProjectDescription?.PadLeft(7) ?? "".PadLeft(8);
-                return $"{(project.IsArchived == 1 ? "(A)": "")} {desc}: {project.ProjectTitle}";
+                string desc = project.ProjectDescription?.PadLeft(7) ?? "".PadLeft(7);
+                return $"{(project.IsArchived == 1 ? "(A) ": "")}{desc}: {project.ProjectTitle}";
             }
             else
             {

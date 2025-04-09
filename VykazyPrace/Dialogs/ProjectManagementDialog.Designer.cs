@@ -38,12 +38,9 @@
             label10 = new Label();
             textBoxOperation = new TextBox();
             tabPage2 = new TabPage();
-            buttonSetAsPreProject = new Button();
             checkBoxArchive = new CheckBox();
             buttonArchiveProject = new Button();
-            checkBoxPreProject = new CheckBox();
             label14 = new Label();
-            label3 = new Label();
             buttonAddProject = new Button();
             comboBoxProjects = new ComboBox();
             label7 = new Label();
@@ -62,11 +59,15 @@
             listBoxOther = new ListBox();
             label13 = new Label();
             textBoxOther = new TextBox();
+            groupBox1 = new GroupBox();
+            groupBox2 = new GroupBox();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
             tabPage3.SuspendLayout();
             tabPage4.SuspendLayout();
+            groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // label6
@@ -86,7 +87,7 @@
             listBoxProject.ItemHeight = 25;
             listBoxProject.Location = new Point(14, 25);
             listBoxProject.Name = "listBoxProject";
-            listBoxProject.Size = new Size(476, 227);
+            listBoxProject.Size = new Size(476, 202);
             listBoxProject.TabIndex = 23;
             listBoxProject.SelectedIndexChanged += listBoxProject_SelectedIndexChanged;
             // 
@@ -174,19 +175,10 @@
             // 
             // tabPage2
             // 
-            tabPage2.Controls.Add(buttonSetAsPreProject);
-            tabPage2.Controls.Add(checkBoxArchive);
-            tabPage2.Controls.Add(buttonArchiveProject);
-            tabPage2.Controls.Add(checkBoxPreProject);
+            tabPage2.Controls.Add(groupBox2);
+            tabPage2.Controls.Add(groupBox1);
             tabPage2.Controls.Add(label14);
-            tabPage2.Controls.Add(label3);
-            tabPage2.Controls.Add(buttonAddProject);
-            tabPage2.Controls.Add(comboBoxProjects);
-            tabPage2.Controls.Add(label7);
             tabPage2.Controls.Add(listBoxProject);
-            tabPage2.Controls.Add(label9);
-            tabPage2.Controls.Add(textBoxProjectDescription);
-            tabPage2.Controls.Add(textBoxProjectTitle);
             tabPage2.Location = new Point(4, 34);
             tabPage2.Name = "tabPage2";
             tabPage2.Size = new Size(504, 494);
@@ -194,22 +186,11 @@
             tabPage2.Text = "PROJEKT";
             tabPage2.UseVisualStyleBackColor = true;
             // 
-            // buttonSetAsPreProject
-            // 
-            buttonSetAsPreProject.Location = new Point(14, 445);
-            buttonSetAsPreProject.Margin = new Padding(4, 5, 4, 5);
-            buttonSetAsPreProject.Name = "buttonSetAsPreProject";
-            buttonSetAsPreProject.Size = new Size(218, 36);
-            buttonSetAsPreProject.TabIndex = 58;
-            buttonSetAsPreProject.Text = "Nastavit jako předprojekt";
-            buttonSetAsPreProject.UseVisualStyleBackColor = true;
-            buttonSetAsPreProject.Visible = false;
-            buttonSetAsPreProject.Click += buttonSetAsPreProject_Click;
-            // 
             // checkBoxArchive
             // 
             checkBoxArchive.AutoSize = true;
-            checkBoxArchive.Location = new Point(158, 258);
+            checkBoxArchive.Font = new Font("Reddit Sans", 12F);
+            checkBoxArchive.Location = new Point(12, 31);
             checkBoxArchive.Name = "checkBoxArchive";
             checkBoxArchive.Size = new Size(135, 29);
             checkBoxArchive.TabIndex = 57;
@@ -219,7 +200,8 @@
             // 
             // buttonArchiveProject
             // 
-            buttonArchiveProject.Location = new Point(240, 445);
+            buttonArchiveProject.Font = new Font("Reddit Sans", 12F);
+            buttonArchiveProject.Location = new Point(219, 111);
             buttonArchiveProject.Margin = new Padding(4, 5, 4, 5);
             buttonArchiveProject.Name = "buttonArchiveProject";
             buttonArchiveProject.Size = new Size(121, 36);
@@ -228,17 +210,6 @@
             buttonArchiveProject.UseVisualStyleBackColor = true;
             buttonArchiveProject.Visible = false;
             buttonArchiveProject.Click += buttonArchiveProject_Click;
-            // 
-            // checkBoxPreProject
-            // 
-            checkBoxPreProject.AutoSize = true;
-            checkBoxPreProject.Location = new Point(14, 258);
-            checkBoxPreProject.Name = "checkBoxPreProject";
-            checkBoxPreProject.Size = new Size(138, 29);
-            checkBoxPreProject.TabIndex = 53;
-            checkBoxPreProject.Text = "PŘEDPROJEKT";
-            checkBoxPreProject.UseVisualStyleBackColor = true;
-            checkBoxPreProject.CheckedChanged += checkBoxPreProject_CheckedChanged;
             // 
             // label14
             // 
@@ -251,20 +222,10 @@
             label14.TabIndex = 52;
             label14.Text = "Seznam";
             // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label3.Location = new Point(14, 293);
-            label3.Margin = new Padding(4, 0, 4, 0);
-            label3.Name = "label3";
-            label3.Size = new Size(54, 21);
-            label3.TabIndex = 44;
-            label3.Text = "Hledání";
-            // 
             // buttonAddProject
             // 
-            buttonAddProject.Location = new Point(369, 445);
+            buttonAddProject.Font = new Font("Reddit Sans", 12F);
+            buttonAddProject.Location = new Point(348, 111);
             buttonAddProject.Margin = new Padding(4, 5, 4, 5);
             buttonAddProject.Name = "buttonAddProject";
             buttonAddProject.Size = new Size(121, 36);
@@ -275,10 +236,11 @@
             // 
             // comboBoxProjects
             // 
+            comboBoxProjects.Font = new Font("Reddit Sans", 12F);
             comboBoxProjects.FormattingEnabled = true;
-            comboBoxProjects.Location = new Point(14, 317);
+            comboBoxProjects.Location = new Point(153, 27);
             comboBoxProjects.Name = "comboBoxProjects";
-            comboBoxProjects.Size = new Size(476, 33);
+            comboBoxProjects.Size = new Size(311, 33);
             comboBoxProjects.TabIndex = 43;
             comboBoxProjects.SelectionChangeCommitted += comboBoxProjects_SelectionChangeCommitted;
             comboBoxProjects.TextChanged += comboBoxProjects_TextChanged;
@@ -286,8 +248,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label7.Location = new Point(169, 379);
+            label7.Location = new Point(167, 34);
             label7.Margin = new Padding(4, 0, 4, 0);
             label7.Name = "label7";
             label7.Size = new Size(104, 21);
@@ -297,8 +258,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label9.Location = new Point(14, 379);
+            label9.Location = new Point(12, 34);
             label9.Margin = new Padding(4, 0, 4, 0);
             label9.Name = "label9";
             label9.Size = new Size(121, 21);
@@ -307,7 +267,8 @@
             // 
             // textBoxProjectDescription
             // 
-            textBoxProjectDescription.Location = new Point(14, 401);
+            textBoxProjectDescription.Font = new Font("Reddit Sans", 12F);
+            textBoxProjectDescription.Location = new Point(12, 56);
             textBoxProjectDescription.Margin = new Padding(5, 8, 5, 8);
             textBoxProjectDescription.Name = "textBoxProjectDescription";
             textBoxProjectDescription.PlaceholderText = "000E00";
@@ -316,11 +277,12 @@
             // 
             // textBoxProjectTitle
             // 
-            textBoxProjectTitle.Location = new Point(169, 401);
+            textBoxProjectTitle.Font = new Font("Reddit Sans", 12F);
+            textBoxProjectTitle.Location = new Point(167, 56);
             textBoxProjectTitle.Margin = new Padding(5, 8, 5, 8);
             textBoxProjectTitle.Name = "textBoxProjectTitle";
             textBoxProjectTitle.PlaceholderText = "Projekt vývoje software na výkaz hodin";
-            textBoxProjectTitle.Size = new Size(321, 28);
+            textBoxProjectTitle.Size = new Size(297, 28);
             textBoxProjectTitle.TabIndex = 37;
             // 
             // tabPage3
@@ -330,9 +292,9 @@
             tabPage3.Controls.Add(listBoxAbsence);
             tabPage3.Controls.Add(label11);
             tabPage3.Controls.Add(textBoxAbsence);
-            tabPage3.Location = new Point(4, 24);
+            tabPage3.Location = new Point(4, 34);
             tabPage3.Name = "tabPage3";
-            tabPage3.Size = new Size(504, 504);
+            tabPage3.Size = new Size(504, 494);
             tabPage3.TabIndex = 3;
             tabPage3.Text = "NEPŘÍTOMNOST";
             tabPage3.UseVisualStyleBackColor = true;
@@ -397,9 +359,9 @@
             tabPage4.Controls.Add(listBoxOther);
             tabPage4.Controls.Add(label13);
             tabPage4.Controls.Add(textBoxOther);
-            tabPage4.Location = new Point(4, 24);
+            tabPage4.Location = new Point(4, 34);
             tabPage4.Name = "tabPage4";
-            tabPage4.Size = new Size(504, 504);
+            tabPage4.Size = new Size(504, 494);
             tabPage4.TabIndex = 4;
             tabPage4.Text = "OSTATNÍ";
             tabPage4.UseVisualStyleBackColor = true;
@@ -457,6 +419,34 @@
             textBoxOther.Size = new Size(476, 28);
             textBoxOther.TabIndex = 62;
             // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(checkBoxArchive);
+            groupBox1.Controls.Add(comboBoxProjects);
+            groupBox1.Font = new Font("Reddit Sans", 9.75F);
+            groupBox1.Location = new Point(14, 233);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(476, 74);
+            groupBox1.TabIndex = 58;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Filtr";
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(label9);
+            groupBox2.Controls.Add(textBoxProjectTitle);
+            groupBox2.Controls.Add(buttonArchiveProject);
+            groupBox2.Controls.Add(buttonAddProject);
+            groupBox2.Controls.Add(textBoxProjectDescription);
+            groupBox2.Controls.Add(label7);
+            groupBox2.Font = new Font("Reddit Sans", 9.75F);
+            groupBox2.Location = new Point(14, 326);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(476, 155);
+            groupBox2.TabIndex = 59;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Nový projekt";
+            // 
             // ProjectManagementDialog
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
@@ -480,6 +470,10 @@
             tabPage3.PerformLayout();
             tabPage4.ResumeLayout(false);
             tabPage4.PerformLayout();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -496,7 +490,6 @@
         private Label label9;
         private TextBox textBoxProjectDescription;
         private TextBox textBoxProjectTitle;
-        private Label label3;
         private ComboBox comboBoxProjects;
         private Button buttonAddOperation;
         private ListBox listBoxOperation;
@@ -516,8 +509,8 @@
         private Label label8;
         private Label label12;
         private Button buttonArchiveProject;
-        private CheckBox checkBoxPreProject;
         private CheckBox checkBoxArchive;
-        private Button buttonSetAsPreProject;
+        private GroupBox groupBox2;
+        private GroupBox groupBox1;
     }
 }

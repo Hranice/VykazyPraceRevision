@@ -51,113 +51,68 @@ namespace VykazyPrace.Dialogs
                 Invoke(new Action(async () =>
                 {
                     var filteredProjects = _projects
-                             .Where(p => p.ProjectType == projectType)
-                             .ToArray();
+                        .Where(p => (projectType == 1 || projectType == 2)
+                            ? (p.ProjectType == 1 || p.ProjectType == 2)
+                            : p.ProjectType == projectType)
+                        .ToArray();
 
                     switch (projectType)
                     {
                         case 0:
                             // PROVOZ
                             listBoxOperation.Items.Clear();
-                            listBoxOperation.Items.AddRange(filteredProjects.Select(FormatHelper.FormatProjectToString).ToArray());
+                            listBoxOperation.Items.AddRange(
+                                filteredProjects.Select(FormatHelper.FormatProjectToString).ToArray()
+                            );
                             break;
+
                         case 1:
-                            // PROJEKT
+                        case 2:
+                            // PROJEKT nebo PŘEDPROJEKT
                             comboBoxProjectsLoading = true;
                             listBoxProject.Items.Clear();
                             comboBoxProjects.Items.Clear();
 
-                            if (checkBoxArchive.Checked)
-                            {
-                                listBoxProject.Items.AddRange(filteredProjects
-                                    .Where(p => p.IsArchived == 1)
-                                    .Select(FormatHelper.FormatProjectToString)
-                                    .ToArray());
+                            var projectItems = filteredProjects
+                                .Where(p => p.IsArchived == (checkBoxArchive.Checked ? 1 : 0))
+                                .Select(FormatHelper.FormatProjectToString)
+                                .ToArray();
 
-                                comboBoxProjects.Items.AddRange(filteredProjects
-                                    .Where(p => p.IsArchived == 1)
-                                    .Select(FormatHelper.FormatProjectToString)
-                                    .ToArray());
-                            }
-                            else
-                            {
-                                listBoxProject.Items.AddRange(filteredProjects
-                                     .Where(p => p.IsArchived == 0)
-                                     .Select(FormatHelper.FormatProjectToString)
-                                     .ToArray());
-
-                                comboBoxProjects.Items.AddRange(filteredProjects
-                                     .Where(p => p.IsArchived == 0)
-                                     .Select(FormatHelper.FormatProjectToString)
-                                     .ToArray());
-                            }
+                            listBoxProject.Items.AddRange(projectItems);
+                            comboBoxProjects.Items.AddRange(projectItems);
 
                             if (comboBoxProjects.Items.Count > 0)
-                            {
                                 comboBoxProjects.SelectedIndex = 0;
-                            }
-
                             else
-                            {
                                 comboBoxProjects.Text = "";
-                            }
 
                             comboBoxProjectsLoading = false;
                             break;
-                        case 2:
-                            // PŘEDPROJEKT
-                            comboBoxProjectsLoading = true;
-                            listBoxProject.Items.Clear();
-                            comboBoxProjects.Items.Clear();
 
-                            if (checkBoxArchive.Checked)
-                            {
-                                listBoxProject.Items.AddRange(filteredProjects
-                                    .Where(p => p.IsArchived == 1)
-                                    .Select(FormatHelper.FormatProjectToString)
-                                    .ToArray());
-
-                                comboBoxProjects.Items.AddRange(filteredProjects
-                                     .Where(p => p.IsArchived == 1)
-                                     .Select(FormatHelper.FormatProjectToString)
-                                     .ToArray());
-                            }
-                            else
-                            {
-                                listBoxProject.Items.AddRange(filteredProjects
-                                    .Where(p => p.IsArchived == 0)
-                                    .Select(FormatHelper.FormatProjectToString)
-                                    .ToArray());
-
-                                comboBoxProjects.Items.AddRange(filteredProjects
-                                     .Where(p => p.IsArchived == 0)
-                                     .Select(FormatHelper.FormatProjectToString)
-                                     .ToArray());
-                            }
-
-                            comboBoxProjectsLoading = false;
-                            break;
                         case 3:
                             // ŠKOLENÍ
                             break;
+
                         case 4:
                             // NEPŘÍTOMNOST
                             await LoadTimeEntryTypes(projectType);
-
                             listBoxAbsence.Items.Clear();
-                            listBoxAbsence.Items.AddRange(_timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray());
+                            listBoxAbsence.Items.AddRange(
+                                _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray()
+                            );
                             break;
+
                         case 5:
                             // OSTATNÍ
                             await LoadTimeEntryTypes(projectType);
-
                             listBoxOther.Items.Clear();
-                            listBoxOther.Items.AddRange(_timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray());
+                            listBoxOther.Items.AddRange(
+                                _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray()
+                            );
                             break;
                     }
 
                     _filteredProjects = filteredProjects.ToList();
-
                     ClearSelection();
                 }));
             }
@@ -170,22 +125,6 @@ namespace VykazyPrace.Dialogs
             }
         }
 
-        private void ClearFields()
-        {
-            //textBoxProjectContractTitle.Text = "";
-            //textBoxProjectContractDescription.Text = "";
-            //textBoxProjectContractNote.Text = "";
-        }
-
-        private (bool, string) CheckForEmptyOrIncorrectFields()
-        {
-
-            //if (string.IsNullOrEmpty(textBoxProjectContractDescription.Text)) return (false, "Popis");
-            //if (string.IsNullOrEmpty(textBoxProjectContractTitle.Text)) return (false, "Název");
-
-            return (true, "");
-        }
-
         private async void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (tabControl1.SelectedTab.Text)
@@ -194,7 +133,7 @@ namespace VykazyPrace.Dialogs
                     await LoadProjectsAsync(0);
                     break;
                 case "PROJEKT":
-                    await LoadProjectsAsync(checkBoxPreProject.Checked ? 2 : 1);
+                    await LoadProjectsAsync(1);
                     break;
                 case "NEPŘÍTOMNOST":
                     await LoadProjectsAsync(4);
@@ -207,14 +146,8 @@ namespace VykazyPrace.Dialogs
 
         private async void checkBoxArchive_CheckedChanged(object sender, EventArgs e)
         {
-            await LoadProjectsAsync(checkBoxPreProject.Checked ? 2 : 1);
+            await LoadProjectsAsync(1);
             buttonArchiveProject.Text = checkBoxArchive.Checked ? "Obnovit" : "Archivovat";
-        }
-
-        private async void checkBoxPreProject_CheckedChanged(object sender, EventArgs e)
-        {
-            await LoadProjectsAsync(checkBoxPreProject.Checked ? 2 : 1);
-            buttonSetAsPreProject.Text = checkBoxPreProject.Checked ? "Nastavit jako projekt" : "Nastavit jako předprojekt";
         }
 
         private async void buttonAddOperation_Click(object sender, EventArgs e)
@@ -247,10 +180,10 @@ namespace VykazyPrace.Dialogs
         {
             var project = new Project()
             {
-                ProjectType = checkBoxPreProject.Checked ? 2 : 1,
                 CreatedBy = _currentUser.Id,
                 ProjectTitle = textBoxProjectTitle.Text,
                 ProjectDescription = textBoxProjectDescription.Text,
+                ProjectType = FormatHelper.IsPreProject(textBoxProjectDescription.Text) ? 2 : 1,
                 IsArchived = 0
             };
 
@@ -284,36 +217,6 @@ namespace VykazyPrace.Dialogs
             }
 
             project.IsArchived = isArchived;
-
-            await _projectRepo.UpdateProjectAsync(project);
-            await LoadProjectsAsync(project.ProjectType);
-            ClearSelection();
-        }
-
-        private async void buttonSetAsPreProject_Click(object sender, EventArgs e)
-        {
-            int projectType = buttonSetAsPreProject.Text == "Nastavit jako předprojekt" ? 2 : 1;
-
-            if (projectType == 1)
-            {
-                if (!CheckFoxValidProject()) return;
-            }
-
-            else
-            {
-                if (!CheckFoxValidPreProject()) return;
-            }
-
-            var project = _filteredProjects[comboBoxProjects.SelectedIndex];
-            //var project = _filteredProjects.Find(x => x.ProjectTitle == textBoxProjectTitle.Text && x.ProjectDescription == textBoxProjectDescription.Text);
-
-            if (project == null)
-            {
-                AppLogger.Error("Nepodařilo se najít zvolený záznam.");
-                return;
-            }
-
-            project.ProjectType = projectType;
 
             await _projectRepo.UpdateProjectAsync(project);
             await LoadProjectsAsync(project.ProjectType);
@@ -514,9 +417,9 @@ namespace VykazyPrace.Dialogs
             buttonAddProject.Text = "Přidat";
             buttonAddAbsence.Text = "Přidat";
             buttonAddOther.Text = "Přidat";
+            groupBox2.Text = "Nový projekt";
 
             buttonArchiveProject.Visible = false;
-            buttonSetAsPreProject.Visible = false;
         }
 
         private void listBoxOperation_SelectedIndexChanged(object sender, EventArgs e)
@@ -542,7 +445,6 @@ namespace VykazyPrace.Dialogs
             if (listBoxProject.SelectedItem is not null)
             {
                 buttonArchiveProject.Visible = true;
-                buttonSetAsPreProject.Visible = true;
 
                 comboBoxProjectsLoading = true;
                 comboBoxProjects.SelectedIndex = comboBoxProjects.FindString(listBoxProject.SelectedItem.ToString());
@@ -551,12 +453,9 @@ namespace VykazyPrace.Dialogs
                 textBoxProjectTitle.Text = listBoxProject.SelectedItem.ToString().Split(':')[1].TrimStart(' ');
                 textBoxProjectDescription.Text = _filteredProjects.Find(x => x.ProjectTitle == textBoxProjectTitle.Text).ProjectDescription;
 
-             
-
                 buttonAddProject.Text = "Uložit";
-
                 buttonArchiveProject.Text = checkBoxArchive.Checked ? "Obnovit" : "Archivovat";
-                buttonSetAsPreProject.Text = checkBoxPreProject.Checked ? "Nastavit jako plnohodnotný projekt" : "Nastavit jako předprojekt";
+                groupBox2.Text = "Úprava projektu";
             }
         }
     }

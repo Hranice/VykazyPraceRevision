@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 using VykazyPrace.Core.Database.Models;
 
 namespace VykazyPrace.Helpers
@@ -96,5 +97,9 @@ namespace VykazyPrace.Helpers
             return $"Týden {weekNumber} ({startOfWeek:dd. M.} – {endOfWeek:dd. M. yyyy})";
         }
 
+        public static bool IsPreProject(string projectDescription)
+        {
+            return !Regex.IsMatch(projectDescription, @"^\d{4}[A-Z]\d{2}$");
+        }
     }
 }

@@ -286,6 +286,7 @@
             Padding = new Padding(0, 0, 10, 10);
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Výkazy práce";
+            FormClosing += MainForm_FormClosing;
             Load += MainForm_Load;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();

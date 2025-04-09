@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using VykazyPrace.Core.Configuration;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Dialogs;
@@ -34,8 +35,26 @@ namespace VykazyPrace
 
         private async void MainForm_Load(object sender, EventArgs e)
         {
-            UpdateService.CheckForUpdateMessage();
-            await UpdateService.CheckForUpdateAsync();
+            InitFormUI();
+
+            await HandleUpdatesAsync();
+
+            if (!ValidateDatabase())
+            {
+                ShowSettingsDialog("Databáze je neplatná nebo ji nelze naèíst. Chcete otevøít nastavení?", "Chyba databáze");
+                Close();
+                return;
+            }
+
+            _ = Task.Run(LoadDataAsync);
+
+            Enabled = true;
+        }
+
+        private void InitFormUI()
+        {
+            var config = ConfigService.Load();
+            WindowState = config.AppMaximized ? FormWindowState.Maximized : FormWindowState.Normal;
 
             _loadingUC.Size = Size;
             Controls.Add(_loadingUC);
@@ -47,24 +66,29 @@ namespace VykazyPrace
             labelSelectedDate.Text = FormatHelper.GetWeekNumberAndRange(_selectedDate);
 
             Enabled = false;
+        }
 
+        private async Task HandleUpdatesAsync()
+        {
+            UpdateService.CheckForUpdateMessage();
+            await UpdateService.CheckForUpdateAsync();
+        }
+
+        private bool ValidateDatabase()
+        {
             try
             {
                 using var testContext = new VykazyPraceContext();
                 VykazyPrace.Core.Database.DatabaseValidator.ValidateStructure(testContext);
+                return true;
             }
             catch (Exception ex)
             {
                 AppLogger.Error("Databáze je neplatná nebo ji nelze naèíst.", ex);
-                ShowSettingsDialog("Databáze je neplatná nebo ji nelze naèíst. Chcete otevøít nastavení?", "Chyba databáze");
-                Close(); // nebo return;
-                return;
+                return false;
             }
-
-            _ = Task.Run(LoadDataAsync);
-
-            Enabled = true;
         }
+
 
 
         private async void MainForm_KeyDown(object? sender, KeyEventArgs e)
@@ -315,6 +339,13 @@ namespace VykazyPrace
         private void oProgramuToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new AboutDialog().ShowDialog();
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            var config = ConfigService.Load();
+            config.AppMaximized = this.WindowState == FormWindowState.Maximized;
+            ConfigService.Save(config);
         }
     }
 }

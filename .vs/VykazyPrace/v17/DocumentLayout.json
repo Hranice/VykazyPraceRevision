@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\vykazyprace.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\vykazyprace.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -15,7 +19,7 @@
       "RelativeMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|solutionrelative:vykazyprace.core\\configuration\\appconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
@@ -33,10 +37,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace.core\\database\\repositories\\projectrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|solutionrelative:vykazyprace.core\\database\\repositories\\projectrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\vykazyprace.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
-      "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\vykazyprace.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace.core\\database\\repositories\\timeentryrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -82,7 +82,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -90,7 +90,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "ConfigService.cs",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Configuration\\ConfigService.cs",
               "RelativeDocumentMoniker": "VykazyPrace.Core\\Configuration\\ConfigService.cs",
@@ -98,24 +98,23 @@
               "RelativeToolTip": "VykazyPrace.Core\\Configuration\\ConfigService.cs",
               "ViewState": "AQIAAAMAAAAAAAAAAAAAABMAAAA0AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-09T06:41:05.175Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-09T06:41:05.175Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "MainForm.cs [N\u00E1vrh]",
+              "DocumentIndex": 4,
+              "Title": "MainForm.cs [Design]",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\MainForm.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\MainForm.cs",
-              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\MainForm.cs [N\u00E1vrh]",
-              "RelativeToolTip": "VykazyPrace\\MainForm.cs [N\u00E1vrh]",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\MainForm.cs [Design]",
+              "RelativeToolTip": "VykazyPrace\\MainForm.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-09T06:39:34.875Z",
-              "EditorCaption": " [N\u00E1vrh]"
+              "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "ProjectRepository.cs",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Repositories\\ProjectRepository.cs",
               "RelativeDocumentMoniker": "VykazyPrace.Core\\Database\\Repositories\\ProjectRepository.cs",
@@ -127,7 +126,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "CalendarV2.cs",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs",
@@ -140,14 +139,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 0,
               "Title": "VykazyPrace",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\VykazyPrace.csproj",
               "RelativeDocumentMoniker": "VykazyPrace\\VykazyPrace.csproj",
               "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\VykazyPrace.csproj",
               "RelativeToolTip": "VykazyPrace\\VykazyPrace.csproj",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-04-03T10:17:18.118Z"
+              "WhenOpened": "2025-04-03T10:17:18.118Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -163,7 +163,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "MainForm.cs",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\MainForm.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\MainForm.cs",
@@ -176,7 +176,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "AppConfig.cs",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Configuration\\AppConfig.cs",
               "RelativeDocumentMoniker": "VykazyPrace.Core\\Configuration\\AppConfig.cs",
@@ -184,8 +184,7 @@
               "RelativeToolTip": "VykazyPrace.Core\\Configuration\\AppConfig.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAA3AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-05T11:26:48.644Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-05T11:26:48.644Z"
             },
             {
               "$type": "Document",
@@ -201,7 +200,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "TimeEntrySubTypeRepository.cs",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Repositories\\TimeEntrySubTypeRepository.cs",
               "RelativeDocumentMoniker": "VykazyPrace.Core\\Database\\Repositories\\TimeEntrySubTypeRepository.cs",
@@ -213,15 +212,14 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "CalendarV2.cs [Design]",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs",
               "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs [Design]",
               "RelativeToolTip": "VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-07T06:54:24.134Z",
-              "EditorCaption": " [Design]"
+              "WhenOpened": "2025-04-07T06:54:24.134Z"
             },
             {
               "$type": "Document",

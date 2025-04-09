@@ -1,0 +1,4 @@
+2025-04-09 08:36:36.199 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-04-09 08:36:37.705 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-04-09 08:36:50.355 +02:00 [INF] Záznam 0 - Provoz Metalizace: 1 h -  byl smazán z databáze.
+2025-04-09 08:36:58.933 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.

@@ -26,6 +26,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         // UI + State
         private readonly LoadingUC _loadingUC = new();
         private readonly Timer _resizeTimer = new() { Interval = 50 };
+        private bool userHasScrolled = false;
 
         // Repositories
         private readonly TimeEntryRepository _timeEntryRepo;
@@ -70,6 +71,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         // Configuration
         private int arrivalColumn = 12;
         private int leaveColumn = 28;
+
 
         public CalendarV2(User currentUser,
                           TimeEntryRepository timeEntryRepo,
@@ -128,9 +130,15 @@ namespace VykazyPrace.UserControls.CalendarV2
         private async void CalendarV2_Load(object sender, EventArgs e)
         {
             InitializeContextMenus();
+            panelContainer.Scroll += PanelContainer_Scroll;
             _loadingUC.Size = Size;
             Controls.Add(_loadingUC);
             await LoadInitialDataAsync();
+        }
+
+        private void PanelContainer_Scroll(object? sender, ScrollEventArgs e)
+        {
+            userHasScrolled = true;
         }
 
         private async Task LoadInitialDataAsync()
@@ -539,7 +547,25 @@ namespace VykazyPrace.UserControls.CalendarV2
             {
                 UpdateDateLabels();
                 panelContainer.AutoScroll = true;
-                panelContainer.AutoScrollPosition = new Point(Math.Abs(scrollPosition.X), 0);
+
+                if (!userHasScrolled)
+                {
+                    int[] columnWidths = tableLayoutPanel1.GetColumnWidths();
+                    int currentHourColumn = (DateTime.Now.Hour * 60 + DateTime.Now.Minute) / 30;
+                    int scrollX = 0;
+
+                    for (int i = 0; i < currentHourColumn; i++)
+                    {
+                        scrollX += columnWidths[i];
+                    }
+
+                    int centerOffset = panelContainer.ClientSize.Width / 2;
+                    scrollX -= centerOffset;
+
+                    if (scrollX < 0) scrollX = 0;
+
+                    panelContainer.AutoScrollPosition = new Point(scrollX, 0);
+                }
 
                 DeactivateAllPanels();
 

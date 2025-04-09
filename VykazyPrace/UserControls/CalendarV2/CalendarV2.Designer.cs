@@ -1095,6 +1095,7 @@
             tableLayoutPanelEntryType.RowCount = 2;
             tableLayoutPanelEntryType.RowStyles.Add(new RowStyle());
             tableLayoutPanelEntryType.RowStyles.Add(new RowStyle());
+            tableLayoutPanelEntryType.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanelEntryType.Size = new Size(237, 70);
             tableLayoutPanelEntryType.TabIndex = 150;
             // 

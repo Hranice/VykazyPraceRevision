@@ -4456,13 +4456,5 @@
         "#import": []
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Při získávání dat o ohrožení zabezpečení balíčku došlo k chybě: Nepovedlo se načíst index služby pro zdroj https://www.emgu.com/e03cb1d2-a3aa-4be9-8e4a-546f4de31a35/v3/index.json."
-    }
-  ]
+  }
 }

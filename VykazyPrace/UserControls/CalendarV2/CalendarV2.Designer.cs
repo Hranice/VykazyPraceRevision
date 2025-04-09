@@ -940,6 +940,7 @@
             flowLayoutPanel2.Size = new Size(243, 583);
             flowLayoutPanel2.TabIndex = 146;
             flowLayoutPanel2.Visible = false;
+            flowLayoutPanel2.SizeChanged += flowLayoutPanel2_SizeChanged;
             // 
             // radioButton1
             // 
@@ -1084,7 +1085,6 @@
             // 
             // tableLayoutPanelEntryType
             // 
-            tableLayoutPanelEntryType.AutoSize = true;
             tableLayoutPanelEntryType.ColumnCount = 1;
             tableLayoutPanelEntryType.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanelEntryType.Controls.Add(comboBoxEntryType, 0, 1);
@@ -1100,7 +1100,7 @@
             // 
             // comboBoxEntryType
             // 
-            comboBoxEntryType.Dock = DockStyle.Top;
+            comboBoxEntryType.Dock = DockStyle.Fill;
             comboBoxEntryType.FormattingEnabled = true;
             comboBoxEntryType.IntegralHeight = false;
             comboBoxEntryType.ItemHeight = 25;

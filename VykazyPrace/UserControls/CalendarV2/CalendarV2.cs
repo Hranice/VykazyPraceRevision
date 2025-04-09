@@ -45,6 +45,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         private User _selectedUser;
         private DateTime _selectedDate;
         private int _selectedTimeEntryId = -1;
+        private int _currentProjectType;
         private bool comboBoxProjectsLoading = false;
         private bool isUpdating = false;
 
@@ -188,32 +189,125 @@ namespace VykazyPrace.UserControls.CalendarV2
             return _selectedDate;
         }
 
-
-
         private async Task LoadTimeEntryTypesAsync(int projectType)
         {
             try
             {
+                _currentProjectType = projectType;
+
                 var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
                 bool isArchived = timeEntry?.AfterCare == 1;
 
                 _timeEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesByProjectTypeAsync(projectType);
 
-                SafeInvoke(() =>
-                {
-                    comboBoxEntryType.Items.Clear();
-                    comboBoxEntryType.Items.AddRange(checkBoxArchivedProjects.Checked
-                        ? _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeWithAfterCareToString).ToArray()
-                        : _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray());
-
-                    comboBoxEntryType.Text = string.Empty;
-                });
+                SafeInvoke(() => UpdateEntryTypeControls(projectType));
             }
             catch (Exception ex)
             {
                 SafeInvoke(() => AppLogger.Error("Chyba při načítání typů časových záznamů.", ex));
             }
         }
+
+        private void UpdateEntryTypeControls(int projectType)
+        {
+            bool useRadioButtons = projectType is 0 or 1 or 2;
+
+            comboBoxEntryType.Visible = !useRadioButtons;
+            comboBoxEntryType.Enabled = !useRadioButtons;
+            comboBoxEntryType.Items.Clear();
+
+            ClearPreviousEntryTypeControls();
+
+            if (useRadioButtons)
+            {
+                AddRadioButtonsForEntryTypes();
+            }
+            else
+            {
+                FillComboBoxWithEntryTypes();
+            }
+        }
+
+        private void AddRadioButtonsForEntryTypes()
+        {
+            var layout = CreateRadioButtonLayout();
+
+            for (int i = 0; i < _timeEntryTypes.Count; i++)
+            {
+                var entryType = _timeEntryTypes[i];
+                var radio = CreateRadioButton(entryType.Title);
+
+                if (i == 0)
+                {
+                    radio.Checked = true;
+                }
+
+                layout.Controls.Add(radio);
+            }
+
+            tableLayoutPanelEntryType.Controls.Add(layout);
+        }
+
+
+        private TableLayoutPanel CreateRadioButtonLayout()
+        {
+            var panel = new TableLayoutPanel
+            {
+                ColumnCount = 3,
+                RowCount = 1,
+                Dock = DockStyle.Fill,
+                Height = comboBoxEntryType.Height,
+                Padding = Padding.Empty,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                Margin = Padding.Empty
+            };
+
+            for (int i = 0; i < panel.ColumnCount; i++)
+            {
+                panel.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            }
+
+            return panel;
+        }
+
+        private RadioButton CreateRadioButton(string text)
+        {
+            return new RadioButton
+            {
+                Text = text,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Appearance = Appearance.Button,
+                Dock = DockStyle.Fill,
+                AutoSize = true,
+                Font = new Font(this.Font.FontFamily, 9.0f)
+            };
+        }
+
+        private void FillComboBoxWithEntryTypes()
+        {
+            var items = _timeEntryTypes.Select(type =>
+                checkBoxArchivedProjects.Checked
+                    ? FormatHelper.FormatTimeEntryTypeWithAfterCareToString(type)
+                    : FormatHelper.FormatTimeEntryTypeToString(type));
+
+            comboBoxEntryType.Items.AddRange(items.ToArray());
+            comboBoxEntryType.Text = string.Empty;
+        }
+
+        private void ClearPreviousEntryTypeControls()
+        {
+            var tablePanels = tableLayoutPanelEntryType.Controls
+                .OfType<TableLayoutPanel>()
+                .ToList();
+
+            foreach (var ctrl in tablePanels)
+            {
+                tableLayoutPanelEntryType.Controls.Remove(ctrl);
+                ctrl.Dispose();
+            }
+        }
+
 
         private async Task LoadTimeEntrySubTypesAsync()
         {
@@ -274,7 +368,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             flowLayoutPanel2.Visible = _selectedTimeEntryId > -1;
 
             var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
-
             if (timeEntry == null) return;
 
             if (timeEntry.ProjectId == 132 && timeEntry.EntryTypeId == 24)
@@ -290,7 +383,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             if (timeEntry.IsValid == 1)
             {
-
                 checkBoxArchivedProjects.Checked = timeEntry.Project.IsArchived == 1;
 
                 var proj = await _projectRepo.GetProjectByIdAsync(timeEntry.ProjectId ?? 0);
@@ -317,7 +409,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                         break;
                 }
 
-
                 BeginInvoke((Action)(() =>
                 {
                     comboBoxStart.SelectedIndex = minutesStart / 30;
@@ -330,16 +421,41 @@ namespace VykazyPrace.UserControls.CalendarV2
                         suppressDropdownTemporarily = true;
                         comboBoxProjects.Text = FormatHelper.FormatProjectToString(timeEntry.Project);
                         suppressDropdownTemporarily = false;
-                        var selectedType = _timeEntryTypes.FirstOrDefault(x => x.Id == timeEntry.EntryTypeId);
-                        comboBoxEntryType.Text = timeEntry.AfterCare == 1
-                            ? FormatHelper.FormatTimeEntryTypeWithAfterCareToString(selectedType)
-                            : FormatHelper.FormatTimeEntryTypeToString(selectedType);
+
+                        // Výběr EntryType podle ProjectType
+                        if (proj.ProjectType is 0 or 1 or 2)
+                        {
+                            int baseId = proj.ProjectType switch
+                            {
+                                0 => 1,
+                                1 => 10,
+                                2 => 13,
+                                _ => 0
+                            };
+
+                            int radioIndex = (int)(timeEntry.EntryTypeId - baseId);
+                            var radioPanel = tableLayoutPanelEntryType.Controls
+                                .OfType<TableLayoutPanel>()
+                                .FirstOrDefault();
+
+                            var radios = radioPanel?.Controls.OfType<RadioButton>().ToList();
+                            if (radios != null && radioIndex >= 0 && radioIndex < radios.Count)
+                            {
+                                radios[radioIndex].Checked = true;
+                            }
+                        }
+                        else
+                        {
+                            var selectedType = _timeEntryTypes.FirstOrDefault(x => x.Id == timeEntry.EntryTypeId);
+                            comboBoxEntryType.Text = timeEntry.AfterCare == 1
+                                ? FormatHelper.FormatTimeEntryTypeWithAfterCareToString(selectedType)
+                                : FormatHelper.FormatTimeEntryTypeToString(selectedType);
+                        }
                     }
 
                     comboBoxProjectsLoading = false;
                 }));
             }
-
             else
             {
                 BeginInvoke((Action)(() =>
@@ -368,6 +484,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 }));
             }
         }
+
 
         private void SelectRadioButtonByText(string text)
         {
@@ -1189,7 +1306,31 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
 
             int selectedEntryTypeId = 0;
-            if (comboBoxEntryType.SelectedIndex > -1)
+
+            if (_currentProjectType is 0 or 1 or 2)
+            {
+                // Projektový typ s radio buttony
+                var radioButtons = tableLayoutPanelEntryType.Controls
+                    .OfType<TableLayoutPanel>()
+                    .SelectMany(panel => panel.Controls.OfType<RadioButton>())
+                    .ToList();
+
+                for (int i = 0; i < radioButtons.Count; i++)
+                {
+                    if (radioButtons[i].Checked)
+                    {
+                        selectedEntryTypeId = _currentProjectType switch
+                        {
+                            0 => 1 + i,
+                            1 => 10 + i,
+                            2 => 13 + i,
+                            _ => 0
+                        };
+                        break;
+                    }
+                }
+            }
+            else if (comboBoxEntryType.SelectedIndex > -1)
             {
                 selectedEntryTypeId = _timeEntryTypes[comboBoxEntryType.SelectedIndex].Id;
             }
@@ -1221,12 +1362,10 @@ namespace VykazyPrace.UserControls.CalendarV2
             {
                 timeEntry.ProjectId = 25;
             }
-
             else if (radioButton5.Checked)
             {
                 timeEntry.ProjectId = 23;
             }
-
             else if (radioButton4.Checked)
             {
                 timeEntry.ProjectId = 26;
@@ -1245,6 +1384,19 @@ namespace VykazyPrace.UserControls.CalendarV2
                 await LoadSidebar();
             }
         }
+
+
+        private int GetRadioButtonIndex(RadioButton selectedRadio)
+        {
+            var allRadios = tableLayoutPanelEntryType
+                .Controls
+                .OfType<TableLayoutPanel>()
+                .SelectMany(p => p.Controls.OfType<RadioButton>())
+                .ToList();
+
+            return allRadios.IndexOf(selectedRadio);
+        }
+
 
         private (bool valid, string reason) CheckForEmptyOrIncorrectFields()
         {
@@ -1269,8 +1421,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                 case "PŘEDPROJEKT":
                     if (string.IsNullOrWhiteSpace(comboBoxProjects.Text) || !ProjectTextMatches)
                         return (false, "Projekt neodpovídá žádné možnosti");
-                    if (string.IsNullOrWhiteSpace(comboBoxEntryType.Text) || !EntryTypeMatches)
-                        return (false, "Typ záznamu neodpovídá žádné možnosti");
                     break;
                 case "ŠKOLENÍ":
                     if (string.IsNullOrWhiteSpace(textBoxNote.Text))

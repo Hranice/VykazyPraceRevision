@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 using VykazyPrace.Core.Database.Models;
 
 namespace VykazyPrace.Helpers
@@ -13,16 +14,17 @@ namespace VykazyPrace.Helpers
                 return "<NULL>";
             }
 
-            if (project?.ProjectType == 1 || project?.ProjectType == 2)
+            if (project.ProjectType == 1 || project.ProjectType == 2)
             {
-                return $"({project?.ProjectDescription}):{project?.ProjectTitle}";
+                string desc = project.ProjectDescription?.PadLeft(7) ?? "".PadLeft(7);
+                return $"{(project.IsArchived == 1 ? "(A) ": "")}{desc}: {project.ProjectTitle}";
             }
-
             else
             {
-                return $"{project?.ProjectTitle}";
+                return project.ProjectTitle ?? "";
             }
         }
+
 
         public static string FormatTimeEntryToString(TimeEntry? timeEntry)
         {
@@ -96,5 +98,9 @@ namespace VykazyPrace.Helpers
             return $"Týden {weekNumber} ({startOfWeek:dd. M.} – {endOfWeek:dd. M. yyyy})";
         }
 
+        public static bool IsPreProject(string projectDescription)
+        {
+            return !Regex.IsMatch(projectDescription, @"^\d{4}[A-Z]\d{2}$");
+        }
     }
 }

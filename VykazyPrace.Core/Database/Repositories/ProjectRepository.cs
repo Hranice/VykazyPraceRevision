@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using VykazyPrace.Core.Database.Models;
 
@@ -42,25 +43,31 @@ namespace VykazyPrace.Core.Database.Repositories
         public async Task<List<Project>> GetAllProjectsAsync(bool includeArchived = false)
         {
             IQueryable<Project> projectsQuery = _context.Projects
-                .Include(p => p.CreatedByNavigation)
-                .AsQueryable();
+                .Include(p => p.CreatedByNavigation);
 
             if (!includeArchived)
             {
                 projectsQuery = projectsQuery.Where(p => p.IsArchived == 0);
             }
 
-            var projects = await projectsQuery.ToListAsync(); // Asynchronní načtení dat do paměti
+            var projects = await projectsQuery.ToListAsync();
 
             return projects
-                .OrderBy(p => IsValidProjectDescription(p.ProjectDescription) ? 1 : 0) // Ostatní první, seřazené na konec
-                .ThenBy(p => GetProjectType(p.ProjectDescription)) // I/E
-                .ThenByDescending(p => GetProjectYear(p.ProjectDescription)) // Rok sestupně
-                .ThenByDescending(p => GetProjectNumber(p.ProjectDescription)) // Pořadové číslo sestupně
+                .OrderBy(p => GetProjectNumber(p.ProjectDescription))
                 .ToList();
         }
 
+        /// <summary>
+        /// Vrací pořadové číslo jako číslo, nebo nejnižší možnou hodnotu pro neplatné záznamy.
+        /// </summary>
+        private int GetProjectNumber(string description)
+        {
+            if (string.IsNullOrWhiteSpace(description))
+                return int.MaxValue; // Na konec
 
+            var match = Regex.Match(description, @"^\d+");
+            return match.Success && int.TryParse(match.Value, out int number) ? number : int.MaxValue;
+        }
 
         /// <summary>
         /// Získání všech projektů i zakázek, seřazených podle interního/externího označení,
@@ -75,11 +82,8 @@ namespace VykazyPrace.Core.Database.Repositories
                 .ToListAsync(); // Asynchronní načtení dat do paměti
 
             return projects
-                .OrderBy(p => IsValidProjectDescription(p.ProjectDescription) ? 1 : 0) // Ostatní první, seřazené na konec
-                .ThenBy(p => GetProjectType(p.ProjectDescription)) // I/E
-                .ThenByDescending(p => GetProjectYear(p.ProjectDescription)) // Rok sestupně
-                .ThenByDescending(p => GetProjectNumber(p.ProjectDescription)) // Pořadové číslo sestupně
-                .ToList();
+                 .OrderBy(p => GetProjectNumber(p.ProjectDescription))
+                 .ToList();
         }
 
         /// <summary>
@@ -109,15 +113,6 @@ namespace VykazyPrace.Core.Database.Repositories
         {
             return IsValidProjectDescription(description) && int.TryParse(description.Substring(5, 2), out int year) ? year : int.MinValue;
         }
-
-        /// <summary>
-        /// Vrací pořadové číslo jako číslo, nebo nejnižší možnou hodnotu pro neplatné záznamy.
-        /// </summary>
-        private int GetProjectNumber(string description)
-        {
-            return IsValidProjectDescription(description) && int.TryParse(description.Substring(0, 4), out int number) ? number : int.MinValue;
-        }
-
 
         /// <summary>
         /// Získání projektu podle ID.

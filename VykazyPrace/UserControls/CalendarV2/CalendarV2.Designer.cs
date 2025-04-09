@@ -1043,7 +1043,7 @@
             comboBoxProjects.FormattingEnabled = true;
             comboBoxProjects.IntegralHeight = false;
             comboBoxProjects.ItemHeight = 25;
-            comboBoxProjects.Location = new Point(3, 36);
+            comboBoxProjects.Location = new Point(3, 46);
             comboBoxProjects.Name = "comboBoxProjects";
             comboBoxProjects.Size = new Size(231, 33);
             comboBoxProjects.TabIndex = 150;
@@ -1095,6 +1095,7 @@
             tableLayoutPanelEntryType.RowCount = 2;
             tableLayoutPanelEntryType.RowStyles.Add(new RowStyle());
             tableLayoutPanelEntryType.RowStyles.Add(new RowStyle());
+            tableLayoutPanelEntryType.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanelEntryType.Size = new Size(237, 70);
             tableLayoutPanelEntryType.TabIndex = 150;
             // 

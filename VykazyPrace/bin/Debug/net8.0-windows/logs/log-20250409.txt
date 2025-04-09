@@ -2,3 +2,24 @@
 2025-04-09 08:36:37.705 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
 2025-04-09 08:36:50.355 +02:00 [INF] Záznam 0 - Provoz Metalizace: 1 h -  byl smazán z databáze.
 2025-04-09 08:36:58.933 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-04-09 10:12:20.777 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-04-09 10:12:51.375 +02:00 [INF] Záznam  - Automatizace: 0,5 h -  byl smazán z databáze.
+2025-04-09 10:41:15.214 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - test byl úspěšně aktualizován.
+2025-04-09 10:41:26.240 +02:00 [INF] Záznam 0277E25 - Stěhování linek KLT-SPEC: 0,5 h - test byl úspěšně aktualizován.
+2025-04-09 10:41:32.880 +02:00 [INF] Záznam 027I21 - Kompletace Lancome: 0,5 h - test byl úspěšně aktualizován.
+2025-04-09 10:41:37.414 +02:00 [INF] Záznam 027I21 - Kompletace Lancome: 0,5 h - test byl smazán z databáze.
+2025-04-09 12:25:55.525 +02:00 [INF] Záznam 0 - Ostatní: 0,5 h - test byl úspěšně aktualizován.
+2025-04-09 12:26:02.945 +02:00 [INF] Záznam  - Automatizace: 0,5 h - test byl úspěšně aktualizován.
+2025-04-09 12:26:20.137 +02:00 [INF] Záznam 0 - Ostatní: 0,5 h - test byl úspěšně aktualizován.
+2025-04-09 12:26:31.481 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - Obchůzka byl úspěšně aktualizován.
+2025-04-09 12:26:35.666 +02:00 [INF] Záznam 0 - Ostatní: 0,5 h - Obchůzka byl smazán z databáze.
+2025-04-09 12:26:38.090 +02:00 [INF] Záznam  - Automatizace: 0,5 h - test byl smazán z databáze.
+2025-04-09 12:26:40.577 +02:00 [INF] Záznam  - Automatizace: 0,5 h - test byl smazán z databáze.
+2025-04-09 12:56:25.544 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - test byl úspěšně aktualizován.
+2025-04-09 12:56:40.020 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Typ záznamu neodpovídá žádné možnosti
+2025-04-09 12:57:25.977 +02:00 [INF] Záznam 0 - Provoz ostatní: 0,5 h - test byl úspěšně aktualizován.
+2025-04-09 12:57:54.493 +02:00 [INF] Záznam 005I21 - 3D tiskárna PEEK: 0,5 h - test byl smazán z databáze.
+2025-04-09 12:57:57.182 +02:00 [INF] Záznam 0 - Provoz ostatní: 0,5 h - test byl smazán z databáze.
+2025-04-09 12:58:15.498 +02:00 [INF] Záznam 0 - Provoz Metalizace: 1,5 h -  byl smazán z databáze.
+2025-04-09 12:58:49.005 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Činnost neodpovídá žádné možnosti
+2025-04-09 12:58:53.231 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.

@@ -86,7 +86,6 @@
             Name = "TestDialog";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "TestDialog";
-            Load += TestDialog_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
         }

@@ -46,13 +46,14 @@
   </ItemGroup>
 
 <ItemGroup>
-  <Compile Include="MainForm.cs">
+  <Compile Update="MainForm.cs">
     <SubType>Form</SubType>
   </Compile>
-  <Compile Include="MainForm.Designer.cs">
+  <Compile Update="MainForm.Designer.cs">
     <DependentUpon>MainForm.cs</DependentUpon>
   </Compile>
 </ItemGroup>
+
 
 
   <ItemGroup>

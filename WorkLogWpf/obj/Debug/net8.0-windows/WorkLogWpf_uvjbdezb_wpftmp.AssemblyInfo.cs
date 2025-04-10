@@ -11,15 +11,13 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("Heinz-Glas Decor s.r.o.")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("WorkLogWpf")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
-[assembly: System.Reflection.AssemblyCopyrightAttribute("© 2025 Jan Procházka")]
-[assembly: System.Reflection.AssemblyDescriptionAttribute("Výkazy hodin")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("1.1.7.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.1.7.0+fe0337856009433c84b9d04f6832745e2caa9793")]
-[assembly: System.Reflection.AssemblyProductAttribute("WorkLog")]
-[assembly: System.Reflection.AssemblyTitleAttribute("WorkLog")]
-[assembly: System.Reflection.AssemblyVersionAttribute("1.1.7.0")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fe0337856009433c84b9d04f6832745e2caa9793")]
+[assembly: System.Reflection.AssemblyProductAttribute("WorkLogWpf")]
+[assembly: System.Reflection.AssemblyTitleAttribute("WorkLogWpf")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 [assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
 

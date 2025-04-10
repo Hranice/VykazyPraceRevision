@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v8.0": {
-      "WorkLog/1.1.6.10": {
+      "WorkLog/1.1.7.0": {
         "dependencies": {
           "Serilog": "4.2.0",
           "Serilog.Sinks.Console": "6.0.0",
@@ -492,7 +492,10 @@
           "Microsoft.EntityFrameworkCore.Sqlite": "9.0.2"
         },
         "runtime": {
-          "VykazyPrace.Core.dll": {}
+          "VykazyPrace.Core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "Microsoft.Office.Interop.Excel/16.0.0.0": {
@@ -530,7 +533,7 @@
     }
   },
   "libraries": {
-    "WorkLog/1.1.6.10": {
+    "WorkLog/1.1.7.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

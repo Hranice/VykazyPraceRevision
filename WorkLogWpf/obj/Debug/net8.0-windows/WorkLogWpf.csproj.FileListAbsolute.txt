@@ -4,12 +4,10 @@ C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\bin\Debug\net8.0-windows
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\bin\Debug\net8.0-windows\WorkLogWpf.dll
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\bin\Debug\net8.0-windows\WorkLogWpf.pdb
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\MainWindow.g.cs
-C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\WeekCalendar.g.cs
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\App.g.cs
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\WorkLogWpf_MarkupCompile.cache
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\WorkLogWpf_MarkupCompile.lref
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\MainWindow.baml
-C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\WeekCalendar.baml
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\WorkLogWpf.g.resources
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\WorkLogWpf.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\WorkLogWpf.AssemblyInfoInputs.cache
@@ -21,3 +19,6 @@ C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\WorkLogWpf.pdb
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\WorkLogWpf.genruntimeconfig.cache
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\ref\WorkLogWpf.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
+C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendar.g.cs
+C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendar.baml

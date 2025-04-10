@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="WorkLogWpf.Views.Controls.WeekCalendar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:WorkLogWpf.Views.Controls">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <!-- Fixní sloupec pro dny -->
+            <ColumnDefinition Width="*"/>
+            <!-- Scrollovatelná část -->
+        </Grid.ColumnDefinitions>
+
+        <!-- Fixní sloupec: Názvy dní -->
+        <Grid Grid.Column="0" Name="DayLabelGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Prázdná buňka pro zarovnání s headerem -->
+            <TextBlock Grid.Row="0" />
+
+            <!-- Dny -->
+            <TextBlock Grid.Row="1" Text="Pondělí&#x0a;7.4.2025" VerticalAlignment="Center" Margin="5"/>
+            <TextBlock Grid.Row="2" Text="Úterý&#x0a;8.4.2025" VerticalAlignment="Center" Margin="5"/>
+            <TextBlock Grid.Row="3" Text="Středa&#x0a;9.4.2025" VerticalAlignment="Center" Margin="5"/>
+            <TextBlock Grid.Row="4" Text="Čtvrtek&#x0a;10.4.2025" VerticalAlignment="Center" Margin="5"/>
+            <TextBlock Grid.Row="5" Text="Pátek&#x0a;11.4.2025" VerticalAlignment="Center" Margin="5"/>
+            <TextBlock Grid.Row="6" Text="Sobota&#x0a;12.4.2025" VerticalAlignment="Center" Margin="5"/>
+            <TextBlock Grid.Row="7" Text="Neděle&#x0a;13.4.2025" VerticalAlignment="Center" Margin="5"/>
+        </Grid>
+
+        <!-- Scrollovatelná část -->
+        <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+            <Grid Name="CalendarGrid" Margin="0">
+                <Grid.RowDefinitions>
+                    <!-- Header -->
+                    <RowDefinition Height="40"/>
+                    <!-- Dny -->
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- 48 sloupců pro půlhodiny -->
+                <Grid.ColumnDefinitions>
+                    <!-- Každý sloupec má stejnou šířku -->
+                    <ColumnDefinition Width="*" />
+                    <!-- 47 dalších -->
+                    <!-- (kopíruj si nebo vygeneruj přes C#) -->
+                </Grid.ColumnDefinitions>
+
+                <!-- Časové hlavičky -->
+                <!-- Každé 2 sloupce = 1 hodina -->
+                <!-- Např. Grid.Column="0", Grid.ColumnSpan="2" -->
+                <!-- Popisky generuj z kódu, ať je to hezčí -->
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

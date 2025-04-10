@@ -1,6 +1,0 @@
-2025-02-28 08:22:42.056 +01:00 [INF] Zápis hodin 7 (000015): 1 h - zakázníček byl úspěšně proveden.
-2025-02-28 08:23:13.358 +01:00 [INF] Zápis hodin 8 (000015): 5,5 h -  byl úspěšně proveden.
-2025-02-28 08:34:46.559 +01:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Zakázka
-2025-02-28 08:37:20.438 +01:00 [INF] Zápis hodin 9 (): 1 h - ave maria byl úspěšně proveden.
-2025-02-28 14:31:37.468 +01:00 [INF] Projekt 5 (0279I25): Kobot byl úspěšně přidán.
-2025-02-28 14:31:49.360 +01:00 [INF] Projekt 6 (0268I25): Karuselový stroj s kamerovým systémem byl úspěšně přidán.

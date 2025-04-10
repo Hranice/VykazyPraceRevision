@@ -1,3 +1,0 @@
-C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\win-x64\publish\WorkLog.pdb
-C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\win-x64\publish\VykazyPrace.Core.pdb
-C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\win-x64\publish\WorkLog.exe

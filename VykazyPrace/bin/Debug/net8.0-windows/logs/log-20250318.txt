@@ -1,9 +1,0 @@
-2025-03-18 07:57:38.734 +01:00 [INF] Zápis hodin 003A00 - Provoz Metalizace: 0,5 h - meow byl úspěšně proveden.
-2025-03-18 12:58:49.233 +01:00 [INF] Export dokončen.
-2025-03-18 13:37:31.876 +01:00 [INF] Export dokončen.
-2025-03-18 15:00:59.737 +01:00 [INF] Export dokončen.
-2025-03-18 15:05:10.011 +01:00 [INF] Export dokončen.
-2025-03-18 15:11:02.132 +01:00 [INF] Export dokončen.
-2025-03-18 15:13:46.019 +01:00 [INF] Export dokončen.
-2025-03-18 15:18:42.709 +01:00 [INF] Export dokončen.
-2025-03-18 15:21:38.018 +01:00 [INF] Export dokončen.

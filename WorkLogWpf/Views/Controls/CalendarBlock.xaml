@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="WorkLogWpf.Views.Controls.CalendarBlock"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             MinWidth="30"
+             MinHeight="30"
+             Cursor="SizeAll">
+    <Border x:Name="BlockBorder"
+            Background="LightBlue"
+            BorderBrush="DarkBlue"
+            BorderThickness="1"
+            CornerRadius="4"
+            Padding="5"
+            SnapsToDevicePixels="True">
+        <Grid>
+            <TextBlock x:Name="BlockText" Text="Blok" Foreground="Black" VerticalAlignment="Center" />
+            <!-- Resize úchyty -->
+            <Thumb x:Name="LeftThumb" Width="5" HorizontalAlignment="Left" Cursor="SizeWE"/>
+            <Thumb x:Name="RightThumb" Width="5" HorizontalAlignment="Right" Cursor="SizeWE"/>
+        </Grid>
+    </Border>
+</UserControl>

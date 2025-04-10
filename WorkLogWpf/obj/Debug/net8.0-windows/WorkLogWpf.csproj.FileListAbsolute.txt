@@ -22,3 +22,5 @@ C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendar.g.cs
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendar.baml
+C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\CalendarBlock.baml
+C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\CalendarBlock.g.cs

@@ -38,7 +38,11 @@
 
         <!-- Scrollovatelná část -->
         <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-            <Grid Name="CalendarGrid" Margin="0">
+            <Grid Name="CalendarGrid"
+                  ShowGridLines="True"
+      Background="Transparent"
+      MouseLeftButtonDown="CalendarGrid_MouseLeftButtonDown"
+      Margin="0">
                 <Grid.RowDefinitions>
                     <!-- Header -->
                     <RowDefinition Height="40"/>
@@ -51,19 +55,6 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-
-                <!-- 48 sloupců pro půlhodiny -->
-                <Grid.ColumnDefinitions>
-                    <!-- Každý sloupec má stejnou šířku -->
-                    <ColumnDefinition Width="*" />
-                    <!-- 47 dalších -->
-                    <!-- (kopíruj si nebo vygeneruj přes C#) -->
-                </Grid.ColumnDefinitions>
-
-                <!-- Časové hlavičky -->
-                <!-- Každé 2 sloupce = 1 hodina -->
-                <!-- Např. Grid.Column="0", Grid.ColumnSpan="2" -->
-                <!-- Popisky generuj z kódu, ať je to hezčí -->
             </Grid>
         </ScrollViewer>
     </Grid>

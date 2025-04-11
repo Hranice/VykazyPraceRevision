@@ -31,7 +31,8 @@ namespace WorkLogWpf.Views.Controls
 
         private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            ResizeDelta?.Invoke(this, new Point(e.HorizontalChange, e.VerticalChange));
+            // Posíláme informaci o směru (a který thumb)
+            ResizeDelta?.Invoke(sender, new Point(e.HorizontalChange, 0));
         }
 
         private void Thumb_DragCompleted(object sender, DragCompletedEventArgs e)
@@ -40,4 +41,3 @@ namespace WorkLogWpf.Views.Controls
         }
     }
 }
-

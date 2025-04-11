@@ -35,14 +35,41 @@ namespace WorkLogWpf.Views.Controls
 
                 if (row <= 0 || col < 0) return;
 
+                // Nejprve zkontrolujeme, zda není kliknuto přímo na existující blok
+                bool clickedOnExistingBlock = CalendarGrid.Children.OfType<CalendarBlock>()
+                    .Any(b => Grid.GetRow(b) == row &&
+                              col >= Grid.GetColumn(b) &&
+                              col < Grid.GetColumn(b) + Grid.GetColumnSpan(b));
+
+                if (clickedOnExistingBlock)
+                    return;
+
+                int desiredSpan = 2;
+
+                // Najdeme nejbližší překážku směrem doprava
+                var obstacle = CalendarGrid.Children.OfType<CalendarBlock>()
+                    .Where(b => Grid.GetRow(b) == row && Grid.GetColumn(b) > col)
+                    .OrderBy(b => Grid.GetColumn(b))
+                    .FirstOrDefault();
+
+                if (obstacle != null)
+                {
+                    int obstacleStart = Grid.GetColumn(obstacle);
+                    desiredSpan = Math.Min(desiredSpan, obstacleStart - col);
+                }
+
+                if (desiredSpan <= 0) return;
+
                 var block = new CalendarBlock();
                 Grid.SetColumn(block, col);
-                Grid.SetColumnSpan(block, 2);
+                Grid.SetColumnSpan(block, desiredSpan);
                 Grid.SetRow(block, row);
                 CalendarGrid.Children.Add(block);
                 RegisterBlockEvents(block);
             }
         }
+
+
 
         private void RegisterBlockEvents(CalendarBlock block)
         {
@@ -130,102 +157,102 @@ namespace WorkLogWpf.Views.Controls
             block.ResizeCompleted += (s, e) => ResetResizeState();
         }
 
-        private void HandleResizeRight(int row, int cursorCol)
+     private void HandleResizeRight(int row, int cursorCol)
+{
+    var block = _resizingOriginalBlock;
+
+    if (_newBlock != null && cursorCol <= _resizingStartCol + _resizingStartSpan - 1)
+    {
+        CalendarGrid.Children.Remove(_newBlock);
+        _newBlock = null;
+        _resizingOriginalBlock = block;
+        _resizingStartCol = Grid.GetColumn(block);
+        _resizingStartSpan = Grid.GetColumnSpan(block);
+        return;
+    }
+
+    if (_newBlock != null)
+    {
+        int addedStart = Grid.GetColumn(_newBlock);
+        int addedSpan = cursorCol - addedStart + 1;
+
+        if (addedSpan <= 0)
         {
-            var block = _resizingOriginalBlock;
-
-            if (_newBlock != null && cursorCol <= _resizingStartCol + _resizingStartSpan - 1)
-            {
-                CalendarGrid.Children.Remove(_newBlock);
-                _newBlock = null;
-                _resizingOriginalBlock = block;
-                _resizingStartCol = Grid.GetColumn(block);
-                _resizingStartSpan = Grid.GetColumnSpan(block);
-                return;
-            }
-
-            if (_newBlock != null)
-            {
-                int addedStart = Grid.GetColumn(_newBlock);
-                int addedSpan = cursorCol - addedStart + 1;
-
-                if (addedSpan <= 0)
-                {
-                    CalendarGrid.Children.Remove(_newBlock);
-                    _newBlock = null;
-                    _resizingOriginalBlock = block;
-                    _resizingStartCol = Grid.GetColumn(block);
-                    _resizingStartSpan = Grid.GetColumnSpan(block);
-                    return;
-                }
-
-                var collision = CalendarGrid.Children.OfType<CalendarBlock>()
-                    .FirstOrDefault(b => b != _newBlock && b != block && Grid.GetRow(b) == row &&
-                        RangesOverlap(addedStart, addedStart + addedSpan - 1, Grid.GetColumn(b), Grid.GetColumn(b) + Grid.GetColumnSpan(b) - 1));
-                if (collision != null) return;
-
-                Grid.SetColumnSpan(_newBlock, addedSpan);
-                return;
-            }
-
-            var blocks = CalendarGrid.Children.OfType<CalendarBlock>()
-                .Where(b => b != block && Grid.GetRow(b) == row)
-                .OrderBy(b => Grid.GetColumn(b))
-                .ToList();
-
-            int originalStart = _resizingStartCol;
-            int targetEnd = cursorCol;
-
-            var collidingBlocks = blocks
-                .Where(b =>
-                {
-                    int bStart = Grid.GetColumn(b);
-                    int bEnd = bStart + Grid.GetColumnSpan(b) - 1;
-                    return RangesOverlap(originalStart, targetEnd, bStart, bEnd);
-                })
-                .ToList();
-
-            if (collidingBlocks.Count > 1)
-                return;
-
-            if (collidingBlocks.Count == 0)
-            {
-                int span = cursorCol - originalStart + 1;
-                if (span <= 0 || originalStart + span > CalendarGrid.ColumnDefinitions.Count)
-                    return;
-
-                Grid.SetColumnSpan(block, span);
-                return;
-            }
-
-            var collided = collidingBlocks[0];
-            int collidedEnd = Grid.GetColumn(collided) + Grid.GetColumnSpan(collided) - 1;
-
-            var nextBlock = blocks.FirstOrDefault(b =>
-                Grid.GetColumn(b) > collidedEnd &&
-                Grid.GetColumn(b) <= cursorCol);
-
-            if (nextBlock != null)
-            {
-                return;
-            }
-
-            int allowedSpan = Grid.GetColumn(collided) - originalStart;
-            Grid.SetColumnSpan(block, allowedSpan);
-
-            int addedStartAfterCollision = collidedEnd + 1;
-            int addedSpanAfterCollision = cursorCol - addedStartAfterCollision + 1;
-
-            if (addedSpanAfterCollision <= 0 || addedStartAfterCollision + addedSpanAfterCollision > CalendarGrid.ColumnDefinitions.Count)
-                return;
-
-            _newBlock = new CalendarBlock();
-            RegisterBlockEvents(_newBlock);
-            Grid.SetRow(_newBlock, row);
-            Grid.SetColumn(_newBlock, addedStartAfterCollision);
-            Grid.SetColumnSpan(_newBlock, addedSpanAfterCollision);
-            CalendarGrid.Children.Add(_newBlock);
+            CalendarGrid.Children.Remove(_newBlock);
+            _newBlock = null;
+            _resizingOriginalBlock = block;
+            _resizingStartCol = Grid.GetColumn(block);
+            _resizingStartSpan = Grid.GetColumnSpan(block);
+            return;
         }
+
+        var collision = CalendarGrid.Children.OfType<CalendarBlock>()
+            .FirstOrDefault(b => b != _newBlock && b != block && Grid.GetRow(b) == row &&
+                RangesOverlap(addedStart, addedStart + addedSpan - 1, Grid.GetColumn(b), Grid.GetColumn(b) + Grid.GetColumnSpan(b) - 1));
+        if (collision != null) return;
+
+        Grid.SetColumnSpan(_newBlock, addedSpan);
+        return;
+    }
+
+    var blocks = CalendarGrid.Children.OfType<CalendarBlock>()
+        .Where(b => b != block && Grid.GetRow(b) == row)
+        .OrderBy(b => Grid.GetColumn(b))
+        .ToList();
+
+    int originalStart = _resizingStartCol;
+    int targetEnd = cursorCol;
+
+    var collidingBlocks = blocks
+        .Where(b =>
+        {
+            int bStart = Grid.GetColumn(b);
+            int bEnd = bStart + Grid.GetColumnSpan(b) - 1;
+            return RangesOverlap(originalStart, targetEnd, bStart, bEnd);
+        })
+        .ToList();
+
+    if (collidingBlocks.Count > 1)
+        return;
+
+    if (collidingBlocks.Count == 0)
+    {
+        int span = cursorCol - originalStart + 1;
+        if (span <= 0 || originalStart + span > CalendarGrid.ColumnDefinitions.Count)
+            return;
+
+        Grid.SetColumnSpan(block, span);
+        return;
+    }
+
+    var collided = collidingBlocks[0];
+    int collidedEnd = Grid.GetColumn(collided) + Grid.GetColumnSpan(collided) - 1;
+
+    var nextBlock = blocks.FirstOrDefault(b =>
+        Grid.GetColumn(b) > collidedEnd &&
+        Grid.GetColumn(b) <= cursorCol);
+
+    if (nextBlock != null)
+    {
+        return;
+    }
+
+    int allowedSpan = Grid.GetColumn(collided) - originalStart;
+    Grid.SetColumnSpan(block, allowedSpan);
+
+    int addedStartAfterCollision = collidedEnd + 1;
+    int addedSpanAfterCollision = cursorCol - addedStartAfterCollision + 1;
+
+    if (addedSpanAfterCollision <= 0 || addedStartAfterCollision + addedSpanAfterCollision > CalendarGrid.ColumnDefinitions.Count)
+        return;
+
+    _newBlock = new CalendarBlock();
+    RegisterBlockEvents(_newBlock);
+    Grid.SetRow(_newBlock, row);
+    Grid.SetColumn(_newBlock, addedStartAfterCollision);
+    Grid.SetColumnSpan(_newBlock, addedSpanAfterCollision);
+    CalendarGrid.Children.Add(_newBlock);
+}
 
 
 
@@ -248,117 +275,115 @@ namespace WorkLogWpf.Views.Controls
             var block = _resizingOriginalBlock;
             int originEnd = _resizingStartCol + _resizingStartSpan - 1;
 
-            if (_newBlockLeft != null && cursorCol >= Grid.GetColumn(_resizingOriginalInitialBlock))
-            {
-                CalendarGrid.Children.Remove(_newBlockLeft);
-                _newBlockLeft = null;
-
-                _resizingOriginalBlock = _resizingOriginalInitialBlock;
-                _resizingStartCol = Grid.GetColumn(_resizingOriginalBlock);
-                _resizingStartSpan = Grid.GetColumnSpan(_resizingOriginalBlock);
-                return;
-            }
-
             if (_newBlockLeft != null)
             {
-                int fixedEnd = Grid.GetColumn(_resizingOriginalInitialBlock) + Grid.GetColumnSpan(_resizingOriginalInitialBlock) - 1;
-                int addedStart = Math.Max(0, cursorCol);
-                int addedSpan = fixedEnd - addedStart + 1;
+                var blockE = CalendarGrid.Children.OfType<CalendarBlock>()
+                    .FirstOrDefault(b => b != _newBlockLeft && b != _resizingOriginalInitialBlock && Grid.GetRow(b) == row);
 
-                if (addedSpan < 1 || addedStart >= CalendarGrid.ColumnDefinitions.Count)
-                    return;
+                if (blockE != null)
+                {
+                    int blockEStartCol = Grid.GetColumn(blockE);
+                    Console.WriteLine("[ResizeLeft RETURN CHECK]");
+                    Console.WriteLine($" - cursorCol: {cursorCol}");
+                    Console.WriteLine($" - blockEStartCol: {blockEStartCol}");
 
-                var collision = CalendarGrid.Children.OfType<CalendarBlock>()
-                    .FirstOrDefault(b => b != _newBlockLeft && b != _resizingOriginalInitialBlock && Grid.GetRow(b) == row &&
-                        RangesOverlap(addedStart, addedStart + addedSpan - 1,
-                            Grid.GetColumn(b), Grid.GetColumn(b) + Grid.GetColumnSpan(b) - 1));
+                    if (cursorCol >= blockEStartCol)
+                    {
+                        CalendarGrid.Children.Remove(_newBlockLeft);
+                        _newBlockLeft = null;
 
-                if (collision != null) return;
+                        _resizingOriginalBlock = _resizingOriginalInitialBlock;
+                        _resizingStartCol = Grid.GetColumn(_resizingOriginalBlock);
+                        _resizingStartSpan = Grid.GetColumnSpan(_resizingOriginalBlock);
 
-                Grid.SetColumn(_newBlockLeft, addedStart);
-                Grid.SetColumnSpan(_newBlockLeft, addedSpan);
-                return;
+                        Console.WriteLine(" -> cursor reached blockE -> removing _newBlockLeft");
+                        return;
+                    }
+                }
             }
 
-            var blocks = CalendarGrid.Children.OfType<CalendarBlock>()
-                .Where(b => b != block && Grid.GetRow(b) == row)
-                .OrderBy(b => Grid.GetColumn(b))
-                .ToList();
-
-            int originalStart = _resizingStartCol;
-            int targetStart = cursorCol;
-            int originEndCol = _resizingStartCol + _resizingStartSpan - 1;
-
-            var collidingBlocks = blocks
-                .Where(b =>
-                {
-                    int bStart = Grid.GetColumn(b);
-                    int bEnd = bStart + Grid.GetColumnSpan(b) - 1;
-                    return RangesOverlap(targetStart, originEndCol, bStart, bEnd);
-                })
-                .ToList();
-
-            if (collidingBlocks.Count > 1)
-                return;
-
-            if (collidingBlocks.Count == 0)
+            // Resizování nově vytvořeného bloku vlevo
+            if (_newBlockLeft != null)
             {
+                int fixedEnd = Grid.GetColumn(_resizingOriginalBlock) + Grid.GetColumnSpan(_resizingOriginalBlock) - 1;
                 int newStart = Math.Max(0, cursorCol);
-                int newSpan = originEnd - newStart + 1;
+                int newSpan = fixedEnd - newStart + 1;
 
                 if (newSpan < 1 || newStart >= CalendarGrid.ColumnDefinitions.Count)
                     return;
 
-                var check = blocks.FirstOrDefault(b =>
-                    RangesOverlap(newStart, newStart + newSpan - 1,
-                        Grid.GetColumn(b), Grid.GetColumn(b) + Grid.GetColumnSpan(b) - 1));
+                var collision = CalendarGrid.Children.OfType<CalendarBlock>()
+                    .FirstOrDefault(b => b != _newBlockLeft && b != _resizingOriginalBlock && Grid.GetRow(b) == row &&
+                        RangesOverlap(newStart, newStart + newSpan - 1,
+                            Grid.GetColumn(b), Grid.GetColumn(b) + Grid.GetColumnSpan(b) - 1));
+
+                if (collision != null) return;
+
+                Grid.SetColumn(_newBlockLeft, newStart);
+                Grid.SetColumnSpan(_newBlockLeft, newSpan);
+                return;
+            }
+
+            // Zjištění, zda máme vytvořit nový levý blok
+            var blockEToSplit = CalendarGrid.Children.OfType<CalendarBlock>()
+                .Where(b => b != block && Grid.GetRow(b) == row)
+                .FirstOrDefault(b =>
+                {
+                    int eStart = Grid.GetColumn(b);
+                    int eEnd = eStart + Grid.GetColumnSpan(b) - 1;
+                    return _resizingStartCol > eEnd && cursorCol < eStart;
+                });
+
+            if (blockEToSplit != null)
+            {
+                int eCol = Grid.GetColumn(blockEToSplit);
+                int eSpan = Grid.GetColumnSpan(blockEToSplit);
+                int eEnd = eCol + eSpan - 1;
+
+                int newStartCol = eEnd + 1;
+                int newSpan = (_resizingStartCol + _resizingStartSpan) - newStartCol;
+
+                if (newSpan < 1 || newStartCol >= CalendarGrid.ColumnDefinitions.Count)
+                    return;
+
+                Grid.SetColumn(block, newStartCol);
+                Grid.SetColumnSpan(block, newSpan);
+
+                int newLeftStart = cursorCol;
+                int newLeftSpan = eCol - newLeftStart;
+
+                if (newLeftSpan < 1 || newLeftStart < 0)
+                    return;
+
+                _newBlockLeft = new CalendarBlock();
+                RegisterBlockEvents(_newBlockLeft);
+                Grid.SetRow(_newBlockLeft, row);
+                Grid.SetColumn(_newBlockLeft, newLeftStart);
+                Grid.SetColumnSpan(_newBlockLeft, newLeftSpan);
+                CalendarGrid.Children.Add(_newBlockLeft);
+
+                _resizingOriginalBlock = _newBlockLeft;
+                _resizingStartCol = newLeftStart;
+                _resizingStartSpan = newLeftSpan;
+            }
+            else
+            {
+                // Normální resizování doleva bez kolize
+                int newStart = Math.Max(0, cursorCol);
+                int newSpan = originEnd - newStart + 1;
+
+                if (newSpan < 1 || newStart >= CalendarGrid.ColumnDefinitions.Count) return;
+
+                var check = CalendarGrid.Children.OfType<CalendarBlock>()
+                    .FirstOrDefault(b => b != _resizingOriginalBlock && Grid.GetRow(b) == row &&
+                        RangesOverlap(newStart, newStart + newSpan - 1,
+                            Grid.GetColumn(b), Grid.GetColumn(b) + Grid.GetColumnSpan(b) - 1));
 
                 if (check != null) return;
 
                 Grid.SetColumn(_resizingOriginalBlock, newStart);
                 Grid.SetColumnSpan(_resizingOriginalBlock, newSpan);
-                return;
             }
-
-            var collided = collidingBlocks[0];
-            int collidedStart = Grid.GetColumn(collided);
-
-            var nextBlock = blocks.FirstOrDefault(b =>
-            {
-                int bEnd = Grid.GetColumn(b) + Grid.GetColumnSpan(b) - 1;
-                return bEnd < originalStart && bEnd >= cursorCol && b != collided;
-            });
-
-            if (nextBlock != null)
-            {
-                return;
-            }
-
-            int newStartAfterCollision = Grid.GetColumn(collided) + Grid.GetColumnSpan(collided);
-            int newSpanAfterCollision = originEnd - newStartAfterCollision + 1;
-
-            if (newSpanAfterCollision < 1 || newStartAfterCollision >= CalendarGrid.ColumnDefinitions.Count)
-                return;
-
-            Grid.SetColumn(_resizingOriginalInitialBlock, newStartAfterCollision);
-            Grid.SetColumnSpan(_resizingOriginalInitialBlock, newSpanAfterCollision);
-
-            int addedLeftStart = cursorCol;
-            int addedLeftSpan = collidedStart - addedLeftStart;
-
-            if (addedLeftSpan < 1 || addedLeftStart < 0)
-                return;
-
-            _newBlockLeft = new CalendarBlock();
-            RegisterBlockEvents(_newBlockLeft);
-            Grid.SetRow(_newBlockLeft, row);
-            Grid.SetColumn(_newBlockLeft, addedLeftStart);
-            Grid.SetColumnSpan(_newBlockLeft, addedLeftSpan);
-            CalendarGrid.Children.Add(_newBlockLeft);
-
-            _resizingOriginalBlock = _newBlockLeft;
-            _resizingStartCol = addedLeftStart;
-            _resizingStartSpan = addedLeftSpan;
         }
 
 

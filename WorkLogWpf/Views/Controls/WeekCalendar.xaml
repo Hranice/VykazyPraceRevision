@@ -4,48 +4,30 @@
              xmlns:local="clr-namespace:WorkLogWpf.Views.Controls"
              Background="White">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <!-- Rozdělení na horní info panel a zbytek -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Info panel -->
+            <RowDefinition Height="*"/>
+            <!-- Kalendář -->
+        </Grid.RowDefinitions>
 
-        <!-- Fixní sloupec: Názvy dní -->
-        <Grid Grid.Column="0" Name="DayLabelGrid">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+        <!-- 🗓️ Panel s názvem týdne a šipkami -->
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">
+            <Button Content="← Předchozí týden" Margin="5" Padding="5" Click="PreviousWeek_Click"/>
+            <TextBlock x:Name="WeekLabel" VerticalAlignment="Center" FontWeight="Bold" FontSize="14" Margin="10,0"/>
+            <Button Content="Následující týden →" Margin="5" Padding="5" Click="NextWeek_Click"/>
+        </StackPanel>
 
-            <TextBlock Grid.Row="0" />
-            <TextBlock Grid.Row="1" Text="Pondělí&#x0a;7.4.2025" VerticalAlignment="Center" Margin="5"/>
-            <TextBlock Grid.Row="2" Text="Úterý&#x0a;8.4.2025" VerticalAlignment="Center" Margin="5"/>
-            <TextBlock Grid.Row="3" Text="Středa&#x0a;9.4.2025" VerticalAlignment="Center" Margin="5"/>
-            <TextBlock Grid.Row="4" Text="Čtvrtek&#x0a;10.4.2025" VerticalAlignment="Center" Margin="5"/>
-            <TextBlock Grid.Row="5" Text="Pátek&#x0a;11.4.2025" VerticalAlignment="Center" Margin="5"/>
-            <TextBlock Grid.Row="6" Text="Sobota&#x0a;12.4.2025" VerticalAlignment="Center" Margin="5"/>
-            <TextBlock Grid.Row="7" Text="Neděle&#x0a;13.4.2025" VerticalAlignment="Center" Margin="5"/>
-        </Grid>
+        <!-- Kalendářní rozložení -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <!-- Scrollovatelná část -->
-        <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-            <Grid Name="CalendarGrid"
-                  Background="White"
-                  MouseLeftButtonDown="CalendarGrid_MouseLeftButtonDown"
-                  Margin="0">
-                <Grid.Resources>
-                    <!-- Styl pro pozadí mřížky -->
-                    <Style TargetType="Border" x:Key="GridCellBorderStyle">
-                        <Setter Property="BorderBrush" Value="#EEE"/>
-                        <Setter Property="BorderThickness" Value="0,0,1,1"/>
-                    </Style>
-                </Grid.Resources>
-
+            <!-- 📅 Levý sloupec: názvy dnů -->
+            <Grid Grid.Column="0" Name="DayLabelGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="*" />
@@ -57,8 +39,43 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <!-- Dynamický generovaný obsah (blogy, časy atd.) bude vkládán z C# -->
+                <TextBlock Grid.Row="0" />
+                <TextBlock Grid.Row="1" Text="Pondělí" VerticalAlignment="Center" Margin="5"/>
+                <TextBlock Grid.Row="2" Text="Úterý" VerticalAlignment="Center" Margin="5"/>
+                <TextBlock Grid.Row="3" Text="Středa" VerticalAlignment="Center" Margin="5"/>
+                <TextBlock Grid.Row="4" Text="Čtvrtek" VerticalAlignment="Center" Margin="5"/>
+                <TextBlock Grid.Row="5" Text="Pátek" VerticalAlignment="Center" Margin="5"/>
+                <TextBlock Grid.Row="6" Text="Sobota" VerticalAlignment="Center" Margin="5"/>
+                <TextBlock Grid.Row="7" Text="Neděle" VerticalAlignment="Center" Margin="5"/>
             </Grid>
-        </ScrollViewer>
+
+            <!-- 📊 Pravá část: kalendářní mřížka -->
+            <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                <Grid Name="CalendarGrid"
+                      Background="White"
+                      MouseLeftButtonDown="CalendarGrid_MouseLeftButtonDown"
+                      Margin="0">
+                    <Grid.Resources>
+                        <Style TargetType="Border" x:Key="GridCellBorderStyle">
+                            <Setter Property="BorderBrush" Value="#EEE"/>
+                            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                        </Style>
+                    </Grid.Resources>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Dynamicky generované bloky (CalendarBlocky) budou přidávány v code-behind -->
+                </Grid>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </UserControl>

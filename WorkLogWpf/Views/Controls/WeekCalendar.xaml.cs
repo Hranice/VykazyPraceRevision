@@ -17,30 +17,99 @@ namespace WorkLogWpf.Views.Controls
         private CalendarBlock _newBlock;
         private CalendarBlock _newBlockLeft;
         private Border _selectedCellHighlight = null;
+        private Border _todayHighlight;
         private CalendarBlock _selectedBlock = null;
         private (int row, int col)? _selectedPosition = null;
         private CalendarBlock _clipboardBlock = null;
 
-        private readonly TimeEntryRepository _timeEntryRepo = new();
+        private readonly TimeEntryRepository _timeEntryRepository;
+
+        private DateTime _currentWeekReference = DateTime.Now;
+        private User _currentUser;
+
 
         private int _resizingStartCol;
         private int _resizingStartSpan;
 
-        public WeekCalendar()
+        public WeekCalendar(TimeEntryRepository timeEntryRepository)
         {
             InitializeComponent();
+
+            _timeEntryRepository = timeEntryRepository;
+
             BuildColumns();
             AddTimeHeaders();
             DrawGridLines();
         }
 
-        public async Task LoadEntriesAsync(User user)
+        public async Task LoadEntriesAsync(User user, DateTime weekReference)
         {
-            var entries = await _timeEntryRepo.GetAllTimeEntriesByUserAsync(user);
-            foreach (var entry in entries)
-            {
+            _currentUser = user;
+            _currentWeekReference = weekReference;
+
+            var (startOfWeek, endOfWeek) = GetCurrentWeekBounds(weekReference);
+
+            var entries = await _timeEntryRepository.GetAllTimeEntriesByUserAsync(user);
+
+            var weeklyEntries = entries
+                .Where(e => e.Timestamp.HasValue &&
+                            e.Timestamp.Value >= startOfWeek &&
+                            e.Timestamp.Value <= endOfWeek)
+                .ToList();
+
+            // vymazat staré bloky
+            var toRemove = CalendarGrid.Children.OfType<CalendarBlock>().ToList();
+            foreach (var block in toRemove)
+                CalendarGrid.Children.Remove(block);
+
+            foreach (var entry in weeklyEntries)
                 AddBlockFromTimeEntry(entry);
+
+            UpdateDayLabels(startOfWeek);
+            UpdateWeekLabel(startOfWeek);
+        }
+
+
+
+        private (DateTime start, DateTime end) GetCurrentWeekBounds(DateTime reference)
+        {
+            int offset = (int)reference.DayOfWeek - 1;
+            if (offset < 0) offset = 6; // pokud je neděle, začíná pondělí 6 dní zpět
+
+            var startOfWeek = reference.Date.AddDays(-offset);
+            var endOfWeek = startOfWeek.AddDays(7).AddSeconds(-1); // poslední vteřina neděle
+
+            return (startOfWeek, endOfWeek);
+        }
+
+        private void UpdateWeekLabel(DateTime monday)
+        {
+            var sunday = monday.AddDays(6);
+            WeekLabel.Text = $"Týden: {monday:dd.MM.yyyy} – {sunday:dd.MM.yyyy}";
+
+            // ✨ Zvýrazni, pokud se jedná o aktuální týden
+            var today = DateTime.Today;
+            if (today >= monday && today <= sunday)
+            {
+                WeekLabel.FontWeight = FontWeights.Bold;
             }
+            else
+            {
+                WeekLabel.FontWeight = FontWeights.Normal;
+            }
+        }
+
+
+        private async void PreviousWeek_Click(object sender, RoutedEventArgs e)
+        {
+            _currentWeekReference = _currentWeekReference.AddDays(-7);
+            await LoadEntriesAsync(_currentUser, _currentWeekReference);
+        }
+
+        private async void NextWeek_Click(object sender, RoutedEventArgs e)
+        {
+            _currentWeekReference = _currentWeekReference.AddDays(7);
+            await LoadEntriesAsync(_currentUser, _currentWeekReference);
         }
 
 
@@ -488,6 +557,71 @@ namespace WorkLogWpf.Views.Controls
             for (int i = 0; i < 48; i++)
                 CalendarGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(60) });
         }
+
+        private void UpdateDayLabels(DateTime monday)
+        {
+            var today = DateTime.Today;
+
+            string[] dayNames = { "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota", "Neděle" };
+
+            for (int i = 0; i < 7; i++)
+            {
+                DateTime date = monday.AddDays(i);
+                string label = $"{dayNames[i]}\n{date:dd.MM.yyyy}";
+
+                if (DayLabelGrid.Children[i + 1] is TextBlock textBlock)
+                {
+                    textBlock.Text = label;
+
+                    if (date.Date == today)
+                    {
+                        textBlock.FontWeight = FontWeights.Bold;
+                    }
+                    else
+                    {
+                        textBlock.FontWeight = FontWeights.Normal;
+                    }
+                }
+            }
+
+            HighlightTodayRow(monday);
+
+        }
+
+        private void HighlightTodayRow(DateTime monday)
+        {
+            var today = DateTime.Today;
+            int dayIndex = (int)today.DayOfWeek;
+
+            if (dayIndex == 0) dayIndex = 7; // Neděle
+
+            int row = dayIndex >= 1 && dayIndex <= 7 ? dayIndex : -1;
+
+            // Odstraň staré zvýraznění, pokud existuje
+            if (_todayHighlight != null)
+            {
+                CalendarGrid.Children.Remove(_todayHighlight);
+                _todayHighlight = null;
+            }
+
+            // Přidej nové zvýraznění, pokud den spadá do zobrazeného týdne
+            if (today >= monday && today <= monday.AddDays(6) && row > 0)
+            {
+                _todayHighlight = new Border
+                {
+                    Background = new SolidColorBrush(Color.FromRgb(230, 240, 255)),
+                    IsHitTestVisible = false
+                };
+
+                Grid.SetRow(_todayHighlight, row);
+                Grid.SetColumnSpan(_todayHighlight, CalendarGrid.ColumnDefinitions.Count);
+                Panel.SetZIndex(_todayHighlight, -1); // pod ostatní prvky
+
+                CalendarGrid.Children.Insert(0, _todayHighlight); // nejníž
+            }
+        }
+
+
 
         private void DrawGridLines()
         {

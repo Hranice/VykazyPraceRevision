@@ -339,7 +339,15 @@ namespace VykazyPrace.UserControls.CalendarV2
             try
             {
                 bool includeArchived = checkBoxArchivedProjects.Checked;
-                _projects = await _projectRepo.GetAllProjectsAsyncByProjectType(projectType, includeArchived);
+
+                if(projectType > 2)
+                {
+                    _projects = await _projectRepo.GetAllProjectsAsyncByProjectType(projectType);
+                }
+                else
+                {
+                    _projects = await _projectRepo.GetAllFullProjectsAndPreProjectsAsync(checkBoxArchivedProjects.Checked);
+                }
 
                 SafeInvoke(() =>
                 {
@@ -1358,15 +1366,15 @@ namespace VykazyPrace.UserControls.CalendarV2
                 timeEntry.ProjectId = selectedProject.Id;
             }
 
-            if (radioButton6.Checked)
+            if (radioButton4.Checked)
             {
                 timeEntry.ProjectId = 25;
             }
-            else if (radioButton5.Checked)
+            else if (radioButton4.Checked)
             {
                 timeEntry.ProjectId = 23;
             }
-            else if (radioButton4.Checked)
+            else if (radioButton3.Checked)
             {
                 timeEntry.ProjectId = 26;
                 timeEntry.EntryTypeId = 16;
@@ -1384,19 +1392,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                 await LoadSidebar();
             }
         }
-
-
-        private int GetRadioButtonIndex(RadioButton selectedRadio)
-        {
-            var allRadios = tableLayoutPanelEntryType
-                .Controls
-                .OfType<TableLayoutPanel>()
-                .SelectMany(p => p.Controls.OfType<RadioButton>())
-                .ToList();
-
-            return allRadios.IndexOf(selectedRadio);
-        }
-
 
         private (bool valid, string reason) CheckForEmptyOrIncorrectFields()
         {
@@ -1517,15 +1512,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                         tableLayoutPanelEntrySubType.Visible = true;
                         checkBoxArchivedProjects.Visible = true;
                         break;
-                    case "PŘEDPROJEKT":
-                        index = 2;
-                        labelProject.Text = "Předprojekt*";
-                        labelType.Text = "Typ záznamu*";
-                        tableLayoutPanelProject.Visible = true;
-                        tableLayoutPanelEntryType.Visible = true;
-                        tableLayoutPanelEntrySubType.Visible = true;
-                        checkBoxArchivedProjects.Visible = false;
-                        break;
                     case "ŠKOLENÍ":
                         index = 3;
                         tableLayoutPanelProject.Visible = false;
@@ -1554,8 +1540,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                 await LoadProjectsAsync(index);
                 await LoadTimeEntryTypesAsync(index);
-
-
             }
         }
 

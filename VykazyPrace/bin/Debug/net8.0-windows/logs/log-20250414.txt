@@ -1,0 +1,1 @@
+2025-04-14 08:39:22.679 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - test byl úspěšně aktualizován.

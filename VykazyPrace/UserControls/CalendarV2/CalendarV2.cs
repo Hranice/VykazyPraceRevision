@@ -344,13 +344,13 @@ namespace VykazyPrace.UserControls.CalendarV2
             {
                 bool includeArchived = checkBoxArchivedProjects.Checked;
 
-                if (projectType > 2)
+                if (projectType == 1)
                 {
-                    _projects = await _projectRepo.GetAllProjectsAsyncByProjectType(projectType);
+                    _projects = await _projectRepo.GetAllFullProjectsAndPreProjectsAsync(checkBoxArchivedProjects.Checked);
                 }
                 else
                 {
-                    _projects = await _projectRepo.GetAllFullProjectsAndPreProjectsAsync(checkBoxArchivedProjects.Checked);
+                    _projects = await _projectRepo.GetAllProjectsAsyncByProjectType(projectType);
                 }
 
                 SafeInvoke(() =>
@@ -1497,6 +1497,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 tableLayoutPanelProject.Visible = true;
                 tableLayoutPanelEntryType.Visible = true;
                 tableLayoutPanelEntrySubType.Visible = true;
+                comboBoxIndex.Text = string.Empty;
                 panel4.Visible = true;
 
                 switch (rb.Text)

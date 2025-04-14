@@ -332,7 +332,7 @@ namespace VykazyPrace
 
         private async void správaIndexùToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new TimeEntrySubTypeManagement(_selectedUser, _timeEntrySubTypeRepo).ShowDialog();
+            new TimeEntrySubTypeManagement(_selectedUser, _timeEntrySubTypeRepo, _timeEntryRepo).ShowDialog();
             await _calendar.ForceReloadAsync();
         }
 

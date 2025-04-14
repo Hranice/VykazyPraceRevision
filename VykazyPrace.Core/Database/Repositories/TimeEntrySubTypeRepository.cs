@@ -46,7 +46,7 @@ namespace VykazyPrace.Core.Database.Repositories
         public async Task<List<TimeEntrySubType>> GetAllTimeEntrySubTypesByUserIdAsync(int userId)
         {
             return await _context.TimeEntrySubTypes
-                .Where(t => t.UserId == userId)
+                .Where(t => t.UserId == userId && t.IsArchived == 0)
                 .Include(t => t.User)
                 .ToListAsync();
         }
@@ -64,7 +64,7 @@ namespace VykazyPrace.Core.Database.Repositories
 
             existingSubType.Title = subType.Title;
             existingSubType.UserId = subType.UserId;
-            await _context.SaveChangesAsync();
+            await _context.SafeSaveAsync();
             return true;
         }
 

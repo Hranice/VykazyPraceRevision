@@ -1,0 +1,12 @@
+2025-04-14 08:39:22.679 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - test byl úspěšně aktualizován.
+2025-04-14 10:39:37.862 +02:00 [INF] Přepsáno (0) záznamů: 'test2' -> 'test3'.
+2025-04-14 10:40:29.130 +02:00 [INF] Záznam 017I21 - Kamerový systém pro K15-3: 0,5 h - test3 byl úspěšně aktualizován.
+2025-04-14 10:40:38.408 +02:00 [INF] Přepsáno (1) záznamů: 'test3' -> 'test4'.
+2025-04-14 10:40:50.352 +02:00 [INF] Záznam 031I21 - Vývoj nových greiferů: 0,5 h - test4 byl smazán z databáze.
+2025-04-14 10:41:55.626 +02:00 [INF] Záznam 017I21 - Kamerový systém pro K15-3: 0,5 h - test4 byl úspěšně aktualizován.
+2025-04-14 10:44:55.793 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Poznámka
+2025-04-14 10:44:58.474 +02:00 [INF] Záznam 031I21 - Vývoj nových greiferů: 0,5 h - test4 byl úspěšně aktualizován.
+2025-04-14 10:47:45.999 +02:00 [INF] Záznam 0 - Školení: 0,5 h - test4 byl smazán z databáze.
+2025-04-14 10:47:51.886 +02:00 [INF] Záznam 0 - Školení: 0,5 h - test4 byl úspěšně aktualizován.
+2025-04-14 10:47:56.413 +02:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 0,5 h -  byl úspěšně aktualizován.
+2025-04-14 10:48:04.728 +02:00 [INF] Záznam 0 - Školení: 0,5 h -  byl smazán z databáze.

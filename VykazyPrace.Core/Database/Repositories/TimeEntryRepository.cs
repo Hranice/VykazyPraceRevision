@@ -196,6 +196,23 @@ namespace VykazyPrace.Core.Database.Repositories
             return true;
         }
 
+        public async Task<int> ReplaceDescriptionForUserAsync(int userId, string originalText, string newText)
+        {
+            var entriesToUpdate = await _context.TimeEntries
+                .Where(e => e.UserId == userId && e.Description.Contains(originalText))
+                .ToListAsync();
+
+            foreach (var entry in entriesToUpdate)
+            {
+                entry.Description = newText;
+            }
+
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+
+            return entriesToUpdate.Count;
+        }
+
+
         /// <summary>
         /// Smazání časového záznamu podle ID.
         /// </summary>

@@ -87,6 +87,23 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
+        /// Získání všech projektů i zakázek, seřazených podle interního/externího označení,
+        /// roku sestupně a pořadového čísla sestupně. Filtrováno podle typu projektu.
+        /// Chybné záznamy jsou umístěny na konec.
+        /// </summary>
+        public async Task<List<Project>> GetAllFullProjectsAndPreProjectsAsync(bool archived = false)
+        {
+            var projects = await _context.Projects
+                .Include(p => p.CreatedByNavigation)
+                .Where(p => p.IsArchived == (archived ? 1 : 0) && (p.ProjectType == 1 || p.ProjectType == 2))
+                .ToListAsync();
+
+            return projects
+                 .OrderBy(p => GetProjectNumber(p.ProjectDescription))
+                 .ToList();
+        }
+
+        /// <summary>
         /// Ověří, zda je ProjectDescription platný (má správnou délku a formát).
         /// </summary>
         private bool IsValidProjectDescription(string description)

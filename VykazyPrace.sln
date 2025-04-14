@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VykazyPrace", "VykazyPrace\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VykazyPrace.Core", "VykazyPrace.Core\VykazyPrace.Core.csproj", "{5D776D8F-A8C6-4598-A9EE-26E64706F437}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkLogWpf", "WorkLogWpf\WorkLogWpf.csproj", "{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{5D776D8F-A8C6-4598-A9EE-26E64706F437}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D776D8F-A8C6-4598-A9EE-26E64706F437}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D776D8F-A8C6-4598-A9EE-26E64706F437}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

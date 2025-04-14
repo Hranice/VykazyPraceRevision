@@ -87,7 +87,6 @@
             radioButton3 = new RadioButton();
             radioButton4 = new RadioButton();
             radioButton5 = new RadioButton();
-            radioButton6 = new RadioButton();
             tableLayoutPanelProject = new TableLayoutPanel();
             comboBoxProjects = new ComboBox();
             panel2 = new Panel();
@@ -525,54 +524,54 @@
             // customTableLayoutPanel1
             // 
             customTableLayoutPanel1.ColumnCount = 48;
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
-            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 41F));
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            customTableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             customTableLayoutPanel1.Controls.Add(label37, 0, 0);
             customTableLayoutPanel1.Controls.Add(label36, 0, 0);
             customTableLayoutPanel1.Controls.Add(label35, 0, 0);
@@ -926,7 +925,6 @@
             flowLayoutPanel2.Controls.Add(radioButton3);
             flowLayoutPanel2.Controls.Add(radioButton4);
             flowLayoutPanel2.Controls.Add(radioButton5);
-            flowLayoutPanel2.Controls.Add(radioButton6);
             flowLayoutPanel2.Controls.Add(tableLayoutPanelProject);
             flowLayoutPanel2.Controls.Add(tableLayoutPanelEntryType);
             flowLayoutPanel2.Controls.Add(tableLayoutPanelEntrySubType);
@@ -974,10 +972,10 @@
             radioButton3.AutoSize = true;
             radioButton3.Location = new Point(3, 44);
             radioButton3.Name = "radioButton3";
-            radioButton3.Size = new Size(129, 35);
-            radioButton3.TabIndex = 2;
+            radioButton3.Size = new Size(86, 35);
+            radioButton3.TabIndex = 3;
             radioButton3.TabStop = true;
-            radioButton3.Text = "PŘEDPROJEKT";
+            radioButton3.Text = "ŠKOLENÍ";
             radioButton3.UseVisualStyleBackColor = true;
             radioButton3.CheckedChanged += radioButton_CheckedChanged;
             // 
@@ -985,12 +983,12 @@
             // 
             radioButton4.Appearance = Appearance.Button;
             radioButton4.AutoSize = true;
-            radioButton4.Location = new Point(138, 44);
+            radioButton4.Location = new Point(95, 44);
             radioButton4.Name = "radioButton4";
-            radioButton4.Size = new Size(86, 35);
-            radioButton4.TabIndex = 3;
+            radioButton4.Size = new Size(144, 35);
+            radioButton4.TabIndex = 4;
             radioButton4.TabStop = true;
-            radioButton4.Text = "ŠKOLENÍ";
+            radioButton4.Text = "NEPŘÍTOMNOST";
             radioButton4.UseVisualStyleBackColor = true;
             radioButton4.CheckedChanged += radioButton_CheckedChanged;
             // 
@@ -1000,25 +998,12 @@
             radioButton5.AutoSize = true;
             radioButton5.Location = new Point(3, 85);
             radioButton5.Name = "radioButton5";
-            radioButton5.Size = new Size(144, 35);
-            radioButton5.TabIndex = 4;
+            radioButton5.Size = new Size(87, 35);
+            radioButton5.TabIndex = 5;
             radioButton5.TabStop = true;
-            radioButton5.Text = "NEPŘÍTOMNOST";
+            radioButton5.Text = "OSTATNÍ";
             radioButton5.UseVisualStyleBackColor = true;
             radioButton5.CheckedChanged += radioButton_CheckedChanged;
-            // 
-            // radioButton6
-            // 
-            radioButton6.Appearance = Appearance.Button;
-            radioButton6.AutoSize = true;
-            radioButton6.Location = new Point(153, 85);
-            radioButton6.Name = "radioButton6";
-            radioButton6.Size = new Size(87, 35);
-            radioButton6.TabIndex = 5;
-            radioButton6.TabStop = true;
-            radioButton6.Text = "OSTATNÍ";
-            radioButton6.UseVisualStyleBackColor = true;
-            radioButton6.CheckedChanged += radioButton_CheckedChanged;
             // 
             // tableLayoutPanelProject
             // 
@@ -1043,7 +1028,7 @@
             comboBoxProjects.FormattingEnabled = true;
             comboBoxProjects.IntegralHeight = false;
             comboBoxProjects.ItemHeight = 25;
-            comboBoxProjects.Location = new Point(3, 46);
+            comboBoxProjects.Location = new Point(3, 36);
             comboBoxProjects.Name = "comboBoxProjects";
             comboBoxProjects.Size = new Size(231, 33);
             comboBoxProjects.TabIndex = 150;
@@ -1156,6 +1141,8 @@
             comboBoxIndex.Name = "comboBoxIndex";
             comboBoxIndex.Size = new Size(232, 33);
             comboBoxIndex.TabIndex = 31;
+            comboBoxIndex.SelectionChangeCommitted += comboBoxIndex_SelectionChangeCommitted;
+            comboBoxIndex.TextChanged += comboBoxIndex_TextChanged;
             // 
             // panel4
             // 
@@ -1418,7 +1405,6 @@
         private RadioButton radioButton3;
         private RadioButton radioButton4;
         private RadioButton radioButton5;
-        private RadioButton radioButton6;
         private TableLayoutPanel tableLayoutPanelProject;
         private TableLayoutPanel tableLayoutPanelEntryType;
         private ComboBox comboBoxEntryType;

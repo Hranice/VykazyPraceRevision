@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace WorkLogWpf.Views.Controls
 {
@@ -14,6 +15,11 @@ namespace WorkLogWpf.Views.Controls
         private CalendarBlock _resizingOriginalInitialBlock;
         private CalendarBlock _newBlock;
         private CalendarBlock _newBlockLeft;
+        private Border _selectedCellHighlight = null;
+        private CalendarBlock _selectedBlock = null;
+        private (int row, int col)? _selectedPosition = null;
+
+
 
         private int _resizingStartCol;
         private int _resizingStartSpan;
@@ -25,28 +31,86 @@ namespace WorkLogWpf.Views.Controls
             AddTimeHeaders();
         }
 
+        private void HighlightSelectedCell(int row, int col)
+        {
+            ClearHighlight();
+
+            _selectedCellHighlight = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(80, 0, 120, 215)),
+                BorderBrush = Brushes.DodgerBlue,
+                BorderThickness = new Thickness(1),
+                Margin = new Thickness(1),
+                IsHitTestVisible = false
+            };
+
+            Grid.SetRow(_selectedCellHighlight, row);
+            Grid.SetColumn(_selectedCellHighlight, col);
+            CalendarGrid.Children.Add(_selectedCellHighlight);
+
+            _selectedPosition = (row, col);
+        }
+
+        private void HighlightSelectedBlock(CalendarBlock block)
+        {
+            ClearHighlight();
+
+            block.BlockBorder.BorderBrush = Brushes.Red;
+            block.BlockBorder.BorderThickness = new Thickness(2);
+
+            _selectedBlock = block;
+            _selectedPosition = (Grid.GetRow(block), Grid.GetColumn(block));
+        }
+
+        private void ClearHighlight()
+        {
+            if (_selectedCellHighlight != null)
+            {
+                CalendarGrid.Children.Remove(_selectedCellHighlight);
+                _selectedCellHighlight = null;
+            }
+
+            if (_selectedBlock != null)
+            {
+                _selectedBlock.BlockBorder.BorderBrush = Brushes.DarkBlue;
+                _selectedBlock.BlockBorder.BorderThickness = new Thickness(1);
+                _selectedBlock = null;
+            }
+
+            _selectedPosition = null;
+        }
+
+
+
         private void CalendarGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            var pos = e.GetPosition(CalendarGrid);
+            int col = GetColumnAt(pos.X);
+            int row = GetRowAt(pos.Y);
+
+            if (row <= 0 || col < 0) return;
+
+            var clickedBlock = CalendarGrid.Children.OfType<CalendarBlock>()
+                .FirstOrDefault(b => Grid.GetRow(b) == row &&
+                                     col >= Grid.GetColumn(b) &&
+                                     col < Grid.GetColumn(b) + Grid.GetColumnSpan(b));
+
+            if (clickedBlock != null)
+            {
+                HighlightSelectedBlock(clickedBlock);
+            }
+            else
+            {
+                HighlightSelectedCell(row, col);
+            }
+
             if (e.ClickCount == 2)
             {
-                var pos = e.GetPosition(CalendarGrid);
-                int col = GetColumnAt(pos.X);
-                int row = GetRowAt(pos.Y);
-
-                if (row <= 0 || col < 0) return;
-
-                // Nejprve zkontrolujeme, zda není kliknuto přímo na existující blok
-                bool clickedOnExistingBlock = CalendarGrid.Children.OfType<CalendarBlock>()
-                    .Any(b => Grid.GetRow(b) == row &&
-                              col >= Grid.GetColumn(b) &&
-                              col < Grid.GetColumn(b) + Grid.GetColumnSpan(b));
-
-                if (clickedOnExistingBlock)
+                if (clickedBlock != null)
                     return;
 
                 int desiredSpan = 2;
 
-                // Najdeme nejbližší překážku směrem doprava
                 var obstacle = CalendarGrid.Children.OfType<CalendarBlock>()
                     .Where(b => Grid.GetRow(b) == row && Grid.GetColumn(b) > col)
                     .OrderBy(b => Grid.GetColumn(b))
@@ -68,8 +132,6 @@ namespace WorkLogWpf.Views.Controls
                 RegisterBlockEvents(block);
             }
         }
-
-
 
         private void RegisterBlockEvents(CalendarBlock block)
         {

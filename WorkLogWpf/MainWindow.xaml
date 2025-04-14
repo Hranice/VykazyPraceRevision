@@ -7,5 +7,5 @@
         xmlns:ViewsControls="clr-namespace:WorkLogWpf.Views.Controls" x:Class="WorkLogWpf.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="720" Width="1280">
-    <ViewsControls:WeekCalendar/>
+    <ViewsControls:WeekCalendar x:Name="WeekCalendar"/>
 </Window>

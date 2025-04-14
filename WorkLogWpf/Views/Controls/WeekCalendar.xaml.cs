@@ -2,6 +2,8 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using VykazyPrace.Core.Database.Models;
+using VykazyPrace.Core.Database.Repositories;
 
 namespace WorkLogWpf.Views.Controls
 {
@@ -19,6 +21,8 @@ namespace WorkLogWpf.Views.Controls
         private (int row, int col)? _selectedPosition = null;
         private CalendarBlock _clipboardBlock = null;
 
+        private readonly TimeEntryRepository _timeEntryRepo = new();
+
         private int _resizingStartCol;
         private int _resizingStartSpan;
 
@@ -29,6 +33,16 @@ namespace WorkLogWpf.Views.Controls
             AddTimeHeaders();
             DrawGridLines();
         }
+
+        public async Task LoadEntriesAsync(User user)
+        {
+            var entries = await _timeEntryRepo.GetAllTimeEntriesByUserAsync(user);
+            foreach (var entry in entries)
+            {
+                AddBlockFromTimeEntry(entry);
+            }
+        }
+
 
         private void HighlightSelectedCell(int row, int col)
         {
@@ -78,6 +92,35 @@ namespace WorkLogWpf.Views.Controls
 
             _selectedPosition = null;
         }
+
+        private void AddBlockFromTimeEntry(TimeEntry entry)
+        {
+            if (entry.Timestamp == null) return;
+
+            var placement = GetGridPlacement(entry.Timestamp.Value, entry.EntryMinutes);
+            if (placement == null) return;
+
+            var (row, col, span) = placement.Value;
+
+            // Zkontroluj kolize
+            bool collision = CalendarGrid.Children.OfType<CalendarBlock>()
+                .Any(b => Grid.GetRow(b) == row &&
+                          RangesOverlap(col, col + span - 1, Grid.GetColumn(b), Grid.GetColumn(b) + Grid.GetColumnSpan(b) - 1));
+
+            if (collision) return;
+
+            var block = new CalendarBlock
+            {
+                ToolTip = $"{entry.Project?.ProjectTitle ?? "Neznámý projekt"}\n{entry.Description}"
+            };
+
+            Grid.SetRow(block, row);
+            Grid.SetColumn(block, col);
+            Grid.SetColumnSpan(block, span);
+            CalendarGrid.Children.Add(block);
+            RegisterBlockEvents(block);
+        }
+
 
         private void CalendarGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -547,6 +590,33 @@ namespace WorkLogWpf.Views.Controls
             return clone;
         }
 
+        private (int row, int column, int span)? GetGridPlacement(DateTime timestamp, int durationMinutes)
+        {
+            DayOfWeek day = timestamp.DayOfWeek;
+            int row = day switch
+            {
+                DayOfWeek.Monday => 1,
+                DayOfWeek.Tuesday => 2,
+                DayOfWeek.Wednesday => 3,
+                DayOfWeek.Thursday => 4,
+                DayOfWeek.Friday => 5,
+                DayOfWeek.Saturday => 6,
+                DayOfWeek.Sunday => 7,
+                _ => -1
+            };
+
+            if (row < 1 || row > 7)
+                return null;
+
+            TimeSpan time = timestamp.TimeOfDay;
+            int column = (int)(time.TotalMinutes / 30); // každý sloupec = 30 minut
+            int span = Math.Max(1, (int)Math.Ceiling(durationMinutes / 30.0));
+
+            if (column < 0 || column + span > CalendarGrid.ColumnDefinitions.Count)
+                return null;
+
+            return (row, column, span);
+        }
 
     }
 }

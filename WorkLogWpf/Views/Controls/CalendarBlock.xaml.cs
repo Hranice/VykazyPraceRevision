@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using VykazyPrace.Core.Database.Models;
 
 namespace WorkLogWpf.Views.Controls
 {
@@ -10,6 +11,8 @@ namespace WorkLogWpf.Views.Controls
         public event EventHandler ResizeStarted;
         public event EventHandler<Point> ResizeDelta;
         public event EventHandler ResizeCompleted;
+        public TimeEntry Entry { get; set; }
+
 
         public CalendarBlock()
         {

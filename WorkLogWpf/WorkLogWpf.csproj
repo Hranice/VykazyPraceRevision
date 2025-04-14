@@ -8,4 +8,8 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\VykazyPrace.Core\VykazyPrace.Core.csproj" />
+  </ItemGroup>
+
 </Project>

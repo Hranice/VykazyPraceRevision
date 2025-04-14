@@ -257,20 +257,34 @@ namespace WorkLogWpf.Views.Controls
                 int col = GetColumnAt(adjustedX);
                 int row = GetRowAt(pos.Y);
 
-                if (col >= 0 && row > 0 && (col != _originalCol || row != _originalRow))
-                {
-                    int span = Grid.GetColumnSpan(_draggedBlock);
-                    bool hasCollision = CalendarGrid.Children.OfType<CalendarBlock>()
-                        .Any(b => b != _draggedBlock && Grid.GetRow(b) == row &&
-                                  RangesOverlap(col, col + span - 1, Grid.GetColumn(b), Grid.GetColumn(b) + Grid.GetColumnSpan(b) - 1));
+                if (col < 0 || row <= 0) return;
 
-                    if (!hasCollision && col + span <= CalendarGrid.ColumnDefinitions.Count)
-                    {
-                        Grid.SetColumn(_draggedBlock, col);
-                        Grid.SetRow(_draggedBlock, row);
-                    }
+                int span = Grid.GetColumnSpan(_draggedBlock);
+
+                // 👉 Pokud je to stejné místo, povol a nemusíme kontrolovat kolize
+                if (col == _originalCol && row == _originalRow)
+                {
+                    Grid.SetColumn(_draggedBlock, col);
+                    Grid.SetRow(_draggedBlock, row);
+                    return;
+                }
+
+                // 👉 Jinak zkontroluj kolize (ale ignoruj _draggedBlock)
+                bool hasCollision = CalendarGrid.Children.OfType<CalendarBlock>()
+                    .Where(b => b != _draggedBlock)
+                    .Any(b => Grid.GetRow(b) == row &&
+                              RangesOverlap(col, col + span - 1,
+                                            Grid.GetColumn(b),
+                                            Grid.GetColumn(b) + Grid.GetColumnSpan(b) - 1));
+
+                if (!hasCollision && col + span <= CalendarGrid.ColumnDefinitions.Count)
+                {
+                    Grid.SetColumn(_draggedBlock, col);
+                    Grid.SetRow(_draggedBlock, row);
                 }
             };
+
+
 
             block.MouseLeftButtonUp += (s, e) =>
             {

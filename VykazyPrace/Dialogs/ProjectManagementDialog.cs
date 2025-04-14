@@ -225,34 +225,6 @@ namespace VykazyPrace.Dialogs
             ClearSelection();
         }
 
-        private bool CheckFoxValidProject()
-        {
-            if (string.IsNullOrEmpty(textBoxProjectDescription.Text))
-            {
-                MessageBox.Show("Je třeba vyplnit popis projektu.");
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(textBoxProjectTitle.Text))
-            {
-                MessageBox.Show("Je třeba vyplnit název projektu.");
-                return false;
-            }
-
-            return true;
-        }
-
-        private bool CheckFoxValidPreProject()
-        {
-            if (string.IsNullOrEmpty(textBoxProjectTitle.Text))
-            {
-                MessageBox.Show("Je třeba vyplnit název projektu.");
-                return false;
-            }
-
-            return true;
-        }
-
         private async void buttonAddAbsence_Click(object sender, EventArgs e)
         {
             var timeEntryType = new TimeEntryType()

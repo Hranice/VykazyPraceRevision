@@ -47,6 +47,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         private int _selectedTimeEntryId = -1;
         private int _currentProjectType;
         private bool comboBoxProjectsLoading = false;
+        private bool comboBoxIndexLoading = false;
         private bool isUpdating = false;
 
         // Drag & drop
@@ -317,6 +318,8 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                 SafeInvoke(() =>
                 {
+                    comboBoxIndexLoading = true;
+
                     comboBoxIndex.Items.Clear();
                     comboBoxIndex.Items.AddRange(
                         _timeEntrySubTypes
@@ -324,8 +327,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                                 .Select(FormatHelper.FormatTimeEntrySubTypeToString)
                                 .ToArray());
 
-                    if (comboBoxIndex.Items.Count > 0)
-                        comboBoxIndex.SelectedIndex = 0;
+                    comboBoxIndex.Text = string.Empty;
+
+                    comboBoxIndexLoading = false;
                 });
             }
             catch (Exception ex)
@@ -340,7 +344,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             {
                 bool includeArchived = checkBoxArchivedProjects.Checked;
 
-                if(projectType > 2)
+                if (projectType > 2)
                 {
                     _projects = await _projectRepo.GetAllProjectsAsyncByProjectType(projectType);
                 }
@@ -371,6 +375,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         private async Task LoadSidebar()
         {
             comboBoxProjectsLoading = true;
+            comboBoxIndexLoading = true;
 
             string[] days = { "Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota" };
             flowLayoutPanel2.Visible = _selectedTimeEntryId > -1;
@@ -462,6 +467,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                     }
 
                     comboBoxProjectsLoading = false;
+                    comboBoxIndexLoading = false;
                 }));
             }
             else
@@ -488,6 +494,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                     tableLayoutPanelEntrySubType.Visible = false;
                     panel4.Visible = false;
 
+                    comboBoxIndexLoading = false;
                     comboBoxProjectsLoading = false;
                 }));
             }
@@ -1774,5 +1781,79 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
+        private void comboBoxIndex_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            if (comboBoxIndexLoading || isUpdating) return;
+
+            isUpdating = true;
+            try
+            {
+                if (comboBoxIndex.SelectedItem != null)
+                {
+                    comboBoxIndex.Text = comboBoxIndex.SelectedItem.ToString();
+                    comboBoxIndex.SelectionStart = comboBoxIndex.Text.Length;
+                    comboBoxIndex.SelectionLength = 0;
+                    comboBoxIndex.DroppedDown = false;
+                }
+            }
+            finally { isUpdating = false; }
+        }
+
+        private void comboBoxIndex_TextChanged(object sender, EventArgs e)
+        {
+            if (comboBoxIndexLoading || isUpdating || !comboBoxIndex.Enabled) return;
+
+            isUpdating = true;
+            try
+            {
+                string query = FormatHelper.RemoveDiacritics(comboBoxIndex.Text);
+                int selectionStart = comboBoxIndex.SelectionStart;
+
+                if (string.IsNullOrWhiteSpace(query))
+                {
+                    ResetIndexComboBox();
+                    return;
+                }
+
+                var filteredItems = _timeEntrySubTypes
+                    .Select(FormatHelper.FormatTimeEntrySubTypeToString)
+                    .Where(x => FormatHelper.RemoveDiacritics(x)
+                    .IndexOf(query, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                    .ToList();
+
+                if (filteredItems.Count > 0)
+                {
+                    comboBoxIndex.Items.Clear();
+                    comboBoxIndex.Items.AddRange(filteredItems.ToArray());
+                    comboBoxIndex.Text = comboBoxIndex.Text;
+                    comboBoxIndex.SelectionStart = selectionStart;
+                    comboBoxIndex.SelectionLength = 0;
+
+                    if (!comboBoxIndex.DroppedDown && !suppressDropdownTemporarily)
+                    {
+                        BeginInvoke(() =>
+                        {
+                            if (!suppressDropdownTemporarily) // double check inside async invoke
+                                comboBoxIndex.DroppedDown = true;
+
+                            Cursor = Cursors.Default;
+                        });
+                    }
+
+                }
+                else
+                {
+                    comboBoxIndex.DroppedDown = false;
+                }
+            }
+            finally { isUpdating = false; }
+        }
+
+        private void ResetIndexComboBox()
+        {
+            comboBoxIndex.Items.Clear();
+            comboBoxIndex.Items.AddRange(_timeEntrySubTypes.Select(FormatHelper.FormatTimeEntrySubTypeToString).ToArray());
+            comboBoxIndex.DroppedDown = false;
+        }
     }
 }

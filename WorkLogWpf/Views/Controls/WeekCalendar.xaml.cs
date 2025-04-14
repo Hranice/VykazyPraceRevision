@@ -460,8 +460,18 @@ namespace WorkLogWpf.Views.Controls
             _clipboardBlock.Height = _selectedBlock.ActualHeight;
             Grid.SetColumnSpan(_clipboardBlock, Grid.GetColumnSpan(_selectedBlock));
 
-            RegisterBlockEvents(_clipboardBlock); // důležité pro interaktivitu
+            RegisterBlockEvents(_clipboardBlock);
         }
+
+        public void DeleteSelectedBlock()
+        {
+            if (_selectedBlock == null) return;
+
+            CalendarGrid.Children.Remove(_selectedBlock);
+            ClearHighlight();
+        }
+
+
 
         protected override void OnPreviewKeyDown(KeyEventArgs e)
         {
@@ -480,6 +490,13 @@ namespace WorkLogWpf.Views.Controls
                     e.Handled = true;
                 }
             }
+
+            else if (e.Key == Key.Delete)
+            {
+                DeleteSelectedBlock();
+                e.Handled = true;
+            }
+
         }
 
 

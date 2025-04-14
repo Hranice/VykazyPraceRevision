@@ -27,6 +27,7 @@ namespace WorkLogWpf.Views.Controls
             InitializeComponent();
             BuildColumns();
             AddTimeHeaders();
+            DrawGridLines();
         }
 
         private void HighlightSelectedCell(int row, int col)
@@ -444,6 +445,27 @@ namespace WorkLogWpf.Views.Controls
             for (int i = 0; i < 48; i++)
                 CalendarGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(60) });
         }
+
+        private void DrawGridLines()
+        {
+            for (int r = 1; r < CalendarGrid.RowDefinitions.Count; r++)
+            {
+                for (int c = 0; c < CalendarGrid.ColumnDefinitions.Count; c++)
+                {
+                    var cellBorder = new Border
+                    {
+                        BorderBrush = new SolidColorBrush(Color.FromRgb(220, 220, 220)),
+                        BorderThickness = new Thickness(0, 0, 1, 1),
+                        Background = Brushes.Transparent,
+                        IsHitTestVisible = false
+                    };
+                    Grid.SetRow(cellBorder, r);
+                    Grid.SetColumn(cellBorder, c);
+                    CalendarGrid.Children.Add(cellBorder);
+                }
+            }
+        }
+
 
         private void AddTimeHeaders()
         {

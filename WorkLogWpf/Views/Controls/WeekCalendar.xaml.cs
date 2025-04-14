@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -31,6 +33,9 @@ namespace WorkLogWpf.Views.Controls
         private int _resizingStartCol;
         private int _resizingStartSpan;
 
+        private readonly HashSet<TimeEntry> _modifiedEntries = new();
+
+
         public WeekCalendar(TimeEntryRepository timeEntryRepository)
         {
             InitializeComponent();
@@ -41,6 +46,17 @@ namespace WorkLogWpf.Views.Controls
             AddTimeHeaders();
             DrawGridLines();
         }
+
+        public async Task SaveModifiedEntriesAsync()
+        {
+            foreach (var entry in _modifiedEntries)
+            {
+                await _timeEntryRepository.UpdateTimeEntryAsync(entry);
+            }
+
+            _modifiedEntries.Clear();
+        }
+
 
         public async Task LoadEntriesAsync(User user, DateTime weekReference)
         {
@@ -67,6 +83,36 @@ namespace WorkLogWpf.Views.Controls
 
             UpdateDayLabels(startOfWeek);
             UpdateWeekLabel(startOfWeek);
+        }
+
+        private DateTime GetStartOfWeek(DateTime reference)
+        {
+            int offset = (int)reference.DayOfWeek - 1;
+            if (offset < 0) offset = 6; // neděle → pondělí -6
+            return reference.Date.AddDays(-offset);
+        }
+
+        private void UpdateLinkedEntryTime(CalendarBlock block)
+        {
+            if (block?.Entry == null) return;
+
+            int row = Grid.GetRow(block);
+            int col = Grid.GetColumn(block);
+            int span = Grid.GetColumnSpan(block);
+
+            DateTime monday = GetStartOfWeek(_currentWeekReference);
+            DateTime day = monday.AddDays(row - 1);
+            TimeSpan start = TimeSpan.FromMinutes(col * 30);
+
+            block.Entry.Timestamp = day.Date + start;
+            block.Entry.EntryMinutes = span * 30;
+
+            Debug.WriteLine(block.Entry.Description?.ToString());
+            Debug.WriteLine(block.Entry.Timestamp.ToString());
+            var ts = block.Entry.Timestamp.Value.AddMinutes(block.Entry.EntryMinutes);
+            Debug.WriteLine(ts.ToString());
+
+            _modifiedEntries.Add(block.Entry);
         }
 
 
@@ -180,6 +226,7 @@ namespace WorkLogWpf.Views.Controls
 
             var block = new CalendarBlock
             {
+                Entry = entry,
                 ToolTip = $"{entry.Project?.ProjectTitle ?? "Neznámý projekt"}\n{entry.Description}"
             };
 
@@ -248,6 +295,23 @@ namespace WorkLogWpf.Views.Controls
                 block.CaptureMouse();
             };
 
+            block.MouseLeftButtonUp += (s, e) =>
+            {
+                if (_draggedBlock != null)
+                {
+                    UpdateLinkedEntryTime(_draggedBlock);
+                    _draggedBlock.ReleaseMouseCapture();
+                    _draggedBlock = null;
+                    ResetResizeState();
+                }
+            };
+
+            block.ResizeCompleted += (s, e) =>
+            {
+                UpdateLinkedEntryTime(_resizingOriginalBlock);
+                ResetResizeState();
+            };
+
             block.MouseMove += (s, e) =>
             {
                 if (_draggedBlock == null || !_draggedBlock.IsMouseCaptured) return;
@@ -282,15 +346,6 @@ namespace WorkLogWpf.Views.Controls
                     Grid.SetColumn(_draggedBlock, col);
                     Grid.SetRow(_draggedBlock, row);
                 }
-            };
-
-
-
-            block.MouseLeftButtonUp += (s, e) =>
-            {
-                _draggedBlock?.ReleaseMouseCapture();
-                _draggedBlock = null;
-                ResetResizeState();
             };
         }
 
@@ -389,6 +444,7 @@ namespace WorkLogWpf.Views.Controls
 
             int allowedSpan = GetStart(collided) - originalStart;
             Grid.SetColumnSpan(block, allowedSpan);
+            UpdateLinkedEntryTime(block);
 
             int newStart = collidedEnd + 1;
             int newSpan = cursorCol - newStart + 1;
@@ -464,6 +520,7 @@ namespace WorkLogWpf.Views.Controls
 
                 Grid.SetColumn(block, newStartCol);
                 Grid.SetColumnSpan(block, newSpan);
+                UpdateLinkedEntryTime(block);
 
                 int newLeftStart = cursorCol;
                 int newLeftSpan = eStart - newLeftStart;
@@ -531,7 +588,7 @@ namespace WorkLogWpf.Views.Controls
             }
         }
 
-        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        protected override async void OnPreviewKeyDown(KeyEventArgs e)
         {
             base.OnPreviewKeyDown(e);
 
@@ -547,14 +604,19 @@ namespace WorkLogWpf.Views.Controls
                     PasteClipboardBlock();
                     e.Handled = true;
                 }
+                else if (e.Key == Key.S)
+                {
+                    await SaveModifiedEntriesAsync();
+                    e.Handled = true;
+                }
             }
-
             else if (e.Key == Key.Delete)
             {
                 DeleteSelectedBlock();
                 e.Handled = true;
             }
         }
+
 
         private void ResetResizeState()
         {

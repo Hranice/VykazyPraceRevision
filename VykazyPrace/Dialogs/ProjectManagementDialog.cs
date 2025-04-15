@@ -191,6 +191,11 @@ namespace VykazyPrace.Dialogs
 
             if (buttonAddProject.Text == "Přidat")
             {
+                if (_filteredProjects.Any(p => p.ProjectDescription == project.ProjectDescription))
+                {
+                    AppLogger.Error("Projekt se zadaným číslem už existuje.");
+                    return;
+                }
                 await _projectRepo.CreateProjectAsync(project);
             }
 

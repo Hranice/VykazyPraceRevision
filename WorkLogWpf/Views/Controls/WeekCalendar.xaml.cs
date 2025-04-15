@@ -34,6 +34,9 @@ namespace WorkLogWpf.Views.Controls
         private int _resizingStartSpan;
 
         private readonly HashSet<TimeEntry> _modifiedEntries = new();
+        private readonly List<TimeEntry> _newEntries = new();
+        private readonly List<TimeEntry> _deletedEntries = new();
+
 
 
         public WeekCalendar(TimeEntryRepository timeEntryRepository)
@@ -92,7 +95,7 @@ namespace WorkLogWpf.Views.Controls
             return reference.Date.AddDays(-offset);
         }
 
-        private void UpdateLinkedEntryTime(CalendarBlock block)
+        private void TrackEntryChange(CalendarBlock block)
         {
             if (block?.Entry == null) return;
 
@@ -107,13 +110,9 @@ namespace WorkLogWpf.Views.Controls
             block.Entry.Timestamp = day.Date + start;
             block.Entry.EntryMinutes = span * 30;
 
-            Debug.WriteLine(block.Entry.Description?.ToString());
-            Debug.WriteLine(block.Entry.Timestamp.ToString());
-            var ts = block.Entry.Timestamp.Value.AddMinutes(block.Entry.EntryMinutes);
-            Debug.WriteLine(ts.ToString());
-
             _modifiedEntries.Add(block.Entry);
         }
+
 
 
 
@@ -224,6 +223,8 @@ namespace WorkLogWpf.Views.Controls
 
             if (collision) return;
 
+
+
             var block = new CalendarBlock
             {
                 Entry = entry,
@@ -299,7 +300,7 @@ namespace WorkLogWpf.Views.Controls
             {
                 if (_draggedBlock != null)
                 {
-                    UpdateLinkedEntryTime(_draggedBlock);
+                    TrackEntryChange(_draggedBlock);
                     _draggedBlock.ReleaseMouseCapture();
                     _draggedBlock = null;
                     ResetResizeState();
@@ -308,7 +309,7 @@ namespace WorkLogWpf.Views.Controls
 
             block.ResizeCompleted += (s, e) =>
             {
-                UpdateLinkedEntryTime(_resizingOriginalBlock);
+                TrackEntryChange(_resizingOriginalBlock);
                 ResetResizeState();
             };
 
@@ -444,7 +445,6 @@ namespace WorkLogWpf.Views.Controls
 
             int allowedSpan = GetStart(collided) - originalStart;
             Grid.SetColumnSpan(block, allowedSpan);
-            UpdateLinkedEntryTime(block);
 
             int newStart = collidedEnd + 1;
             int newSpan = cursorCol - newStart + 1;
@@ -520,7 +520,6 @@ namespace WorkLogWpf.Views.Controls
 
                 Grid.SetColumn(block, newStartCol);
                 Grid.SetColumnSpan(block, newSpan);
-                UpdateLinkedEntryTime(block);
 
                 int newLeftStart = cursorCol;
                 int newLeftSpan = eStart - newLeftStart;

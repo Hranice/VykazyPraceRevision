@@ -1605,6 +1605,8 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             var entry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
 
+            if (entry == null) return;
+
             // svačina
             if (entry.ProjectId == 132 && entry.EntryTypeId == 24) return;
 

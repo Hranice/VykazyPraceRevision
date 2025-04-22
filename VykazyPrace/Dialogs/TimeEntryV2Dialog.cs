@@ -211,21 +211,32 @@ namespace VykazyPrace.Dialogs
 
         private async void buttonRemove_Click(object sender, EventArgs e)
         {
-            var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(TimeEntryId);
+            var (success, entry, error) = await _timeEntryRepo.TryGetTimeEntryByIdAsync(TimeEntryId);
+            if (!success)
+            {
+                AppLogger.Error($"Nepodařilo se načíst záznam ID {TimeEntryId}: {error}");
+                return;
+            }
+            if (entry == null)
+            {
+                AppLogger.Error($"Záznam ID {TimeEntryId} nebyl nalezen.");
+                return;
+            }
 
-            var dialogResult = MessageBox.Show($"Smazat záznam {FormatHelper.FormatTimeEntryToString(timeEntry)}?", "Smazat?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+            var dialogResult = MessageBox.Show($"Smazat záznam {FormatHelper.FormatTimeEntryToString(entry)}?", "Smazat?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
             if (dialogResult == DialogResult.Yes)
             {
-                if (await _timeEntryRepo.DeleteTimeEntryAsync(TimeEntryId))
+                var result = await _timeEntryRepo.DeleteTimeEntryAsync(TimeEntryId);
+                if (result.Success)
                 {
-                    AppLogger.Information($"Záznam {FormatHelper.FormatTimeEntryToString(timeEntry)} byl smazán z databáze.");
+                    AppLogger.Information($"Záznam {FormatHelper.FormatTimeEntryToString(entry)} byl smazán z databáze.");
                     Close();
                 }
 
                 else
                 {
-                    AppLogger.Error($"Nepodařilo se smazat záznam {FormatHelper.FormatTimeEntryToString(timeEntry)} z databáze.");
+                    AppLogger.Error($"Nepodařilo se smazat záznam {FormatHelper.FormatTimeEntryToString(entry)} z databáze.", new Exception(result.ErrorMessage));
                 }
             }
         }

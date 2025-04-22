@@ -37,20 +37,29 @@ namespace VykazyPrace.Dialogs
         {
             try
             {
-                _users = await _userRepo.GetAllUsersAsync();
-                _userGroups = await _userGroupRepo.GetAllUserGroupsAsync();
+                var usersResult = await _userRepo.GetAllUsersAsync();
+                if (usersResult.Success) {
 
-                Invoke(() =>
+                    _users = usersResult.Users;
+                    _userGroups = await _userGroupRepo.GetAllUserGroupsAsync();
+
+                    Invoke(() =>
+                    {
+                        listBoxUsers.Items.Clear();
+                        listBoxUsers.Items.AddRange(_users.Select(FormatHelper.FormatUserToString).ToArray());
+
+                        comboBoxGroup.Items.Clear();
+                        comboBoxGroup.Items.AddRange(_userGroups.Select(FormatHelper.FormatUserGroupToString).ToArray());
+                        comboBoxGroup.SelectedIndex = 0;
+
+                        _loadingUC.Visible = false;
+                    });
+                }
+
+                else
                 {
-                    listBoxUsers.Items.Clear();
-                    listBoxUsers.Items.AddRange(_users.Select(FormatHelper.FormatUserToString).ToArray());
-
-                    comboBoxGroup.Items.Clear();
-                    comboBoxGroup.Items.AddRange(_userGroups.Select(FormatHelper.FormatUserGroupToString).ToArray());
-                    comboBoxGroup.SelectedIndex = 0;
-
-                    _loadingUC.Visible = false;
-                });
+                    AppLogger.Error("Nepodařilo se načíst uživatele.", new Exception(usersResult.Error));
+                }
             }
             catch (Exception ex)
             {
@@ -113,16 +122,16 @@ namespace VykazyPrace.Dialogs
                     };
 
 
-                    var addedUser = await _userRepo.CreateUserAsync(newUser);
-                    if (addedUser is not null)
+                    var addedUserResult = await _userRepo.CreateUserAsync(newUser);
+                    if(addedUserResult.Success)
                     {
-                        AppLogger.Information($"Uživatel {FormatHelper.FormatUserToString(addedUser)} byl přidán do databáze.", true);
+                        AppLogger.Information($"Uživatel {FormatHelper.FormatUserToString(newUser)} byl přidán do databáze.", true);
                         ClearFields();
                     }
 
                     else
                     {
-                        AppLogger.Error($"Uživatel {FormatHelper.FormatUserToString(newUser)} nebyl přidán do databáze.");
+                        AppLogger.Error($"Uživatel {FormatHelper.FormatUserToString(newUser)} nebyl přidán do databáze.", new Exception(addedUserResult.ErrorMessage));
                     }
 
                     await LoadUsersAsync();
@@ -145,7 +154,8 @@ namespace VykazyPrace.Dialogs
 
                 if (dialogResult == DialogResult.Yes)
                 {
-                    if (await _userRepo.DeleteUserAsync(user.Id))
+                    var deleteUserResult = await _userRepo.DeleteUserAsync(user.Id);
+                    if (deleteUserResult.Success)
                     {
                         AppLogger.Information($"Uživatel {FormatHelper.FormatUserToString(user)} byl smazán z databáze.", true);
                         ClearFields();
@@ -153,7 +163,7 @@ namespace VykazyPrace.Dialogs
 
                     else
                     {
-                        AppLogger.Error($"Nepodařilo se smazat uživatele {FormatHelper.FormatUserToString(user)} z databáze.");
+                        AppLogger.Error($"Nepodařilo se smazat uživatele {FormatHelper.FormatUserToString(user)} z databáze.", new Exception(deleteUserResult.ErrorMessage));
                     }
 
                     await LoadUsersAsync();

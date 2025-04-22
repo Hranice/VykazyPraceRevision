@@ -51,46 +51,47 @@ namespace VykazyPrace.Dialogs
 
         private async Task LoadTimeEntriesAsync()
         {
-            try
-            {
-                var timeEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesAsync();
-                _timeEntries = await _timeEntryRepo.GetTimeEntriesByUserAndDateAsync(_currentUser, _currentDate);
+            //throw new NotImplementedException("Je třeba převést na safe metodu.");
+            //try
+            //{
+            //    var timeEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesAsync();
+            //    _timeEntries = await _timeEntryRepo.GetTimeEntriesByUserAndDateAsync(_currentUser, _currentDate);
 
-                Invoke(() =>
-                {
-                    comboBoxEntryType.Items.Clear();
-                    comboBoxEntryType.Items.AddRange(timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray());
-                    if (comboBoxEntryType.Items.Count > 0) comboBoxEntryType.SelectedIndex = 0;
-                    listBoxTimeEntries.Items.Clear();
-                    listBoxTimeEntries.Items.AddRange(_timeEntries.Select(FormatHelper.FormatTimeEntryToString).ToArray());
-                    UpdateLabelFinishedHours();
-                });
-            }
-            catch (Exception ex)
-            {
-                Invoke(() => AppLogger.Error("Chyba při načítání seznamu zapsaných hodin.", ex));
-            }
+            //    Invoke(() =>
+            //    {
+            //        comboBoxEntryType.Items.Clear();
+            //        comboBoxEntryType.Items.AddRange(timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray());
+            //        if (comboBoxEntryType.Items.Count > 0) comboBoxEntryType.SelectedIndex = 0;
+            //        listBoxTimeEntries.Items.Clear();
+            //        listBoxTimeEntries.Items.AddRange(_timeEntries.Select(FormatHelper.FormatTimeEntryToString).ToArray());
+            //        UpdateLabelFinishedHours();
+            //    });
+            //}
+            //catch (Exception ex)
+            //{
+            //    Invoke(() => AppLogger.Error("Chyba při načítání seznamu zapsaných hodin.", ex));
+            //}
         }
 
         private async Task LoadProjectsContractsAsync()
         {
-            try
-            {
-                _projects = await _projectRepo.GetAllProjectsAsync();
+            //try
+            //{
+            //    _projects = await _projectRepo.GetAllProjectsAsync();
 
-                Invoke(new Action(() =>
-                {
-                    comboBoxProjects.Items.Clear();
-                    comboBoxProjects.Items.AddRange(_projects.Select(FormatHelper.FormatProjectToString).ToArray());
-                }));
-            }
-            catch (Exception ex)
-            {
-                Invoke(new Action(() =>
-                {
-                    AppLogger.Error("Chyba při načítání projektů.", ex);
-                }));
-            }
+            //    Invoke(new Action(() =>
+            //    {
+            //        comboBoxProjects.Items.Clear();
+            //        comboBoxProjects.Items.AddRange(_projects.Select(FormatHelper.FormatProjectToString).ToArray());
+            //    }));
+            //}
+            //catch (Exception ex)
+            //{
+            //    Invoke(new Action(() =>
+            //    {
+            //        AppLogger.Error("Chyba při načítání projektů.", ex);
+            //    }));
+            //}
         }
 
         private bool isUpdating = false;
@@ -231,18 +232,18 @@ namespace VykazyPrace.Dialogs
                     EntryTypeId = addedTimeEntryType?.Id ?? 0
                 };
 
-                var addedTimeEntry = await _timeEntryRepo.CreateTimeEntryAsync(newTimeEntry);
-                if (addedTimeEntry is not null)
+                var createdEntryResult = await _timeEntryRepo.CreateTimeEntryAsync(newTimeEntry);
+                if (createdEntryResult.Success)
                 {
-                    AppLogger.Information($"Zápis hodin {FormatHelper.FormatTimeEntryToString(addedTimeEntry)} byl úspěšně proveden.");
+                    AppLogger.Information($"Zápis hodin {FormatHelper.FormatTimeEntryToString(createdEntryResult.Entry)} byl úspěšně proveden.");
                     ClearFields();
-                }
-                else
-                {
-                    AppLogger.Error($"Zápis {FormatHelper.FormatTimeEntryToString(newTimeEntry)} nebyl proveden.");
+                    await LoadTimeEntriesAsync();
                 }
 
-                await LoadTimeEntriesAsync();
+                else
+                {
+                    AppLogger.Error($"Zápis {FormatHelper.FormatTimeEntryToString(newTimeEntry)} nebyl proveden.", new Exception(createdEntryResult.ErrorMessage));
+                }
             }
         }
 
@@ -275,7 +276,8 @@ namespace VykazyPrace.Dialogs
 
                 if (dialogResult == DialogResult.Yes)
                 {
-                    if (await _timeEntryRepo.DeleteTimeEntryAsync(timeEntry.Id))
+                    var result = await _timeEntryRepo.DeleteTimeEntryAsync(timeEntry.Id);
+                    if (result.Success)
                     {
                         AppLogger.Information($"Záznam {FormatHelper.FormatTimeEntryToString(timeEntry)} byl smazán z databáze.");
                         ClearFields();
@@ -283,7 +285,7 @@ namespace VykazyPrace.Dialogs
 
                     else
                     {
-                        AppLogger.Error($"Nepodařilo se smazat záznam {FormatHelper.FormatTimeEntryToString(timeEntry)} z databáze.");
+                        AppLogger.Error($"Nepodařilo se smazat záznam {FormatHelper.FormatTimeEntryToString(timeEntry)} z databáze.", new Exception(result.ErrorMessage));
                     }
 
                     await LoadTimeEntriesAsync();
@@ -374,29 +376,34 @@ namespace VykazyPrace.Dialogs
             await LoadTimeEntriesAsync();
         }
 
-        private async void UpdateLabelFinishedHours()
+        private async Task UpdateLabelFinishedHours()
         {
-            int projectMinutes = (await _timeEntryRepo.GetTimeEntriesByUserAndDateAsync(_currentUser, _currentDate))
-                .Sum(te => te.EntryMinutes);
-
-            if (projectMinutes > 450)
+            var entriesResult = await _timeEntryRepo.GetTimeEntriesByUserAndDateAsync(_currentUser, _currentDate);
+            if (entriesResult.Success)
             {
-                //labelFinishedHours.ForeColor = Color.DarkSlateBlue;
+                int projectMinutes = entriesResult.Entries
+                    .Sum(te => te.EntryMinutes);
+
+                if (projectMinutes > 450)
+                {
+                    //labelFinishedHours.ForeColor = Color.DarkSlateBlue;
+                }
+
+                else if (projectMinutes == 450)
+                {
+                    //labelFinishedHours.ForeColor = Color.Green;
+                }
+
+                else
+                {
+                    //labelFinishedHours.ForeColor = Color.Tomato;
+                }
+
+                //labelFinishedHours.Text = $"{totalMinutes / 60.0} / 7,5 h    ({projectMinutes / 60.0}+{contractMinutes / 60.0})";
+
+                groupBox1.Text = $"Zápis hodin (zbývá zapsat {(450 - projectMinutes) / 60.0} h)";
             }
-
-            else if (projectMinutes == 450)
-            {
-                //labelFinishedHours.ForeColor = Color.Green;
-            }
-
-            else
-            {
-                //labelFinishedHours.ForeColor = Color.Tomato;
-            }
-
-            //labelFinishedHours.Text = $"{totalMinutes / 60.0} / 7,5 h    ({projectMinutes / 60.0}+{contractMinutes / 60.0})";
-
-            groupBox1.Text = $"Zápis hodin (zbývá zapsat {(450 - projectMinutes) / 60.0} h)";
+           
         }
 
         private void maskedTextBoxNumberOfHours_TextChanged(object sender, EventArgs e)

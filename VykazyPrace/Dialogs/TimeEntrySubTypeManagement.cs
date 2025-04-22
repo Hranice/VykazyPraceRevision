@@ -25,13 +25,22 @@ namespace VykazyPrace.Dialogs
         private async Task LoadTimeEntrySubTypesAsync()
         {
             listBoxTimeEntrySubTypes.Items.Clear();
-            _timeEntrySubTypes = await _timeEntrySubTypeRepo.GetAllTimeEntrySubTypesByUserIdAsync(_selectedUser.Id);
-            listBoxTimeEntrySubTypes.Items.AddRange(
-                _timeEntrySubTypes
-                    .Where(t => t.IsArchived == 0)
-                    .Select(FormatHelper.FormatTimeEntrySubTypeToString)
-                    .ToArray());
+            var timeEntrySubTypesResult = await _timeEntrySubTypeRepo.GetAllTimeEntrySubTypesByUserIdAsync(_selectedUser.Id);
 
+            if (timeEntrySubTypesResult.Success)
+            {
+                _timeEntrySubTypes = timeEntrySubTypesResult.TimeEntrySubTypes;
+                listBoxTimeEntrySubTypes.Items.AddRange(
+                    _timeEntrySubTypes
+                        .Where(t => t.IsArchived == 0)
+                        .Select(FormatHelper.FormatTimeEntrySubTypeToString)
+                        .ToArray());
+            }
+
+            else
+            {
+                AppLogger.Error("Nepodařilo se načíst indexy.", new Exception(timeEntrySubTypesResult.Error));
+            }
         }
 
         private async void buttonRemove_Click(object sender, EventArgs e)
@@ -54,18 +63,27 @@ namespace VykazyPrace.Dialogs
 
         private async void buttonSave_Click(object sender, EventArgs e)
         {
-            var result = MessageBox.Show("Změnou označení přepíšete všechny dosavadní záznamy, chcete pokračovat?", "Přepsat záznamy?", MessageBoxButtons.YesNoCancel);
+            var dialogResult = MessageBox.Show("Změnou označení přepíšete všechny dosavadní záznamy, chcete pokračovat?", "Přepsat záznamy?", MessageBoxButtons.YesNoCancel);
 
-            if (result == DialogResult.Yes)
+            if (dialogResult == DialogResult.Yes)
             {
                 string originalSubTypeTitle = listBoxTimeEntrySubTypes.Text.ToString();
                 var newEntrySubType = _timeEntrySubTypes[listBoxTimeEntrySubTypes.SelectedIndex];
                 newEntrySubType.Title = textBoxTitle.Text;
                 await _timeEntrySubTypeRepo.UpdateTimeEntrySubTypeAsync(newEntrySubType);
 
-                int rowsAffected = await _timeEntryRepo.ReplaceDescriptionForUserAsync(_selectedUser.Id, originalSubTypeTitle, newEntrySubType.Title);
-                AppLogger.Information($"Přepsáno ({rowsAffected}) záznamů: '{originalSubTypeTitle}' -> '{newEntrySubType.Title}'.", true);
-                await LoadTimeEntrySubTypesAsync();
+                var result = await _timeEntryRepo.ReplaceDescriptionForUserAsync(_selectedUser.Id, originalSubTypeTitle, newEntrySubType.Title);
+                if (result.Success)
+                {
+                    AppLogger.Information($"Přepsáno ({result.AffectedRecords}) záznamů: '{originalSubTypeTitle}' -> '{newEntrySubType.Title}'.", true);
+                    await LoadTimeEntrySubTypesAsync();
+
+                }
+
+                else
+                {
+                    AppLogger.Error($"Nepodařilo se přejmenovat záznamy: '{originalSubTypeTitle}' -> '{newEntrySubType.Title}'.", new Exception(result.ErrorMessage));
+                }
             }
         }
     }

@@ -47,85 +47,102 @@ namespace VykazyPrace.Dialogs
         {
             try
             {
-                var _projects = await _projectRepo.GetAllProjectsAsync(true);
-
-                Invoke(new Action(async () =>
+                var (success, result, error) = await _projectRepo.GetAllProjectsAsync(true);
+                if (!success || result == null)
                 {
-                    var filteredProjects = _projects
-                        .Where(p => (projectType == 1 || projectType == 2)
-                            ? (p.ProjectType == 1 || p.ProjectType == 2)
-                            : p.ProjectType == projectType)
-                        .ToArray();
+                    AppLogger.Error("Nepodařilo se načíst projekty.", new Exception(error));
+                    return;
+                }
 
-                    switch (projectType)
+                var projects = result;
+
+                _ = Invoke(async () =>
+                {
+                    try
                     {
-                        case 0:
-                            // PROVOZ
-                            listBoxOperation.Items.Clear();
-                            listBoxOperation.Items.AddRange(
-                                filteredProjects.Select(FormatHelper.FormatProjectToString).ToArray()
-                            );
-                            break;
+                        var filteredProjects = FilterProjectsByType(projects, projectType);
 
-                        case 1:
-                        case 2:
-                            // PROJEKT nebo PŘEDPROJEKT
-                            comboBoxProjectsLoading = true;
-                            listBoxProject.Items.Clear();
-                            comboBoxProjects.Items.Clear();
+                        switch (projectType)
+                        {
+                            case 0:
+                                LoadOperationProjects(filteredProjects);
+                                break;
+                            case 1:
+                            case 2:
+                                LoadProjectAndPreProject(filteredProjects);
+                                break;
+                            case 4:
+                                await LoadAbsenceProjects();
+                                break;
+                            case 5:
+                                await LoadOtherProjects();
+                                break;
+                        }
 
-                            var projectItems = filteredProjects
-                                .Where(p => p.IsArchived == (checkBoxArchive.Checked ? 1 : 0))
-                                .Select(FormatHelper.FormatProjectToString)
-                                .ToArray();
-
-                            listBoxProject.Items.AddRange(projectItems);
-                            comboBoxProjects.Items.AddRange(projectItems);
-
-                            if (comboBoxProjects.Items.Count > 0)
-                                comboBoxProjects.SelectedIndex = 0;
-                            else
-                                comboBoxProjects.Text = "";
-
-                            comboBoxProjectsLoading = false;
-                            break;
-
-                        case 3:
-                            // ŠKOLENÍ
-                            break;
-
-                        case 4:
-                            // NEPŘÍTOMNOST
-                            await LoadTimeEntryTypes(projectType);
-                            listBoxAbsence.Items.Clear();
-                            listBoxAbsence.Items.AddRange(
-                                _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray()
-                            );
-                            break;
-
-                        case 5:
-                            // OSTATNÍ
-                            await LoadTimeEntryTypes(projectType);
-                            listBoxOther.Items.Clear();
-                            listBoxOther.Items.AddRange(
-                                _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray()
-                            );
-                            break;
+                        _filteredProjects = filteredProjects.ToList();
+                        ClearSelection();
+                        GenerateNextDescription();
                     }
+                    catch (Exception ex)
+                    {
+                        AppLogger.Error("Chyba při vykreslování projektů na UI.", ex);
+                    }
+                });
 
-                    _filteredProjects = filteredProjects.ToList();
-                    ClearSelection();
-                    GenerateNextDescription();
-                }));
             }
             catch (Exception ex)
             {
-                Invoke(new Action(() =>
-                {
-                    AppLogger.Error("Chyba při načítání projektů.", ex);
-                }));
+                Invoke(() => AppLogger.Error("Chyba při načítání projektů.", ex));
             }
         }
+
+        private IEnumerable<Project> FilterProjectsByType(IEnumerable<Project> projects, int projectType)
+        {
+            return projects.Where(p =>
+                (projectType is 1 or 2) ? (p.ProjectType is 1 or 2) : p.ProjectType == projectType);
+        }
+
+        private void LoadOperationProjects(IEnumerable<Project> projects)
+        {
+            listBoxOperation.Items.Clear();
+            listBoxOperation.Items.AddRange(projects.Select(FormatHelper.FormatProjectToString).ToArray());
+        }
+
+        private void LoadProjectAndPreProject(IEnumerable<Project> projects)
+        {
+            comboBoxProjectsLoading = true;
+
+            listBoxProject.Items.Clear();
+            comboBoxProjects.Items.Clear();
+
+            var projectItems = projects
+                .Where(p => p.IsArchived == (checkBoxArchive.Checked ? 1 : 0))
+                .Select(FormatHelper.FormatProjectToString)
+                .ToArray();
+
+            listBoxProject.Items.AddRange(projectItems);
+            comboBoxProjects.Items.AddRange(projectItems);
+
+            comboBoxProjects.SelectedIndex = comboBoxProjects.Items.Count > 0 ? 0 : -1;
+            comboBoxProjects.Text = comboBoxProjects.SelectedIndex == -1 ? string.Empty : comboBoxProjects.Text;
+
+            comboBoxProjectsLoading = false;
+        }
+
+        private async Task LoadAbsenceProjects()
+        {
+            await LoadTimeEntryTypes(4);
+            listBoxAbsence.Items.Clear();
+            listBoxAbsence.Items.AddRange(_timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray());
+        }
+
+        private async Task LoadOtherProjects()
+        {
+            await LoadTimeEntryTypes(5);
+            listBoxOther.Items.Clear();
+            listBoxOther.Items.AddRange(_timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray());
+        }
+
 
         private async void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {

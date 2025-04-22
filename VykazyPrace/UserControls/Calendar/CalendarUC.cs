@@ -51,18 +51,20 @@ namespace VykazyPrace.UserControls.Calendar
 
         private async Task LoadTimeEntriesAsync()
         {
-            _minutesDict.Clear();
+            //throw new NotImplementedException("Je třeba převést na safe metodu.");
 
-            var timeEntries = await _timeEntryRepo.GetAllTimeEntriesByUserAsync(_selectedUser);
+            //_minutesDict.Clear();
 
-            foreach (var entry in timeEntries.Where(e => e.Timestamp.HasValue &&
-                                                         e.Timestamp.Value.Year == _currentYear &&
-                                                         e.Timestamp.Value.Month == _currentMonth))
-            {
-                int day = entry.Timestamp.Value.Day;
-                _minutesDict.TryGetValue(day, out int currentMinutes);
-                _minutesDict[day] = currentMinutes + entry.EntryMinutes;
-            }
+            //var timeEntries = await _timeEntryRepo.GetAllTimeEntriesByUserAsync(_selectedUser);
+
+            //foreach (var entry in timeEntries.Where(e => e.Timestamp.HasValue &&
+            //                                             e.Timestamp.Value.Year == _currentYear &&
+            //                                             e.Timestamp.Value.Month == _currentMonth))
+            //{
+            //    int day = entry.Timestamp.Value.Day;
+            //    _minutesDict.TryGetValue(day, out int currentMinutes);
+            //    _minutesDict[day] = currentMinutes + entry.EntryMinutes;
+            //}
         }
 
         private void CalendarUC_Load(object sender, EventArgs e)
@@ -189,7 +191,7 @@ namespace VykazyPrace.UserControls.Calendar
         private void DayCell_DoubleClick(object? sender, EventArgs e)
         {
             if (sender is not DayUC dayCell || !int.TryParse(dayCell.labelDay.Text, out int day)) return;
-            new TimeEntryDialog(_selectedUser, new DateTime(_currentYear, _currentMonth, day)).ShowDialog();
+            //new TimeEntryDialog(_selectedUser, new DateTime(_currentYear, _currentMonth, day)).ShowDialog();
             Task.Run(ReloadCalendar);
         }
 

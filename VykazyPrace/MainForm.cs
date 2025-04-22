@@ -105,15 +105,22 @@ namespace VykazyPrace
             {
                 Invoke(() => _loadingUC.BringToFront());
 
-                var users = await _userRepo.GetAllUsersAsync();
-                _selectedUser = await _userRepo.GetUserByWindowsUsernameAsync(Environment.UserName) ?? new User();
-                _currentUserLoA = _selectedUser.LevelOfAccess;
-
-                if (_selectedUser.Id == 0)
+                var (usersSuccess, users, usersError) = await _userRepo.GetAllUsersAsync();
+                if (!usersSuccess || users == null)
                 {
-                    AppLogger.Error("Nepodaøilo se naèíst aktuálního uživatele, pøístup bude omezen.");
+                    AppLogger.Error("Nepodaøilo se naèíst uživatele.", new Exception(usersError));
                     return;
                 }
+
+                var (selectedSuccess, selectedUser, selectedError) = await _userRepo.GetUserByWindowsUsernameAsync(Environment.UserName);
+                if (!selectedSuccess || selectedUser == null)
+                {
+                    AppLogger.Error("Nepodaøilo se naèíst aktuálního uživatele.", new Exception(selectedError));
+                    return;
+                }
+
+                _selectedUser = selectedUser;
+                _currentUserLoA = selectedUser.LevelOfAccess;
 
                 Invoke(() =>
                 {
@@ -132,6 +139,8 @@ namespace VykazyPrace
                 ShowSettingsDialog("Pøejete si otevøít nastavení?", "Chyba pøi naèítání dat.");
             }
         }
+
+
 
         private void SetupUiForAccessLevel(int levelOfAccess)
         {
@@ -262,13 +271,19 @@ namespace VykazyPrace
 
         private async void comboBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var users = await _userRepo.GetAllUsersAsync();
+            var usersResult = await _userRepo.GetAllUsersAsync();
+            if (usersResult.Success)
+            {
+                var selectedName = comboBoxUsers.SelectedItem?.ToString();
+                _selectedUser = usersResult.Users.FirstOrDefault(x => FormatHelper.FormatUserToString(x) == selectedName) ?? new User();
 
-            var selectedName = comboBoxUsers.SelectedItem?.ToString();
-            _selectedUser = users.FirstOrDefault(x => FormatHelper.FormatUserToString(x) == selectedName) ?? new User();
-
-            _calendar?.ChangeUser(_selectedUser);
-            _monthlyCalendar.ChangeUser(_selectedUser);
+                _calendar?.ChangeUser(_selectedUser);
+                _monthlyCalendar.ChangeUser(_selectedUser);
+            }
+            else
+            {
+                AppLogger.Error("Nepodøilo se naèíst uživatele.", new Exception(usersResult.Error));
+            }
         }
 
         private async void buttonPrevious_Click(object sender, EventArgs e)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -19,59 +20,85 @@ namespace VykazyPrace.Core.Database.Repositories
         /// <summary>
         /// Přidání nového uživatele.
         /// </summary>
-        public async Task<User> CreateUserAsync(User user)
+        public async Task<SaveResult> CreateUserAsync(User user)
         {
             _context.Users.Add(user);
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
-            return user;
+            return await VykazyPraceContextExtensions.SafeSaveAsync(_context);
         }
 
         /// <summary>
         /// Získání všech uživatelů.
         /// </summary>
-        public async Task<List<User>> GetAllUsersAsync()
+        public async Task<(bool Success, List<User>? Users, string? Error)> GetAllUsersAsync()
         {
-            return await _context.Users
+            try
+            {
+                var users = await _context.Users
                 .Include(u => u.Projects)
                 .Include(u => u.TimeEntries)
                 .Include(u => u.UserGroup)
                 .OrderBy(u => u.UserGroupId)
                 .ToListAsync();
+
+                return (true, users, null);
+            }
+            catch (Exception ex)
+            {
+                return (false, null, ex.Message);
+            }
         }
 
 
         /// <summary>
         /// Získání uživatele podle ID.
         /// </summary>
-        public async Task<User?> GetUserByIdAsync(int id)
+        public async Task<(bool Success, User? User, string? Error)> GetUserByIdAsync(int id)
         {
-            return await _context.Users
+            try
+            {
+                var user = await _context.Users
                 .Include(u => u.Projects)
                 .Include(u => u.TimeEntries)
                 .Include(u => u.UserGroup)
                 .FirstOrDefaultAsync(u => u.Id == id);
+
+                return (true, user, null);
+            }
+            catch (Exception ex)
+            {
+                return (false, null, ex.Message);
+            }
         }
 
         /// <summary>
         /// Získání uživatele podle přihlašovacího jména do Windows.
         /// </summary>
-        public async Task<User?> GetUserByWindowsUsernameAsync(string windowsUsername)
+        public async Task<(bool Success, User? User, string? Error)> GetUserByWindowsUsernameAsync(string windowsUsername)
         {
-            return await _context.Users
+            try
+            {
+                var user = await _context.Users
                 .Include(u => u.Projects)
                 .Include(u => u.TimeEntries)
                 .Include(u => u.UserGroup)
                 .FirstOrDefaultAsync(u => u.WindowsUsername == windowsUsername);
+
+                return (true, user, null);
+            }
+            catch (Exception ex)
+            {
+                return (false, null, ex.Message);
+            }
         }
 
         /// <summary>
         /// Aktualizace uživatele.
         /// </summary>
-        public async Task<bool> UpdateUserAsync(User user)
+        public async Task<SaveResult> UpdateUserAsync(User user)
         {
             var existingUser = await _context.Users.FindAsync(user.Id);
             if (existingUser == null)
-                return false;
+                return new SaveResult(false, "Uživatel neexistuje.", 0);
 
             existingUser.FirstName = user.FirstName;
             existingUser.Surname = user.Surname;
@@ -79,22 +106,20 @@ namespace VykazyPrace.Core.Database.Repositories
             existingUser.WindowsUsername = user.WindowsUsername;
             existingUser.LevelOfAccess = user.LevelOfAccess;
 
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
-            return true;
+            return await VykazyPraceContextExtensions.SafeSaveAsync(_context);
         }
 
         /// <summary>
         /// Smazání uživatele podle ID.
         /// </summary>
-        public async Task<bool> DeleteUserAsync(int id)
+        public async Task<SaveResult> DeleteUserAsync(int id)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
-                return false;
+                return new SaveResult(false, "Uživatel neexistuje.", 0);
 
             _context.Users.Remove(user);
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
-            return true;
+            return await VykazyPraceContextExtensions.SafeSaveAsync(_context);
         }
     }
 }

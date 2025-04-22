@@ -1,0 +1,34 @@
+2025-04-17 08:38:18.567 +02:00 [ERR] Databáze je neplatná nebo ji nelze načíst.
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 14: 'unable to open database file'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteConnectionInternal..ctor(SqliteConnectionStringBuilder connectionOptions, SqliteConnectionPool pool)
+   at Microsoft.Data.Sqlite.SqliteConnectionPool.GetConnection()
+   at Microsoft.Data.Sqlite.SqliteConnectionFactory.GetConnection(SqliteConnection outerConnection)
+   at Microsoft.Data.Sqlite.SqliteConnection.Open()
+   at VykazyPrace.Core.Database.DatabaseValidator.ValidateStructure(VykazyPraceContext context) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\DatabaseValidator.cs:line 27
+   at VykazyPrace.MainForm.ValidateDatabase() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 82
+2025-04-17 08:40:06.684 +02:00 [ERR] Databáze je neplatná nebo ji nelze načíst.
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 14: 'unable to open database file'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteConnectionInternal..ctor(SqliteConnectionStringBuilder connectionOptions, SqliteConnectionPool pool)
+   at Microsoft.Data.Sqlite.SqliteConnectionPool.GetConnection()
+   at Microsoft.Data.Sqlite.SqliteConnectionFactory.GetConnection(SqliteConnection outerConnection)
+   at Microsoft.Data.Sqlite.SqliteConnection.Open()
+   at VykazyPrace.Core.Database.DatabaseValidator.ValidateStructure(VykazyPraceContext context) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\DatabaseValidator.cs:line 27
+   at VykazyPrace.MainForm.ValidateDatabase() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 82
+2025-04-17 09:12:19.421 +02:00 [ERR] Záznam ID -1 nebyl nalezen.
+2025-04-17 09:12:22.922 +02:00 [ERR] Záznam ID -1 nebyl nalezen.
+2025-04-17 09:12:36.412 +02:00 [ERR] Nepodařilo se načíst záznam ID 1693: SQLite Error 10: 'disk I/O error'.
+2025-04-17 09:12:42.293 +02:00 [ERR] Nepodařilo se načíst záznam ID 1693: SQLite Error 10: 'disk I/O error'.
+2025-04-17 09:12:43.659 +02:00 [ERR] Nepodařilo se načíst záznam ID 1693: SQLite Error 10: 'disk I/O error'.
+2025-04-17 09:12:58.372 +02:00 [ERR] Nepodařilo se načíst záznam ID 1672: SQLite Error 10: 'disk I/O error'.
+2025-04-17 09:13:00.419 +02:00 [ERR] Nepodařilo se načíst záznam ID 1693: SQLite Error 10: 'disk I/O error'.
+2025-04-17 09:13:02.671 +02:00 [ERR] Nepodařilo se načíst záznam ID 1671: SQLite Error 10: 'disk I/O error'.
+2025-04-17 09:13:06.877 +02:00 [ERR] Nepodařilo se načíst záznam ID 1672: SQLite Error 10: 'disk I/O error'.
+2025-04-17 09:13:42.931 +02:00 [ERR] Záznam ID -1 nebyl nalezen.
+2025-04-17 09:17:14.185 +02:00 [ERR] Nepodařilo se načíst záznam ID 1693: SQLite Error 10: 'disk I/O error'.
+2025-04-17 09:17:17.661 +02:00 [ERR] Nepodařilo se načíst záznam ID 314: SQLite Error 10: 'disk I/O error'.
+2025-04-17 09:17:20.555 +02:00 [ERR] Nepodařilo se načíst záznam ID 313: SQLite Error 10: 'disk I/O error'.
+2025-04-17 09:20:07.573 +02:00 [ERR] Nepodařilo se načíst záznam ID 1693: SQLite Error 10: 'disk I/O error'.
+2025-04-17 09:20:12.987 +02:00 [ERR] Nepodařilo se načíst záznam ID 1693: SQLite Error 10: 'disk I/O error'.
+2025-04-17 09:20:19.215 +02:00 [ERR] Nepodařilo se načíst záznam ID 1617: SQLite Error 10: 'disk I/O error'.

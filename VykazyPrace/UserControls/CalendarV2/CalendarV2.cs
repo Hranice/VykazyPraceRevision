@@ -1373,7 +1373,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 timeEntry.ProjectId = selectedProject.Id;
             }
 
-            if (radioButton4.Checked)
+            if (radioButton5.Checked)
             {
                 timeEntry.ProjectId = 25;
             }

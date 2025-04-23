@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using VykazyPrace.Core.Database.Models;
 
 namespace VykazyPrace.Core.Database.Repositories
@@ -27,6 +28,7 @@ namespace VykazyPrace.Core.Database.Repositories
 
             return (true, timeEntry, null);
         }
+
 
 
         /// <summary>

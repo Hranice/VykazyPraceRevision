@@ -36,22 +36,37 @@ namespace VykazyPrace.Logging
             ShowErrorPopup(message);
         }
 
+        private static readonly SynchronizationContext? _syncContext = SynchronizationContext.Current;
+
         private static void ShowErrorPopup(string message, Exception ex)
         {
             string errorMessage = $"Došlo k chybě:\n{message}\n\n{ex.Message}";
-            MessageBox.Show(errorMessage, "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            ShowMessage(errorMessage, "Chyba", MessageBoxIcon.Error);
         }
 
         private static void ShowErrorPopup(string message)
         {
             string errorMessage = $"Došlo k chybě:\n{message}";
-            MessageBox.Show(errorMessage, "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            ShowMessage(errorMessage, "Chyba", MessageBoxIcon.Error);
         }
 
         private static void ShowInformationPopup(string message)
         {
-            MessageBox.Show(message, "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            ShowMessage(message, "Info", MessageBoxIcon.Information);
         }
+
+        private static void ShowMessage(string text, string caption, MessageBoxIcon icon)
+        {
+            if (_syncContext != null && SynchronizationContext.Current != _syncContext)
+            {
+                _syncContext.Post(_ => MessageBox.Show(text, caption, MessageBoxButtons.OK, icon), null);
+            }
+            else
+            {
+                MessageBox.Show(text, caption, MessageBoxButtons.OK, icon);
+            }
+        }
+
     }
 
 }

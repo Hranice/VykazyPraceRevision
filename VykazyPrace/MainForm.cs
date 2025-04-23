@@ -71,7 +71,11 @@ namespace VykazyPrace
         private async Task HandleUpdatesAsync()
         {
             UpdateService.CheckForUpdateMessage();
+#if DEBUG
+            MessageBox.Show("Update pozastaven, protože debug");
+#else
             await UpdateService.CheckForUpdateAsync();
+#endif
         }
 
         private bool ValidateDatabase()
@@ -275,7 +279,7 @@ namespace VykazyPrace
             if (usersResult.Success)
             {
                 var selectedName = comboBoxUsers.SelectedItem?.ToString();
-                _selectedUser = usersResult.Users.FirstOrDefault(x => FormatHelper.FormatUserToString(x) == selectedName) ?? new User();
+                _selectedUser = usersResult.Users.FirstOrDefault(x => FormatHelper.FormatUserToString(x) == selectedName);
 
                 _calendar?.ChangeUser(_selectedUser);
                 _monthlyCalendar.ChangeUser(_selectedUser);

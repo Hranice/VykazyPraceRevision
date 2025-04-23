@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -40,11 +41,14 @@ namespace VykazyPrace.UserControls.CalendarV2
         private List<TimeEntryType> _timeEntryTypes = new();
         private List<TimeEntrySubType> _timeEntrySubTypes = new();
         private List<DayPanel> panels = new();
+        private readonly HashSet<TimeEntry> _changedEntries = new();
+        private readonly HashSet<TimeEntry> _newEntries = new();
+
 
         // Context
         private User _selectedUser;
         private DateTime _selectedDate;
-        private int _selectedTimeEntryId = -1;
+        private TimeEntry? _selectedTimeEntry;
         private int _currentProjectType;
         private bool comboBoxProjectsLoading = false;
         private bool comboBoxIndexLoading = false;
@@ -134,14 +138,8 @@ namespace VykazyPrace.UserControls.CalendarV2
             InitializeContextMenus();
             panelContainer.Scroll += PanelContainer_Scroll;
             _loadingUC.Size = Size;
-            _loadingUC.MouseDown += _loadingUC_MouseDown;
             Controls.Add(_loadingUC);
             await LoadInitialDataAsync();
-        }
-
-        private void _loadingUC_MouseDown(object? sender, MouseEventArgs e)
-        {
-            MessageBox.Show("Test");
         }
 
         private void PanelContainer_Scroll(object? sender, ScrollEventArgs e)
@@ -151,13 +149,21 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async Task LoadInitialDataAsync()
         {
-            await Task.WhenAll(
-                LoadTimeEntryTypesAsync(DefaultProjectType),
-                LoadTimeEntrySubTypesAsync(),
-                LoadProjectsAsync(DefaultProjectType),
-                RenderCalendar()
-            );
+            try
+            {
+                await LoadProjectsAsync(DefaultProjectType);
+                await LoadTimeEntryTypesAsync(DefaultProjectType);
+                await LoadTimeEntrySubTypesAsync();
+
+                await RenderCalendar();
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("Chyba při načítání dat do kalendáře.", ex);
+                MessageBox.Show("Došlo k chybě při načítání dat. Zkontrolujte připojení a zkuste to znovu.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
+
 
         public async Task ChangeUser(User newUser)
         {
@@ -166,9 +172,62 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             // Reset vybraného záznamu a sidebaru po změně uživatele
             DeactivateAllPanels();
-            _selectedTimeEntryId = -1;
+            _selectedTimeEntry = null;
             _ = LoadSidebar();
         }
+
+        public async Task SaveChangesAsync()
+        {
+            if (_changedEntries.Count == 0 && _newEntries.Count == 0)
+            {
+                MessageBox.Show("Žádné změny k uložení.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            int successCount = 0;
+            int failCount = 0;
+
+            foreach (var newEntry in _newEntries)
+            {
+                var result = await _timeEntryRepo.CreateTimeEntryAsync(newEntry);
+                if (result.Success)
+                {
+                    successCount++;
+                }
+                else
+                {
+                    failCount++;
+                    AppLogger.Error($"Nepodařilo se uložit nový záznam: {result.ErrorMessage}");
+                }
+            }
+            _newEntries.Clear();
+
+            foreach (var entry in _changedEntries)
+            {
+                var result = await _timeEntryRepo.UpdateTimeEntryAsync(entry);
+                if (result.Success)
+                {
+                    successCount++;
+                }
+                else
+                {
+                    failCount++;
+                    AppLogger.Error($"Nepodařilo se uložit záznam ID {entry.Id}: {result.ErrorMessage}");
+                }
+            }
+
+
+
+
+            _changedEntries.Clear();
+
+            string message = $"Změny uloženy: {successCount}";
+            if (failCount > 0)
+                message += $", selhalo: {failCount}";
+
+            MessageBox.Show(message, "Výsledek uložení", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
 
         internal async Task<DateTime> ChangeToPreviousWeek()
         {
@@ -201,22 +260,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             try
             {
                 _currentProjectType = projectType;
-
-                if (_selectedTimeEntryId == -1) return;
-
-                var (success, entry, error) = await _timeEntryRepo.TryGetTimeEntryByIdAsync(_selectedTimeEntryId);
-                if (!success)
-                {
-                    AppLogger.Error($"Nepodařilo se načíst záznam ID {_selectedTimeEntryId}: {error}");
-                    return;
-                }
-                if (entry == null)
-                {
-                    AppLogger.Error($"Záznam ID {_selectedTimeEntryId} nebyl nalezen.");
-                    return;
-                }
-                bool isArchived = entry?.AfterCare == 1;
-
                 _timeEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesByProjectTypeAsync(projectType);
 
                 SafeInvoke(() => UpdateEntryTypeControls(projectType));
@@ -424,29 +467,23 @@ namespace VykazyPrace.UserControls.CalendarV2
             comboBoxProjectsLoading = true;
             comboBoxIndexLoading = true;
 
-            flowLayoutPanel2.Visible = _selectedTimeEntryId > -1;
-            if (_selectedTimeEntryId == -1) return;
+            flowLayoutPanel2.Visible = _selectedTimeEntry is not null;
+            if (_selectedTimeEntry is null) return;
 
-            var (success, entry, error) = await _timeEntryRepo.TryGetTimeEntryByIdAsync(_selectedTimeEntryId);
-            if (!success || entry == null)
-            {
-                AppLogger.Error($"Nepodařilo se načíst záznam ID {_selectedTimeEntryId}: {error ?? "Záznam nebyl nalezen."}");
-                return;
-            }
 
-            if (entry.ProjectId == 132 && entry.EntryTypeId == 24)
+            if (_selectedTimeEntry.ProjectId == 132 && _selectedTimeEntry.EntryTypeId == 24)
             {
                 flowLayoutPanel2.Visible = false;
             }
 
-            var timestamp = entry.Timestamp ?? _selectedDate;
+            var timestamp = _selectedTimeEntry.Timestamp ?? _selectedDate;
             int minutesStart = timestamp.Hour * 60 + timestamp.Minute;
-            int minutesEnd = minutesStart + entry.EntryMinutes;
-            flowLayoutPanel2.Enabled = entry.IsLocked == 0;
+            int minutesEnd = minutesStart + _selectedTimeEntry.EntryMinutes;
+            flowLayoutPanel2.Enabled = _selectedTimeEntry.IsLocked == 0;
 
-            if (entry.IsValid == 1)
+            if (_selectedTimeEntry.IsValid == 1)
             {
-                await ProcessValidEntry(entry, minutesStart, minutesEnd);
+                await ProcessValidEntry(_selectedTimeEntry, minutesStart, minutesEnd);
             }
             else
             {
@@ -456,8 +493,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async Task ProcessValidEntry(TimeEntry entry, int minutesStart, int minutesEnd)
         {
-            checkBoxArchivedProjects.Checked = entry.Project.IsArchived == 1;
-
             var projectResult = await _projectRepo.GetProjectByIdAsync(entry.ProjectId ?? 0);
             if (!projectResult.Success)
             {
@@ -465,13 +500,14 @@ namespace VykazyPrace.UserControls.CalendarV2
                 return;
             }
 
-            var project = projectResult.Project;
-            await LoadTimeEntryTypesAsync(project.ProjectType);
+            checkBoxArchivedProjects.Checked = projectResult.Project?.IsArchived == 1;
+            //var project = projectResult.Project;
+            //await LoadTimeEntryTypesAsync(project.ProjectType);
 
             BeginInvoke((Action)(() =>
             {
                 ApplyStartEndTime(minutesStart, minutesEnd);
-                PopulateEntryFields(entry, project);
+                PopulateEntryFields();
                 comboBoxProjectsLoading = false;
                 comboBoxIndexLoading = false;
             }));
@@ -508,19 +544,40 @@ namespace VykazyPrace.UserControls.CalendarV2
             comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
         }
 
-        private void PopulateEntryFields(TimeEntry entry, Project project)
+        private void PopulateEntryFields()
         {
-            if (lastPanel?.EntryId == -1) return;
+            if (_selectedTimeEntry is null) return;
 
-            comboBoxIndex.Text = entry.Description;
-            textBoxNote.Text = entry.Note;
-            suppressDropdownTemporarily = true;
-            comboBoxProjects.Text = FormatHelper.FormatProjectToString(entry.Project);
-            suppressDropdownTemporarily = false;
-
-            if (project.ProjectType is 0 or 1 or 2)
+            // Speciální projekty
+            switch (_selectedTimeEntry?.Project?.Id)
             {
-                int baseId = project.ProjectType switch
+                case 25: SelectRadioButtonByText("OSTATNÍ"); break;
+                case 23: SelectRadioButtonByText("NEPŘÍTOMNOST"); break;
+                case 26: SelectRadioButtonByText("ŠKOLENÍ"); break;
+                default:
+                    int index = 0;
+                    if (_selectedTimeEntry?.Project is not null)
+                    {
+                        index = _selectedTimeEntry.Project.ProjectType + 1;
+                    }
+
+                    if (flowLayoutPanel2.Controls.Find($"radioButton{index}", false).FirstOrDefault() is RadioButton rb)
+                        rb.Checked = true;
+                    break;
+            }
+
+            comboBoxIndex.Text = _selectedTimeEntry?.Description;
+            textBoxNote.Text = _selectedTimeEntry?.Note;
+            if (_selectedTimeEntry?.Project is not null)
+            {
+                suppressDropdownTemporarily = true;
+                comboBoxProjects.Text = FormatHelper.FormatProjectToString(_selectedTimeEntry?.Project);
+                suppressDropdownTemporarily = false;
+            }
+
+            if (_selectedTimeEntry?.Project?.ProjectType is 0 or 1 or 2)
+            {
+                int baseId = _selectedTimeEntry?.Project?.ProjectType switch
                 {
                     0 => 1,
                     1 => 10,
@@ -528,7 +585,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                     _ => 0
                 };
 
-                int radioIndex = (int)(entry.EntryTypeId - baseId);
+                int radioIndex = (int)(_selectedTimeEntry?.EntryTypeId - baseId);
                 var radioPanel = tableLayoutPanelEntryType.Controls.OfType<TableLayoutPanel>().FirstOrDefault();
                 var radios = radioPanel?.Controls.OfType<RadioButton>().ToList();
 
@@ -539,28 +596,12 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
             else
             {
-                var selectedType = _timeEntryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
-                comboBoxEntryType.Text = entry.AfterCare == 1
+                var selectedType = _timeEntryTypes.FirstOrDefault(x => x.Id == _selectedTimeEntry.EntryTypeId);
+                comboBoxEntryType.Text = _selectedTimeEntry.AfterCare == 1
                     ? FormatHelper.FormatTimeEntryTypeWithAfterCareToString(selectedType)
                     : FormatHelper.FormatTimeEntryTypeToString(selectedType);
             }
-
-            // Speciální projekty
-            switch (project.Id)
-            {
-                case 25: SelectRadioButtonByText("OSTATNÍ"); break;
-                case 23: SelectRadioButtonByText("NEPŘÍTOMNOST"); break;
-                case 26: SelectRadioButtonByText("ŠKOLENÍ"); break;
-                default:
-                    int index = project.ProjectType + 1;
-                    if (flowLayoutPanel2.Controls.Find($"radioButton{index}", false).FirstOrDefault() is RadioButton rb)
-                        rb.Checked = true;
-                    break;
-            }
         }
-
-
-
 
         private void SelectRadioButtonByText(string text)
         {
@@ -589,7 +630,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             var cell = GetCellAt(tableLayoutPanel1, e.Location);
             pasteTargetCell = cell;
             DeactivateAllPanels();
-            _selectedTimeEntryId = -1;
+            _selectedTimeEntry = null;
             _ = LoadSidebar();
         }
 
@@ -611,8 +652,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async void TableLayoutPanel1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            MessageBox.Show("Test");
-
             try
             {
                 if (!CheckDataAvailability()) return;
@@ -630,22 +669,12 @@ namespace VykazyPrace.UserControls.CalendarV2
                 DateTime timestamp = _selectedDate.AddDays(row).AddMinutes(column * 30);
                 var newEntry = PrepareNewTimeEntry(timestamp);
 
-                var createdEntryResult = await _timeEntryRepo.CreateTimeEntryAsync(newEntry);
-                if (createdEntryResult.Success)
-                {
-                    _selectedTimeEntryId = createdEntryResult.Entry.Id;
-                    await RenderCalendar();
-                    await LoadSidebar();
-                }
-
-                else
-                {
-                    AppLogger.Error("Chyba při vytváření nového časového záznamu.", new Exception(createdEntryResult.ErrorMessage));
-                }
-
-
-
+                _newEntries.Add(newEntry);
+                _selectedTimeEntry = newEntry;
+                await RenderCalendar();
+                await LoadSidebar();
             }
+
             catch (Exception ex)
             {
                 AppLogger.Error($"Neočekávaná chyba při přidávání záznamu: {ex.Message}");
@@ -658,7 +687,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             if (_projects.Count == 0 || _timeEntryTypes.Count == 0)
             {
                 AppLogger.Error("Nelze vytvořit záznam: nejsou načteny projekty nebo typy záznamů.");
-                MessageBox.Show("Nejsou načteny projekty nebo typy záznamů.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AppLogger.Error($"CheckDataAvailability: Projekty: {_projects.Count}, Typy: {_timeEntryTypes.Count}");
                 return false;
             }
             return true;
@@ -696,20 +725,22 @@ namespace VykazyPrace.UserControls.CalendarV2
             if (comboBoxProjects.SelectedIndex >= 0)
                 projectId = _projects[comboBoxProjects.SelectedIndex].Id;
 
-            return new TimeEntry
+            var project = _projects.Find(x => x.Id == projectId);
+
+            var entry = new TimeEntry
             {
-                ProjectId = projectId,
-                EntryTypeId = _timeEntryTypes[0].Id,
+                User = null,
                 UserId = _selectedUser.Id,
                 Timestamp = timestamp,
                 EntryMinutes = 30,
-                AfterCare = _projects.Find(x => x.Id == projectId)?.IsArchived ?? 0,
+                AfterCare = 0,
                 IsLocked = 0
             };
+
+            entry.User = null;
+
+            return entry;
         }
-
-
-
 
         private async Task RenderCalendar()
         {
@@ -777,56 +808,57 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                 foreach (var entry in entries)
                 {
-                    if (entry.Project == null)
-                        continue;
-
                     await CreatePanelForEntry(entry);
                 }
-
-                this.BeginInvoke((Action)(() =>
-                {
-                    UpdateDateLabels();
-                    panelContainer.AutoScroll = true;
-
-                    if (!userHasScrolled)
-                    {
-                        int[] columnWidths = tableLayoutPanel1.GetColumnWidths();
-                        int currentHourColumn = (DateTime.Now.Hour * 60 + DateTime.Now.Minute) / 30;
-                        int scrollX = 0;
-
-                        for (int i = 0; i < currentHourColumn && i < columnWidths.Length; i++)
-                        {
-                            scrollX += columnWidths[i];
-                        }
-
-                        int centerOffset = panelContainer.ClientSize.Width / 2;
-                        scrollX -= centerOffset;
-                        if (scrollX < 0) scrollX = 0;
-
-                        panelContainer.AutoScrollPosition = new Point(scrollX, 0);
-                    }
-
-                    DeactivateAllPanels();
-
-                    var panelToActivate = tableLayoutPanel1.Controls
-                        .OfType<DayPanel>()
-                        .FirstOrDefault(p => p.EntryId == _selectedTimeEntryId);
-
-                    panelToActivate?.Activate();
-
-                    _loadingUC.Visible = false;
-                    _loadingUC.SendToBack();
-
-                    tableLayoutPanel1.ResumeLayout(true);
-                    panelContainer.ResumeLayout(true);
-
-                }));
-
             }
             else
             {
                 AppLogger.Error($"Nepodařilo se získat záznamy z databáze.", new Exception(entriesErrorMessage));
             }
+
+            foreach (var entry in _newEntries)
+            {
+                await CreatePanelForEntry(entry);
+            }
+
+            this.BeginInvoke((Action)(() =>
+            {
+                UpdateDateLabels();
+                panelContainer.AutoScroll = true;
+
+                if (!userHasScrolled)
+                {
+                    int[] columnWidths = tableLayoutPanel1.GetColumnWidths();
+                    int currentHourColumn = (DateTime.Now.Hour * 60 + DateTime.Now.Minute) / 30;
+                    int scrollX = 0;
+
+                    for (int i = 0; i < currentHourColumn && i < columnWidths.Length; i++)
+                    {
+                        scrollX += columnWidths[i];
+                    }
+
+                    int centerOffset = panelContainer.ClientSize.Width / 2;
+                    scrollX -= centerOffset;
+                    if (scrollX < 0) scrollX = 0;
+
+                    panelContainer.AutoScrollPosition = new Point(scrollX, 0);
+                }
+
+                DeactivateAllPanels();
+
+                var panelToActivate = tableLayoutPanel1.Controls
+                    .OfType<DayPanel>()
+                    .FirstOrDefault(p => p.LinkedTimeEntry == _selectedTimeEntry);
+
+                panelToActivate?.Activate();
+
+                _loadingUC.Visible = false;
+                _loadingUC.SendToBack();
+
+                tableLayoutPanel1.ResumeLayout(true);
+                panelContainer.ResumeLayout(true);
+
+            }));
         }
 
         private int GetColumnBasedOnTimeEntry(DateTime? timeStamp)
@@ -912,30 +944,9 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
-        private void AttachTooltipToPanel(DayPanel panel, TimeEntry entry)
-        {
-            if (entry.IsValid == 1)
-            {
-                string projectName = entry.Project?.ProjectTitle ?? "Projekt neznámý";
-                string note = string.IsNullOrWhiteSpace(entry.Note) ? "Bez poznámky" : entry.Note;
-
-                var tooltip = new ToolTip()
-                {
-                    AutoPopDelay = 5000,
-                    InitialDelay = 300,
-                    ReshowDelay = 100,
-                    ShowAlways = true
-                };
-
-                string text = $"{projectName}\n{note}";
-                tooltip.SetToolTip(panel, text);
-            }
-        }
-
         private async Task CreatePanelForEntry(TimeEntry entry)
         {
-            if (entry.Project == null) return;
-
+            entry.Project ??= _projects.FirstOrDefault(p => p.Id == entry.ProjectId);
             var entryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesAsync();
             var entryType = entryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
             string color = entryType?.Color ?? "#ADD8E6";
@@ -950,14 +961,12 @@ namespace VykazyPrace.UserControls.CalendarV2
                 Dock = DockStyle.Fill,
                 BackColor = ColorTranslator.FromHtml(color),
                 BorderStyle = BorderStyle.FixedSingle,
-                EntryId = entry.Id
+                LinkedTimeEntry = entry
             };
 
             if (entry.IsValid == 1)
             {
-                panel.UpdateUi(
-              (entry.Project?.IsArchived == 1 ? "(AFTERCARE) " : "") + (entry.Project.ProjectType == 1 ? entry.Project.ProjectDescription : entry.Project.ProjectTitle),
-              entry.Description);
+                panel.UpdateUi();
             }
 
             panel.ContextMenuStrip = dayPanelMenu;
@@ -967,8 +976,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             panel.MouseUp += dayPanel_MouseUp;
             panel.MouseLeave += dayPanel_MouseLeave;
             panel.MouseClick += dayPanel_MouseClick;
-
-            AttachTooltipToPanel(panel, entry);
 
             int column = GetColumnBasedOnTimeEntry(entry.Timestamp);
             int row = GetRowBasedOnTimeEntry(entry.Timestamp);
@@ -1015,7 +1022,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void dayPanel_MouseMove(object? sender, MouseEventArgs e)
         {
-            Debug.WriteLine("MouseMoved");
             if (sender is not DayPanel panel) return;
 
             int rowHeight = tableLayoutPanel1.Height / tableLayoutPanel1.RowCount;
@@ -1045,7 +1051,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void dayPanel_MouseDown(object? sender, MouseEventArgs e)
         {
-            Debug.WriteLine("MouseDown");
             if (sender is not DayPanel panel) return;
 
             mouseMoved = false;
@@ -1171,7 +1176,8 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
-        private async void dayPanel_MouseUp(object? sender, MouseEventArgs e)
+
+        private void dayPanel_MouseUp(object? sender, MouseEventArgs e)
         {
             try
             {
@@ -1183,26 +1189,12 @@ namespace VykazyPrace.UserControls.CalendarV2
                 activePanel = null;
                 Cursor = Cursors.Default;
 
-                var previousTimeEntryId = _selectedTimeEntryId;
-                _selectedTimeEntryId = panel.EntryId;
-
-                if (_selectedTimeEntryId == -1) return;
-
-                var (success, entry, error) = await _timeEntryRepo.TryGetTimeEntryByIdAsync(_selectedTimeEntryId);
-                if (!success)
+                _selectedTimeEntry = panel.LinkedTimeEntry;
+                if (_selectedTimeEntry is null)
                 {
-                    AppLogger.Error($"Nepodařilo se načíst záznam ID {_selectedTimeEntryId}: {error}");
+                    AppLogger.Error($"Záznam {FormatHelper.FormatTimeEntryToString(_selectedTimeEntry)} nebyl nalezen.");
                     return;
                 }
-                if (entry == null)
-                {
-                    AppLogger.Error($"Záznam ID {_selectedTimeEntryId} nebyl nalezen.");
-                    return;
-                }
-
-
-                var entryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesAsync();
-                var entryType = entryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
 
                 var newTimestamp = _selectedDate
                     .AddDays(tableLayoutPanel1.GetRow(panel))
@@ -1210,38 +1202,42 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                 var newDuration = GetEntryMinutesBasedOnColumnSpan(tableLayoutPanel1.GetColumnSpan(panel));
 
-                if (entry.Timestamp != newTimestamp || entry.EntryMinutes != newDuration)
+                if (_selectedTimeEntry.Timestamp != newTimestamp || _selectedTimeEntry.EntryMinutes != newDuration)
                 {
-                    entry.Timestamp = newTimestamp;
-                    entry.EntryMinutes = newDuration;
-                    await _timeEntryRepo.UpdateTimeEntryAsync(entry);
+                    _selectedTimeEntry.Timestamp = newTimestamp;
+                    _selectedTimeEntry.EntryMinutes = newDuration;
+
+                    _changedEntries.Add(_selectedTimeEntry);
                 }
 
+                var entryType = _selectedTimeEntry.EntryType;
                 string color = entryType?.Color ?? "#ADD8E6";
-                if (entry.IsValid == 0)
+                if (_selectedTimeEntry.IsValid == 0)
                 {
                     color = "#FF6957";
                 }
+
                 panel.BackColor = ColorTranslator.FromHtml(color);
 
                 int minutesStart = newTimestamp.Hour * 60 + newTimestamp.Minute;
-                int minutesEnd = minutesStart + entry.EntryMinutes;
+                int minutesEnd = minutesStart + _selectedTimeEntry.EntryMinutes;
                 int index = minutesStart / 30;
 
                 comboBoxStart.SelectedIndex = index;
                 comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
 
-                if (_selectedTimeEntryId != previousTimeEntryId)
-                {
-                    await LoadSidebar();
-                }
+                _ = LoadSidebar();
             }
             catch (Exception ex)
             {
-                AppLogger.Error($"Chyba při zpracování MouseUp pro záznam: {ex.Message}");
-                MessageBox.Show("Došlo k chybě při práci se záznamem. Zkuste to prosím znovu.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AppLogger.Error($"Chyba při zpracování MouseUp: {ex.Message}");
+                MessageBox.Show("Došlo k chybě při práci se záznamem.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
+
+
 
         #endregion
 
@@ -1476,55 +1472,48 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
 
             // Načtení existujícího záznamu
-            if (_selectedTimeEntryId == -1) return;
-
-            var (success, entry, error) = await _timeEntryRepo.TryGetTimeEntryByIdAsync(_selectedTimeEntryId);
-            if (!success || entry == null)
-            {
-                AppLogger.Error($"Nepodařilo se načíst záznam ID {_selectedTimeEntryId}: {error ?? "Entry is null."}");
-                return;
-            }
+            if (_selectedTimeEntry is null) return;
 
             // Úprava záznamu
-            entry.Description = subType.Title;
-            entry.EntryTypeId = selectedEntryTypeId;
-            entry.Note = textBoxNote.Text;
+            _selectedTimeEntry.Description = subType.Title;
+            _selectedTimeEntry.EntryTypeId = selectedEntryTypeId;
+            _selectedTimeEntry.Note = textBoxNote.Text;
 
             var selectedProject = _projects.FirstOrDefault(p =>
                 FormatHelper.FormatProjectToString(p).Equals(comboBoxProjects.Text, StringComparison.InvariantCultureIgnoreCase));
             if (selectedProject != null)
             {
-                entry.ProjectId = selectedProject.Id;
+                _selectedTimeEntry.ProjectId = selectedProject.Id;
             }
 
             // Přednost mají radio buttony pro speciální projekty
             if (radioButton4.Checked)
             {
-                entry.ProjectId = 25;
+                _selectedTimeEntry.ProjectId = 25;
             }
             else if (radioButton5.Checked)
             {
-                entry.ProjectId = 23;
+                _selectedTimeEntry.ProjectId = 23;
             }
             else if (radioButton3.Checked)
             {
-                entry.ProjectId = 26;
-                entry.EntryTypeId = 16;
+                _selectedTimeEntry.ProjectId = 26;
+                _selectedTimeEntry.EntryTypeId = 16;
             }
 
-            entry.AfterCare = _projects.FirstOrDefault(x => x.Id == entry.ProjectId)?.IsArchived ?? 0;
-            entry.IsValid = 1;
+            _selectedTimeEntry.AfterCare = _projects.FirstOrDefault(x => x.Id == _selectedTimeEntry.ProjectId)?.IsArchived ?? 0;
+            _selectedTimeEntry.IsValid = 1;
 
             // Uložení změn
-            var updateResult = await _timeEntryRepo.UpdateTimeEntryAsync(entry);
+            var updateResult = await _timeEntryRepo.UpdateTimeEntryAsync(_selectedTimeEntry);
             if (!updateResult.Success)
             {
-                AppLogger.Error($"Nepodařilo se potvrdit změny záznamu {FormatHelper.FormatTimeEntryToString(entry)}",
+                AppLogger.Error($"Nepodařilo se potvrdit změny záznamu {FormatHelper.FormatTimeEntryToString(_selectedTimeEntry)}",
                     new Exception(updateResult.ErrorMessage));
                 return;
             }
 
-            AppLogger.Information($"Záznam {FormatHelper.FormatTimeEntryToString(entry)} byl úspěšně aktualizován.");
+            AppLogger.Information($"Záznam {FormatHelper.FormatTimeEntryToString(_selectedTimeEntry)} byl úspěšně aktualizován.");
 
             // Aktualizace UI a dat
             await LoadTimeEntrySubTypesAsync();
@@ -1613,37 +1602,25 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         public async Task DeleteRecord()
         {
-            if (_selectedTimeEntryId == -1) return;
-
-            var (success, entry, error) = await _timeEntryRepo.TryGetTimeEntryByIdAsync(_selectedTimeEntryId);
-            if (!success)
-            {
-                AppLogger.Error($"Nepodařilo se načíst záznam ID {_selectedTimeEntryId}: {error}");
-                return;
-            }
-            if (entry == null)
-            {
-                AppLogger.Error($"Záznam ID {_selectedTimeEntryId} nebyl nalezen.");
-                return;
-            }
+            if (_selectedTimeEntry is null) return;
 
             // svačina
-            if (entry.ProjectId == 132 && entry.EntryTypeId == 24) return;
+            if (_selectedTimeEntry.ProjectId == 132 && _selectedTimeEntry.EntryTypeId == 24) return;
 
-            bool confirmed = ShowDeleteConfirmation(entry);
+            bool confirmed = ShowDeleteConfirmation(_selectedTimeEntry);
             if (!confirmed) return;
 
-            var result = await _timeEntryRepo.DeleteTimeEntryAsync(_selectedTimeEntryId);
+            var result = await _timeEntryRepo.DeleteTimeEntryAsync(_selectedTimeEntry.Id);
             if (result.Success)
             {
-                AppLogger.Information($"Záznam {FormatHelper.FormatTimeEntryToString(entry)} byl smazán z databáze.");
+                AppLogger.Information($"Záznam {FormatHelper.FormatTimeEntryToString(_selectedTimeEntry)} byl smazán z databáze.");
             }
             else
             {
-                AppLogger.Error($"Nepodařilo se smazat záznam {FormatHelper.FormatTimeEntryToString(entry)} z databáze.", new Exception(result.ErrorMessage));
+                AppLogger.Error($"Nepodařilo se smazat záznam {FormatHelper.FormatTimeEntryToString(_selectedTimeEntry)} z databáze.", new Exception(result.ErrorMessage));
             }
 
-            _selectedTimeEntryId = -1;
+            _selectedTimeEntry = null;
             await RenderCalendar();
             await LoadSidebar();
         }
@@ -1751,6 +1728,13 @@ namespace VykazyPrace.UserControls.CalendarV2
                 return true;
             }
 
+            if (keyData == (Keys.Control | Keys.S))
+            {
+                _ = SaveChangesAsync();
+                return true;
+            }
+
+
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
@@ -1775,43 +1759,28 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async void CopySelectedPanel()
         {
-            if (_selectedTimeEntryId <= 0) return;
-
-            var (success, entry, error) = await _timeEntryRepo.TryGetTimeEntryByIdAsync(_selectedTimeEntryId);
-            if (!success)
-            {
-                AppLogger.Error($"Nepodařilo se načíst záznam ID {_selectedTimeEntryId}: {error}");
-                return;
-            }
-            if (entry == null)
-            {
-                AppLogger.Error($"Záznam ID {_selectedTimeEntryId} nebyl nalezen.");
-                return;
-            }
+            if (_selectedTimeEntry is null) return;
 
             // svačina
-            if (entry.ProjectId == 132 && entry.EntryTypeId == 24) return;
+            if (_selectedTimeEntry.ProjectId == 132 && _selectedTimeEntry.EntryTypeId == 24) return;
 
-            if (entry != null)
+            copiedEntry = new TimeEntry
             {
-                copiedEntry = new TimeEntry
-                {
-                    EntryTypeId = entry.EntryTypeId,
-                    ProjectId = entry.ProjectId,
-                    Description = entry.Description,
-                    Note = entry.Note,
-                    EntryMinutes = entry.EntryMinutes,
-                    AfterCare = entry.AfterCare,
-                    UserId = entry.UserId,
-                    IsValid = entry.IsValid
-                };
+                EntryTypeId = _selectedTimeEntry.EntryTypeId,
+                ProjectId = _selectedTimeEntry.ProjectId,
+                Description = _selectedTimeEntry.Description,
+                Note = _selectedTimeEntry.Note,
+                EntryMinutes = _selectedTimeEntry.EntryMinutes,
+                AfterCare = _selectedTimeEntry.AfterCare,
+                UserId = _selectedTimeEntry.UserId,
+                IsValid = _selectedTimeEntry.IsValid
+            };
 
-                var panel = panels.FirstOrDefault(p => p.EntryId == _selectedTimeEntryId);
-                if (panel != null)
-                {
-                    copyToolTip.ToolTipTitle = "Zkopírováno";
-                    copyToolTip.Show("Záznam byl zkopírován", panel, panel.Width / 2, panel.Height / 2, 2000);
-                }
+            var panel = panels.FirstOrDefault(p => p.LinkedTimeEntry == _selectedTimeEntry);
+            if (panel != null)
+            {
+                copyToolTip.ToolTipTitle = "Zkopírováno";
+                copyToolTip.Show("Záznam byl zkopírován", panel, panel.Width / 2, panel.Height / 2, 2000);
             }
         }
 
@@ -1873,13 +1842,11 @@ namespace VykazyPrace.UserControls.CalendarV2
                 IsValid = copiedEntry.IsValid
             };
 
-            var createdEntryResult = await _timeEntryRepo.CreateTimeEntryAsync(newEntry);
-            if (createdEntryResult.Success)
-            {
-                _selectedTimeEntryId = createdEntryResult.Entry.Id;
-                await RenderCalendar();
-                await LoadSidebar();
-            }
+            _newEntries.Add(newEntry);
+            _selectedTimeEntry = newEntry;
+            await RenderCalendar();
+            await LoadSidebar();
+
         }
 
         private async Task RemoveOverlappingPanels(int fromCol, int span, int row)
@@ -1894,7 +1861,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             foreach (var panel in toRemove)
             {
-                await _timeEntryRepo.DeleteTimeEntryAsync(panel.EntryId);
+                await _timeEntryRepo.DeleteTimeEntryAsync(panel.LinkedTimeEntry.Id);
             }
         }
 
@@ -1931,18 +1898,8 @@ namespace VykazyPrace.UserControls.CalendarV2
                 var panel = kvp.Key;
                 var (newCol, span) = (tableLayoutPanel1.GetColumn(panel), kvp.Value.span);
 
-                var (success, entry, error) = await _timeEntryRepo.TryGetTimeEntryByIdAsync(_selectedTimeEntryId);
-                if (!success)
-                {
-                    continue;
-                }
-                if (entry == null)
-                {
-                    continue;
-                }
-
-                entry.Timestamp = _selectedDate.AddDays(row).AddMinutes(newCol * TimeSlotLengthInMinutes);
-                await _timeEntryRepo.UpdateTimeEntryAsync(entry);
+                _selectedTimeEntry.Timestamp = _selectedDate.AddDays(row).AddMinutes(newCol * TimeSlotLengthInMinutes);
+                await _timeEntryRepo.UpdateTimeEntryAsync(_selectedTimeEntry);
             }
 
             return true;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace VykazyPrace.Core.Database.Models
 {
@@ -31,7 +32,8 @@ namespace VykazyPrace.Core.Database.Models
                 }
                 catch (Exception ex)
                 {
-                    return new SaveResult(false, $"Neznámá chyba: {ex.Message}");
+                    Debug.WriteLine(ex.InnerException);
+                    return new SaveResult(false, $"Neznámá chyba: {ex.Message}\n\n{ex.InnerException}");
                 }
             }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using VykazyPrace.Core.Configuration;
 
@@ -91,6 +92,10 @@ public partial class VykazyPraceContext : DbContext
         {
             entity.HasIndex(e => e.Id, "IX_UserGroups_Id").IsUnique();
         });
+
+        modelBuilder.Entity<TimeEntry>()
+    .Ignore(e => e.User);
+
 
         OnModelCreatingPartial(modelBuilder);
     }

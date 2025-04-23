@@ -1,22 +1,48 @@
-﻿namespace VykazyPrace.UserControls.CalendarV2
+﻿using VykazyPrace.Core.Database.Models;
+
+namespace VykazyPrace.UserControls.CalendarV2
 {
     public partial class DayPanel : UserControl
     {
-        public int EntryId { get; set; }
+        public TimeEntry? LinkedTimeEntry { get; set; }
         private int _borderThickness = 0;
 
         public DayPanel()
         {
             InitializeComponent();
+            AttachTooltipToPanel();
+            UpdateUi();
         }
 
-        public void UpdateUi(string? title, string? subtitle)
+        private void AttachTooltipToPanel()
+        {
+            if (LinkedTimeEntry is null) return;
+
+            if (LinkedTimeEntry?.IsValid == 1)
+            {
+                string projectName = LinkedTimeEntry.Project?.ProjectTitle ?? "Projekt neznámý";
+                string note = string.IsNullOrWhiteSpace(LinkedTimeEntry.Note) ? "Bez poznámky" : LinkedTimeEntry.Note;
+
+                var tooltip = new ToolTip()
+                {
+                    AutoPopDelay = 5000,
+                    InitialDelay = 300,
+                    ReshowDelay = 100,
+                    ShowAlways = true
+                };
+
+                string text = $"{projectName}\n{note}";
+                tooltip.SetToolTip(this, text);
+            }
+        }
+
+        public void UpdateUi()
         {
             SetLabelHeightForLines(label1, 2);
             SetLabelHeightForLines(label2, 2);
 
-            label1.Text = TrimTextToFitTwoLines(label1, title);
-            label2.Text = TrimTextToFitTwoLines(label2, subtitle);
+            label1.Text = TrimTextToFitTwoLines(label1, LinkedTimeEntry?.Project?.ProjectTitle);
+            label2.Text = TrimTextToFitTwoLines(label2, LinkedTimeEntry?.Project?.ProjectDescription);
         }
 
 

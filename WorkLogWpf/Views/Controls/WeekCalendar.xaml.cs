@@ -52,13 +52,31 @@ namespace WorkLogWpf.Views.Controls
 
         public async Task SaveModifiedEntriesAsync()
         {
+            Debug.WriteLine("💾 SaveModifiedEntriesAsync");
+
             foreach (var entry in _modifiedEntries)
             {
+                Debug.WriteLine($"🟠 Ukládám změněný: {entry.Timestamp} [{entry.EntryMinutes} min]");
                 await _timeEntryRepository.UpdateTimeEntryAsync(entry);
             }
 
+            foreach (var entry in _newEntries)
+            {
+                Debug.WriteLine($"🟢 Ukládám nový: {entry.Timestamp} [{entry.EntryMinutes} min]");
+                await _timeEntryRepository.CreateTimeEntryAsync(entry);
+            }
+
+            foreach (var entry in _deletedEntries)
+            {
+                Debug.WriteLine($"🔴 Mažu záznam: {entry.Timestamp} [{entry.EntryMinutes} min]");
+                await _timeEntryRepository.DeleteTimeEntryAsync(entry.Id);
+            }
+
             _modifiedEntries.Clear();
+            _newEntries.Clear();
+            _deletedEntries.Clear();
         }
+
 
 
         public async Task LoadEntriesAsync(User user, DateTime weekReference)
@@ -97,7 +115,11 @@ namespace WorkLogWpf.Views.Controls
 
         private void TrackEntryChange(CalendarBlock block)
         {
-            if (block?.Entry == null) return;
+            if (block?.Entry == null)
+            {
+                Debug.WriteLine("[TrackEntryChange] ❌ Block nebo Entry je null");
+                return;
+            }
 
             int row = Grid.GetRow(block);
             int col = Grid.GetColumn(block);
@@ -110,10 +132,20 @@ namespace WorkLogWpf.Views.Controls
             block.Entry.Timestamp = day.Date + start;
             block.Entry.EntryMinutes = span * 30;
 
+            Debug.WriteLine($"[TrackEntryChange] ✅ Block updated");
+            Debug.WriteLine($" - Row: {row}, Col: {col}, Span: {span}");
+            Debug.WriteLine($" - Timestamp: {block.Entry.Timestamp}");
+            Debug.WriteLine($" - EntryMinutes: {block.Entry.EntryMinutes}");
+
+            if (_newEntries.Contains(block.Entry))
+            {
+                Debug.WriteLine("[TrackEntryChange] 🟢 Blok je nový → už je v _newEntries");
+                return;
+            }
+
+            Debug.WriteLine("[TrackEntryChange] 🟠 Přidávám blok do _modifiedEntries");
             _modifiedEntries.Add(block.Entry);
         }
-
-
 
 
         private (DateTime start, DateTime end) GetCurrentWeekBounds(DateTime reference)
@@ -268,13 +300,29 @@ namespace WorkLogWpf.Views.Controls
 
                 if (desiredSpan <= 0) return;
 
-                var block = new CalendarBlock();
+                var entry = new TimeEntry
+                {
+                    UserId = _currentUser.Id,
+                    Timestamp = GetStartOfWeek(_currentWeekReference).AddDays(row - 1).AddMinutes(col * 30),
+                    EntryMinutes = desiredSpan * 30,
+                    ProjectId = null,
+                    Description = ""
+                };
+
+                _newEntries.Add(entry);
+
+                var block = new CalendarBlock
+                {
+                    Entry = entry
+                };
+
                 Grid.SetColumn(block, col);
                 Grid.SetColumnSpan(block, desiredSpan);
                 Grid.SetRow(block, row);
                 CalendarGrid.Children.Add(block);
                 RegisterBlockEvents(block);
             }
+
         }
 
         private void RegisterBlockEvents(CalendarBlock block)
@@ -369,20 +417,39 @@ namespace WorkLogWpf.Views.Controls
                 int row = Grid.GetRow(_resizingOriginalBlock);
                 int cursorCol;
 
-                if ((s as FrameworkElement)?.Name == "LeftThumb")
+                if (thumb?.Name == "LeftThumb")
                     cursorCol = GetColumnAtLeftEdge(absolute.X);
                 else
                     cursorCol = GetColumnAt(absolute.X);
-
 
                 if (cursorCol < 0 || cursorCol >= CalendarGrid.ColumnDefinitions.Count) return;
 
                 if (thumb?.Name == "RightThumb") HandleResizeRight(row, cursorCol);
                 else if (thumb?.Name == "LeftThumb") HandleResizeLeft(row, cursorCol);
+
+                // 🟡 Během resizování aktualizuj EntryMinutes a Timestamp
+                if (_resizingOriginalBlock?.Entry != null)
+                    TrackEntryChange(_resizingOriginalBlock);
+                if (_newBlock?.Entry != null)
+                    TrackEntryChange(_newBlock);
+                if (_newBlockLeft?.Entry != null)
+                    TrackEntryChange(_newBlockLeft);
             };
 
-            block.ResizeCompleted += (s, e) => ResetResizeState();
+            block.ResizeCompleted += (s, e) =>
+            {
+                Debug.WriteLine("[ResizeCompleted] 🔁 completedBlock:");
+                if (_resizingOriginalBlock?.Entry != null)
+                    TrackEntryChange(_resizingOriginalBlock);
+                if (_newBlock?.Entry != null)
+                    TrackEntryChange(_newBlock);
+                if (_newBlockLeft?.Entry != null)
+                    TrackEntryChange(_newBlockLeft);
+
+                ResetResizeState();
+            };
         }
+
 
         private void HandleResizeRight(int row, int cursorCol)
         {
@@ -399,6 +466,7 @@ namespace WorkLogWpf.Views.Controls
                 return;
             }
 
+            // Roztažení nově vytvořeného bloku
             if (_newBlock != null)
             {
                 int addedStart = GetStart(_newBlock);
@@ -414,9 +482,11 @@ namespace WorkLogWpf.Views.Controls
                 }
 
                 Grid.SetColumnSpan(_newBlock, addedSpan);
+                TrackEntryChange(_newBlock); // 🔥 Zásadní!
                 return;
             }
 
+            // Kontrola kolizí a vytvoření nového bloku za kolidujícím
             var blocks = CalendarGrid.Children.OfType<CalendarBlock>()
                 .Where(b => b != block && IsInRow(b, row))
                 .OrderBy(b => GetStart(b)).ToList();
@@ -435,6 +505,7 @@ namespace WorkLogWpf.Views.Controls
                 if (span <= 0 || originalStart + span > CalendarGrid.ColumnDefinitions.Count) return;
 
                 Grid.SetColumnSpan(block, span);
+                TrackEntryChange(block); // 🔥 Původní blok byl změněn
                 return;
             }
 
@@ -445,19 +516,39 @@ namespace WorkLogWpf.Views.Controls
 
             int allowedSpan = GetStart(collided) - originalStart;
             Grid.SetColumnSpan(block, allowedSpan);
+            TrackEntryChange(block); // 🔥 i zkrácení se sleduje
 
             int newStart = collidedEnd + 1;
             int newSpan = cursorCol - newStart + 1;
 
             if (newSpan <= 0 || newStart + newSpan > CalendarGrid.ColumnDefinitions.Count) return;
 
-            _newBlock = new CalendarBlock();
+            var newEntry = new TimeEntry
+            {
+                UserId = _currentUser.Id,
+                Timestamp = GetStartOfWeek(_currentWeekReference).AddDays(row - 1).AddMinutes(newStart * 30),
+                EntryMinutes = newSpan * 30,
+                ProjectId = null,
+                Description = ""
+            };
+
+            _newEntries.Add(newEntry);
+
+            Debug.WriteLine("[HandleResizeRight] 🧱 Vytvářím nový blok doprava");
+            Debug.WriteLine($" - StartCol: {newStart}, Span: {newSpan}");
+
+            _newBlock = new CalendarBlock
+            {
+                Entry = newEntry
+            };
+
             RegisterBlockEvents(_newBlock);
             Grid.SetRow(_newBlock, row);
             Grid.SetColumn(_newBlock, newStart);
             Grid.SetColumnSpan(_newBlock, newSpan);
             CalendarGrid.Children.Add(_newBlock);
         }
+
 
         private int GetColumnAtLeftEdge(double x)
         {
@@ -501,6 +592,7 @@ namespace WorkLogWpf.Views.Controls
 
                 Grid.SetColumn(_newBlockLeft, newStart);
                 Grid.SetColumnSpan(_newBlockLeft, newSpan);
+                TrackEntryChange(_newBlockLeft); // 🔥 Sleduj změnu bloku
                 return;
             }
 
@@ -520,13 +612,32 @@ namespace WorkLogWpf.Views.Controls
 
                 Grid.SetColumn(block, newStartCol);
                 Grid.SetColumnSpan(block, newSpan);
+                TrackEntryChange(block);
 
                 int newLeftStart = cursorCol;
                 int newLeftSpan = eStart - newLeftStart;
 
                 if (newLeftSpan < 1 || newLeftStart < 0) return;
 
-                _newBlockLeft = new CalendarBlock();
+                var newEntry = new TimeEntry
+                {
+                    UserId = _currentUser.Id,
+                    Timestamp = GetStartOfWeek(_currentWeekReference).AddDays(row - 1).AddMinutes(newLeftStart * 30),
+                    EntryMinutes = newLeftSpan * 30,
+                    ProjectId = null,
+                    Description = ""
+                };
+
+                _newEntries.Add(newEntry);
+
+                Debug.WriteLine("[HandleResizeLeft] 🧱 Vytvářím nový blok doleva");
+                Debug.WriteLine($" - StartCol: {newLeftStart}, Span: {newLeftSpan}");
+
+                _newBlockLeft = new CalendarBlock
+                {
+                    Entry = newEntry
+                };
+
                 RegisterBlockEvents(_newBlockLeft);
                 Grid.SetRow(_newBlockLeft, row);
                 Grid.SetColumn(_newBlockLeft, newLeftStart);
@@ -548,14 +659,18 @@ namespace WorkLogWpf.Views.Controls
 
                 Grid.SetColumn(_resizingOriginalBlock, newStart);
                 Grid.SetColumnSpan(_resizingOriginalBlock, newSpan);
+                TrackEntryChange(_resizingOriginalBlock); // 🔥 i běžné resize
             }
         }
+
 
         public void CopySelectedBlock()
         {
             if (_selectedBlock == null) return;
+
             _clipboardBlock = CloneBlock(_selectedBlock);
         }
+
 
         public void PasteClipboardBlock()
         {
@@ -570,7 +685,22 @@ namespace WorkLogWpf.Views.Controls
             bool collision = IsCollision(col, col + span - 1, row);
             if (collision) return;
 
-            var newBlock = new CalendarBlock();
+            var newEntry = new TimeEntry
+            {
+                UserId = _currentUser.Id,
+                Timestamp = GetStartOfWeek(_currentWeekReference).AddDays(row - 1).AddMinutes(col * 30),
+                EntryMinutes = span * 30,
+                ProjectId = _clipboardBlock?.Entry?.ProjectId,
+                Description = _clipboardBlock?.Entry?.Description ?? ""
+            };
+
+            _newEntries.Add(newEntry);
+
+            var newBlock = new CalendarBlock
+            {
+                Entry = newEntry
+            };
+
             Grid.SetColumn(newBlock, col);
             Grid.SetColumnSpan(newBlock, span);
             Grid.SetRow(newBlock, row);
@@ -578,14 +708,24 @@ namespace WorkLogWpf.Views.Controls
             CalendarGrid.Children.Add(newBlock);
         }
 
+
         public void DeleteSelectedBlock()
         {
             if (_selectedBlock != null)
             {
+                if (_selectedBlock.Entry != null)
+                {
+                    if (_newEntries.Contains(_selectedBlock.Entry))
+                        _newEntries.Remove(_selectedBlock.Entry);
+                    else
+                        _deletedEntries.Add(_selectedBlock.Entry);
+                }
+
                 CalendarGrid.Children.Remove(_selectedBlock);
                 ClearHighlight();
             }
         }
+
 
         protected override async void OnPreviewKeyDown(KeyEventArgs e)
         {
@@ -793,11 +933,23 @@ namespace WorkLogWpf.Views.Controls
 
         private CalendarBlock CloneBlock(CalendarBlock original)
         {
-            var clone = new CalendarBlock();
+            var clone = new CalendarBlock
+            {
+                Entry = original.Entry != null ? new TimeEntry
+                {
+                    UserId = original.Entry.UserId,
+                    Timestamp = original.Entry.Timestamp,
+                    EntryMinutes = original.Entry.EntryMinutes,
+                    ProjectId = original.Entry.ProjectId,
+                    Description = original.Entry.Description
+                } : null
+            };
+
             Grid.SetColumnSpan(clone, Grid.GetColumnSpan(original));
             RegisterBlockEvents(clone);
             return clone;
         }
+
 
         private (int row, int column, int span)? GetGridPlacement(DateTime timestamp, int durationMinutes)
         {

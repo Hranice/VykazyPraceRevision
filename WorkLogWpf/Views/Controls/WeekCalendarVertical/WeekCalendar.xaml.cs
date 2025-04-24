@@ -4,7 +4,7 @@ using System.Windows.Input;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 
-namespace WorkLogWpf.Views.Controls
+namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
 {
     public partial class WeekCalendar : UserControl
     {

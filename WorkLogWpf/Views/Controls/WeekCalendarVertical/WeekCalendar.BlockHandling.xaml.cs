@@ -3,7 +3,7 @@ using System.Windows.Input;
 using System.Windows;
 using VykazyPrace.Core.Database.Models;
 
-namespace WorkLogWpf.Views.Controls
+namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
 {
     public partial class WeekCalendar
     {

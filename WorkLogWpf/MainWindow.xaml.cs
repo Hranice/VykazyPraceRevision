@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
-using WorkLogWpf.Views.Controls;
+using WorkLogWpf.Views.Controls.WeekCalendarVertical;
 
 namespace WorkLogWpf
 {

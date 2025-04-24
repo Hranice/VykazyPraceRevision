@@ -71,3 +71,5 @@ C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\bin\Debug\net8.0-windows
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\bin\Debug\net8.0-windows\VykazyPrace.Core.pdb
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\WorkLogWpf.csproj.AssemblyReference.cache
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\WorkLogWpf.csproj.Up2Date
+C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendarVertical\WeekCalendar.g.cs
+C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendarVertical\WeekCalendar.baml

@@ -21,4 +21,10 @@
     <Resource Include="Views\Controls\Assets\tools.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Views\Controls\WeekCalendarVertical\WeekCalendar.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>

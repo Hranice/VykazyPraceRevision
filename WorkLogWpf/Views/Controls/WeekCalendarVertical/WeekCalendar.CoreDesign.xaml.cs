@@ -9,7 +9,7 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
         private (int row, int column, int span)? GetGridPlacement(DateTime timestamp, int durationMinutes)
         {
             DayOfWeek day = timestamp.DayOfWeek;
-            int row = day switch
+            int column = day switch
             {
                 DayOfWeek.Monday => 1,
                 DayOfWeek.Tuesday => 2,
@@ -21,14 +21,14 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
                 _ => -1
             };
 
-            if (row < 1 || row > 7)
+            if (column < 1 || column > 7)
                 return null;
 
             TimeSpan time = timestamp.TimeOfDay;
-            int column = (int)(time.TotalMinutes / 30); // každý sloupec = 30 minut
+            int row = (int)(time.TotalMinutes / 30); // každý řádek = 30 minut
             int span = Math.Max(1, (int)Math.Ceiling(durationMinutes / 30.0));
 
-            if (column < 0 || column + span > CalendarGrid.ColumnDefinitions.Count)
+            if (row < 0 || row + span > CalendarGrid.RowDefinitions.Count)
                 return null;
 
             return (row, column, span);
@@ -70,6 +70,7 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
             _selectedPosition = (row, col);
         }
 
+
         private void HighlightSelectedBlock(CalendarBlock block)
         {
             ClearHighlight();
@@ -99,12 +100,13 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
             _selectedPosition = null;
         }
 
-        private void BuildColumns()
+        private void BuildRows()
         {
-            CalendarGrid.ColumnDefinitions.Clear();
+            CalendarGrid.RowDefinitions.Clear();
             for (int i = 0; i < 48; i++)
-                CalendarGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(60) });
+                CalendarGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(20) });
         }
+
 
         private void UpdateDayLabels(DateTime monday)
         {
@@ -132,27 +134,24 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
                 }
             }
 
-            HighlightTodayRow(monday);
+            HighlightTodayColumn(monday);
         }
 
-        private void HighlightTodayRow(DateTime monday)
+        private void HighlightTodayColumn(DateTime monday)
         {
             var today = DateTime.Today;
             int dayIndex = (int)today.DayOfWeek;
-
             if (dayIndex == 0) dayIndex = 7; // Neděle
 
-            int row = dayIndex >= 1 && dayIndex <= 7 ? dayIndex : -1;
+            int column = dayIndex >= 1 && dayIndex <= 7 ? dayIndex : -1;
 
-            // Odstraň staré zvýraznění, pokud existuje
             if (_todayHighlight != null)
             {
                 CalendarGrid.Children.Remove(_todayHighlight);
                 _todayHighlight = null;
             }
 
-            // Přidej nové zvýraznění, pokud den spadá do zobrazeného týdne
-            if (today >= monday && today <= monday.AddDays(6) && row > 0)
+            if (today >= monday && today <= monday.AddDays(6) && column > 0)
             {
                 _todayHighlight = new Border
                 {
@@ -160,24 +159,24 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
                     IsHitTestVisible = false
                 };
 
-                Grid.SetRow(_todayHighlight, row);
-                Grid.SetColumnSpan(_todayHighlight, CalendarGrid.ColumnDefinitions.Count);
-                Panel.SetZIndex(_todayHighlight, -1); // pod ostatní prvky
+                Grid.SetColumn(_todayHighlight, column);
+                Grid.SetRowSpan(_todayHighlight, CalendarGrid.RowDefinitions.Count);
+                Panel.SetZIndex(_todayHighlight, -1);
 
-                CalendarGrid.Children.Insert(0, _todayHighlight); // nejníž
+                CalendarGrid.Children.Insert(0, _todayHighlight);
             }
         }
 
         private void DrawGridLines()
         {
-            for (int r = 1; r < CalendarGrid.RowDefinitions.Count; r++)
+            for (int r = 0; r < CalendarGrid.RowDefinitions.Count; r++)
             {
-                for (int c = 0; c < CalendarGrid.ColumnDefinitions.Count; c++)
+                for (int c = 1; c <= 7; c++)
                 {
                     var cellBorder = new Border
                     {
                         BorderBrush = new SolidColorBrush(Color.FromRgb(220, 220, 220)),
-                        BorderThickness = new Thickness(0, 0, 1, 1),
+                        BorderThickness = new Thickness(1, 1, 0, 0),
                         Background = Brushes.Transparent,
                         IsHitTestVisible = false
                     };
@@ -198,10 +197,12 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
                     var textBlock = new TextBlock
                     {
                         Text = $"{(int)time.TotalHours}:{time.Minutes:D2}",
-                        HorizontalAlignment = HorizontalAlignment.Center
+                        HorizontalAlignment = HorizontalAlignment.Right,
+                        Margin = new Thickness(2, 0, 5, 0),
+                        VerticalAlignment = VerticalAlignment.Center
                     };
-                    Grid.SetRow(textBlock, 0);
-                    Grid.SetColumn(textBlock, i);
+                    Grid.SetRow(textBlock, i);
+                    Grid.SetColumn(textBlock, 0);
                     CalendarGrid.Children.Add(textBlock);
                 }
             }

@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using System.Windows;
 using VykazyPrace.Core.Database.Models;
+using System.Diagnostics;
 
 namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
 {
@@ -17,15 +18,20 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
         {
             Point _blockCursorOffset = new Point();
 
+            // Začátek dragování – uchopíme blok
             block.MouseLeftButtonDown += (s, e) =>
             {
                 _draggedBlock = block;
-                _blockCursorOffset = e.GetPosition(block);
+
+                // Získáme pozici myši vůči CELÉMU CalendarGrid
+                _blockCursorOffset = e.GetPosition(CalendarGrid);
+
                 _originalCol = Grid.GetColumn(block);
                 _originalRow = Grid.GetRow(block);
                 block.CaptureMouse();
             };
 
+            // Uvolnění myši – potvrzení nové pozice
             block.MouseLeftButtonUp += (s, e) =>
             {
                 if (_draggedBlock != null)
@@ -37,76 +43,80 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
                 }
             };
 
-            block.ResizeCompleted += (s, e) =>
-            {
-                TrackEntryChange(_resizingOriginalBlock);
-                ResetResizeState();
-            };
-
+            // Během pohybu myší aktualizuj pozici bloku
             block.MouseMove += (s, e) =>
             {
                 if (_draggedBlock == null || !_draggedBlock.IsMouseCaptured) return;
 
+                // Aktuální pozice kurzoru v CalendarGrid
                 var pos = e.GetPosition(CalendarGrid);
-                double adjustedX = pos.X - _blockCursorOffset.X;
-                int col = GetColumnAt(adjustedX);
-                int row = GetRowAt(pos.Y);
 
-                if (col < 0 || row <= 0) return;
+                // Vypočti relativní posun myši
+                double deltaY = pos.Y - _blockCursorOffset.Y;
 
-                int span = Grid.GetColumnSpan(_draggedBlock);
+                // Výška jednoho řádku (30 minut) – můžeš přizpůsobit, nebo zjistit z layoutu
+                double rowHeight = CalendarGrid.RowDefinitions[0].ActualHeight;
 
-                if (col == _originalCol && row == _originalRow)
-                {
-                    Grid.SetColumn(_draggedBlock, col);
-                    Grid.SetRow(_draggedBlock, row);
+                // Vypočti nový řádek jako původní + kolik řádků se ušlo
+                int newRow = _originalRow + (int)Math.Round(deltaY / rowHeight);
+                int newCol = GetColumnAt(pos.X);
+
+                if (newRow < 0 || newCol < 1) return;
+
+                int span = Grid.GetRowSpan(_draggedBlock);
+
+                if (newRow == _originalRow && newCol == _originalCol)
                     return;
-                }
 
                 bool hasCollision = CalendarGrid.Children.OfType<CalendarBlock>()
                     .Where(b => b != _draggedBlock)
-                    .Any(b => Grid.GetRow(b) == row &&
-                              RangesOverlap(col, col + span - 1,
-                                            Grid.GetColumn(b),
-                                            Grid.GetColumn(b) + Grid.GetColumnSpan(b) - 1));
+                    .Any(b => Grid.GetColumn(b) == newCol &&
+                              RangesOverlap(newRow, newRow + span - 1,
+                                            Grid.GetRow(b),
+                                            Grid.GetRow(b) + Grid.GetRowSpan(b) - 1));
 
-                if (!hasCollision && col + span <= CalendarGrid.ColumnDefinitions.Count)
+                if (!hasCollision && newRow + span <= CalendarGrid.RowDefinitions.Count)
                 {
-                    Grid.SetColumn(_draggedBlock, col);
-                    Grid.SetRow(_draggedBlock, row);
+                    Grid.SetRow(_draggedBlock, newRow);
+                    Grid.SetColumn(_draggedBlock, newCol);
                 }
             };
         }
 
         private void RegisterResizeEvents(CalendarBlock block)
         {
+            // Ulož výchozí stav pro případ vracení zpět
             block.ResizeStarted += (s, e) =>
             {
                 _resizingOriginalInitialBlock = block;
                 _resizingOriginalBlock = block;
-                _resizingStartCol = Grid.GetColumn(block);
-                _resizingStartSpan = Grid.GetColumnSpan(block);
+                _resizingStartRow = Grid.GetRow(block);
+                _resizingStartSpan = Grid.GetRowSpan(block);
             };
 
+            // Při tahu resizovacím thumbem určujeme nový konec nebo začátek
             block.ResizeDelta += (s, deltaPoint) =>
             {
                 if (_resizingOriginalBlock == null) return;
 
                 var thumb = s as FrameworkElement;
                 Point absolute = Mouse.GetPosition(CalendarGrid);
-                int row = Grid.GetRow(_resizingOriginalBlock);
-                int cursorCol;
+                int col = Grid.GetColumn(_resizingOriginalBlock);
+                int cursorRow;
 
-                if (thumb?.Name == "LeftThumb")
-                    cursorCol = GetColumnAtLeftEdge(absolute.X);
+                // Detekuj, který okraj bloku se resizuje
+                if (thumb?.Name == "TopThumb")
+                    cursorRow = GetRowAtTopEdge(absolute.Y);
                 else
-                    cursorCol = GetColumnAt(absolute.X);
+                    cursorRow = GetRowAt(absolute.Y);
 
-                if (cursorCol < 0 || cursorCol >= CalendarGrid.ColumnDefinitions.Count) return;
+                if (cursorRow < 0 || cursorRow >= CalendarGrid.RowDefinitions.Count) return;
 
-                if (thumb?.Name == "RightThumb") HandleResizeRight(row, cursorCol);
-                else if (thumb?.Name == "LeftThumb") HandleResizeLeft(row, cursorCol);
+                // Směruj akci na konkrétní handler
+                if (thumb?.Name == "BottomThumb") HandleResizeDown(col, cursorRow);
+                else if (thumb?.Name == "TopThumb") HandleResizeUp(col, cursorRow);
 
+                // Po každém delta kroku aktualizuj entry
                 if (_resizingOriginalBlock?.Entry != null)
                     TrackEntryChange(_resizingOriginalBlock);
                 if (_newBlock?.Entry != null)
@@ -115,6 +125,7 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
                     TrackEntryChange(_newBlockLeft);
             };
 
+            // Po ukončení resizování zapiš změny a resetuj stav
             block.ResizeCompleted += (s, e) =>
             {
                 if (_resizingOriginalBlock?.Entry != null)
@@ -128,47 +139,47 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
             };
         }
 
-        private void HandleResizeRight(int row, int cursorCol)
+        private void HandleResizeDown(int col, int cursorRow)
         {
             var block = _resizingOriginalBlock;
-            int originalStart = _resizingStartCol;
+            int originalStart = _resizingStartRow;
 
-            // Vrácení k původnímu bloku
-            if (_newBlock != null && cursorCol <= _resizingStartCol + _resizingStartSpan - 1)
+            // Pokud se kurzor vrátí zpět do původního rozsahu
+            if (_newBlock != null && cursorRow <= _resizingStartRow + _resizingStartSpan - 1)
             {
                 RemoveNewBlock(ref _newBlock);
                 _resizingOriginalBlock = block;
-                _resizingStartCol = GetStart(block);
-                _resizingStartSpan = Grid.GetColumnSpan(block);
+                _resizingStartRow = GetStart(block);
+                _resizingStartSpan = Grid.GetRowSpan(block);
                 return;
             }
 
-            // Roztažení nově vytvořeného bloku
+            // Pokud už jsme vytvořili nový blok a stále ho chceme upravovat
             if (_newBlock != null)
             {
                 int addedStart = GetStart(_newBlock);
-                int addedSpan = cursorCol - addedStart + 1;
+                int addedSpan = cursorRow - addedStart + 1;
 
-                if (addedSpan <= 0 || IsCollision(addedStart, addedStart + addedSpan - 1, row, _newBlock, block))
+                if (addedSpan <= 0 || IsCollision(addedStart, addedStart + addedSpan - 1, col, _newBlock, block))
                 {
                     RemoveNewBlock(ref _newBlock);
                     _resizingOriginalBlock = block;
-                    _resizingStartCol = GetStart(block);
-                    _resizingStartSpan = Grid.GetColumnSpan(block);
+                    _resizingStartRow = GetStart(block);
+                    _resizingStartSpan = Grid.GetRowSpan(block);
                     return;
                 }
 
-                Grid.SetColumnSpan(_newBlock, addedSpan);
+                Grid.SetRowSpan(_newBlock, addedSpan);
                 TrackEntryChange(_newBlock);
                 return;
             }
 
-            // Kontrola kolizí a vytvoření nového bloku za kolidujícím
+            // Hledání kolidujících bloků
             var blocks = CalendarGrid.Children.OfType<CalendarBlock>()
-                .Where(b => b != block && IsInRow(b, row))
+                .Where(b => b != block && IsInColumn(b, col))
                 .OrderBy(b => GetStart(b)).ToList();
 
-            int targetEnd = cursorCol;
+            int targetEnd = cursorRow;
 
             var colliding = blocks
                 .Where(b => RangesOverlap(originalStart, targetEnd, GetStart(b), GetEnd(b)))
@@ -178,32 +189,35 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
 
             if (colliding.Count == 0)
             {
-                int span = cursorCol - originalStart + 1;
-                if (span <= 0 || originalStart + span > CalendarGrid.ColumnDefinitions.Count) return;
+                // Bez kolize – jen upravíme velikost
+                int span = cursorRow - originalStart + 1;
+                if (span <= 0 || originalStart + span > CalendarGrid.RowDefinitions.Count) return;
 
-                Grid.SetColumnSpan(block, span);
+                Grid.SetRowSpan(block, span);
                 TrackEntryChange(block);
                 return;
             }
 
+            // Koliduje s jedním blokem – vytvoříme nový blok za kolizí
             var collided = colliding[0];
             int collidedEnd = GetEnd(collided);
 
-            if (blocks.Any(b => GetStart(b) > collidedEnd && GetStart(b) <= cursorCol)) return;
+            if (blocks.Any(b => GetStart(b) > collidedEnd && GetStart(b) <= cursorRow)) return;
 
             int allowedSpan = GetStart(collided) - originalStart;
-            Grid.SetColumnSpan(block, allowedSpan);
+            Grid.SetRowSpan(block, allowedSpan);
             TrackEntryChange(block);
 
             int newStart = collidedEnd + 1;
-            int newSpan = cursorCol - newStart + 1;
+            int newSpan = cursorRow - newStart + 1;
 
-            if (newSpan <= 0 || newStart + newSpan > CalendarGrid.ColumnDefinitions.Count) return;
+            if (newSpan <= 0 || newStart + newSpan > CalendarGrid.RowDefinitions.Count) return;
 
+            // Vytvoř nový samostatný blok (split)
             var newEntry = new TimeEntry
             {
                 UserId = _currentUser.Id,
-                Timestamp = GetStartOfWeek(_currentWeekReference).AddDays(row - 1).AddMinutes(newStart * 30),
+                Timestamp = GetStartOfWeek(_currentWeekReference).AddDays(col - 1).AddMinutes(newStart * 30),
                 EntryMinutes = newSpan * 30,
                 ProjectId = null,
                 Description = ""
@@ -211,92 +225,99 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
 
             _newEntries.Add(newEntry);
 
-            _newBlock = new CalendarBlock
-            {
-                Entry = newEntry
-            };
-
+            _newBlock = new CalendarBlock { Entry = newEntry };
             RegisterBlockEvents(_newBlock);
-            Grid.SetRow(_newBlock, row);
-            Grid.SetColumn(_newBlock, newStart);
-            Grid.SetColumnSpan(_newBlock, newSpan);
+            Grid.SetColumn(_newBlock, col);
+            Grid.SetRow(_newBlock, newStart);
+            Grid.SetRowSpan(_newBlock, newSpan);
             CalendarGrid.Children.Add(_newBlock);
         }
 
-        private int GetColumnAtLeftEdge(double x)
+
+        private int GetRowAtTopEdge(double y)
         {
-            double accumulatedWidth = 0;
-            for (int i = 0; i < CalendarGrid.ColumnDefinitions.Count; i++)
+            double accumulatedHeight = 0;
+            for (int i = 0; i < CalendarGrid.RowDefinitions.Count; i++)
             {
-                double colWidth = CalendarGrid.ColumnDefinitions[i].ActualWidth;
-                if (x < accumulatedWidth + colWidth / 2)
+                double rowHeight = CalendarGrid.RowDefinitions[i].ActualHeight;
+                if (y < accumulatedHeight + rowHeight / 2)
                     return i;
-                accumulatedWidth += colWidth;
+                accumulatedHeight += rowHeight;
             }
-            return CalendarGrid.ColumnDefinitions.Count - 1;
+            return CalendarGrid.RowDefinitions.Count - 1;
         }
 
-        private void HandleResizeLeft(int row, int cursorCol)
+        private void HandleResizeUp(int col, int cursorRow)
         {
             var block = _resizingOriginalBlock;
-            int originEnd = _resizingStartCol + _resizingStartSpan - 1;
+            int originEnd = _resizingStartRow + _resizingStartSpan - 1;
 
+            // Pokud už byl vytvořen nový horní blok (split), sleduj, zda se máme vrátit
             if (_newBlockLeft != null)
             {
                 var blockE = CalendarGrid.Children.OfType<CalendarBlock>()
-                    .FirstOrDefault(b => b != _newBlockLeft && b != _resizingOriginalInitialBlock && IsInRow(b, row));
+                    .FirstOrDefault(b => b != _newBlockLeft && b != _resizingOriginalInitialBlock && IsInColumn(b, col));
 
-                if (blockE != null && cursorCol >= GetStart(blockE))
+                // Pokud se vracíme zpět (kurzor nad existující blok), zruš split
+                if (blockE != null && cursorRow >= GetStart(blockE))
                 {
                     RemoveNewBlock(ref _newBlockLeft);
                     _resizingOriginalBlock = _resizingOriginalInitialBlock;
-                    _resizingStartCol = GetStart(_resizingOriginalBlock);
-                    _resizingStartSpan = Grid.GetColumnSpan(_resizingOriginalBlock);
+                    _resizingStartRow = GetStart(_resizingOriginalBlock);
+                    _resizingStartSpan = Grid.GetRowSpan(_resizingOriginalBlock);
                     return;
                 }
 
+                // Jinak uprav nový blok nahoře
                 int fixedEnd = GetEnd(_resizingOriginalBlock);
-                int newStart = Math.Max(0, cursorCol);
+                int newStart = Math.Max(0, cursorRow);
                 int newSpan = fixedEnd - newStart + 1;
 
-                if (newSpan < 1 || newStart >= CalendarGrid.ColumnDefinitions.Count ||
-                    IsCollision(newStart, newStart + newSpan - 1, row, _newBlockLeft, _resizingOriginalBlock))
+                if (newSpan < 1 || newStart >= CalendarGrid.RowDefinitions.Count ||
+                    IsCollision(newStart, newStart + newSpan - 1, col, _newBlockLeft, _resizingOriginalBlock))
                     return;
 
-                Grid.SetColumn(_newBlockLeft, newStart);
-                Grid.SetColumnSpan(_newBlockLeft, newSpan);
+                Grid.SetRow(_newBlockLeft, newStart);
+                Grid.SetRowSpan(_newBlockLeft, newSpan);
                 TrackEntryChange(_newBlockLeft);
                 return;
             }
 
+            // Hledání kolidujícího bloku, který je mezi kurzorem a původním začátkem
             var blockEToSplit = CalendarGrid.Children.OfType<CalendarBlock>()
-                .Where(b => b != block && IsInRow(b, row))
-                .FirstOrDefault(b => _resizingStartCol > GetEnd(b) && cursorCol < GetStart(b));
+                .Where(b => b != block && IsInColumn(b, col))
+                .FirstOrDefault(b =>
+                    RangesOverlap(cursorRow, _resizingStartRow - 1, GetStart(b), GetEnd(b))
+                );
 
             if (blockEToSplit != null)
             {
+                // Kolidující blok existuje – provedeme rozdělení
                 int eStart = GetStart(blockEToSplit);
                 int eEnd = GetEnd(blockEToSplit);
 
-                int newStartCol = eEnd + 1;
-                int newSpan = (_resizingStartCol + _resizingStartSpan) - newStartCol;
+                int newStartRow = eEnd + 1;
+                int newSpan = originEnd - newStartRow + 1;
 
-                if (newSpan < 1 || newStartCol >= CalendarGrid.ColumnDefinitions.Count) return;
+                if (newSpan < 1 || newStartRow >= CalendarGrid.RowDefinitions.Count) return;
 
-                Grid.SetColumn(block, newStartCol);
-                Grid.SetColumnSpan(block, newSpan);
+                // Přesun původního bloku dolů
+                Grid.SetRow(block, newStartRow);
+                Grid.SetRowSpan(block, newSpan);
                 TrackEntryChange(block);
 
-                int newLeftStart = cursorCol;
-                int newLeftSpan = eStart - newLeftStart;
+                // Vytvoření nového bloku nahoře (split)
+                int newTopStart = cursorRow;
+                int newTopSpan = eStart - newTopStart;
 
-                if (newLeftSpan < 1 || newLeftStart < 0) return;
+                if (newTopSpan < 1 || newTopStart < 0 ||
+                    IsCollision(newTopStart, newTopStart + newTopSpan - 1, col, blockEToSplit, block)) return;
 
                 var newEntry = new TimeEntry
                 {
                     UserId = _currentUser.Id,
-                    Timestamp = GetStartOfWeek(_currentWeekReference).AddDays(row - 1).AddMinutes(newLeftStart * 30),
-                    EntryMinutes = newLeftSpan * 30,
+                    Timestamp = GetStartOfWeek(_currentWeekReference).AddDays(col - 1).AddMinutes(newTopStart * 30),
+                    EntryMinutes = newTopSpan * 30,
                     ProjectId = null,
                     Description = ""
                 };
@@ -309,26 +330,28 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
                 };
 
                 RegisterBlockEvents(_newBlockLeft);
-                Grid.SetRow(_newBlockLeft, row);
-                Grid.SetColumn(_newBlockLeft, newLeftStart);
-                Grid.SetColumnSpan(_newBlockLeft, newLeftSpan);
+                Grid.SetColumn(_newBlockLeft, col);
+                Grid.SetRow(_newBlockLeft, newTopStart);
+                Grid.SetRowSpan(_newBlockLeft, newTopSpan);
                 CalendarGrid.Children.Add(_newBlockLeft);
 
+                // Nový blok se stává "resizovaným"
                 _resizingOriginalBlock = _newBlockLeft;
-                _resizingStartCol = newLeftStart;
-                _resizingStartSpan = newLeftSpan;
+                _resizingStartRow = newTopStart;
+                _resizingStartSpan = newTopSpan;
             }
             else
             {
-                int newStart = Math.Max(0, cursorCol);
+                // Žádná kolize – zvětšujeme blok směrem nahoru
+                int newStart = Math.Max(0, cursorRow);
                 int newSpan = originEnd - newStart + 1;
 
-                if (newSpan < 1 || newStart >= CalendarGrid.ColumnDefinitions.Count ||
-                    IsCollision(newStart, newStart + newSpan - 1, row, _resizingOriginalBlock))
+                if (newSpan < 1 || newStart >= CalendarGrid.RowDefinitions.Count ||
+                    IsCollision(newStart, newStart + newSpan - 1, col, _resizingOriginalBlock))
                     return;
 
-                Grid.SetColumn(_resizingOriginalBlock, newStart);
-                Grid.SetColumnSpan(_resizingOriginalBlock, newSpan);
+                Grid.SetRow(_resizingOriginalBlock, newStart);
+                Grid.SetRowSpan(_resizingOriginalBlock, newSpan);
                 TrackEntryChange(_resizingOriginalBlock);
             }
         }
@@ -346,17 +369,17 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
 
             int row = _selectedPosition.Value.row;
             int col = _selectedPosition.Value.col;
-            int span = Grid.GetColumnSpan(_clipboardBlock);
+            int span = Grid.GetRowSpan(_clipboardBlock);
 
-            if (col + span > CalendarGrid.ColumnDefinitions.Count) return;
+            if (row + span > CalendarGrid.RowDefinitions.Count) return;
 
-            bool collision = IsCollision(col, col + span - 1, row);
+            bool collision = IsCollision(row, row + span - 1, col);
             if (collision) return;
 
             var newEntry = new TimeEntry
             {
                 UserId = _currentUser.Id,
-                Timestamp = GetStartOfWeek(_currentWeekReference).AddDays(row - 1).AddMinutes(col * 30),
+                Timestamp = GetStartOfWeek(_currentWeekReference).AddDays(col - 1).AddMinutes(row * 30),
                 EntryMinutes = span * 30,
                 ProjectId = _clipboardBlock?.Entry?.ProjectId,
                 Description = _clipboardBlock?.Entry?.Description ?? ""
@@ -364,24 +387,22 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
 
             _newEntries.Add(newEntry);
 
-            var newBlock = new CalendarBlock
-            {
-                Entry = newEntry
-            };
+            var newBlock = new CalendarBlock { Entry = newEntry };
 
-            Grid.SetColumn(newBlock, col);
-            Grid.SetColumnSpan(newBlock, span);
             Grid.SetRow(newBlock, row);
+            Grid.SetRowSpan(newBlock, span);
+            Grid.SetColumn(newBlock, col);
             RegisterBlockEvents(newBlock);
             CalendarGrid.Children.Add(newBlock);
         }
+
 
         private void ResetResizeState()
         {
             _resizingOriginalBlock = null;
             _newBlock = null;
             _newBlockLeft = null;
-            _resizingStartCol = -1;
+            _resizingStartRow = -1;
             _resizingStartSpan = -1;
         }
 
@@ -449,11 +470,11 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
 
             int row = Grid.GetRow(block);
             int col = Grid.GetColumn(block);
-            int span = Grid.GetColumnSpan(block);
+            int span = Grid.GetRowSpan(block);
 
             DateTime monday = GetStartOfWeek(_currentWeekReference);
-            DateTime day = monday.AddDays(row - 1);
-            TimeSpan start = TimeSpan.FromMinutes(col * 30);
+            DateTime day = monday.AddDays(col - 1);
+            TimeSpan start = TimeSpan.FromMinutes(row * 30);
 
             block.Entry.Timestamp = day.Date + start;
             block.Entry.EntryMinutes = span * 30;
@@ -462,6 +483,8 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
             {
                 return;
             }
+
+            Debug.WriteLine($"Track change: {block.Entry.Timestamp} / {block.Entry.EntryMinutes} min");
 
             _modifiedEntries.Add(block.Entry);
         }

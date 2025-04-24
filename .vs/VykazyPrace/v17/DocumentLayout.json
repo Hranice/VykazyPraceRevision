@@ -3,28 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}|WorkLogWpf\\WorkLogWpf.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\worklogwpf\\views\\controls\\weekcalendarhorizontal\\weekcalendar.blockhandling.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}|WorkLogWpf\\WorkLogWpf.csproj|solutionrelative:worklogwpf\\views\\controls\\weekcalendarhorizontal\\weekcalendar.blockhandling.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}|WorkLogWpf\\WorkLogWpf.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\worklogwpf\\views\\controls\\weekcalendarvertical\\weekcalendar.blockhandling.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}|WorkLogWpf\\WorkLogWpf.csproj|solutionrelative:worklogwpf\\views\\controls\\weekcalendarvertical\\weekcalendar.blockhandling.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}|WorkLogWpf\\WorkLogWpf.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\worklogwpf\\views\\controls\\weekcalendarhorizontal\\weekcalendar.coredesign.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}|WorkLogWpf\\WorkLogWpf.csproj|solutionrelative:worklogwpf\\views\\controls\\weekcalendarhorizontal\\weekcalendar.coredesign.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}|WorkLogWpf\\WorkLogWpf.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\worklogwpf\\views\\controls\\weekcalendarvertical\\weekcalendar.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}|WorkLogWpf\\WorkLogWpf.csproj|solutionrelative:worklogwpf\\views\\controls\\weekcalendarvertical\\weekcalendar.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}|WorkLogWpf\\WorkLogWpf.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\worklogwpf\\views\\controls\\weekcalendarhorizontal\\weekcalendar.helpers.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}|WorkLogWpf\\WorkLogWpf.csproj|solutionrelative:worklogwpf\\views\\controls\\weekcalendarhorizontal\\weekcalendar.helpers.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}|WorkLogWpf\\WorkLogWpf.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\worklogwpf\\views\\controls\\weekcalendarhorizontal\\weekcalendar.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
-      "RelativeMoniker": "D:0:0:{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}|WorkLogWpf\\WorkLogWpf.csproj|solutionrelative:worklogwpf\\views\\controls\\weekcalendarhorizontal\\weekcalendar.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}|WorkLogWpf\\WorkLogWpf.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\worklogwpf\\views\\controls\\weekcalendarhorizontal\\weekcalendar.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}|WorkLogWpf\\WorkLogWpf.csproj|solutionrelative:worklogwpf\\views\\controls\\weekcalendarhorizontal\\weekcalendar.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}|WorkLogWpf\\WorkLogWpf.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\worklogwpf\\views\\controls\\weekcalendarhorizontal\\calendarblock.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}|WorkLogWpf\\WorkLogWpf.csproj|solutionrelative:worklogwpf\\views\\controls\\weekcalendarhorizontal\\calendarblock.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}|WorkLogWpf\\WorkLogWpf.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\worklogwpf\\views\\controls\\weekcalendarvertical\\weekcalendar.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{F558057E-FA7F-483B-9E7A-A010D4F5FAF2}|WorkLogWpf\\WorkLogWpf.csproj|solutionrelative:worklogwpf\\views\\controls\\weekcalendarvertical\\weekcalendar.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -42,78 +30,40 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "CalendarBlock.xaml",
-              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\CalendarBlock.xaml",
-              "RelativeDocumentMoniker": "WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\CalendarBlock.xaml",
-              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\CalendarBlock.xaml",
-              "RelativeToolTip": "WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\CalendarBlock.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-04-24T06:39:16.289Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "WeekCalendar.xaml",
-              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.xaml",
-              "RelativeDocumentMoniker": "WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.xaml",
-              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.xaml",
-              "RelativeToolTip": "WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-04-24T06:37:24.513Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "WeekCalendar.BlockHandling.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.BlockHandling.xaml.cs",
-              "RelativeDocumentMoniker": "WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.BlockHandling.xaml.cs",
-              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.BlockHandling.xaml.cs",
-              "RelativeToolTip": "WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.BlockHandling.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAsAAAAmAAAAAAAAAA==",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\WorkLogWpf\\Views\\Controls\\WeekCalendarVertical\\WeekCalendar.BlockHandling.xaml.cs",
+              "RelativeDocumentMoniker": "WorkLogWpf\\Views\\Controls\\WeekCalendarVertical\\WeekCalendar.BlockHandling.xaml.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\WorkLogWpf\\Views\\Controls\\WeekCalendarVertical\\WeekCalendar.BlockHandling.xaml.cs",
+              "RelativeToolTip": "WorkLogWpf\\Views\\Controls\\WeekCalendarVertical\\WeekCalendar.BlockHandling.xaml.cs",
+              "ViewState": "AgIAADgAAAAAAAAAAAAmwE4AAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-24T06:35:43.371Z",
+              "WhenOpened": "2025-04-24T07:49:11.155Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "WeekCalendar.CoreDesign.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.CoreDesign.xaml.cs",
-              "RelativeDocumentMoniker": "WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.CoreDesign.xaml.cs",
-              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.CoreDesign.xaml.cs",
-              "RelativeToolTip": "WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.CoreDesign.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAA6AAAAAAAAAA==",
+              "Title": "WeekCalendar.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\WorkLogWpf\\Views\\Controls\\WeekCalendarVertical\\WeekCalendar.xaml.cs",
+              "RelativeDocumentMoniker": "WorkLogWpf\\Views\\Controls\\WeekCalendarVertical\\WeekCalendar.xaml.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\WorkLogWpf\\Views\\Controls\\WeekCalendarVertical\\WeekCalendar.xaml.cs",
+              "RelativeToolTip": "WorkLogWpf\\Views\\Controls\\WeekCalendarVertical\\WeekCalendar.xaml.cs",
+              "ViewState": "AgIAAF0AAAAAAAAAAAAEwG0AAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-24T06:35:39.416Z",
+              "WhenOpened": "2025-04-24T06:59:26.392Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "WeekCalendar.Helpers.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.Helpers.xaml.cs",
-              "RelativeDocumentMoniker": "WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.Helpers.xaml.cs",
-              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.Helpers.xaml.cs",
-              "RelativeToolTip": "WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.Helpers.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAA6AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-24T06:35:34.925Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "WeekCalendar.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.xaml.cs",
-              "RelativeDocumentMoniker": "WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.xaml.cs",
-              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.xaml.cs",
-              "RelativeToolTip": "WorkLogWpf\\Views\\Controls\\WeekCalendarHorizontal\\WeekCalendar.xaml.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAYAAAA6AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-24T06:34:03.027Z",
+              "Title": "WeekCalendar.xaml",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\WorkLogWpf\\Views\\Controls\\WeekCalendarVertical\\WeekCalendar.xaml",
+              "RelativeDocumentMoniker": "WorkLogWpf\\Views\\Controls\\WeekCalendarVertical\\WeekCalendar.xaml",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\WorkLogWpf\\Views\\Controls\\WeekCalendarVertical\\WeekCalendar.xaml",
+              "RelativeToolTip": "WorkLogWpf\\Views\\Controls\\WeekCalendarVertical\\WeekCalendar.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-04-24T06:43:31.132Z",
               "EditorCaption": ""
             }
           ]

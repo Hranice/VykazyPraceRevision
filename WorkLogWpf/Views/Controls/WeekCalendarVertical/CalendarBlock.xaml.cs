@@ -18,13 +18,13 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
         {
             InitializeComponent();
 
-            LeftThumb.DragStarted += Thumb_DragStarted;
-            LeftThumb.DragDelta += Thumb_DragDelta;
-            LeftThumb.DragCompleted += Thumb_DragCompleted;
-
-            RightThumb.DragStarted += Thumb_DragStarted;
-            RightThumb.DragDelta += Thumb_DragDelta;
-            RightThumb.DragCompleted += Thumb_DragCompleted;
+            TopThumb.DragStarted += Thumb_DragStarted;
+            TopThumb.DragDelta += Thumb_DragDelta;
+            TopThumb.DragCompleted += Thumb_DragCompleted;
+                
+            BottomThumb.DragStarted += Thumb_DragStarted;
+            BottomThumb.DragDelta += Thumb_DragDelta;
+            BottomThumb.DragCompleted += Thumb_DragCompleted;
         }
 
         private void Thumb_DragStarted(object sender, DragStartedEventArgs e)

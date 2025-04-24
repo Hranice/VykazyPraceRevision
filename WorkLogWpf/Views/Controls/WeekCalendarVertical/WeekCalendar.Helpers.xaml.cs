@@ -1,12 +1,15 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
 {
     public partial class WeekCalendar
     {
-        private int GetStart(CalendarBlock block) => Grid.GetColumn(block);
-        private int GetEnd(CalendarBlock block) => GetStart(block) + Grid.GetColumnSpan(block) - 1;
+        private int GetStart(CalendarBlock block) => Grid.GetRow(block);
+        private int GetEnd(CalendarBlock block) => GetStart(block) + Grid.GetRowSpan(block) - 1;
         private bool IsInRow(CalendarBlock block, int row) => Grid.GetRow(block) == row;
+        private bool IsInColumn(CalendarBlock block, int column) => Grid.GetColumn(block) == column;
 
         private int GetColumnAt(double x)
         {
@@ -52,5 +55,18 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
             if (offset < 0) offset = 6; // neděle → pondělí -6
             return reference.Date.AddDays(-offset);
         }
+
+        private T? FindParent<T>(DependencyObject? child) where T : DependencyObject
+        {
+            while (child != null)
+            {
+                if (child is T parent)
+                    return parent;
+
+                child = VisualTreeHelper.GetParent(child);
+            }
+            return null;
+        }
+
     }
 }

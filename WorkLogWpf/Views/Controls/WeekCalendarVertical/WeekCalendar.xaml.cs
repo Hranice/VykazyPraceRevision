@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using VykazyPrace.Core.Database.Models;
@@ -26,7 +27,7 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
         private DateTime _currentWeekReference = DateTime.Now;
         private User _currentUser;
 
-        private int _resizingStartCol;
+        private int _resizingStartRow;
         private int _resizingStartSpan;
 
         private readonly HashSet<TimeEntry> _modifiedEntries = new();
@@ -39,7 +40,7 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
 
             _timeEntryRepository = timeEntryRepository;
 
-            BuildColumns();
+            BuildRows();
             AddTimeHeaders();
             DrawGridLines();
         }
@@ -48,6 +49,7 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
         {
             foreach (var entry in _modifiedEntries)
             {
+                Debug.WriteLine($"Saving {entry.Timestamp} / {entry.EntryMinutes}");
                 await _timeEntryRepository.UpdateTimeEntryAsync(entry);
             }
 
@@ -108,36 +110,51 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
         private void CalendarGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var pos = e.GetPosition(CalendarGrid);
-            int col = GetColumnAt(pos.X);
             int row = GetRowAt(pos.Y);
+            int col = GetColumnAt(pos.X);
 
-            if (row <= 0 || col < 0) return;
+            if (row < 0 || col < 1) return;
+
+            var element = e.OriginalSource as FrameworkElement;
+            var blockUnderCursor = element?.DataContext as CalendarBlock
+                ?? FindParent<CalendarBlock>(element);
+
+            if (blockUnderCursor != null)
+            {
+                HighlightSelectedBlock(blockUnderCursor);
+                return;
+            }
 
             var clickedBlock = GetBlockAt(row, col);
 
             if (clickedBlock != null)
+            {
                 HighlightSelectedBlock(clickedBlock);
+            }
             else
+            {
                 HighlightSelectedCell(row, col);
+            }
+
 
             if (e.ClickCount == 2 && clickedBlock == null)
             {
                 int desiredSpan = 2;
 
                 var obstacle = CalendarGrid.Children.OfType<CalendarBlock>()
-                    .Where(b => IsInRow(b, row) && GetStart(b) > col)
+                    .Where(b => IsInColumn(b, col) && GetStart(b) > row)
                     .OrderBy(b => GetStart(b))
                     .FirstOrDefault();
 
                 if (obstacle != null)
-                    desiredSpan = Math.Min(desiredSpan, GetStart(obstacle) - col);
+                    desiredSpan = Math.Min(desiredSpan, GetStart(obstacle) - row);
 
                 if (desiredSpan <= 0) return;
 
                 var entry = new TimeEntry
                 {
                     UserId = _currentUser.Id,
-                    Timestamp = GetStartOfWeek(_currentWeekReference).AddDays(row - 1).AddMinutes(col * 30),
+                    Timestamp = GetStartOfWeek(_currentWeekReference).AddDays(col - 1).AddMinutes(row * 30),
                     EntryMinutes = desiredSpan * 30,
                     ProjectId = null,
                     Description = ""
@@ -150,13 +167,14 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
                     Entry = entry
                 };
 
-                Grid.SetColumn(block, col);
-                Grid.SetColumnSpan(block, desiredSpan);
                 Grid.SetRow(block, row);
+                Grid.SetRowSpan(block, desiredSpan);
+                Grid.SetColumn(block, col);
                 CalendarGrid.Children.Add(block);
                 RegisterBlockEvents(block);
             }
         }
+
 
         private void AddBlockFromTimeEntry(TimeEntry entry)
         {
@@ -169,8 +187,8 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
 
             // Zkontroluj kolize
             bool collision = CalendarGrid.Children.OfType<CalendarBlock>()
-                .Any(b => Grid.GetRow(b) == row &&
-                          RangesOverlap(col, col + span - 1, Grid.GetColumn(b), Grid.GetColumn(b) + Grid.GetColumnSpan(b) - 1));
+                .Any(b => Grid.GetColumn(b) == col &&
+                          RangesOverlap(row, row + span - 1, Grid.GetRow(b), Grid.GetRow(b) + Grid.GetRowSpan(b) - 1));
 
             if (collision) return;
 
@@ -181,39 +199,10 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
             };
 
             Grid.SetRow(block, row);
+            Grid.SetRowSpan(block, span);
             Grid.SetColumn(block, col);
-            Grid.SetColumnSpan(block, span);
             CalendarGrid.Children.Add(block);
             RegisterBlockEvents(block);
-        }
-
-        protected override async void OnPreviewKeyDown(KeyEventArgs e)
-        {
-            base.OnPreviewKeyDown(e);
-
-            if (Keyboard.Modifiers == ModifierKeys.Control)
-            {
-                if (e.Key == Key.C)
-                {
-                    CopySelectedBlock();
-                    e.Handled = true;
-                }
-                else if (e.Key == Key.V)
-                {
-                    PasteClipboardBlock();
-                    e.Handled = true;
-                }
-                else if (e.Key == Key.S)
-                {
-                    await SaveModifiedEntriesAsync();
-                    e.Handled = true;
-                }
-            }
-            else if (e.Key == Key.Delete)
-            {
-                DeleteSelectedBlock();
-                e.Handled = true;
-            }
         }
     }
 }

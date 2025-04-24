@@ -11,13 +11,15 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("VykazyPrace.Core")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("WorkLogWpf")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9168234272d8cca0f906bd54b5b10c05a8d4c7f6")]
-[assembly: System.Reflection.AssemblyProductAttribute("VykazyPrace.Core")]
-[assembly: System.Reflection.AssemblyTitleAttribute("VykazyPrace.Core")]
+[assembly: System.Reflection.AssemblyProductAttribute("WorkLogWpf")]
+[assembly: System.Reflection.AssemblyTitleAttribute("WorkLogWpf")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
 
 // Vygenerované třídou WriteCodeFragment nástroje MSBuild
 

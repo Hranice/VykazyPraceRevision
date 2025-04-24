@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using VykazyPrace.Core.Database.Models;
 
-namespace WorkLogWpf.Views.Controls
+namespace WorkLogWpf.Views.Controls.WeekCalendarHorizontal
 {
     public partial class CalendarBlock : UserControl
     {

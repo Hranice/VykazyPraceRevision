@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace WorkLogWpf.Views.Controls
+namespace WorkLogWpf.Views.Controls.WeekCalendarHorizontal
 {
     public partial class WeekCalendar
     {

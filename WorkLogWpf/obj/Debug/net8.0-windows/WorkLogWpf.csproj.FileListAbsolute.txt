@@ -19,10 +19,6 @@ C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\WorkLogWpf.pdb
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\WorkLogWpf.genruntimeconfig.cache
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\ref\WorkLogWpf.dll
-C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendar.g.cs
-C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendar.baml
-C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\CalendarBlock.baml
-C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\CalendarBlock.g.cs
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\bin\Debug\net8.0-windows\Microsoft.Data.Sqlite.dll
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\bin\Debug\net8.0-windows\Microsoft.EntityFrameworkCore.dll
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\bin\Debug\net8.0-windows\Microsoft.EntityFrameworkCore.Abstractions.dll
@@ -73,3 +69,9 @@ C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\WorkLogWpf.csproj.Up2Date
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendarVertical\WeekCalendar.g.cs
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendarVertical\WeekCalendar.baml
+C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendarHorizontal\CalendarBlock.baml
+C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendarHorizontal\CalendarBlock.g.cs
+C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendarHorizontal\WeekCalendar.g.cs
+C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendarVertical\CalendarBlock.baml
+C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendarVertical\CalendarBlock.g.cs
+C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendarHorizontal\WeekCalendar.baml

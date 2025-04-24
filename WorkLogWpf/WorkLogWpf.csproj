@@ -9,7 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\Controls\tools %281%29.png" />
+    <None Remove="Views\Controls\tools.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\VykazyPrace.Core\VykazyPrace.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Views\Controls\Assets\tools.png" />
   </ItemGroup>
 
 </Project>

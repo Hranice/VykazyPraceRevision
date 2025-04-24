@@ -5,17 +5,53 @@
              MinHeight="30"
              Cursor="SizeAll">
     <Border x:Name="BlockBorder"
-            Background="LightBlue"
-            BorderBrush="DarkBlue"
+            Background="#69B5FF"
+            BorderBrush="#1460AA"
             BorderThickness="1"
             CornerRadius="4"
-            Padding="5"
             SnapsToDevicePixels="True">
         <Grid>
-            <TextBlock x:Name="BlockText" Text="Blok" Foreground="Black" VerticalAlignment="Center" />
             <!-- Resize úchyty -->
-            <Thumb x:Name="LeftThumb" Width="5" HorizontalAlignment="Left" Cursor="SizeWE"/>
-            <Thumb x:Name="RightThumb" Width="5" HorizontalAlignment="Right" Cursor="SizeWE"/>
+            <Thumb x:Name="LeftThumb" Width="5" HorizontalAlignment="Left">
+                <Thumb.Template>
+                    <ControlTemplate TargetType="Thumb">
+                        <Border CornerRadius="4" Background="DodgerBlue">
+                        </Border>
+                    </ControlTemplate>
+                </Thumb.Template>
+            </Thumb>
+
+            <Thumb x:Name="RightThumb" Width="5" HorizontalAlignment="Right">
+                <Thumb.Template>
+                    <ControlTemplate TargetType="Thumb">
+                        <Border CornerRadius="4" Background="DodgerBlue">
+                        </Border>
+                    </ControlTemplate>
+                </Thumb.Template>
+            </Thumb>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MaxWidth="47"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Image Width="16" Height="16"
+                       Margin="8,4,0,0"
+                       x:Name="BlockImageInfo"
+                       Grid.Row="0"
+                       Grid.Column="0" Source="/Views/Controls/Assets/tools.png"/>
+                <TextBlock x:Name="BlockTitle" Text="Titulek" Foreground="Black" HorizontalAlignment="Left" Margin="7,4,7,0"
+                           Grid.Row="0"
+                           Grid.Column="1"/>
+                <TextBlock x:Name="BlockSubtitle" Text="Podtitulek" Foreground="Black" HorizontalAlignment="Left" Margin="7,0,7,4"
+                           Grid.Row="1"
+                           Grid.Column="1"/>
+            </Grid>
+
         </Grid>
     </Border>
 </UserControl>

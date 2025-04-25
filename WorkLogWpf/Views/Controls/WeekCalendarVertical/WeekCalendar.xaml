@@ -20,7 +20,7 @@
         <!-- Kalendářní rozložení -->
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="100"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
@@ -35,16 +35,17 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" />
-                <TextBlock Grid.Column="1" Text="Pondělí" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock Grid.Column="2" Text="Úterý" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock Grid.Column="3" Text="Středa" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock Grid.Column="4" Text="Čtvrtek" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock Grid.Column="5" Text="Pátek" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock Grid.Column="6" Text="Sobota" HorizontalAlignment="Center" Margin="5"/>
-                <TextBlock Grid.Column="7" Text="Neděle" HorizontalAlignment="Center" Margin="5"/>
+                <TextBlock Grid.Column="1" Text="Pondělí" HorizontalAlignment="Center" Margin="5" TextWrapping="Wrap"/>
+                <TextBlock Grid.Column="2" Text="Úterý" HorizontalAlignment="Center" Margin="5" TextWrapping="Wrap"/>
+                <TextBlock Grid.Column="3" Text="Středa" HorizontalAlignment="Center" Margin="5" TextWrapping="Wrap"/>
+                <TextBlock Grid.Column="4" Text="Čtvrtek" HorizontalAlignment="Center" Margin="5" TextWrapping="Wrap"/>
+                <TextBlock Grid.Column="5" Text="Pátek" HorizontalAlignment="Center" Margin="5" TextWrapping="Wrap"/>
+                <TextBlock Grid.Column="6" Text="Sobota" HorizontalAlignment="Center" Margin="5" TextWrapping="Wrap"/>
+                <TextBlock Grid.Column="7" Text="Neděle" HorizontalAlignment="Center" Margin="5" TextWrapping="Wrap"/>
             </Grid>
 
             <!-- Spodní část: kalendářní mřížka -->

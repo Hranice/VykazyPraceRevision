@@ -1,11 +1,17 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows;
+using System.Diagnostics;
+using System.Windows.Documents;
 
 namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
 {
     public partial class WeekCalendar
     {
+        private readonly List<UIElement> _highlightedTimeHeaders = new();
+        private readonly List<Border> _timeHeaderBorders = new();
+
+
         private (int row, int column, int span)? GetGridPlacement(DateTime timestamp, int durationMinutes)
         {
             DayOfWeek day = timestamp.DayOfWeek;
@@ -50,6 +56,33 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
             }
         }
 
+        private void HighlightTimeHeadersForBlock(CalendarBlock block)
+        {
+            ClearTimeHeaderHighlights();
+
+            int startRow = Grid.GetRow(block);
+            int span = Grid.GetRowSpan(block);
+
+            for (int r = startRow; r < startRow + span; r++)
+            {
+                var border = _timeHeaderBorders.FirstOrDefault(b => Grid.GetRow(b) == r);
+                if (border != null)
+                {
+                    border.Background = new SolidColorBrush(Color.FromRgb(230, 240, 255));
+                    _highlightedTimeHeaders.Add(border);
+                }
+            }
+        }
+
+        private void ClearTimeHeaderHighlights()
+        {
+            foreach (var border in _highlightedTimeHeaders)
+            {
+                (border as Border).Background = Brushes.Transparent;
+            }
+            _highlightedTimeHeaders.Clear();
+        }
+
         private void HighlightSelectedCell(int row, int col)
         {
             ClearHighlight();
@@ -74,12 +107,12 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
         private void HighlightSelectedBlock(CalendarBlock block)
         {
             ClearHighlight();
-
-            block.BlockBorder.BorderBrush = Brushes.Red;
-            block.BlockBorder.BorderThickness = new Thickness(2);
+            block.Highlight();
 
             _selectedBlock = block;
             _selectedPosition = (Grid.GetRow(block), Grid.GetColumn(block));
+
+            HighlightTimeHeadersForBlock(block);
         }
 
         private void ClearHighlight()
@@ -90,21 +123,18 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
                 _selectedCellHighlight = null;
             }
 
-            if (_selectedBlock != null)
+            if (_selectedBlock is not null)
             {
-                _selectedBlock.BlockBorder.BorderBrush = Brushes.DarkBlue;
-                _selectedBlock.BlockBorder.BorderThickness = new Thickness(1);
-                _selectedBlock = null;
+                _selectedBlock.ClearHighlight();
+                _selectedPosition = null;
             }
-
-            _selectedPosition = null;
         }
 
         private void BuildRows()
         {
             CalendarGrid.RowDefinitions.Clear();
             for (int i = 0; i < 48; i++)
-                CalendarGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(20) });
+                CalendarGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(54) });
         }
 
 
@@ -166,46 +196,89 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
                 CalendarGrid.Children.Insert(0, _todayHighlight);
             }
         }
-
         private void DrawGridLines()
         {
+            // Linky v hlavním gridu
             for (int r = 0; r < CalendarGrid.RowDefinitions.Count; r++)
             {
-                for (int c = 1; c <= 7; c++)
+                for (int c = 0; c < CalendarGrid.ColumnDefinitions.Count; c++)
                 {
                     var cellBorder = new Border
                     {
                         BorderBrush = new SolidColorBrush(Color.FromRgb(220, 220, 220)),
-                        BorderThickness = new Thickness(1, 1, 0, 0),
+                        BorderThickness = new Thickness(0, 0, 1, 1),
                         Background = Brushes.Transparent,
                         IsHitTestVisible = false
                     };
+
                     Grid.SetRow(cellBorder, r);
                     Grid.SetColumn(cellBorder, c);
                     CalendarGrid.Children.Add(cellBorder);
                 }
             }
+
+            // Linky v horním gridu pro názvy dnů
+            for (int c = 0; c < DayLabelGrid.ColumnDefinitions.Count; c++)
+            {
+                var cellBorder = new Border
+                {
+                    BorderBrush = new SolidColorBrush(Color.FromRgb(220, 220, 220)),
+                    BorderThickness = new Thickness(0, 0, 1, 1),
+                    Background = Brushes.Transparent,
+                    IsHitTestVisible = false
+                };
+
+                Grid.SetColumn(cellBorder, c);
+                Grid.SetRow(cellBorder, 0);
+                Panel.SetZIndex(cellBorder, -100);
+                DayLabelGrid.Children.Add(cellBorder);
+            }
+
+            AddScrollbarPlaceholderColumn();
         }
+
+        private void AddScrollbarPlaceholderColumn()
+        {
+            var placeholder = new Border
+            {
+                Background = Brushes.Transparent,
+                Width = SystemParameters.VerticalScrollBarWidth, // dynamická šířka
+                IsHitTestVisible = false
+            };
+
+            Grid.SetColumn(placeholder, 8); // poslední sloupec (dynamicky doplněný)
+            Grid.SetRow(placeholder, 0);
+            DayLabelGrid.Children.Add(placeholder);
+        }
+
 
         private void AddTimeHeaders()
         {
             for (int i = 0; i < 48; i++)
             {
-                if (i % 2 == 0)
+                var time = TimeSpan.FromMinutes(i * 30);
+
+                var textBlock = new TextBlock
                 {
-                    var time = TimeSpan.FromMinutes(i * 30);
-                    var textBlock = new TextBlock
-                    {
-                        Text = $"{(int)time.TotalHours}:{time.Minutes:D2}",
-                        HorizontalAlignment = HorizontalAlignment.Right,
-                        Margin = new Thickness(2, 0, 5, 0),
-                        VerticalAlignment = VerticalAlignment.Center
-                    };
-                    Grid.SetRow(textBlock, i);
-                    Grid.SetColumn(textBlock, 0);
-                    CalendarGrid.Children.Add(textBlock);
-                }
+                    Text = $"{(int)time.TotalHours}:{time.Minutes:D2}",
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    Margin = new Thickness(2, 0, 5, 0),
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+
+                var border = new Border
+                {
+                    Background = Brushes.Transparent,
+                    Child = textBlock
+                };
+
+                Grid.SetRow(border, i);
+                Grid.SetColumn(border, 0);
+
+                CalendarGrid.Children.Add(border);
+                _timeHeaderBorders.Add(border);
             }
         }
+
     }
 }

@@ -75,7 +75,7 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
 
             var (startOfWeek, endOfWeek) = GetCurrentWeekBounds(weekReference);
 
-            var entries = await _timeEntryRepository.GetAllTimeEntriesByUserAsync(user);
+            var entries = await _timeEntryRepository.GetAllTimeEntriesByUserAsync(user, true);
 
             var weeklyEntries = entries
                 .Where(e => e.Timestamp.HasValue &&

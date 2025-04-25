@@ -79,6 +79,7 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
                 {
                     Grid.SetRow(_draggedBlock, newRow);
                     Grid.SetColumn(_draggedBlock, newCol);
+                    HighlightTimeHeadersForBlock(_draggedBlock);
                 }
             };
         }

@@ -8,14 +8,14 @@
             Background="#69B5FF"
             BorderBrush="#1460AA"
             BorderThickness="1"
-            CornerRadius="4"
+            CornerRadius="0"
             SnapsToDevicePixels="True">
         <Grid>
             <!-- Resize úchyty -->
             <Thumb x:Name="TopThumb" Height="5" VerticalAlignment="Top" Cursor="SizeNS">
                 <Thumb.Template>
                     <ControlTemplate TargetType="Thumb">
-                        <Border CornerRadius="4" Background="DodgerBlue">
+                        <Border Background="#69B5FF">
                         </Border>
                     </ControlTemplate>
                 </Thumb.Template>
@@ -24,7 +24,7 @@
             <Thumb x:Name="BottomThumb" Height="5" VerticalAlignment="Bottom" Cursor="SizeNS">
                 <Thumb.Template>
                     <ControlTemplate TargetType="Thumb">
-                        <Border CornerRadius="4" Background="DodgerBlue">
+                        <Border Background="#69B5FF">
                         </Border>
                     </ControlTemplate>
                 </Thumb.Template>
@@ -32,25 +32,46 @@
 
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Image Width="16" Height="16"
-                       Margin="4,8,0,0"
-                       x:Name="BlockImageInfo"
-                       Grid.Row="0"
-                       Grid.Column="0" Source="/Views/Controls/Assets/tools.png"/>
-                <TextBlock x:Name="BlockTitle" Text="Titulek" Foreground="Black" HorizontalAlignment="Left" Margin="4"
-                           Grid.Row="0"
-                           Grid.Column="1"/>
-                <TextBlock x:Name="BlockSubtitle" Text="Podtitulek" Foreground="Black" HorizontalAlignment="Left" Margin="4"
-                           Grid.Row="1"
-                           Grid.Column="1"/>
+
+                <!-- Ikona -->
+                <Image x:Name="BlockImageInfo"
+                    Width="32"
+                    Margin="4,8,4,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Grid.Column="0"
+                    Visibility="Collapsed" />
+
+                <!-- Titulky ve StackPanelu -->
+                <Grid x:Name="TitleGrid"
+                    Grid.Column="1"
+                      Margin="8,6,4,4">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock x:Name="BlockTitle"
+                   Text="Titulek"
+                   Foreground="#062038"
+                   FontWeight="Bold"
+                   TextWrapping="Wrap"
+                   TextAlignment="Left"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                                   Margin="0,0,0,4 "/>
+
+                        <TextBlock x:Name="BlockSubtitle"
+                   Text=""
+                   Foreground="#062038"
+                   TextWrapping="Wrap"
+                   TextAlignment="Left"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"/>
+                    </StackPanel>
+
+                </Grid>
             </Grid>
+
 
         </Grid>
     </Border>

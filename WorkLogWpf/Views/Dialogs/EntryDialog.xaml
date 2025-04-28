@@ -1,0 +1,56 @@
+﻿<Window x:Class="WorkLogWpf.Views.Dialogs.EntryDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Upravit záznam" Height="600" Width="400" WindowStartupLocation="CenterOwner">
+    <StackPanel Margin="20" VerticalAlignment="Top">
+
+        <!-- Kategorie -->
+        <WrapPanel Margin="0,0,0,10" HorizontalAlignment="Center">
+            <ToggleButton Content="PROVOZ" Margin="4"/>
+            <ToggleButton Content="PROJEKT" Margin="4"/>
+            <ToggleButton Content="ŠKOLENÍ" Margin="4"/>
+            <ToggleButton Content="NEPŘÍTOMNOST" Margin="4"/>
+            <ToggleButton Content="OSTATNÍ" Margin="4"/>
+        </WrapPanel>
+
+        <!-- Nákladové středisko -->
+        <TextBlock Text="Nákladové středisko*" />
+        <ComboBox x:Name="CostCenterCombo" Margin="0,4,0,10" />
+
+        <!-- Typ záznamu -->
+        <TextBlock Text="Typ záznamu*" />
+        <WrapPanel Margin="0,4,0,10">
+            <ToggleButton Content="Práce" Margin="4"/>
+            <ToggleButton Content="Administrativa" Margin="4"/>
+            <ToggleButton Content="Meeting" Margin="4"/>
+        </WrapPanel>
+
+        <!-- Index -->
+        <TextBlock Text="Index*" />
+        <ComboBox x:Name="IndexCombo" Margin="0,4,0,10" />
+
+        <!-- Počátek a Ukončení -->
+        <WrapPanel Margin="0,0,0,10">
+            <StackPanel Width="50" Margin="0,0,8,0">
+                <TextBlock Text="Počátek*" />
+                <ComboBox x:Name="StartTimeCombo" Margin="0,4,0,0"/>
+            </StackPanel>
+            <StackPanel Width="50">
+                <TextBlock Text="Ukončení*" />
+                <ComboBox x:Name="EndTimeCombo" Margin="0,4,0,0"/>
+            </StackPanel>
+
+        </WrapPanel>
+
+        <!-- Poznámka -->
+        <TextBlock Text="Poznámka" />
+        <TextBox x:Name="NoteBox" Height="80" Margin="0,4,0,10" TextWrapping="Wrap" AcceptsReturn="True"/>
+
+        <!-- Tlačítka -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Odstranit" Width="100" Margin="4" Click="Delete_Click"/>
+            <Button Content="Potvrdit" Width="100" Margin="4" Click="Confirm_Click"/>
+        </StackPanel>
+
+    </StackPanel>
+</Window>

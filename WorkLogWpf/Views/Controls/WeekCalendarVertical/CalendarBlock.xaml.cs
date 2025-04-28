@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using VykazyPrace.Core.Database.Models;
+using WorkLogWpf.Views.Dialogs;
 
 namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
 {
@@ -131,6 +132,7 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
             BottomThumb.DragCompleted += Thumb_DragCompleted;
         }
 
+   
         private void Thumb_DragStarted(object sender, DragStartedEventArgs e)
         {
             ResizeStarted?.Invoke(this, EventArgs.Empty);
@@ -138,7 +140,6 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
 
         private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            // Posíláme informaci o směru (a který thumb)
             ResizeDelta?.Invoke(sender, new Point(e.HorizontalChange, 0));
         }
 

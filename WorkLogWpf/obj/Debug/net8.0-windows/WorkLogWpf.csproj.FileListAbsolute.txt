@@ -75,3 +75,5 @@ C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendarVertical\CalendarBlock.baml
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendarVertical\CalendarBlock.g.cs
 C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Controls\WeekCalendarHorizontal\WeekCalendar.baml
+C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Dialogs\EntryDialog.baml
+C:\Users\jprochazka\source\repos\VykazyPrace\WorkLogWpf\obj\Debug\net8.0-windows\Views\Dialogs\EntryDialog.g.cs

@@ -3,6 +3,7 @@ using System.Windows.Input;
 using System.Windows;
 using VykazyPrace.Core.Database.Models;
 using System.Diagnostics;
+using WorkLogWpf.Views.Dialogs;
 
 namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
 {
@@ -12,6 +13,37 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
         {
             RegisterDragEvents(block);
             RegisterResizeEvents(block);
+
+            block.MouseRightButtonUp += (s, e) =>
+            {
+                if (!block.CanBeEdited)
+                    return;
+
+                var targetDate = block.Entry.Timestamp.Value.Date;
+
+                var otherRanges = CalendarGrid.Children.OfType<CalendarBlock>()
+        .Where(b => b != block && b.Entry.Timestamp.HasValue)
+        .Select(b => (
+            Start: b.Entry.Timestamp.Value,
+            End: b.Entry.Timestamp.Value.AddMinutes(b.Entry.EntryMinutes)
+        ))
+        .ToList();
+
+
+
+
+                var dialog = new EntryDialog(block.Entry, otherRanges)
+                {
+                    Owner = Application.Current.MainWindow,
+                };
+
+                if (dialog.ShowDialog() == true)
+                {
+                    block.Entry = dialog.UpdatedEntry;
+                    TrackEntryChange(block);
+                }
+            };
+
         }
 
         private void RegisterDragEvents(CalendarBlock block)
@@ -484,8 +516,6 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
             {
                 return;
             }
-
-            Debug.WriteLine($"Track change: {block.Entry.Timestamp} / {block.Entry.EntryMinutes} min");
 
             _modifiedEntries.Add(block.Entry);
         }

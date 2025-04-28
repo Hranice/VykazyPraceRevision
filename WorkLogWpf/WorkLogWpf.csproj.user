@@ -8,5 +8,8 @@
     <Compile Update="Views\Controls\WeekCalendarHorizontal\WeekCalendar.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Dialogs\EntryDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 </Project>

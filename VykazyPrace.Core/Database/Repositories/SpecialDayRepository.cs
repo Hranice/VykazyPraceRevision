@@ -27,6 +27,54 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
+        /// Uzamkne všechny dny v daném měsíci (vytvoří SpecialDay pro každý den).
+        /// Pokud už SpecialDay na dané datum existuje, aktualizuje ho.
+        /// </summary>
+        /// <param name="month">Číslo měsíce (1-12)</param>
+        /// <param name="year">Rok (např. 2025)</param>
+        public async Task<bool> LockEntireMonthAsync(int month, int year)
+        {
+            try
+            {
+                var firstDayOfMonth = new DateTime(year, month, 1);
+                var daysInMonth = DateTime.DaysInMonth(year, month);
+
+                for (int day = 1; day <= daysInMonth; day++)
+                {
+                    var date = new DateTime(year, month, day);
+                    var existingSpecialDay = await _context.SpecialDays
+                        .FirstOrDefaultAsync(sd => sd.Date.Date == date.Date);
+
+                    if (existingSpecialDay != null)
+                    {
+                        // Aktualizuj existující SpecialDay
+                        existingSpecialDay.Locked = true;
+                    }
+                    else
+                    {
+                        // Přidej nový SpecialDay
+                        var newSpecialDay = new SpecialDay
+                        {
+                            Date = date,
+                            Locked = true,
+                            Color = "#DCDCDC",
+                            Title = "Uzamčeno"
+                        };
+                        _context.SpecialDays.Add(newSpecialDay);
+                    }
+                }
+
+                await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+        /// <summary>
         /// Získání všech speciálních dnů.
         /// </summary>
         public async Task<List<SpecialDay>> GetAllSpecialDaysAsync()

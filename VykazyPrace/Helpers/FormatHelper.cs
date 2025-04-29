@@ -17,7 +17,7 @@ namespace VykazyPrace.Helpers
             if (project.ProjectType == 1 || project.ProjectType == 2)
             {
                 string desc = project.ProjectDescription?.PadLeft(7) ?? "".PadLeft(7);
-                return $"{(project.IsArchived == 1 ? "(A) ": "")}{desc}: {project.ProjectTitle}";
+                return $"{(project.IsArchived == 1 ? "(A) " : "")}{desc}: {project.ProjectTitle}";
             }
             else
             {
@@ -101,6 +101,28 @@ namespace VykazyPrace.Helpers
         public static bool IsPreProject(string projectDescription)
         {
             return !Regex.IsMatch(projectDescription, @"^\d{4}[A-Z]\d{2}$");
+        }
+
+        public static int GetMonthNumberFromString(string month)
+        {
+            var monthNumber = month switch
+            {
+                "Leden" => 1,
+                "Únor" => 2,
+                "Březen" => 3,
+                "Duben" => 4,
+                "Květen" => 5,
+                "Červen" => 6,
+                "Červenec" => 7,
+                "Srpen" => 8,
+                "Září" => 9,
+                "Říjen" => 10,
+                "Listopad" => 11,
+                "Prosinec" => 12,
+                _ => throw new ArgumentException("Neplatný měsíc: " + month)
+            };
+
+            return monthNumber;
         }
     }
 }

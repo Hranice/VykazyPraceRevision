@@ -20,6 +20,7 @@ namespace VykazyPrace.Dialogs
         private readonly UserRepository _userRepo = new();
         private readonly UserGroupRepository _userGroupRepository = new();
         private readonly ProjectRepository _projectRepo = new();
+        private readonly SpecialDayRepository _specialDayRepo = new();
         private readonly LoadingUC _loadingUC = new();
 
         public ExportDialog(User selectedUser)
@@ -301,6 +302,7 @@ namespace VykazyPrace.Dialogs
             if (result == DialogResult.Yes)
             {
                 await _timeEntryRepo.LockAllEntriesInMonth(comboBoxMonth.Text);
+                await _specialDayRepo.LockEntireMonthAsync(FormatHelper.GetMonthNumberFromString(comboBoxMonth.Text), dateTimePicker1.Value.Year);
             }
         }
 

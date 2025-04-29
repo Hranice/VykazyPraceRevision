@@ -645,7 +645,9 @@ namespace VykazyPrace.UserControls.CalendarV2
             var entries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _selectedDate);
             var allProjects = await _projectRepo.GetAllProjectsAsync();
             var projectDict = allProjects.ToDictionary(p => p.Id);
-            var specialDays = _specialDayRepo.GetSpecialDaysForWeekAsync(_selectedDate);
+            var specialDays = await _specialDayRepo.GetSpecialDaysForWeekAsync(_selectedDate);
+
+            tableLayoutPanel1.SetSpecialDays(specialDays);
 
             // snack entries
             for (int row = 0; row < 7; row++)

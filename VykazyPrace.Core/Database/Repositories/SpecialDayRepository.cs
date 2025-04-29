@@ -45,7 +45,7 @@ namespace VykazyPrace.Core.Database.Repositories
             var weekEnd = weekStart.AddDays(7);
 
             return await _context.SpecialDays
-                .Where(sd => sd.Date >= weekStart.Date && sd.Date < weekEnd.Date)
+                .Where(sd => sd.Date.Date >= weekStart.Date && sd.Date.Date < weekEnd.Date)
                 .OrderBy(sd => sd.Date)
                 .ToListAsync();
         }

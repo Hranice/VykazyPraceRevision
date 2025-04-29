@@ -27,6 +27,8 @@ public partial class VykazyPraceContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<UserGroup> UserGroups { get; set; }
+    public virtual DbSet<SpecialDay> SpecialDays { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -91,6 +93,30 @@ public partial class VykazyPraceContext : DbContext
         {
             entity.HasIndex(e => e.Id, "IX_UserGroups_Id").IsUnique();
         });
+
+        modelBuilder.Entity<SpecialDay>(entity =>
+        {
+            entity.HasIndex(e => e.Id, "IX_SpecialDays_Id").IsUnique();
+
+            entity.Property(e => e.Date)
+                .HasColumnType("TEXT")
+                .IsRequired();
+
+            entity.Property(e => e.Title)
+                .HasColumnType("TEXT")
+                .IsRequired()
+                .HasDefaultValue("Default");
+
+            entity.Property(e => e.Locked)
+                .HasColumnType("INTEGER")
+                .HasDefaultValue(0);
+
+            entity.Property(e => e.Color)
+                .HasColumnType("TEXT")
+                .HasDefaultValue("#FFCDC7");
+        });
+
+
 
         OnModelCreatingPartial(modelBuilder);
     }

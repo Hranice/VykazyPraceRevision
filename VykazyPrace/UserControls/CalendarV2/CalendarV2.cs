@@ -33,6 +33,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         private readonly TimeEntryTypeRepository _timeEntryTypeRepo;
         private readonly TimeEntrySubTypeRepository _timeEntrySubTypeRepo;
         private readonly ProjectRepository _projectRepo;
+        private readonly SpecialDayRepository _specialDayRepo;
         private readonly UserRepository _userRepo;
 
         // Data cache
@@ -80,7 +81,8 @@ namespace VykazyPrace.UserControls.CalendarV2
                           TimeEntryTypeRepository timeEntryTypeRepo,
                           TimeEntrySubTypeRepository timeEntrySubTypeRepo,
                           ProjectRepository projectRepo,
-                          UserRepository userRepo)
+                          UserRepository userRepo,
+                          SpecialDayRepository specialDayRepo)
         {
             InitializeComponent();
             DoubleBuffered = true;
@@ -93,12 +95,14 @@ namespace VykazyPrace.UserControls.CalendarV2
             _timeEntrySubTypeRepo = timeEntrySubTypeRepo;
             _projectRepo = projectRepo;
             _userRepo = userRepo;
+            _specialDayRepo = specialDayRepo;
 
             _resizeTimer.Tick += (_, _) =>
             {
                 _resizeTimer.Stop();
                 AdjustIndicators(panelContainer.AutoScrollPosition);
             };
+            _specialDayRepo = specialDayRepo;
         }
 
         private void InitializeContextMenus()
@@ -641,6 +645,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             var entries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _selectedDate);
             var allProjects = await _projectRepo.GetAllProjectsAsync();
             var projectDict = allProjects.ToDictionary(p => p.Id);
+            var specialDays = _specialDayRepo.GetSpecialDaysForWeekAsync(_selectedDate);
 
             // snack entries
             for (int row = 0; row < 7; row++)

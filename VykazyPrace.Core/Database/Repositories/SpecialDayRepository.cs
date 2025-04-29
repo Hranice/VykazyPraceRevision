@@ -37,6 +37,21 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
+        /// Získání všech speciálních dnů pro zadaný týden (od pondělí do neděle).
+        /// </summary>
+        /// <param name="weekStart">Datum začátku týdne (pondělí).</param>
+        public async Task<List<SpecialDay>> GetSpecialDaysForWeekAsync(DateTime weekStart)
+        {
+            var weekEnd = weekStart.AddDays(7);
+
+            return await _context.SpecialDays
+                .Where(sd => sd.Date >= weekStart.Date && sd.Date < weekEnd.Date)
+                .OrderBy(sd => sd.Date)
+                .ToListAsync();
+        }
+
+
+        /// <summary>
         /// Získání speciálního dne podle ID.
         /// </summary>
         public async Task<SpecialDay?> GetSpecialDayByIdAsync(int id)

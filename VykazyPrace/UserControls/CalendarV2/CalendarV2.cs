@@ -417,6 +417,11 @@ namespace VykazyPrace.UserControls.CalendarV2
                         break;
                     default:
                         int index = proj.ProjectType + 1;
+
+                        // Po sloučení projektů a zakázek mají společnou záložku
+                        if (index == 2 || index == 3)
+                            index = 2;
+
                         if (flowLayoutPanel2.Controls.Find($"radioButton{index}", false).FirstOrDefault() is RadioButton rb)
                             rb.Checked = true;
                         break;

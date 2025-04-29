@@ -147,7 +147,7 @@ public class CustomTableLayoutPanel : TableLayoutPanel
         int halfHourIndex = now.Hour * 2 + now.Minute / 30;
 
         // Kreslení mřížky
-        using (var pen = new Pen(Color.Gray))
+        using (var pen = new Pen(Color.FromArgb(145,145,145)))
         {
             int x = 0, y = 0;
             foreach (var width in colWidths)

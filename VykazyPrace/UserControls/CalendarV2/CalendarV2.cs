@@ -40,6 +40,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         private List<Project> _projects = new();
         private List<TimeEntryType> _timeEntryTypes = new();
         private List<TimeEntrySubType> _timeEntrySubTypes = new();
+        private List<SpecialDay> _specialDays = new();
         private List<DayPanel> panels = new();
 
         // Context
@@ -153,8 +154,21 @@ namespace VykazyPrace.UserControls.CalendarV2
                 LoadTimeEntryTypesAsync(DefaultProjectType),
                 LoadTimeEntrySubTypesAsync(),
                 LoadProjectsAsync(DefaultProjectType),
+                LoadSpecialDaysAsync(),
                 RenderCalendar()
             );
+        }
+
+        private async Task LoadSpecialDaysAsync()
+        {
+            try
+            {
+                _specialDays = await _specialDayRepo.GetSpecialDaysForWeekAsync(_selectedDate);
+            }
+            catch (Exception ex)
+            {
+                SafeInvoke(() => AppLogger.Error("Chyba při načítání speciálních dnů.", ex));
+            }
         }
 
         public async Task ChangeUser(User newUser)
@@ -595,6 +609,12 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             DateTime clickedDate = _selectedDate.AddDays(row).AddMinutes(column * 30);
 
+            var specialDay = _specialDays.Find(x => x.Date.Date == clickedDate.Date);
+            if (specialDay is not null)
+            {
+                if (specialDay.Locked) return;
+            }
+
             var newTimeEntry = new TimeEntry()
             {
                 ProjectId = _projects[0].Id,
@@ -645,9 +665,9 @@ namespace VykazyPrace.UserControls.CalendarV2
             var entries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _selectedDate);
             var allProjects = await _projectRepo.GetAllProjectsAsync();
             var projectDict = allProjects.ToDictionary(p => p.Id);
-            var specialDays = await _specialDayRepo.GetSpecialDaysForWeekAsync(_selectedDate);
 
-            tableLayoutPanel1.SetSpecialDays(specialDays);
+            await LoadSpecialDaysAsync();
+            tableLayoutPanel1.SetSpecialDays(_specialDays);
 
             // snack entries
             for (int row = 0; row < 7; row++)
@@ -872,7 +892,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             tableLayoutPanel1.Controls.Add(panel, column, row);
             tableLayoutPanel1.SetColumnSpan(panel, columnSpan);
-            panel.Tag = (entry.ProjectId == 132 && entry.EntryTypeId == 24) ? "snack" : null;
+            panel.Tag = (entry.ProjectId == 132 && entry.EntryTypeId == 24) ? "snack" : entry.IsLocked == 1 ? "locked" : null;
 
             panels.Add(panel);
         }
@@ -942,6 +962,9 @@ namespace VykazyPrace.UserControls.CalendarV2
         private void dayPanel_MouseDown(object? sender, MouseEventArgs e)
         {
             if (sender is not DayPanel panel) return;
+
+            if (panel.Tag as string == "locked")
+                return;
 
             mouseMoved = false;
             DeactivateAllPanels();
@@ -1049,6 +1072,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                 Cursor = Cursors.SizeAll;
                 return;
             }
+
+            else if (panel.Tag as string == "locked")
+                return;
 
             if (e.X <= ResizeThreshold)
             {
@@ -1191,18 +1217,6 @@ namespace VykazyPrace.UserControls.CalendarV2
         private int GetEntryMinutesBasedOnColumnSpan(int columnSpan)
         {
             return columnSpan * 30;
-        }
-
-        private async void buttonPreviousWeek_Click(object sender, EventArgs e)
-        {
-            _selectedDate = _selectedDate.AddDays(-7);
-            await RenderCalendar();
-        }
-
-        private async void buttonNextWeek_Click(object sender, EventArgs e)
-        {
-            _selectedDate = _selectedDate.AddDays(7);
-            await RenderCalendar();
         }
 
         #region Timespans
@@ -1465,6 +1479,9 @@ namespace VykazyPrace.UserControls.CalendarV2
             var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
             if (timeEntry == null) return;
 
+            // zamčeno
+            if (timeEntry.IsLocked == 1) return;
+
             // svačina
             if (timeEntry.ProjectId == 132 && timeEntry.EntryTypeId == 24) return;
 
@@ -1687,6 +1704,12 @@ namespace VykazyPrace.UserControls.CalendarV2
             DateTime newTimestamp = _selectedDate
                 .AddDays(row)
                 .AddMinutes(column * TimeSlotLengthInMinutes);
+
+            var specialDay = _specialDays.Find(x => x.Date.Date == newTimestamp.Date.Date);
+            if (specialDay != null)
+            {
+                if (specialDay.Locked) return;
+            }
 
             var newEntry = new TimeEntry
             {

@@ -120,7 +120,8 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         public async Task ForceReloadAsync()
         {
-            await LoadInitialDataAsync();
+            await LoadTimeEntrySubTypesAsync();
+            //await LoadInitialDataAsync();
         }
 
         private void SafeInvoke(Action action)

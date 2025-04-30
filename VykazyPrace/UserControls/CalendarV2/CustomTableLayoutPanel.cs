@@ -75,11 +75,6 @@ public class CustomTableLayoutPanel : TableLayoutPanel
                 e.Graphics.FillRectangle(brush, e.CellBounds);
             }
         }
-
-        if (e.Row > 5)
-        {
-
-        }
     }
 
     private void CustomTableLayoutPanel_MouseClick(object sender, MouseEventArgs e)

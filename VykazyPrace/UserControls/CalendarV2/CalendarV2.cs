@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -761,51 +762,22 @@ namespace VykazyPrace.UserControls.CalendarV2
             return ((int)timeStamp.Value.DayOfWeek + 6) % 7;
         }
 
-        private void UpdateDateLabels()
+          private void UpdateDateLabels()
         {
             Color special = Color.FromArgb(255, 98, 92);
+            Color regular = Color.FromArgb(0, 0, 0);
 
-            labelDate01.Text = _selectedDate.ToString("d.M.yyyy");
-            if (_specialDays.Any(x => x.Date.Date == _selectedDate))
+            Label[] dateLabels = { labelDate01, labelDate02, labelDate03, labelDate04, labelDate05, labelDate06, labelDate07 };
+            Label[] dayLabels = { labelDay01, labelDay02, labelDay03, labelDay04, labelDay05, labelDay06, labelDay07 };
+
+            for (int i = 0; i < 7; i++)
             {
-                labelDate01.ForeColor = special;
-                labelDay01.ForeColor = special;
-            }
-            labelDate02.Text = _selectedDate.AddDays(1).ToString("d.M.yyyy");
-            if (_specialDays.Any(x => x.Date.Date == _selectedDate.AddDays(1)))
-            {
-                labelDate02.ForeColor = special;
-                labelDay02.ForeColor = special;
-            }
-            labelDate03.Text = _selectedDate.AddDays(2).ToString("d.M.yyyy");
-            if (_specialDays.Any(x => x.Date.Date == _selectedDate.AddDays(2)))
-            {
-                labelDate03.ForeColor = special;
-                labelDay03.ForeColor = special;
-            }
-            labelDate04.Text = _selectedDate.AddDays(3).ToString("d.M.yyyy");
-            if (_specialDays.Any(x => x.Date.Date == _selectedDate.AddDays(3)))
-            {
-                labelDate04.ForeColor = special;
-                labelDay04.ForeColor = special;
-            }
-            labelDate05.Text = _selectedDate.AddDays(4).ToString("d.M.yyyy");
-            if (_specialDays.Any(x => x.Date.Date == _selectedDate.AddDays(4)))
-            {
-                labelDate05.ForeColor = special;
-                labelDay05.ForeColor = special;
-            }
-            labelDate06.Text = _selectedDate.AddDays(5).ToString("d.M.yyyy");
-            if(_specialDays.Any(x => x.Date.Date == _selectedDate.AddDays(5)))
-            {
-                labelDate06.ForeColor = special;
-                labelDay06.ForeColor = special;
-            }
-            labelDate07.Text = _selectedDate.AddDays(6).ToString("d.M.yyyy");
-            if (_specialDays.Any(x => x.Date.Date == _selectedDate.AddDays(6)))
-            {
-                labelDate07.ForeColor = special;
-                labelDay07.ForeColor = special;
+                DateTime date = _selectedDate.AddDays(i);
+                bool isSpecial = _specialDays.Any(x => x.Date.Date == date);
+
+                dateLabels[i].Text = date.ToString("d.M.yyyy");
+                dateLabels[i].ForeColor = isSpecial ? special : regular;
+                dayLabels[i].ForeColor = isSpecial ? special : regular;
             }
         }
 

@@ -44,6 +44,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         private List<SpecialDay> _specialDays = new();
         private List<DayPanel> panels = new();
 
+
         // Context
         private User _selectedUser;
         private DateTime _selectedDate;
@@ -136,14 +137,22 @@ namespace VykazyPrace.UserControls.CalendarV2
             _resizeTimer.Start();
         }
 
-        private async void CalendarV2_Load(object sender, EventArgs e)
+        private void CalendarV2_Load(object sender, EventArgs e)
         {
             InitializeContextMenus();
+
+            comboBoxProjects.AutoCompleteMode = AutoCompleteMode.None;
+            comboBoxProjects.AutoCompleteSource = AutoCompleteSource.None;
+
+            comboBoxIndex.AutoCompleteMode = AutoCompleteMode.None;
+            comboBoxIndex.AutoCompleteSource = AutoCompleteSource.None;
+
             panelContainer.Scroll += PanelContainer_Scroll;
             _loadingUC.Size = Size;
             Controls.Add(_loadingUC);
-            await LoadInitialDataAsync();
+            _ = LoadInitialDataAsync();
         }
+
 
         private void PanelContainer_Scroll(object? sender, ScrollEventArgs e)
         {
@@ -763,7 +772,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             return ((int)timeStamp.Value.DayOfWeek + 6) % 7;
         }
 
-          private void UpdateDateLabels()
+        private void UpdateDateLabels()
         {
             Color special = Color.FromArgb(255, 98, 92);
             Color regular = Color.FromArgb(0, 0, 0);
@@ -1291,52 +1300,18 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void comboBoxProjects_TextChanged(object sender, EventArgs e)
         {
-            if (comboBoxProjectsLoading || isUpdating || !comboBoxProjects.Enabled) return;
+            lastTypedProjectText = comboBoxProjects.Text;
 
-            isUpdating = true;
-            try
-            {
-                string query = FormatHelper.RemoveDiacritics(comboBoxProjects.Text);
-                int selectionStart = comboBoxProjects.SelectionStart;
-
-                if (string.IsNullOrWhiteSpace(query))
-                {
-                    ResetProjectComboBox();
-                    return;
-                }
-
-                var filteredItems = _projects
-                    .Select(FormatHelper.FormatProjectToString)
-                    .Where(x => FormatHelper.RemoveDiacritics(x)
-                        .IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)
-                    .ToList();
-
-                if (filteredItems.Count > 0)
-                {
-                    comboBoxProjects.Items.Clear();
-                    comboBoxProjects.Items.AddRange(filteredItems.ToArray());
-                    comboBoxProjects.Text = comboBoxProjects.Text;
-                    comboBoxProjects.SelectionStart = selectionStart;
-                    comboBoxProjects.SelectionLength = 0;
-
-                    if (!comboBoxProjects.DroppedDown && !suppressDropdownTemporarily)
-                    {
-                        BeginInvoke(() =>
-                        {
-                            if (!suppressDropdownTemporarily) // double check inside async invoke
-                                comboBoxProjects.DroppedDown = true;
-
-                            Cursor = Cursors.Default;
-                        });
-                    }
-
-                }
-                else
-                {
-                    comboBoxProjects.DroppedDown = false;
-                }
-            }
-            finally { isUpdating = false; }
+            FilterComboBoxItems(
+                comboBox: comboBoxProjects,
+                dataSource: _projects,
+                formatFunc: FormatHelper.FormatProjectToString,
+                isLoading: comboBoxProjectsLoading,
+                updatingFlag: ref isUpdating,
+                normalizeFunc: FormatHelper.RemoveDiacritics,
+                comparison: StringComparison.OrdinalIgnoreCase,
+                resetAction: ResetProjectComboBox
+            );
         }
 
         private void ResetProjectComboBox()
@@ -1827,6 +1802,84 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
+        private void FilterComboBoxItems<T>(
+     ComboBox comboBox,
+     List<T> dataSource,
+     Func<T, string> formatFunc,
+     bool isLoading,
+     ref bool updatingFlag,
+     Func<string, string>? normalizeFunc = null,
+     StringComparison comparison = StringComparison.OrdinalIgnoreCase,
+     Action? resetAction = null)
+        {
+            if (isLoading || updatingFlag || !comboBox.Enabled || suppressDropdownTemporarily) return;
+
+            updatingFlag = true;
+            try
+            {
+                string query = normalizeFunc?.Invoke(comboBox.Text) ?? comboBox.Text;
+                int selectionStart = comboBox.SelectionStart;
+
+                if (string.IsNullOrWhiteSpace(query))
+                {
+                    resetAction?.Invoke();
+                    return;
+                }
+
+                var filteredItems = dataSource
+                    .Select(formatFunc)
+                    .Where(x =>
+                    {
+                        var normalizedItem = normalizeFunc?.Invoke(x) ?? x;
+                        return query.Length > 1
+                            ? normalizedItem.IndexOf(query.Substring(1), comparison) >= 0
+                            : normalizedItem.IndexOf(query, comparison) > 0;
+                    })
+
+                    .ToList();
+
+                if (filteredItems.Count > 0)
+                {
+                    comboBox.BeginUpdate();
+                    comboBox.Items.Clear();
+                    comboBox.Items.AddRange(filteredItems.ToArray());
+
+                    // ⚠️ Zabrání automatickému výběru a přepisu
+                    comboBox.SelectedIndex = -1;
+                    comboBox.SelectedItem = null;
+
+                    // ⚠️ Obnov text a pozici kurzoru ručně
+                    string preservedText = comboBox.Text;
+                    comboBox.Text = preservedText;
+                    comboBox.SelectionStart = selectionStart;
+                    comboBox.SelectionLength = 0;
+
+                    comboBox.EndUpdate();
+
+                    if (!comboBox.DroppedDown && !suppressDropdownTemporarily)
+                    {
+                        BeginInvoke(() =>
+                        {
+                            if (!suppressDropdownTemporarily)
+                                comboBox.DroppedDown = true;
+                            Cursor = Cursors.Default;
+                        });
+                    }
+                }
+                else
+                {
+                    comboBox.DroppedDown = false;
+                }
+            }
+            finally
+            {
+                updatingFlag = false;
+            }
+        }
+
+
+
+
         private void comboBoxIndex_SelectionChangeCommitted(object sender, EventArgs e)
         {
             if (comboBoxIndexLoading || isUpdating) return;
@@ -1847,53 +1900,21 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void comboBoxIndex_TextChanged(object sender, EventArgs e)
         {
-            if (comboBoxIndexLoading || isUpdating || !comboBoxIndex.Enabled) return;
+            lastTypedIndexText = comboBoxIndex.Text;
 
-            isUpdating = true;
-            try
-            {
-                string query = FormatHelper.RemoveDiacritics(comboBoxIndex.Text);
-                int selectionStart = comboBoxIndex.SelectionStart;
-
-                if (string.IsNullOrWhiteSpace(query))
-                {
-                    ResetIndexComboBox();
-                    return;
-                }
-
-                var filteredItems = _timeEntrySubTypes
-                    .Select(FormatHelper.FormatTimeEntrySubTypeToString)
-                    .Where(x => FormatHelper.RemoveDiacritics(x)
-                    .IndexOf(query, StringComparison.CurrentCultureIgnoreCase) >= 0)
-                    .ToList();
-
-                if (filteredItems.Count > 0)
-                {
-                    comboBoxIndex.Items.Clear();
-                    comboBoxIndex.Items.AddRange(filteredItems.ToArray());
-                    comboBoxIndex.Text = comboBoxIndex.Text;
-                    comboBoxIndex.SelectionStart = selectionStart;
-                    comboBoxIndex.SelectionLength = 0;
-
-                    if (!comboBoxIndex.DroppedDown && !suppressDropdownTemporarily)
-                    {
-                        BeginInvoke(() =>
-                        {
-                            if (!suppressDropdownTemporarily) // double check inside async invoke
-                                comboBoxIndex.DroppedDown = true;
-
-                            Cursor = Cursors.Default;
-                        });
-                    }
-
-                }
-                else
-                {
-                    comboBoxIndex.DroppedDown = false;
-                }
-            }
-            finally { isUpdating = false; }
+            FilterComboBoxItems(
+                comboBox: comboBoxIndex,
+                dataSource: _timeEntrySubTypes,
+                formatFunc: FormatHelper.FormatTimeEntrySubTypeToString,
+                isLoading: comboBoxIndexLoading,
+                updatingFlag: ref isUpdating,
+                normalizeFunc: FormatHelper.RemoveDiacritics,
+                comparison: StringComparison.OrdinalIgnoreCase,
+                resetAction: ResetIndexComboBox
+            );
         }
+
+
 
         private void ResetIndexComboBox()
         {

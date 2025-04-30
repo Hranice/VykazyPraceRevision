@@ -32,28 +32,28 @@
             tableLayoutPanel3 = new TableLayoutPanel();
             panelDay6 = new Panel();
             labelDate07 = new Label();
-            label12 = new Label();
+            labelDay07 = new Label();
             panel1 = new Panel();
             label2 = new Label();
             labelDate1 = new Label();
             panelDay0 = new Panel();
             labelDate01 = new Label();
-            label3 = new Label();
+            labelDay01 = new Label();
             panelDay3 = new Panel();
             labelDate04 = new Label();
-            label9 = new Label();
+            labelDay04 = new Label();
             panelDay5 = new Panel();
             labelDate06 = new Label();
-            label13 = new Label();
+            labelDay06 = new Label();
             panelDay4 = new Panel();
             labelDate05 = new Label();
-            label11 = new Label();
+            labelDay05 = new Label();
             panelDay2 = new Panel();
             labelDate03 = new Label();
-            label7 = new Label();
+            labelDay03 = new Label();
             panelDay1 = new Panel();
             labelDate02 = new Label();
-            label88 = new Label();
+            labelDay02 = new Label();
             panelContainer = new Panel();
             tableLayoutPanel1 = new CustomTableLayoutPanel();
             customTableLayoutPanel1 = new CustomTableLayoutPanel();
@@ -182,7 +182,7 @@
             // panelDay6
             // 
             panelDay6.Controls.Add(labelDate07);
-            panelDay6.Controls.Add(label12);
+            panelDay6.Controls.Add(labelDay07);
             panelDay6.Dock = DockStyle.Fill;
             panelDay6.Location = new Point(3, 526);
             panelDay6.Margin = new Padding(3, 15, 3, 3);
@@ -201,16 +201,16 @@
             labelDate07.Text = "9.3.2025";
             labelDate07.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // label12
+            // labelDay07
             // 
-            label12.AutoSize = true;
-            label12.Dock = DockStyle.Top;
-            label12.Location = new Point(0, 0);
-            label12.Name = "label12";
-            label12.Size = new Size(51, 21);
-            label12.TabIndex = 34;
-            label12.Text = "Neděle";
-            label12.TextAlign = ContentAlignment.TopRight;
+            labelDay07.AutoSize = true;
+            labelDay07.Dock = DockStyle.Top;
+            labelDay07.Location = new Point(0, 0);
+            labelDay07.Name = "labelDay07";
+            labelDay07.Size = new Size(51, 21);
+            labelDay07.TabIndex = 34;
+            labelDay07.Text = "Neděle";
+            labelDay07.TextAlign = ContentAlignment.TopRight;
             // 
             // panel1
             // 
@@ -245,7 +245,7 @@
             // panelDay0
             // 
             panelDay0.Controls.Add(labelDate01);
-            panelDay0.Controls.Add(label3);
+            panelDay0.Controls.Add(labelDay01);
             panelDay0.Dock = DockStyle.Fill;
             panelDay0.Location = new Point(3, 40);
             panelDay0.Margin = new Padding(3, 15, 3, 3);
@@ -264,21 +264,21 @@
             labelDate01.Text = "4.3.2025";
             labelDate01.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // label3
+            // labelDay01
             // 
-            label3.AutoSize = true;
-            label3.Dock = DockStyle.Top;
-            label3.Location = new Point(0, 0);
-            label3.Name = "label3";
-            label3.Size = new Size(52, 21);
-            label3.TabIndex = 34;
-            label3.Text = "Pondělí";
-            label3.TextAlign = ContentAlignment.TopRight;
+            labelDay01.AutoSize = true;
+            labelDay01.Dock = DockStyle.Top;
+            labelDay01.Location = new Point(0, 0);
+            labelDay01.Name = "labelDay01";
+            labelDay01.Size = new Size(52, 21);
+            labelDay01.TabIndex = 34;
+            labelDay01.Text = "Pondělí";
+            labelDay01.TextAlign = ContentAlignment.TopRight;
             // 
             // panelDay3
             // 
             panelDay3.Controls.Add(labelDate04);
-            panelDay3.Controls.Add(label9);
+            panelDay3.Controls.Add(labelDay04);
             panelDay3.Dock = DockStyle.Fill;
             panelDay3.Location = new Point(3, 283);
             panelDay3.Margin = new Padding(3, 15, 3, 3);
@@ -297,21 +297,21 @@
             labelDate04.Text = "7.3.2025";
             labelDate04.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // label9
+            // labelDay04
             // 
-            label9.AutoSize = true;
-            label9.Dock = DockStyle.Top;
-            label9.Location = new Point(0, 0);
-            label9.Name = "label9";
-            label9.Size = new Size(55, 21);
-            label9.TabIndex = 34;
-            label9.Text = "Čtvrtek";
-            label9.TextAlign = ContentAlignment.TopRight;
+            labelDay04.AutoSize = true;
+            labelDay04.Dock = DockStyle.Top;
+            labelDay04.Location = new Point(0, 0);
+            labelDay04.Name = "labelDay04";
+            labelDay04.Size = new Size(55, 21);
+            labelDay04.TabIndex = 34;
+            labelDay04.Text = "Čtvrtek";
+            labelDay04.TextAlign = ContentAlignment.TopRight;
             // 
             // panelDay5
             // 
             panelDay5.Controls.Add(labelDate06);
-            panelDay5.Controls.Add(label13);
+            panelDay5.Controls.Add(labelDay06);
             panelDay5.Dock = DockStyle.Fill;
             panelDay5.Location = new Point(3, 445);
             panelDay5.Margin = new Padding(3, 15, 3, 3);
@@ -330,21 +330,21 @@
             labelDate06.Text = "9.3.2025";
             labelDate06.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // label13
+            // labelDay06
             // 
-            label13.AutoSize = true;
-            label13.Dock = DockStyle.Top;
-            label13.Location = new Point(0, 0);
-            label13.Name = "label13";
-            label13.Size = new Size(53, 21);
-            label13.TabIndex = 34;
-            label13.Text = "Sobota";
-            label13.TextAlign = ContentAlignment.TopRight;
+            labelDay06.AutoSize = true;
+            labelDay06.Dock = DockStyle.Top;
+            labelDay06.Location = new Point(0, 0);
+            labelDay06.Name = "labelDay06";
+            labelDay06.Size = new Size(53, 21);
+            labelDay06.TabIndex = 34;
+            labelDay06.Text = "Sobota";
+            labelDay06.TextAlign = ContentAlignment.TopRight;
             // 
             // panelDay4
             // 
             panelDay4.Controls.Add(labelDate05);
-            panelDay4.Controls.Add(label11);
+            panelDay4.Controls.Add(labelDay05);
             panelDay4.Dock = DockStyle.Fill;
             panelDay4.Location = new Point(3, 364);
             panelDay4.Margin = new Padding(3, 15, 3, 3);
@@ -363,21 +363,21 @@
             labelDate05.Text = "8.3.2025";
             labelDate05.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // label11
+            // labelDay05
             // 
-            label11.AutoSize = true;
-            label11.Dock = DockStyle.Top;
-            label11.Location = new Point(0, 0);
-            label11.Name = "label11";
-            label11.Size = new Size(43, 21);
-            label11.TabIndex = 34;
-            label11.Text = "Pátek";
-            label11.TextAlign = ContentAlignment.TopRight;
+            labelDay05.AutoSize = true;
+            labelDay05.Dock = DockStyle.Top;
+            labelDay05.Location = new Point(0, 0);
+            labelDay05.Name = "labelDay05";
+            labelDay05.Size = new Size(43, 21);
+            labelDay05.TabIndex = 34;
+            labelDay05.Text = "Pátek";
+            labelDay05.TextAlign = ContentAlignment.TopRight;
             // 
             // panelDay2
             // 
             panelDay2.Controls.Add(labelDate03);
-            panelDay2.Controls.Add(label7);
+            panelDay2.Controls.Add(labelDay03);
             panelDay2.Dock = DockStyle.Fill;
             panelDay2.Location = new Point(3, 202);
             panelDay2.Margin = new Padding(3, 15, 3, 3);
@@ -396,21 +396,21 @@
             labelDate03.Text = "6.3.2025";
             labelDate03.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // label7
+            // labelDay03
             // 
-            label7.AutoSize = true;
-            label7.Dock = DockStyle.Top;
-            label7.Location = new Point(0, 0);
-            label7.Name = "label7";
-            label7.Size = new Size(49, 21);
-            label7.TabIndex = 34;
-            label7.Text = "Středa";
-            label7.TextAlign = ContentAlignment.TopRight;
+            labelDay03.AutoSize = true;
+            labelDay03.Dock = DockStyle.Top;
+            labelDay03.Location = new Point(0, 0);
+            labelDay03.Name = "labelDay03";
+            labelDay03.Size = new Size(49, 21);
+            labelDay03.TabIndex = 34;
+            labelDay03.Text = "Středa";
+            labelDay03.TextAlign = ContentAlignment.TopRight;
             // 
             // panelDay1
             // 
             panelDay1.Controls.Add(labelDate02);
-            panelDay1.Controls.Add(label88);
+            panelDay1.Controls.Add(labelDay02);
             panelDay1.Dock = DockStyle.Fill;
             panelDay1.Location = new Point(3, 121);
             panelDay1.Margin = new Padding(3, 15, 3, 3);
@@ -429,16 +429,16 @@
             labelDate02.Text = "5.3.2025";
             labelDate02.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // label88
+            // labelDay02
             // 
-            label88.AutoSize = true;
-            label88.Dock = DockStyle.Top;
-            label88.Location = new Point(0, 0);
-            label88.Name = "label88";
-            label88.Size = new Size(43, 21);
-            label88.TabIndex = 34;
-            label88.Text = "Úterý";
-            label88.TextAlign = ContentAlignment.TopRight;
+            labelDay02.AutoSize = true;
+            labelDay02.Dock = DockStyle.Top;
+            labelDay02.Location = new Point(0, 0);
+            labelDay02.Name = "labelDay02";
+            labelDay02.Size = new Size(43, 21);
+            labelDay02.TabIndex = 34;
+            labelDay02.Text = "Úterý";
+            labelDay02.TextAlign = ContentAlignment.TopRight;
             // 
             // panelContainer
             // 
@@ -1028,7 +1028,7 @@
             comboBoxProjects.FormattingEnabled = true;
             comboBoxProjects.IntegralHeight = false;
             comboBoxProjects.ItemHeight = 25;
-            comboBoxProjects.Location = new Point(3, 46);
+            comboBoxProjects.Location = new Point(3, 36);
             comboBoxProjects.Name = "comboBoxProjects";
             comboBoxProjects.Size = new Size(231, 33);
             comboBoxProjects.TabIndex = 150;
@@ -1383,22 +1383,22 @@
         private Label label15;
         private TableLayoutPanel tableLayoutPanel3;
         private Panel panelDay6;
-        private Label label12;
+        private Label labelDay07;
         private Panel panel1;
         private Label label2;
         private Label labelDate1;
         private Panel panelDay0;
-        private Label label3;
+        private Label labelDay01;
         private Panel panelDay3;
-        private Label label9;
+        private Label labelDay04;
         private Panel panelDay5;
-        private Label label13;
+        private Label labelDay06;
         private Panel panelDay4;
-        private Label label11;
+        private Label labelDay05;
         private Panel panelDay2;
-        private Label label7;
+        private Label labelDay03;
         private Panel panelDay1;
-        private Label label88;
+        private Label labelDay02;
         private FlowLayoutPanel flowLayoutPanel2;
         private RadioButton radioButton1;
         private RadioButton radioButton2;

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -33,12 +34,14 @@ namespace VykazyPrace.UserControls.CalendarV2
         private readonly TimeEntryTypeRepository _timeEntryTypeRepo;
         private readonly TimeEntrySubTypeRepository _timeEntrySubTypeRepo;
         private readonly ProjectRepository _projectRepo;
+        private readonly SpecialDayRepository _specialDayRepo;
         private readonly UserRepository _userRepo;
 
         // Data cache
         private List<Project> _projects = new();
         private List<TimeEntryType> _timeEntryTypes = new();
         private List<TimeEntrySubType> _timeEntrySubTypes = new();
+        private List<SpecialDay> _specialDays = new();
         private List<DayPanel> panels = new();
 
         // Context
@@ -80,7 +83,8 @@ namespace VykazyPrace.UserControls.CalendarV2
                           TimeEntryTypeRepository timeEntryTypeRepo,
                           TimeEntrySubTypeRepository timeEntrySubTypeRepo,
                           ProjectRepository projectRepo,
-                          UserRepository userRepo)
+                          UserRepository userRepo,
+                          SpecialDayRepository specialDayRepo)
         {
             InitializeComponent();
             DoubleBuffered = true;
@@ -93,12 +97,14 @@ namespace VykazyPrace.UserControls.CalendarV2
             _timeEntrySubTypeRepo = timeEntrySubTypeRepo;
             _projectRepo = projectRepo;
             _userRepo = userRepo;
+            _specialDayRepo = specialDayRepo;
 
             _resizeTimer.Tick += (_, _) =>
             {
                 _resizeTimer.Stop();
                 AdjustIndicators(panelContainer.AutoScrollPosition);
             };
+            _specialDayRepo = specialDayRepo;
         }
 
         private void InitializeContextMenus()
@@ -149,8 +155,21 @@ namespace VykazyPrace.UserControls.CalendarV2
                 LoadTimeEntryTypesAsync(DefaultProjectType),
                 LoadTimeEntrySubTypesAsync(),
                 LoadProjectsAsync(DefaultProjectType),
+                LoadSpecialDaysAsync(),
                 RenderCalendar()
             );
+        }
+
+        private async Task LoadSpecialDaysAsync()
+        {
+            try
+            {
+                _specialDays = await _specialDayRepo.GetSpecialDaysForWeekAsync(_selectedDate);
+            }
+            catch (Exception ex)
+            {
+                SafeInvoke(() => AppLogger.Error("Chyba při načítání speciálních dnů.", ex));
+            }
         }
 
         public async Task ChangeUser(User newUser)
@@ -417,6 +436,11 @@ namespace VykazyPrace.UserControls.CalendarV2
                         break;
                     default:
                         int index = proj.ProjectType + 1;
+
+                        // Po sloučení projektů a zakázek mají společnou záložku
+                        if (index == 2 || index == 3)
+                            index = 2;
+
                         if (flowLayoutPanel2.Controls.Find($"radioButton{index}", false).FirstOrDefault() is RadioButton rb)
                             rb.Checked = true;
                         break;
@@ -586,6 +610,12 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             DateTime clickedDate = _selectedDate.AddDays(row).AddMinutes(column * 30);
 
+            var specialDay = _specialDays.Find(x => x.Date.Date == clickedDate.Date);
+            if (specialDay is not null)
+            {
+                if (specialDay.Locked) return;
+            }
+
             var newTimeEntry = new TimeEntry()
             {
                 ProjectId = _projects[0].Id,
@@ -636,6 +666,9 @@ namespace VykazyPrace.UserControls.CalendarV2
             var entries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _selectedDate);
             var allProjects = await _projectRepo.GetAllProjectsAsync();
             var projectDict = allProjects.ToDictionary(p => p.Id);
+
+            await LoadSpecialDaysAsync();
+            tableLayoutPanel1.SetSpecialDays(_specialDays);
 
             // snack entries
             for (int row = 0; row < 7; row++)
@@ -729,15 +762,23 @@ namespace VykazyPrace.UserControls.CalendarV2
             return ((int)timeStamp.Value.DayOfWeek + 6) % 7;
         }
 
-        private void UpdateDateLabels()
+          private void UpdateDateLabels()
         {
-            labelDate01.Text = _selectedDate.ToString("d.M.yyyy");
-            labelDate02.Text = _selectedDate.AddDays(1).ToString("d.M.yyyy");
-            labelDate03.Text = _selectedDate.AddDays(2).ToString("d.M.yyyy");
-            labelDate04.Text = _selectedDate.AddDays(3).ToString("d.M.yyyy");
-            labelDate05.Text = _selectedDate.AddDays(4).ToString("d.M.yyyy");
-            labelDate06.Text = _selectedDate.AddDays(5).ToString("d.M.yyyy");
-            labelDate07.Text = _selectedDate.AddDays(6).ToString("d.M.yyyy");
+            Color special = Color.FromArgb(255, 98, 92);
+            Color regular = Color.FromArgb(0, 0, 0);
+
+            Label[] dateLabels = { labelDate01, labelDate02, labelDate03, labelDate04, labelDate05, labelDate06, labelDate07 };
+            Label[] dayLabels = { labelDay01, labelDay02, labelDay03, labelDay04, labelDay05, labelDay06, labelDay07 };
+
+            for (int i = 0; i < 7; i++)
+            {
+                DateTime date = _selectedDate.AddDays(i);
+                bool isSpecial = _specialDays.Any(x => x.Date.Date == date);
+
+                dateLabels[i].Text = date.ToString("d.M.yyyy");
+                dateLabels[i].ForeColor = isSpecial ? special : regular;
+                dayLabels[i].ForeColor = isSpecial ? special : regular;
+            }
         }
 
 
@@ -860,7 +901,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             tableLayoutPanel1.Controls.Add(panel, column, row);
             tableLayoutPanel1.SetColumnSpan(panel, columnSpan);
-            panel.Tag = (entry.ProjectId == 132 && entry.EntryTypeId == 24) ? "snack" : null;
+            panel.Tag = (entry.ProjectId == 132 && entry.EntryTypeId == 24) ? "snack" : entry.IsLocked == 1 ? "locked" : null;
 
             panels.Add(panel);
         }
@@ -930,6 +971,9 @@ namespace VykazyPrace.UserControls.CalendarV2
         private void dayPanel_MouseDown(object? sender, MouseEventArgs e)
         {
             if (sender is not DayPanel panel) return;
+
+            if (panel.Tag as string == "locked")
+                return;
 
             mouseMoved = false;
             DeactivateAllPanels();
@@ -1037,6 +1081,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                 Cursor = Cursors.SizeAll;
                 return;
             }
+
+            else if (panel.Tag as string == "locked")
+                return;
 
             if (e.X <= ResizeThreshold)
             {
@@ -1179,18 +1226,6 @@ namespace VykazyPrace.UserControls.CalendarV2
         private int GetEntryMinutesBasedOnColumnSpan(int columnSpan)
         {
             return columnSpan * 30;
-        }
-
-        private async void buttonPreviousWeek_Click(object sender, EventArgs e)
-        {
-            _selectedDate = _selectedDate.AddDays(-7);
-            await RenderCalendar();
-        }
-
-        private async void buttonNextWeek_Click(object sender, EventArgs e)
-        {
-            _selectedDate = _selectedDate.AddDays(7);
-            await RenderCalendar();
         }
 
         #region Timespans
@@ -1453,6 +1488,9 @@ namespace VykazyPrace.UserControls.CalendarV2
             var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
             if (timeEntry == null) return;
 
+            // zamčeno
+            if (timeEntry.IsLocked == 1) return;
+
             // svačina
             if (timeEntry.ProjectId == 132 && timeEntry.EntryTypeId == 24) return;
 
@@ -1675,6 +1713,12 @@ namespace VykazyPrace.UserControls.CalendarV2
             DateTime newTimestamp = _selectedDate
                 .AddDays(row)
                 .AddMinutes(column * TimeSlotLengthInMinutes);
+
+            var specialDay = _specialDays.Find(x => x.Date.Date == newTimestamp.Date.Date);
+            if (specialDay != null)
+            {
+                if (specialDay.Locked) return;
+            }
 
             var newEntry = new TimeEntry
             {

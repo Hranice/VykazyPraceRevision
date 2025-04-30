@@ -20,6 +20,7 @@ namespace VykazyPrace.Dialogs
         private readonly UserRepository _userRepo = new();
         private readonly UserGroupRepository _userGroupRepository = new();
         private readonly ProjectRepository _projectRepo = new();
+        private readonly SpecialDayRepository _specialDayRepo = new();
         private readonly LoadingUC _loadingUC = new();
 
         public ExportDialog(User selectedUser)
@@ -108,7 +109,7 @@ namespace VykazyPrace.Dialogs
             await LoadTimeEntriesSummaryAsync(dateTimePicker1.Value, dateTimePicker2.Value);
         }
 
-        private async Task ExportToExcel(string filePath)
+        private async Task ExportToExcelWithRate(string filePath)
         {
             var excelApp = new Application();
             if (excelApp == null)
@@ -277,6 +278,172 @@ namespace VykazyPrace.Dialogs
             }
         }
 
+        private async Task ExportToExcel(string filePath)
+        {
+            var excelApp = new Application();
+            if (excelApp == null)
+            {
+                AppLogger.Error("Excel nebyl nalezen na tomto počítači.");
+                return;
+            }
+
+            try
+            {
+                var workbook = excelApp.Workbooks.Add();
+                var worksheet = (Worksheet)workbook.Sheets[1];
+                worksheet.Name = "Časové záznamy";
+
+                Worksheet summarySheet = (Worksheet)workbook.Sheets.Add(After: worksheet);
+                summarySheet.Name = "Souhrn podle uživatele";
+
+                string[] headers = {
+            "Osobní číslo", "Jméno", "Skupina", "Projekt", "Popis projektu",
+            "Typ záznamu", "Časový záznam", "Popis", "Poznámky", "Doba v hodinách"
+        };
+
+                for (int i = 0; i < headers.Length; i++)
+                    worksheet.Cells[1, i + 1] = headers[i];
+
+                var timeEntries = await _timeEntryRepo.GetAllTimeEntriesAsync();
+                var projects = timeEntries
+                    .Where(e => e.Project?.ProjectType == 0)
+                    .Select(e => e.Project!)
+                    .DistinctBy(p => p.Id)
+                    .ToList();
+
+                int row = 2;
+                foreach (var e in timeEntries)
+                {
+                    if (e.ProjectId == 132 && e.EntryTypeId == 24) continue;
+
+                    worksheet.Cells[row, 1] = e.User?.PersonalNumber ?? 0;
+                    worksheet.Cells[row, 2] = $"{e.User?.FirstName} {e.User?.Surname}".Trim();
+                    worksheet.Cells[row, 3] = e.User?.UserGroup?.Title ?? "CHYBÍ DATA";
+                    worksheet.Cells[row, 4] = e.Project?.ProjectTitle ?? "N/A";
+                    worksheet.Cells[row, 5] = $"'{e.Project?.ProjectDescription ?? "N/A"}";
+                    worksheet.Cells[row, 6] = e.EntryType?.Title ?? "Neznámý typ";
+                    worksheet.Cells[row, 7] = e.Timestamp?.ToString("yyyy-MM-dd") ?? "N/A";
+                    worksheet.Cells[row, 8] = e.Description ?? "N/A";
+                    worksheet.Cells[row, 9] = e.Note ?? "N/A";
+                    worksheet.Cells[row, 10] = e.EntryMinutes / 60.0;
+                    row++;
+                }
+
+                worksheet.Columns.AutoFit();
+                int lastDataRow = row - 1;
+
+                Range mainRange = worksheet.Range[$"A1:J{lastDataRow}"];
+                var mainTable = worksheet.ListObjects.AddEx(
+                    XlListObjectSourceType.xlSrcRange,
+                    mainRange,
+                    XlYesNoGuess.xlYes
+                );
+                mainTable.Name = "CasoveZaznamy";
+                mainTable.ShowTotals = true;
+                foreach (ListColumn col in mainTable.ListColumns)
+                    col.TotalsCalculation = col.Name == "Doba v hodinách"
+                        ? XlTotalsCalculation.xlTotalsCalculationSum
+                        : XlTotalsCalculation.xlTotalsCalculationNone;
+
+                PivotCache pivotCache = workbook.PivotCaches().Create(
+                    XlPivotTableSourceType.xlDatabase,
+                    mainRange,
+                    XlPivotTableVersionList.xlPivotTableVersion15
+                );
+
+                PivotTable pivot = pivotCache.CreatePivotTable(
+                    summarySheet.Range["A1"],
+                    "UserSummaryPivot"
+                );
+
+                pivot.RowGrand = false;
+
+                PivotField f1 = (PivotField)pivot.PivotFields("Osobní číslo");
+                f1.Orientation = XlPivotFieldOrientation.xlRowField;
+                for (int i = 1; i <= 12; i++) f1.Subtotals[i] = false;
+
+                PivotField f2 = (PivotField)pivot.PivotFields("Jméno");
+                f2.Orientation = XlPivotFieldOrientation.xlRowField;
+                for (int i = 1; i <= 12; i++) f2.Subtotals[i] = false;
+
+                PivotField f3 = (PivotField)pivot.PivotFields("Projekt");
+                f3.Orientation = XlPivotFieldOrientation.xlRowField;
+                for (int i = 1; i <= 12; i++) f3.Subtotals[i] = false;
+
+                PivotField f4 = (PivotField)pivot.PivotFields("Popis projektu");
+                f4.Orientation = XlPivotFieldOrientation.xlRowField;
+                for (int i = 1; i <= 12; i++) f4.Subtotals[i] = false;
+
+                PivotField dataField = (PivotField)pivot.PivotFields("Doba v hodinách");
+                pivot.AddDataField(dataField, "Součet hodin", XlConsolidationFunction.xlSum);
+
+                pivot.RowAxisLayout(XlLayoutRowType.xlTabularRow);
+                pivot.ShowDrillIndicators = false;
+                pivot.RefreshTable();
+                summarySheet.Columns.AutoFit();
+
+                foreach (var proj in projects)
+                {
+                    var projRows = timeEntries.Where(e => e.Project?.Id == proj.Id).ToList();
+                    if (!projRows.Any()) continue;
+
+                    Worksheet pSheet = (Worksheet)workbook.Sheets.Add(After: summarySheet);
+                    string safeName = string.Join("_", proj.ProjectTitle.Split(Path.GetInvalidFileNameChars()));
+                    pSheet.Name = safeName.Length > 31 ? safeName[..31] : safeName;
+
+                    for (int i = 0; i < headers.Length; i++)
+                        pSheet.Cells[1, i + 1] = headers[i];
+
+                    int pRow = 2;
+                    foreach (var e in projRows)
+                    {
+                        pSheet.Cells[pRow, 1] = e.User?.PersonalNumber ?? 0;
+                        pSheet.Cells[pRow, 2] = $"{e.User?.FirstName} {e.User?.Surname}".Trim();
+                        pSheet.Cells[pRow, 3] = e.User?.UserGroup?.Title ?? "CHYBÍ DATA";
+                        pSheet.Cells[pRow, 4] = e.Project?.ProjectTitle ?? "N/A";
+                        pSheet.Cells[pRow, 5] = $"'{e.Project?.ProjectDescription ?? "N/A"}";
+                        pSheet.Cells[pRow, 6] = e.EntryType?.Title ?? "Neznámý typ";
+                        pSheet.Cells[pRow, 7] = e.Timestamp?.ToString("yyyy-MM-dd") ?? "N/A";
+                        pSheet.Cells[pRow, 8] = e.Description ?? "N/A";
+                        pSheet.Cells[pRow, 9] = e.Note ?? "N/A";
+                        pSheet.Cells[pRow, 10] = e.EntryMinutes / 60.0;
+                        pRow++;
+                    }
+
+                    pSheet.Columns.AutoFit();
+                    var range = pSheet.Range[$"A1:J{pRow - 1}"];
+                    var table = pSheet.ListObjects.AddEx(XlListObjectSourceType.xlSrcRange, range, XlYesNoGuess.xlYes);
+                    table.ShowTotals = true;
+                    foreach (ListColumn col in table.ListColumns)
+                        col.TotalsCalculation = col.Name == "Doba v hodinách"
+                            ? XlTotalsCalculation.xlTotalsCalculationSum
+                            : XlTotalsCalculation.xlTotalsCalculationNone;
+                }
+
+                summarySheet.Activate();
+                workbook.SaveAs(filePath);
+                workbook.Close();
+                excelApp.Quit();
+                Marshal.ReleaseComObject(workbook);
+                Process.Start(new ProcessStartInfo { FileName = filePath, UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("Chyba při exportu do Excelu.", ex);
+            }
+            finally
+            {
+                Marshal.ReleaseComObject(excelApp);
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+        }
+
+
+
+
+
+
         private async void ButtonSaveAs_Click(object sender, EventArgs e)
         {
             using SaveFileDialog sfd = new SaveFileDialog { Filter = "Excel Files|*.xlsx", FileName = "Export.xlsx" };
@@ -301,6 +468,7 @@ namespace VykazyPrace.Dialogs
             if (result == DialogResult.Yes)
             {
                 await _timeEntryRepo.LockAllEntriesInMonth(comboBoxMonth.Text);
+                await _specialDayRepo.LockEntireMonthAsync(FormatHelper.GetMonthNumberFromString(comboBoxMonth.Text), dateTimePicker1.Value.Year);
             }
         }
 

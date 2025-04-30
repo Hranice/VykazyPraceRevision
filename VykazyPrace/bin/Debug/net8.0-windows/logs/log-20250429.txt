@@ -1,0 +1,10 @@
+2025-04-29 08:49:08.907 +02:00 [INF] Záznam 0290 - Úprava přenašeče Antonini: 0,5 h - test4 byl smazán z databáze.
+2025-04-29 08:50:21.272 +02:00 [ERR] Databáze je neplatná nebo ji nelze načíst.
+System.InvalidOperationException: Chybí tabulka 'Users' v databázi.
+   at VykazyPrace.Core.Database.DatabaseValidator.ValidateStructure(VykazyPraceContext context) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\DatabaseValidator.cs:line 43
+   at VykazyPrace.MainForm.ValidateDatabase() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 82
+2025-04-29 10:46:51.759 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-04-29 10:52:44.935 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - test4 byl úspěšně aktualizován.
+2025-04-29 10:53:54.043 +02:00 [INF] Záznam 0 - Provoz ostatní: 2 h - test4 byl smazán z databáze.
+2025-04-29 11:01:48.857 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - test4 byl úspěšně aktualizován.
+2025-04-29 11:03:39.489 +02:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 0,5 h -  byl smazán z databáze.

@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Windows.Forms;
+using VykazyPrace.Core.Database.Models;
 
 public class CustomTableLayoutPanel : TableLayoutPanel
 {
@@ -12,6 +15,9 @@ public class CustomTableLayoutPanel : TableLayoutPanel
     private static readonly Color SelectedColor = Color.FromArgb(241, 255, 255);
     private static readonly Color ActiveDayColor = Color.FromArgb(200, 200, 200);
 
+    private Dictionary<int, SpecialDay> _specialDayRows = new Dictionary<int, SpecialDay>();
+
+
     public CustomTableLayoutPanel()
     {
         this.DoubleBuffered = true;
@@ -19,19 +25,48 @@ public class CustomTableLayoutPanel : TableLayoutPanel
         this.MouseClick += CustomTableLayoutPanel_MouseClick;
     }
 
+    public void SetSpecialDays(List<SpecialDay> specialDays)
+    {
+        _specialDayRows.Clear();
+
+        foreach (var specialDay in specialDays)
+        {
+            int row = ((int)specialDay.Date.DayOfWeek + 6) % 7; // Pondělí = 0
+            _specialDayRows[row] = specialDay;
+        }
+
+        Invalidate();
+    }
+
+
     private void CustomTableLayoutPanel_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
     {
         int todayIndex = ((int)DateTime.Now.DayOfWeek + 6) % 7; // Pondělí = 0
 
-        if (e.Row == todayIndex)
+        Color? backgroundColor = null;
+
+        if (_specialDayRows.TryGetValue(e.Row, out var specialDay))
         {
-            using (var brush = new SolidBrush(ActiveDayColor))
+            backgroundColor = ColorTranslator.FromHtml(specialDay.Color);
+        }
+        else if (e.Row == todayIndex)
+        {
+            backgroundColor = ActiveDayColor;
+        }
+
+        if(e.Row > 4)
+        {
+            backgroundColor = ColorTranslator.FromHtml("#FFCDC7");
+        }
+
+        if (backgroundColor.HasValue)
+        {
+            using (var brush = new SolidBrush(backgroundColor.Value))
             {
                 e.Graphics.FillRectangle(brush, e.CellBounds);
             }
         }
 
-        // Kliknutá buňka (s jinou barvou pro aktivní den)
         if (e.Row == selectedRow && e.Column == selectedColumn)
         {
             Color highlightColor = (e.Row == todayIndex) ? SelectedTodayColor : SelectedColor;
@@ -107,7 +142,7 @@ public class CustomTableLayoutPanel : TableLayoutPanel
         int halfHourIndex = now.Hour * 2 + now.Minute / 30;
 
         // Kreslení mřížky
-        using (var pen = new Pen(Color.Gray))
+        using (var pen = new Pen(Color.FromArgb(145,145,145)))
         {
             int x = 0, y = 0;
             foreach (var width in colWidths)

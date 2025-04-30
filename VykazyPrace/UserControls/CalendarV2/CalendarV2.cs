@@ -1300,8 +1300,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void comboBoxProjects_TextChanged(object sender, EventArgs e)
         {
-            lastTypedProjectText = comboBoxProjects.Text;
-
             FilterComboBoxItems(
                 comboBox: comboBoxProjects,
                 dataSource: _projects,
@@ -1900,8 +1898,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void comboBoxIndex_TextChanged(object sender, EventArgs e)
         {
-            lastTypedIndexText = comboBoxIndex.Text;
-
             FilterComboBoxItems(
                 comboBox: comboBoxIndex,
                 dataSource: _timeEntrySubTypes,

@@ -18,3 +18,4 @@
 2025-05-01 14:08:44.060 +02:00 [INF] Záznam  - Automatizace: 0,5 h -  byl smazán z databáze.
 2025-05-01 14:10:07.654 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - Seřízení kontrolního systému byl úspěšně aktualizován.
 2025-05-01 14:10:41.506 +02:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 0,5 h -  byl smazán z databáze.
+2025-05-01 17:26:10.653 +02:00 [INF] Staženo 291 záznamů.

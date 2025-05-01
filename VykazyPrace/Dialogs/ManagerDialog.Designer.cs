@@ -28,7 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
+            buttonDownloadArrivalsDepartures = new Button();
             SuspendLayout();
+            // 
+            // buttonDownloadArrivalsDepartures
+            // 
+            buttonDownloadArrivalsDepartures.Location = new Point(12, 12);
+            buttonDownloadArrivalsDepartures.Name = "buttonDownloadArrivalsDepartures";
+            buttonDownloadArrivalsDepartures.Size = new Size(276, 23);
+            buttonDownloadArrivalsDepartures.TabIndex = 0;
+            buttonDownloadArrivalsDepartures.Text = "Stáhnout příchody a odchody z PowerKey";
+            buttonDownloadArrivalsDepartures.UseVisualStyleBackColor = true;
+            buttonDownloadArrivalsDepartures.Click += buttonDownloadArrivalsDepartures_Click;
             // 
             // ManagerDialog
             // 
@@ -36,11 +47,14 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(800, 450);
+            Controls.Add(buttonDownloadArrivalsDepartures);
             Name = "ManagerDialog";
             Text = "ManagerDialog";
             ResumeLayout(false);
         }
 
         #endregion
+
+        private Button buttonDownloadArrivalsDepartures;
     }
 }

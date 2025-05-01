@@ -1786,6 +1786,11 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
         private void FilterComboBoxItems<T>(
      ComboBox comboBox,
      List<T> dataSource,

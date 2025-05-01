@@ -517,6 +517,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.Size = new Size(1969, 550);
             tableLayoutPanel1.TabIndex = 149;
+            tableLayoutPanel1.Paint += tableLayoutPanel1_Paint;
             tableLayoutPanel1.MouseClick += tableLayoutPanel1_MouseClick;
             tableLayoutPanel1.MouseDoubleClick += TableLayoutPanel1_MouseDoubleClick;
             tableLayoutPanel1.MouseUp += tableLayoutPanel1_MouseUp;

@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
+using System.Security.Permissions;
+
 namespace VykazyPrace.UserControls
 {
     public partial class CustomComboBox : UserControl
@@ -26,7 +28,7 @@ namespace VykazyPrace.UserControls
             {
                 Visible = false,
                 IntegralHeight = true,
-                Height = 200
+                Height = 100
             };
 
             Controls.Add(textBox);
@@ -35,6 +37,7 @@ namespace VykazyPrace.UserControls
 
             textBox.TextChanged += TextBox_TextChanged;
             textBox.KeyDown += TextBox_KeyDown;
+            Application.AddMessageFilter(new ClickOutsideMessageFilter(this, listBox, HideDropDown));
             textBox.LostFocus += TextBox_LostFocus;
             textBox.MouseDown += TextBox_MouseDown;
             listBox.Click += ListBox_Click;
@@ -223,6 +226,34 @@ namespace VykazyPrace.UserControls
                     HideDropDown();
                 }
             }));
+        }
+
+        private class ClickOutsideMessageFilter : IMessageFilter
+        {
+            private readonly Control owner;
+            private readonly Control dropdown;
+            private readonly Action hideAction;
+
+            public ClickOutsideMessageFilter(Control owner, Control dropdown, Action hideAction)
+            {
+                this.owner = owner;
+                this.dropdown = dropdown;
+                this.hideAction = hideAction;
+            }
+
+            public bool PreFilterMessage(ref Message m)
+            {
+                if (m.Msg == 0x201) // WM_LBUTTONDOWN
+                {
+                    Point mousePos = Control.MousePosition;
+                    if (!owner.Bounds.Contains(owner.Parent?.PointToClient(mousePos) ?? Point.Empty) &&
+                        !dropdown.Bounds.Contains(dropdown.TopLevelControl?.PointToClient(mousePos) ?? Point.Empty))
+                    {
+                        hideAction();
+                    }
+                }
+                return false;
+            }
         }
     }
 }

@@ -52,6 +52,9 @@
     <Compile Update="UserControls\Calendar\DayUC.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="UserControls\CustomComboBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="UserControls\LoadingUC.cs">
       <SubType>UserControl</SubType>
     </Compile>

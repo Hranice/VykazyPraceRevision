@@ -19,6 +19,8 @@ namespace VykazyPrace.Dialogs
             this.KeyDown += Form1_KeyDown;
 
             LoadFilteredData();
+
+            customComboBox1.SetItems(new string[] { "test1", "test2", "paprika" });
         }
 
         private void LoadFilteredData()

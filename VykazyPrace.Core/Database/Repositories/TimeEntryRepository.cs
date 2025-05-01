@@ -196,21 +196,24 @@ namespace VykazyPrace.Core.Database.Repositories
             return true;
         }
 
-        public async Task<int> ReplaceDescriptionForUserAsync(int userId, string originalText, string newText)
+        public async Task<int> UpdateUnlockedDescriptionsForUserAsync(int userId, string oldDescription, string newDescription)
         {
             var entriesToUpdate = await _context.TimeEntries
-                .Where(e => e.UserId == userId && e.Description.Contains(originalText))
+                .Where(e => e.UserId == userId &&
+                            e.IsLocked == 0 &&
+                            e.Description == oldDescription)
                 .ToListAsync();
 
             foreach (var entry in entriesToUpdate)
             {
-                entry.Description = newText;
+                entry.Description = newDescription;
             }
 
             await VykazyPraceContextExtensions.SafeSaveAsync(_context);
 
             return entriesToUpdate.Count;
         }
+
 
 
         /// <summary>

@@ -44,3 +44,7 @@ System.Runtime.InteropServices.COMException (0x800A03EC): Není možné nastavit
    at System.RuntimeType.ForwardCallToInvokeMember(String memberName, BindingFlags flags, Object target, Object[] aArgs, Boolean[] aArgsIsByRef, Int32[] aArgsWrapperTypes, Type[] aArgsTypes, Type retType)
    at Microsoft.Office.Interop.Excel.PivotField.set_Subtotals(Object Index, Object )
    at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 363
+2025-04-30 13:06:34.844 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Projekt neodpovídá žádné možnosti
+2025-04-30 13:09:39.579 +02:00 [INF] Záznam 031I21 - Vývoj nových greiferů: 0,5 h - ewew byl úspěšně aktualizován.
+2025-04-30 13:11:04.379 +02:00 [INF] Záznam 027I21 - Kompletace Lancome: 0,5 h - ewewergergre byl úspěšně aktualizován.
+2025-04-30 13:11:23.956 +02:00 [INF] Záznam 027I21 - Kompletace Lancome: 0,5 h - effffff byl úspěšně aktualizován.

@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace VykazyPrace.UserControls
@@ -14,7 +10,10 @@ namespace VykazyPrace.UserControls
     {
         private readonly TextBox textBox;
         private readonly ListBox listBox;
+        private readonly ToolTip listBoxToolTip = new();
         private List<string> originalItems = new();
+
+        private bool suppressTextChanged = false;
 
         public event EventHandler? ItemSelected;
 
@@ -22,24 +21,25 @@ namespace VykazyPrace.UserControls
 
         public CustomComboBox()
         {
-            textBox = new TextBox { Dock = DockStyle.Top };
+            textBox = new TextBox { Dock = DockStyle.Fill };
             listBox = new ListBox
             {
-                Dock = DockStyle.Bottom,
                 Visible = false,
-                Height = 100,
-                IntegralHeight = false
+                IntegralHeight = true,
+                Height = 200
             };
 
-            Controls.Add(listBox);
             Controls.Add(textBox);
+            AutoSize = false;
             Height = textBox.Height;
 
             textBox.TextChanged += TextBox_TextChanged;
             textBox.KeyDown += TextBox_KeyDown;
+            textBox.LostFocus += TextBox_LostFocus;
+            textBox.MouseDown += TextBox_MouseDown;
             listBox.Click += ListBox_Click;
             listBox.MouseMove += ListBox_MouseMove;
-            LostFocus += CustomComboBox_LostFocus;
+            listBox.KeyDown += ListBox_KeyDown;
         }
 
         public void SetItems(IEnumerable<string> items)
@@ -49,38 +49,141 @@ namespace VykazyPrace.UserControls
             listBox.Items.AddRange(originalItems.ToArray());
         }
 
+        public void SetText(string text)
+        {
+            suppressTextChanged = true;
+            textBox.Text = text;
+            suppressTextChanged = false;
+        }
+
+        public string GetText() => textBox.Text;
+
         private void TextBox_TextChanged(object? sender, EventArgs e)
         {
-            string query = textBox.Text.ToLowerInvariant();
+            if (suppressTextChanged)
+                return;
 
-            var filtered = originalItems
-                .Where(item => item.ToLowerInvariant().Contains(query))
-                .ToList();
+            string query = textBox.Text.ToLowerInvariant();
+            var filtered = originalItems.Where(item => item.ToLowerInvariant().Contains(query)).ToList();
 
             listBox.Items.Clear();
             listBox.Items.AddRange(filtered.ToArray());
-            listBox.Visible = filtered.Count > 0;
-            Height = textBox.Height + (listBox.Visible ? listBox.Height : 0);
+
+            if (filtered.Count > 0)
+            {
+                ShowDropDown();
+            }
+            else
+            {
+                HideDropDown();
+            }
+        }
+
+        private void ShowDropDown()
+        {
+            if (!listBox.Visible)
+            {
+                if (TopLevelControl is null) return;
+
+                var textBoxScreenLocation = textBox.PointToScreen(Point.Empty);
+                var listBoxLocation = TopLevelControl.PointToClient(new Point(textBoxScreenLocation.X, textBoxScreenLocation.Y + textBox.Height));
+
+                int maxWidth = listBox.Items.Count > 0
+                    ? listBox.Items.Cast<string>().Select(item => TextRenderer.MeasureText(item, listBox.Font).Width).Max() + SystemInformation.VerticalScrollBarWidth
+                    : textBox.Width;
+
+                listBox.Width = Math.Max(textBox.Width, maxWidth);
+                listBox.Location = listBoxLocation;
+
+                TopLevelControl.Controls.Add(listBox);
+                listBox.BringToFront();
+                listBox.Visible = true;
+            }
+        }
+
+        private void HideDropDown()
+        {
+            if (listBox.Visible)
+            {
+                listBox.BeginInvoke(new Action(() =>
+                {
+                    listBox.Visible = false;
+                    if (TopLevelControl?.Controls.Contains(listBox) == true)
+                        TopLevelControl.Controls.Remove(listBox);
+                }));
+            }
         }
 
         private void ListBox_Click(object? sender, EventArgs e)
         {
-            if (listBox.SelectedItem != null)
-            {
-                textBox.Text = listBox.SelectedItem.ToString();
-                listBox.Visible = false;
-                Height = textBox.Height;
-                ItemSelected?.Invoke(this, EventArgs.Empty);
-            }
+            ConfirmSelection();
         }
 
         private void TextBox_KeyDown(object? sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Down && listBox.Visible)
+            if (e.KeyCode == Keys.Down && listBox.Items.Count > 0)
             {
+                if (!listBox.Visible) ShowDropDown();
                 listBox.Focus();
-                if (listBox.Items.Count > 0)
-                    listBox.SelectedIndex = 0;
+                listBox.SelectedIndex = 0;
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.Up && listBox.Visible)
+            {
+                if (listBox.SelectedIndex > 0)
+                {
+                    listBox.SelectedIndex--;
+                }
+                e.Handled = true;
+            }
+            else if ((e.KeyCode == Keys.Enter || e.KeyCode == Keys.Tab) && listBox.Visible)
+            {
+                ConfirmSelection();
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                HideDropDown();
+                e.Handled = true;
+            }
+        }
+
+        private void ListBox_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                ConfirmSelection();
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                HideDropDown();
+                textBox.Focus();
+                e.Handled = true;
+            }
+        }
+        private void TextBox_MouseDown(object? sender, MouseEventArgs e)
+        {
+            if (!listBox.Visible && listBox.Items.Count > 0)
+            {
+                ShowDropDown();
+            }
+        }
+
+        private void ConfirmSelection()
+        {
+            if (listBox.SelectedItem is string selected)
+            {
+                suppressTextChanged = true;
+                textBox.Text = selected;
+                suppressTextChanged = false;
+
+                ItemSelected?.Invoke(this, EventArgs.Empty);
+
+                textBox.Focus();
+                textBox.SelectionStart = textBox.Text.Length;
+
+                HideDropDown();
             }
         }
 
@@ -91,15 +194,35 @@ namespace VykazyPrace.UserControls
             {
                 listBox.SelectedIndex = index;
             }
+
+            if (index >= 0 && index < listBox.Items.Count)
+            {
+                string itemText = listBox.Items[index].ToString() ?? string.Empty;
+                var itemSize = TextRenderer.MeasureText(itemText, listBox.Font);
+
+                if (itemSize.Width > listBox.ClientSize.Width)
+                {
+                    if (listBoxToolTip.GetToolTip(listBox) != itemText)
+                    {
+                        listBoxToolTip.SetToolTip(listBox, itemText);
+                    }
+                }
+                else
+                {
+                    listBoxToolTip.SetToolTip(listBox, string.Empty);
+                }
+            }
         }
 
-        private void CustomComboBox_LostFocus(object? sender, EventArgs e)
+        private void TextBox_LostFocus(object? sender, EventArgs e)
         {
-            if (!textBox.Focused && !listBox.Focused)
+            BeginInvoke(new Action(() =>
             {
-                listBox.Visible = false;
-                Height = textBox.Height;
-            }
+                if (!textBox.Focused && !listBox.Focused)
+                {
+                    HideDropDown();
+                }
+            }));
         }
     }
 }

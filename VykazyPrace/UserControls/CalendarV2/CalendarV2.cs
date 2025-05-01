@@ -141,12 +141,6 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             InitializeContextMenus();
 
-            comboBoxProjects.AutoCompleteMode = AutoCompleteMode.None;
-            comboBoxProjects.AutoCompleteSource = AutoCompleteSource.None;
-
-            comboBoxIndex.AutoCompleteMode = AutoCompleteMode.None;
-            comboBoxIndex.AutoCompleteSource = AutoCompleteSource.None;
-
             panelContainer.Scroll += PanelContainer_Scroll;
             _loadingUC.Size = Size;
             Controls.Add(_loadingUC);
@@ -347,18 +341,10 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                 SafeInvoke(() =>
                 {
-                    comboBoxIndexLoading = true;
-
-                    comboBoxIndex.Items.Clear();
-                    comboBoxIndex.Items.AddRange(
-                        _timeEntrySubTypes
+                    customComboBox1.SetItems(_timeEntrySubTypes
                                 .Where(t => t.IsArchived == 0)
                                 .Select(FormatHelper.FormatTimeEntrySubTypeToString)
                                 .ToArray());
-
-                    comboBoxIndex.Text = string.Empty;
-
-                    comboBoxIndexLoading = false;
                 });
             }
             catch (Exception ex)
@@ -463,7 +449,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                     if (lastPanel?.EntryId != -1)
                     {
-                        comboBoxIndex.Text = timeEntry.Description;
+                        customComboBox1.SetText(timeEntry.Description);
                         textBoxNote.Text = timeEntry.Note;
                         suppressDropdownTemporarily = true;
                         comboBoxProjects.Text = FormatHelper.FormatProjectToString(timeEntry.Project);
@@ -511,7 +497,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                     comboBoxStart.SelectedIndex = minutesStart / 30;
                     comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
 
-                    comboBoxIndex.Text = string.Empty;
+                    customComboBox1.SetText(string.Empty);
                     textBoxNote.Text = string.Empty;
                     comboBoxProjects.Text = string.Empty;
                     comboBoxEntryType.Text = string.Empty;
@@ -1361,7 +1347,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             var newSubType = new TimeEntrySubType
             {
-                Title = comboBoxIndex.Text,
+                Title = customComboBox1.GetText(),
                 UserId = _selectedUser.Id
             };
 
@@ -1509,7 +1495,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 tableLayoutPanelProject.Visible = true;
                 tableLayoutPanelEntryType.Visible = true;
                 tableLayoutPanelEntrySubType.Visible = true;
-                comboBoxIndex.Text = string.Empty;
+                customComboBox1.SetText(string.Empty);
                 panel4.Visible = true;
 
                 switch (rb.Text)
@@ -1873,50 +1859,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             {
                 updatingFlag = false;
             }
-        }
-
-
-
-
-        private void comboBoxIndex_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            if (comboBoxIndexLoading || isUpdating) return;
-
-            isUpdating = true;
-            try
-            {
-                if (comboBoxIndex.SelectedItem != null)
-                {
-                    comboBoxIndex.Text = comboBoxIndex.SelectedItem.ToString();
-                    comboBoxIndex.SelectionStart = comboBoxIndex.Text.Length;
-                    comboBoxIndex.SelectionLength = 0;
-                    comboBoxIndex.DroppedDown = false;
-                }
-            }
-            finally { isUpdating = false; }
-        }
-
-        private void comboBoxIndex_TextChanged(object sender, EventArgs e)
-        {
-            FilterComboBoxItems(
-                comboBox: comboBoxIndex,
-                dataSource: _timeEntrySubTypes,
-                formatFunc: FormatHelper.FormatTimeEntrySubTypeToString,
-                isLoading: comboBoxIndexLoading,
-                updatingFlag: ref isUpdating,
-                normalizeFunc: FormatHelper.RemoveDiacritics,
-                comparison: StringComparison.OrdinalIgnoreCase,
-                resetAction: ResetIndexComboBox
-            );
-        }
-
-
-
-        private void ResetIndexComboBox()
-        {
-            comboBoxIndex.Items.Clear();
-            comboBoxIndex.Items.AddRange(_timeEntrySubTypes.Select(FormatHelper.FormatTimeEntrySubTypeToString).ToArray());
-            comboBoxIndex.DroppedDown = false;
         }
     }
 }

@@ -97,7 +97,7 @@
             labelType = new Label();
             tableLayoutPanelEntrySubType = new TableLayoutPanel();
             label10 = new Label();
-            comboBoxIndex = new ComboBox();
+            customComboBox1 = new CustomComboBox();
             panel4 = new Panel();
             tableLayoutPanel13 = new TableLayoutPanel();
             comboBoxEnd = new ComboBox();
@@ -1028,7 +1028,7 @@
             comboBoxProjects.FormattingEnabled = true;
             comboBoxProjects.IntegralHeight = false;
             comboBoxProjects.ItemHeight = 25;
-            comboBoxProjects.Location = new Point(3, 46);
+            comboBoxProjects.Location = new Point(3, 36);
             comboBoxProjects.Name = "comboBoxProjects";
             comboBoxProjects.Size = new Size(231, 33);
             comboBoxProjects.TabIndex = 150;
@@ -1110,7 +1110,7 @@
             tableLayoutPanelEntrySubType.ColumnCount = 1;
             tableLayoutPanelEntrySubType.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanelEntrySubType.Controls.Add(label10, 0, 0);
-            tableLayoutPanelEntrySubType.Controls.Add(comboBoxIndex, 0, 1);
+            tableLayoutPanelEntrySubType.Controls.Add(customComboBox1, 0, 1);
             tableLayoutPanelEntrySubType.Dock = DockStyle.Top;
             tableLayoutPanelEntrySubType.Location = new Point(3, 280);
             tableLayoutPanelEntrySubType.Name = "tableLayoutPanelEntrySubType";
@@ -1131,18 +1131,13 @@
             label10.TabIndex = 32;
             label10.Text = "Index*";
             // 
-            // comboBoxIndex
+            // customComboBox1
             // 
-            comboBoxIndex.Dock = DockStyle.Top;
-            comboBoxIndex.FormattingEnabled = true;
-            comboBoxIndex.IntegralHeight = false;
-            comboBoxIndex.ItemHeight = 25;
-            comboBoxIndex.Location = new Point(3, 28);
-            comboBoxIndex.Name = "comboBoxIndex";
-            comboBoxIndex.Size = new Size(232, 33);
-            comboBoxIndex.TabIndex = 31;
-            comboBoxIndex.SelectionChangeCommitted += comboBoxIndex_SelectionChangeCommitted;
-            comboBoxIndex.TextChanged += comboBoxIndex_TextChanged;
+            customComboBox1.Dock = DockStyle.Fill;
+            customComboBox1.Location = new Point(3, 28);
+            customComboBox1.Name = "customComboBox1";
+            customComboBox1.Size = new Size(232, 34);
+            customComboBox1.TabIndex = 33;
             // 
             // panel4
             // 
@@ -1411,7 +1406,6 @@
         private Label labelType;
         private TableLayoutPanel tableLayoutPanelEntrySubType;
         private Label label10;
-        private ComboBox comboBoxIndex;
         private Panel panel4;
         private TableLayoutPanel tableLayoutPanel13;
         private Label label40;
@@ -1436,5 +1430,6 @@
         private Label labelDate05;
         private Label labelDate03;
         private Label labelDate02;
+        private CustomComboBox customComboBox1;
     }
 }

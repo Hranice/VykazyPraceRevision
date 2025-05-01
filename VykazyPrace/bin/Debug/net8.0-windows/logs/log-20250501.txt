@@ -1,0 +1,2 @@
+2025-05-01 08:48:31.089 +02:00 [INF] Záznam 0 - Provoz Nová hala: 0,5 h - aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa byl úspěšně aktualizován.
+2025-05-01 08:50:30.859 +02:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 0,5 h - aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa byl smazán z databáze.

@@ -121,8 +121,8 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         public async Task ForceReloadAsync()
         {
-            await LoadTimeEntrySubTypesAsync();
-            //await LoadInitialDataAsync();
+            await LoadInitialDataAsync();
+            await LoadSidebar();
         }
 
         private void SafeInvoke(Action action)
@@ -644,17 +644,17 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async Task RenderCalendar()
         {
-            var currentUser = await _userRepo.GetUserByWindowsUsernameAsync(Environment.UserName);
-            bool isCurrentUser = _selectedUser.WindowsUsername == currentUser.WindowsUsername;
-            tableLayoutPanel1.Enabled = isCurrentUser;
-            flowLayoutPanel2.Enabled = isCurrentUser;
-
             tableLayoutPanel1.SuspendLayout();
             panelContainer.SuspendLayout();
 
             var scrollPosition = panelContainer.AutoScrollPosition;
             panelContainer.AutoScroll = false;
             _loadingUC.BringToFront();
+
+            var currentUser = await _userRepo.GetUserByWindowsUsernameAsync(Environment.UserName);
+            bool isCurrentUser = _selectedUser.WindowsUsername == currentUser.WindowsUsername;
+            tableLayoutPanel1.Enabled = isCurrentUser;
+            flowLayoutPanel2.Enabled = isCurrentUser;
 
             tableLayoutPanel1.Controls.Clear();
             panels.Clear();

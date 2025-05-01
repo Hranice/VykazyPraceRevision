@@ -1,2 +1,20 @@
 2025-05-01 08:48:31.089 +02:00 [INF] Záznam 0 - Provoz Nová hala: 0,5 h - aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa byl úspěšně aktualizován.
 2025-05-01 08:50:30.859 +02:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 0,5 h - aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa byl smazán z databáze.
+2025-05-01 09:36:22.557 +02:00 [ERR] Nelze přepisovat více položek najednou.
+2025-05-01 09:36:34.757 +02:00 [INF] Změněn typ záznamu: 'test4' -> 'test46'.
+2025-05-01 09:51:10.257 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - test46 byl úspěšně aktualizován.
+2025-05-01 09:52:04.650 +02:00 [INF] Změněn typ záznamu: 'test46' -> 'test4'.
+2025-05-01 10:00:01.705 +02:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 0,5 h - test467 byl úspěšně aktualizován.
+2025-05-01 10:00:12.321 +02:00 [INF] Změněn typ záznamu: 'test467' -> 'test4678'. Přejmenováno 1 záznamů.
+2025-05-01 10:03:51.283 +02:00 [INF] Změněn typ záznamu: 'test4678' -> 'test46789'. Přejmenováno 1 záznamů.
+2025-05-01 10:04:29.506 +02:00 [INF] Změněn typ záznamu: 'test46789' -> 'test46789ee'. Přejmenováno 1 záznamů.
+2025-05-01 10:04:57.505 +02:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 1,5 h - test46789eeee byl úspěšně aktualizován.
+2025-05-01 10:05:07.303 +02:00 [INF] Změněn typ záznamu: 'test46789eeee' -> 'rrrrrrrrrrrrr'. Přejmenováno 1 záznamů.
+2025-05-01 10:05:17.700 +02:00 [INF] Změněn typ záznamu: 'rrrrrrrrrrrrr' -> 'rrrrrrrrrrrrree'. Přejmenováno 1 záznamů.
+2025-05-01 10:05:26.377 +02:00 [INF] Změněn typ záznamu: 'rrrrrrrrrrrrree' -> 'ee'. Přejmenováno 1 záznamů.
+2025-05-01 10:06:08.928 +02:00 [INF] Změněn typ záznamu: 'ee' -> 'ee25'. Přejmenováno 1 záznamů.
+2025-05-01 10:06:28.049 +02:00 [INF] Změněn typ záznamu: 'ee25' -> 'ee25ewwe'. Přejmenováno 1 záznamů.
+2025-05-01 14:08:33.939 +02:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 0,5 h - Úklid byl úspěšně aktualizován.
+2025-05-01 14:08:44.060 +02:00 [INF] Záznam  - Automatizace: 0,5 h -  byl smazán z databáze.
+2025-05-01 14:10:07.654 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - Seřízení kontrolního systému byl úspěšně aktualizován.
+2025-05-01 14:10:41.506 +02:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 0,5 h -  byl smazán z databáze.

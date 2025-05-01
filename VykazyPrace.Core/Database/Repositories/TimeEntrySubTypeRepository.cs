@@ -23,13 +23,10 @@ namespace VykazyPrace.Core.Database.Repositories
 
             if (existingEntry != null)
             {
-                if (existingEntry.IsArchived == 1)
+                if (existingEntry.IsArchived == 0)
                 {
-                    existingEntry.IsArchived = 0;
-                    await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+                    return existingEntry;
                 }
-
-                return existingEntry;
             }
 
             _context.TimeEntrySubTypes.Add(subType);

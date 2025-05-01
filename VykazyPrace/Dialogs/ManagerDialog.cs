@@ -17,8 +17,9 @@ namespace VykazyPrace.Dialogs
             try
             {
                 var powerKeyHelper = new PowerKeyHelper();
-                int totalRows = await powerKeyHelper.DownloadArrivalsDeparturesAsync();
-                AppLogger.Information($"Staženo {totalRows} záznamů.", true);
+                var month = DateTime.Now.AddMonths(-1);
+                int totalRows = await powerKeyHelper.DownloadArrivalsDeparturesAsync(month);
+                AppLogger.Information($"Staženo {totalRows} záznamů pro měsíc č.{month.Month}.", true);
             }
             catch (Exception ex)
             {

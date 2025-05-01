@@ -22,6 +22,26 @@ namespace VykazyPrace.Core.Database.Repositories
             return entry;
         }
 
+        public async Task<DateTime?> GetLatestWorkDateAsync(int userId)
+        {
+            return await _context.ArrivalsDepartures
+                .Where(a => a.UserId == userId)
+                .OrderByDescending(a => a.WorkDate)
+                .Select(a => (DateTime?)a.WorkDate)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<ArrivalDeparture?> GetExactMatchAsync(int userId, DateTime workDate, DateTime arrival, DateTime departure, double worked, double overtime)
+        {
+            return await _context.ArrivalsDepartures.FirstOrDefaultAsync(a =>
+                a.UserId == userId &&
+                a.WorkDate == workDate.Date &&
+                a.ArrivalTimestamp == arrival &&
+                a.DepartureTimestamp == departure &&
+                Math.Abs(a.HoursWorked - worked) < 0.01 &&
+                Math.Abs(a.HoursOvertime - overtime) < 0.01);
+        }
+
         /// <summary>
         /// Získání všech záznamů příchodů/odchodů.
         /// </summary>

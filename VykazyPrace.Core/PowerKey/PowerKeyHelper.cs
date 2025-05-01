@@ -1,10 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 
@@ -14,12 +9,15 @@ namespace VykazyPrace.Core.PowerKey
     {
         private const string ConnectionString = "Server=10.130.10.100;Database=powerkey;User Id=vykazprace;Password=!Vykaz2025!;TrustServerCertificate=True;";
 
-        public async Task<int> DownloadArrivalsDeparturesAsync()
+
+        // TODO: Vzít pouze pokud je stav Nezpracováno (prnvě by bylo fajn zjistit, co to znamená)
+        public async Task<int> DownloadArrivalsDeparturesAsync(DateTime month)
         {
             try
             {
                 DropView();
-                CreateView();
+                CreateView(month);
+
                 return await SaveToDatabaseAsync();
             }
             catch (Exception ex)
@@ -45,10 +43,14 @@ namespace VykazyPrace.Core.PowerKey
             }
         }
 
-        private void CreateView()
+        private void CreateView(DateTime targetMonth)
         {
             const string dateFormatCommand = "SET DATEFORMAT DMY;";
-            const string createViewCommand = @"
+
+            // SQL část pro výpočet monthNumber pomocí PowerKey funkce
+            string dateToMonthNumber = $"[pwk].[DateToMonthNumber] ('{targetMonth:yyyy-MM-dd}')";
+
+            string createViewCommand = $@"
 CREATE VIEW [pwk].[Prenos_pracovni_doby]
 AS
 SELECT
@@ -82,7 +84,7 @@ CROSS APPLY (
     ORDER BY [AR2].[RegistrationTime] ASC
 ) AS [PB]
 WHERE [PE].[DeletedID] = 0 
-AND [AM].[MonthNumber] = ([pwk].[DateToMonthNumber] (GETDATE())) - 1";
+AND [AM].[MonthNumber] = {dateToMonthNumber}";
 
             try
             {
@@ -98,13 +100,14 @@ AND [AM].[MonthNumber] = ([pwk].[DateToMonthNumber] (GETDATE())) - 1";
                 {
                     createView.ExecuteNonQuery();
                 }
-
             }
             catch (Exception ex)
             {
                 throw new Exception("Chyba při vytváření view.", ex);
             }
         }
+
+
 
         private async Task<int> SaveToDatabaseAsync()
         {
@@ -130,8 +133,14 @@ AND [AM].[MonthNumber] = ([pwk].[DateToMonthNumber] (GETDATE())) - 1";
                             if (!TryParseArrivalDepartureRow(row, out var arrival, out var departure, out var workDate, out var worked, out var overtime, out var reason))
                                 continue;
 
-                            var existing = await arrivalRepo.GetByUserAndDateAsync(user.Id, workDate);
-                            if (existing != null) continue;
+                            var duplicate = await arrivalRepo.GetExactMatchAsync(user.Id, workDate, arrival, departure, worked, overtime);
+                            if (duplicate != null)
+                                continue;
+
+                            var latestDate = await arrivalRepo.GetLatestWorkDateAsync(user.Id);
+                            if (latestDate.HasValue && workDate <= latestDate.Value)
+                                continue;
+
 
                             var newEntry = new ArrivalDeparture
                             {

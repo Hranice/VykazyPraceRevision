@@ -32,7 +32,7 @@ namespace VykazyPrace.Dialogs
         SELECT * 
         FROM pwk.Prenos_pracovni_doby
         WHERE [Id_pracovníka (Os. číslo)] = @OsCislo";
-        //AND [Datum směny] BETWEEN @StartDate AND @EndDate";
+            //AND [Datum směny] BETWEEN @StartDate AND @EndDate";
 
             try
             {
@@ -130,7 +130,7 @@ WHERE [AR2].[AttnDayID]=[D2].[AttnDayID] AND [D].[InOutType]=2 AND [AR2].[Delete
 ORDER BY [AR2].[RegistrationTime] ASC) AS [PB]
 
 WHERE [PE].[DeletedID] = 0 
-AND [AM].[MonthNumber] = ([pwk].[DateToMonthNumber] (GETDATE()))";
+AND [AM].[MonthNumber] = ([pwk].[DateToMonthNumber] (GETDATE())) - 1";
 
             try
             {
@@ -173,6 +173,11 @@ AND [AM].[MonthNumber] = ([pwk].[DateToMonthNumber] (GETDATE()))";
         private void buttonReload_Click(object sender, EventArgs e)
         {
             LoadFilteredData();
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

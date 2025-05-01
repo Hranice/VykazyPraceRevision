@@ -348,5 +348,10 @@ namespace VykazyPrace
             config.AppMaximized = this.WindowState == FormWindowState.Maximized;
             ConfigService.Save(config);
         }
+
+        private void správceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new ManagerDialog().ShowDialog();
+        }
     }
 }

@@ -33,6 +33,7 @@
             buttonCreate = new Button();
             buttonReload = new Button();
             customComboBox1 = new VykazyPrace.UserControls.CustomComboBox();
+            buttonSave = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -81,11 +82,22 @@
             customComboBox1.Size = new Size(150, 23);
             customComboBox1.TabIndex = 4;
             // 
+            // buttonSave
+            // 
+            buttonSave.Location = new Point(1057, 114);
+            buttonSave.Name = "buttonSave";
+            buttonSave.Size = new Size(55, 28);
+            buttonSave.TabIndex = 5;
+            buttonSave.Text = "Save";
+            buttonSave.UseVisualStyleBackColor = true;
+            buttonSave.Click += buttonSave_Click;
+            // 
             // TestDialog
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1124, 641);
+            Controls.Add(buttonSave);
             Controls.Add(customComboBox1);
             Controls.Add(buttonReload);
             Controls.Add(buttonCreate);
@@ -106,5 +118,6 @@
         private Button buttonCreate;
         private Button buttonReload;
         private UserControls.CustomComboBox customComboBox1;
+        private Button buttonSave;
     }
 }

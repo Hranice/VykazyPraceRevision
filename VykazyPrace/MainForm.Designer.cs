@@ -52,6 +52,7 @@
             buttonPrevious = new Button();
             panelContainer = new Panel();
             panelCalendarContainer = new Panel();
+            správceToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -121,7 +122,7 @@
             // 
             // toolStripMenuItem1
             // 
-            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { nastaveníToolStripMenuItem, testToolStripMenuItem, oProgramuToolStripMenuItem });
+            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { nastaveníToolStripMenuItem, testToolStripMenuItem, oProgramuToolStripMenuItem, správceToolStripMenuItem });
             toolStripMenuItem1.Name = "toolStripMenuItem1";
             toolStripMenuItem1.Size = new Size(24, 20);
             toolStripMenuItem1.Text = "?";
@@ -266,6 +267,13 @@
             panelCalendarContainer.Size = new Size(966, 769);
             panelCalendarContainer.TabIndex = 1;
             // 
+            // správceToolStripMenuItem
+            // 
+            správceToolStripMenuItem.Name = "správceToolStripMenuItem";
+            správceToolStripMenuItem.Size = new Size(180, 22);
+            správceToolStripMenuItem.Text = "Správce";
+            správceToolStripMenuItem.Click += správceToolStripMenuItem_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
@@ -321,5 +329,6 @@
         private ToolStripMenuItem testToolStripMenuItem;
         private ToolStripMenuItem správaIndexůToolStripMenuItem;
         private Button buttonNow;
+        private ToolStripMenuItem správceToolStripMenuItem;
     }
 }

@@ -27,7 +27,10 @@ public partial class VykazyPraceContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<UserGroup> UserGroups { get; set; }
+
     public virtual DbSet<SpecialDay> SpecialDays { get; set; }
+
+    public virtual DbSet<ArrivalDeparture> ArrivalsDepartures { get; set; } // Nový DbSet
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -116,7 +119,36 @@ public partial class VykazyPraceContext : DbContext
                 .HasDefaultValue("#FFCDC7");
         });
 
+        modelBuilder.Entity<ArrivalDeparture>(entity =>
+        {
+            entity.HasIndex(e => e.Id, "IX_ArrivalsDepartures_Id").IsUnique();
 
+            entity.Property(e => e.WorkDate)
+                .HasColumnType("TEXT")
+                .IsRequired();
+
+            entity.Property(e => e.ArrivalTimestamp)
+                .HasColumnType("TEXT");
+
+            entity.Property(e => e.DepartureTimestamp)
+                .HasColumnType("TEXT");
+
+            entity.Property(e => e.DepartureReason)
+                .HasColumnType("TEXT");
+
+            entity.Property(e => e.HoursWorked)
+                .HasColumnType("REAL")
+                .HasDefaultValue(0);
+
+            entity.Property(e => e.HoursOvertime)
+                .HasColumnType("REAL")
+                .HasDefaultValue(0);
+
+            entity.HasOne(d => d.User)
+                .WithMany(p => p.ArrivalDepartures)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
 
         OnModelCreatingPartial(modelBuilder);
     }

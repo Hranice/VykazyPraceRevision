@@ -107,7 +107,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             _resizeTimer.Tick += async (_, _) =>
             {
                 _resizeTimer.Stop();
-                //await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
+                await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
             };
 
             _specialDayRepo = specialDayRepo;
@@ -1883,11 +1883,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                     comboBox.Items.Clear();
                     comboBox.Items.AddRange(filteredItems.ToArray());
 
-                    // ⚠️ Zabrání automatickému výběru a přepisu
                     comboBox.SelectedIndex = -1;
                     comboBox.SelectedItem = null;
 
-                    // ⚠️ Obnov text a pozici kurzoru ručně
                     string preservedText = comboBox.Text;
                     comboBox.Text = preservedText;
                     comboBox.SelectionStart = selectionStart;

@@ -45,3 +45,5 @@ System.Runtime.InteropServices.COMException (0x800A03EC): Soubor Export.xlsx nen
 2025-05-05 14:08:37.535 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
 2025-05-05 14:09:17.078 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
 2025-05-05 14:26:25.911 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-05 14:29:15.966 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-05 15:32:05.167 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.

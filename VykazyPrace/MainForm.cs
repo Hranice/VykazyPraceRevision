@@ -22,6 +22,7 @@ namespace VykazyPrace
         private readonly TimeEntrySubTypeRepository _timeEntrySubTypeRepo = new TimeEntrySubTypeRepository();
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
         private readonly SpecialDayRepository _specialDayRepo = new SpecialDayRepository();
+        private readonly ArrivalDepartureRepository _arrivalDepartureRepo = new ArrivalDepartureRepository();
         private readonly LoadingUC _loadingUC = new LoadingUC();
         private User _selectedUser = new();
         private int _currentUserLoA = 0;
@@ -175,7 +176,14 @@ namespace VykazyPrace
             panelCalendarContainer.Controls.Add(_monthlyCalendar);
 
             // Nový CalendarV2 do panelContainer
-            _calendar = new CalendarV2(_selectedUser, _timeEntryRepo, _timeEntryTypeRepo, _timeEntrySubTypeRepo, _projectRepo, _userRepo, _specialDayRepo)
+            _calendar = new CalendarV2(_selectedUser,
+                                       _timeEntryRepo,
+                                       _timeEntryTypeRepo,
+                                       _timeEntrySubTypeRepo,
+                                       _projectRepo,
+                                       _userRepo,
+                                       _specialDayRepo,
+                                       _arrivalDepartureRepo)
             {
                 Dock = DockStyle.Fill,
                 Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238),

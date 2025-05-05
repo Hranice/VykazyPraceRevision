@@ -666,6 +666,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         private async Task RenderCalendar()
         {
             tableLayoutPanelCalendar.SuspendLayout();
+            tableLayoutPanelCalendar.SetDate(_selectedDate);
             panelContainer.SuspendLayout();
 
             var scrollPosition = panelContainer.AutoScrollPosition;

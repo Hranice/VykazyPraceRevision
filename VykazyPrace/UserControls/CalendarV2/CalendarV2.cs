@@ -52,9 +52,6 @@ namespace VykazyPrace.UserControls.CalendarV2
         private DateTime _selectedDate;
         private int _selectedTimeEntryId = -1;
         private int _currentProjectType;
-        private bool comboBoxProjectsLoading = false;
-        private bool comboBoxIndexLoading = false;
-        private bool isUpdating = false;
 
         // Drag & drop
         private DayPanel? activePanel = null;
@@ -363,7 +360,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                 SafeInvoke(() =>
                 {
-                    customComboBox1.SetItems(_timeEntrySubTypes
+                    customComboBoxSubTypes.SetItems(_timeEntrySubTypes
                                 .Where(t => t.IsArchived == 0)
                                 .Select(FormatHelper.FormatTimeEntrySubTypeToString)
                                 .ToArray());
@@ -392,15 +389,9 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                 SafeInvoke(() =>
                 {
-                    comboBoxProjectsLoading = true;
-
-                    comboBoxProjects.Items.Clear();
-                    comboBoxProjects.Items.AddRange(
-                        _projects.Select(FormatHelper.FormatProjectToString).ToArray());
-
-                    comboBoxProjects.Text = string.Empty;
-
-                    comboBoxProjectsLoading = false;
+                    customComboBoxProjects.SetItems(_projects
+                            .Select(FormatHelper.FormatProjectToString)
+                            .ToArray());
                 });
             }
             catch (Exception ex)
@@ -411,10 +402,8 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async Task LoadSidebar()
         {
-            comboBoxProjectsLoading = true;
-            comboBoxIndexLoading = true;
-
             string[] days = { "Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota" };
+            flowLayoutPanel2.Visible = _selectedTimeEntryId > -1;
             flowLayoutPanel2.Visible = _selectedTimeEntryId > -1;
 
             var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
@@ -471,11 +460,9 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                     if (lastPanel?.EntryId != -1)
                     {
-                        customComboBox1.SetText(timeEntry.Description);
+                        customComboBoxSubTypes.SetText(timeEntry.Description);
+                        customComboBoxProjects.SetText(FormatHelper.FormatProjectToString(timeEntry.Project));
                         textBoxNote.Text = timeEntry.Note;
-                        suppressDropdownTemporarily = true;
-                        comboBoxProjects.Text = FormatHelper.FormatProjectToString(timeEntry.Project);
-                        suppressDropdownTemporarily = false;
 
                         // Výběr EntryType podle ProjectType
                         if (proj.ProjectType is 0 or 1 or 2)
@@ -508,8 +495,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                         }
                     }
 
-                    comboBoxProjectsLoading = false;
-                    comboBoxIndexLoading = false;
                 }));
             }
             else
@@ -519,9 +504,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                     comboBoxStart.SelectedIndex = minutesStart / 30;
                     comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
 
-                    customComboBox1.SetText(string.Empty);
+                    customComboBoxSubTypes.SetText(string.Empty);
                     textBoxNote.Text = string.Empty;
-                    comboBoxProjects.Text = string.Empty;
+                    //comboBoxProjects.Text = string.Empty;
                     comboBoxEntryType.Text = string.Empty;
 
                     foreach (var radio in flowLayoutPanel2.Controls.OfType<RadioButton>())
@@ -536,8 +521,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                     tableLayoutPanelEntrySubType.Visible = false;
                     panel4.Visible = false;
 
-                    comboBoxIndexLoading = false;
-                    comboBoxProjectsLoading = false;
                 }));
             }
         }
@@ -643,9 +626,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                 EntryMinutes = 30
             };
 
-            if (comboBoxProjects.SelectedIndex > -1)
+            if (customComboBoxProjects.SelectedIndex > -1)
             {
-                newTimeEntry.ProjectId = _projects[(comboBoxProjects.SelectedIndex == -1 ? 0 : comboBoxProjects.SelectedIndex)].Id;
+                newTimeEntry.ProjectId = _projects[(customComboBoxProjects.SelectedIndex == -1 ? 0 : customComboBoxProjects.SelectedIndex)].Id;
             }
 
             newTimeEntry.AfterCare = _projects.Find(x => x.Id == newTimeEntry.ProjectId).IsArchived;
@@ -1348,51 +1331,6 @@ namespace VykazyPrace.UserControls.CalendarV2
         }
         #endregion
 
-        #region ComboBox Projects
-
-        private void comboBoxProjects_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            if (comboBoxProjectsLoading || isUpdating) return;
-
-            isUpdating = true;
-            try
-            {
-                if (comboBoxProjects.SelectedItem != null)
-                {
-                    comboBoxProjects.Text = comboBoxProjects.SelectedItem.ToString();
-                    comboBoxProjects.SelectionStart = comboBoxProjects.Text.Length;
-                    comboBoxProjects.SelectionLength = 0;
-                    comboBoxProjects.DroppedDown = false;
-                }
-            }
-            finally { isUpdating = false; }
-        }
-
-        private bool suppressDropdownTemporarily = false;
-
-
-        private void comboBoxProjects_TextChanged(object sender, EventArgs e)
-        {
-            FilterComboBoxItems(
-                comboBox: comboBoxProjects,
-                dataSource: _projects,
-                formatFunc: FormatHelper.FormatProjectToString,
-                isLoading: comboBoxProjectsLoading,
-                updatingFlag: ref isUpdating,
-                normalizeFunc: FormatHelper.RemoveDiacritics,
-                comparison: StringComparison.OrdinalIgnoreCase,
-                resetAction: ResetProjectComboBox
-            );
-        }
-
-        private void ResetProjectComboBox()
-        {
-            comboBoxProjects.Items.Clear();
-            comboBoxProjects.Items.AddRange(_projects.Select(FormatHelper.FormatProjectToString).ToArray());
-            comboBoxProjects.DroppedDown = false;
-        }
-        #endregion
-
         private async void buttonConfirm_Click(object sender, EventArgs e)
         {
             var (valid, reason) = CheckForEmptyOrIncorrectFields();
@@ -1434,7 +1372,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             var newSubType = new TimeEntrySubType
             {
-                Title = customComboBox1.GetText(),
+                Title = customComboBoxSubTypes.GetText(),
                 UserId = _selectedUser.Id
             };
 
@@ -1448,7 +1386,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             timeEntry.Note = textBoxNote.Text;
 
             var selectedProject = _projects.FirstOrDefault(p =>
-                FormatHelper.FormatProjectToString(p).Equals(comboBoxProjects.Text, StringComparison.InvariantCultureIgnoreCase));
+                FormatHelper.FormatProjectToString(p).Equals(customComboBoxProjects.SelectedItem, StringComparison.InvariantCultureIgnoreCase));
 
             if (selectedProject != null)
             {
@@ -1489,7 +1427,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                .FirstOrDefault(r => r.Checked);
 
             bool ProjectTextMatches = _projects.Any(p =>
-                FormatHelper.FormatProjectToString(p).Equals(comboBoxProjects.Text, StringComparison.InvariantCultureIgnoreCase));
+                FormatHelper.FormatProjectToString(p).Equals(customComboBoxProjects.SelectedItem, StringComparison.InvariantCultureIgnoreCase));
 
             bool EntryTypeMatches = _timeEntryTypes.Any(t =>
                 FormatHelper.FormatTimeEntryTypeToString(t).Equals(comboBoxEntryType.Text, StringComparison.InvariantCultureIgnoreCase) ||
@@ -1498,12 +1436,12 @@ namespace VykazyPrace.UserControls.CalendarV2
             switch (rb?.Text)
             {
                 case "PROVOZ":
-                    if (string.IsNullOrWhiteSpace(comboBoxProjects.Text) || !ProjectTextMatches)
+                    if (string.IsNullOrWhiteSpace(customComboBoxProjects.SelectedItem) || !ProjectTextMatches)
                         return (false, "Nákladové středisko neodpovídá žádné možnosti");
                     break;
                 case "PROJEKT":
                 case "PŘEDPROJEKT":
-                    if (string.IsNullOrWhiteSpace(comboBoxProjects.Text) || !ProjectTextMatches)
+                    if (string.IsNullOrWhiteSpace(customComboBoxProjects.SelectedItem) || !ProjectTextMatches)
                         return (false, "Projekt neodpovídá žádné možnosti");
                     break;
                 case "ŠKOLENÍ":
@@ -1582,7 +1520,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 tableLayoutPanelProject.Visible = true;
                 tableLayoutPanelEntryType.Visible = true;
                 tableLayoutPanelEntrySubType.Visible = true;
-                customComboBox1.SetText(string.Empty);
+                customComboBoxSubTypes.SetText(string.Empty);
                 panel4.Visible = true;
 
                 switch (rb.Text)
@@ -1881,79 +1819,6 @@ namespace VykazyPrace.UserControls.CalendarV2
         private void panelDay2_Paint(object sender, PaintEventArgs e)
         {
 
-        }
-
-        private void FilterComboBoxItems<T>(
-     ComboBox comboBox,
-     List<T> dataSource,
-     Func<T, string> formatFunc,
-     bool isLoading,
-     ref bool updatingFlag,
-     Func<string, string>? normalizeFunc = null,
-     StringComparison comparison = StringComparison.OrdinalIgnoreCase,
-     Action? resetAction = null)
-        {
-            if (isLoading || updatingFlag || !comboBox.Enabled || suppressDropdownTemporarily) return;
-
-            updatingFlag = true;
-            try
-            {
-                string query = normalizeFunc?.Invoke(comboBox.Text) ?? comboBox.Text;
-                int selectionStart = comboBox.SelectionStart;
-
-                if (string.IsNullOrWhiteSpace(query))
-                {
-                    resetAction?.Invoke();
-                    return;
-                }
-
-                var filteredItems = dataSource
-                    .Select(formatFunc)
-                    .Where(x =>
-                    {
-                        var normalizedItem = normalizeFunc?.Invoke(x) ?? x;
-                        return query.Length > 1
-                            ? normalizedItem.IndexOf(query.Substring(1), comparison) >= 0
-                            : normalizedItem.IndexOf(query, comparison) > 0;
-                    })
-
-                    .ToList();
-
-                if (filteredItems.Count > 0)
-                {
-                    comboBox.BeginUpdate();
-                    comboBox.Items.Clear();
-                    comboBox.Items.AddRange(filteredItems.ToArray());
-
-                    comboBox.SelectedIndex = -1;
-                    comboBox.SelectedItem = null;
-
-                    string preservedText = comboBox.Text;
-                    comboBox.Text = preservedText;
-                    comboBox.SelectionStart = selectionStart;
-                    comboBox.SelectionLength = 0;
-
-                    comboBox.EndUpdate();
-
-                    if (!comboBox.DroppedDown && !suppressDropdownTemporarily)
-                    {
-                        BeginInvoke(() =>
-                        {
-                            if (!suppressDropdownTemporarily)
-                                comboBox.DroppedDown = true;
-                            Cursor = Cursors.Default;
-                        });
-                    }
-                }
-                else
-                {
-                    comboBox.DroppedDown = false;
-                }
-            }
-            finally
-            {
-                updatingFlag = false;
-            }
         }
     }
 }

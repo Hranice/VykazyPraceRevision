@@ -21,6 +21,34 @@ namespace VykazyPrace.UserControls
 
         public string SelectedItem => textBox.Text;
 
+        private int _selectedIndex = -1;
+
+        public int SelectedIndex
+        {
+            get => _selectedIndex;
+            set
+            {
+                if (value >= 0 && value < listBox.Items.Count)
+                {
+                    _selectedIndex = value;
+                    string selected = listBox.Items[value].ToString()!;
+                    suppressTextChanged = true;
+                    textBox.Text = selected;
+                    suppressTextChanged = false;
+                    listBox.SelectedIndex = value;
+                }
+                else
+                {
+                    _selectedIndex = -1;
+                    suppressTextChanged = true;
+                    textBox.Text = string.Empty;
+                    suppressTextChanged = false;
+                    listBox.SelectedIndex = -1;
+                }
+            }
+        }
+
+
         public CustomComboBox()
         {
             textBox = new TextBox { Dock = DockStyle.Fill };

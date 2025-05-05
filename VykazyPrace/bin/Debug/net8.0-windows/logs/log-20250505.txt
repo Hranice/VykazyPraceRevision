@@ -54,3 +54,19 @@ System.Runtime.InteropServices.COMException (0x800A03EC): Soubor Export.xlsx nen
 2025-05-05 15:44:25.743 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
 2025-05-05 15:44:55.042 +02:00 [INF] Záznam  - Automatizace: 1 h -  byl úspěšně aktualizován.
 2025-05-05 15:44:57.512 +02:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 1 h -  byl smazán z databáze.
+2025-05-05 15:47:57.169 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-05 15:55:34.172 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-05 15:56:34.133 +02:00 [INF] Záznam 0289E25 - Automatický přenos z postřikové linky: 1,5 h - Studie proveditelnosti byl úspěšně aktualizován.
+2025-05-05 15:57:23.515 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-05 15:59:28.324 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Nákladové středisko neodpovídá žádné možnosti
+2025-05-05 15:59:31.868 +02:00 [INF] Záznam 0 - Provoz Nová hala: 2,5 h - Seřízení kontrolního systému byl úspěšně aktualizován.
+2025-05-05 15:59:54.188 +02:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 1,5 h -  byl úspěšně aktualizován.
+2025-05-05 16:00:02.115 +02:00 [INF] Záznam 0 - Nepřítomnost: 1,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-05-05 16:00:06.074 +02:00 [INF] Záznam 0 - Ostatní: 1,5 h -  byl úspěšně aktualizován.
+2025-05-05 16:00:12.649 +02:00 [ERR] Je třeba správně vyplnit všechna potřebná data! Chybný parametr: Nákladové středisko neodpovídá žádné možnosti
+2025-05-05 16:00:15.966 +02:00 [INF] Záznam 0 - Školení: 1,5 h -  byl úspěšně aktualizován.
+2025-05-05 16:00:18.771 +02:00 [INF] Záznam 0 - Provoz Nová hala: 1,5 h - 3D tisk byl úspěšně aktualizován.
+2025-05-05 16:00:23.886 +02:00 [INF] Záznam 0 - Provoz Nová hala: 1,5 h - Přednatáčení byl úspěšně aktualizován.
+2025-05-05 16:02:01.289 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-05 16:02:45.632 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-05 16:03:43.810 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.

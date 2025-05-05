@@ -95,7 +95,7 @@
             radioButton4 = new RadioButton();
             radioButton5 = new RadioButton();
             tableLayoutPanelProject = new TableLayoutPanel();
-            comboBoxProjects = new ComboBox();
+            customComboBoxProjects = new CustomComboBox();
             panel2 = new Panel();
             checkBoxArchivedProjects = new CheckBox();
             labelProject = new Label();
@@ -104,7 +104,7 @@
             labelType = new Label();
             tableLayoutPanelEntrySubType = new TableLayoutPanel();
             label10 = new Label();
-            customComboBox1 = new CustomComboBox();
+            customComboBoxSubTypes = new CustomComboBox();
             panel4 = new Panel();
             tableLayoutPanel13 = new TableLayoutPanel();
             comboBoxEnd = new ComboBox();
@@ -1109,7 +1109,7 @@
             // 
             tableLayoutPanelProject.ColumnCount = 1;
             tableLayoutPanelProject.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanelProject.Controls.Add(comboBoxProjects, 0, 2);
+            tableLayoutPanelProject.Controls.Add(customComboBoxProjects, 0, 1);
             tableLayoutPanelProject.Controls.Add(panel2, 0, 0);
             tableLayoutPanelProject.Dock = DockStyle.Top;
             tableLayoutPanelProject.Location = new Point(3, 126);
@@ -1122,18 +1122,14 @@
             tableLayoutPanelProject.Size = new Size(237, 72);
             tableLayoutPanelProject.TabIndex = 149;
             // 
-            // comboBoxProjects
+            // customComboBoxProjects
             // 
-            comboBoxProjects.Dock = DockStyle.Bottom;
-            comboBoxProjects.FormattingEnabled = true;
-            comboBoxProjects.IntegralHeight = false;
-            comboBoxProjects.ItemHeight = 25;
-            comboBoxProjects.Location = new Point(3, 36);
-            comboBoxProjects.Name = "comboBoxProjects";
-            comboBoxProjects.Size = new Size(231, 33);
-            comboBoxProjects.TabIndex = 150;
-            comboBoxProjects.SelectionChangeCommitted += comboBoxProjects_SelectionChangeCommitted;
-            comboBoxProjects.TextChanged += comboBoxProjects_TextChanged;
+            customComboBoxProjects.Dock = DockStyle.Fill;
+            customComboBoxProjects.Location = new Point(3, 35);
+            customComboBoxProjects.Name = "customComboBoxProjects";
+            customComboBoxProjects.SelectedIndex = -1;
+            customComboBoxProjects.Size = new Size(231, 34);
+            customComboBoxProjects.TabIndex = 150;
             // 
             // panel2
             // 
@@ -1210,7 +1206,7 @@
             tableLayoutPanelEntrySubType.ColumnCount = 1;
             tableLayoutPanelEntrySubType.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanelEntrySubType.Controls.Add(label10, 0, 0);
-            tableLayoutPanelEntrySubType.Controls.Add(customComboBox1, 0, 1);
+            tableLayoutPanelEntrySubType.Controls.Add(customComboBoxSubTypes, 0, 1);
             tableLayoutPanelEntrySubType.Dock = DockStyle.Top;
             tableLayoutPanelEntrySubType.Location = new Point(3, 280);
             tableLayoutPanelEntrySubType.Name = "tableLayoutPanelEntrySubType";
@@ -1231,13 +1227,14 @@
             label10.TabIndex = 32;
             label10.Text = "Index*";
             // 
-            // customComboBox1
+            // customComboBoxSubTypes
             // 
-            customComboBox1.Dock = DockStyle.Fill;
-            customComboBox1.Location = new Point(3, 28);
-            customComboBox1.Name = "customComboBox1";
-            customComboBox1.Size = new Size(232, 34);
-            customComboBox1.TabIndex = 33;
+            customComboBoxSubTypes.Dock = DockStyle.Fill;
+            customComboBoxSubTypes.Location = new Point(3, 28);
+            customComboBoxSubTypes.Name = "customComboBoxSubTypes";
+            customComboBoxSubTypes.SelectedIndex = -1;
+            customComboBoxSubTypes.Size = new Size(232, 34);
+            customComboBoxSubTypes.TabIndex = 33;
             // 
             // panel4
             // 
@@ -1519,7 +1516,6 @@
         private Button buttonRemove;
         private ComboBox comboBoxEnd;
         private ComboBox comboBoxStart;
-        private ComboBox comboBoxProjects;
         private Panel panel2;
         private CheckBox checkBoxArchivedProjects;
         private Label labelProject;
@@ -1530,7 +1526,7 @@
         private Label labelDate05;
         private Label labelDate03;
         private Label labelDate02;
-        private CustomComboBox customComboBox1;
+        private CustomComboBox customComboBoxSubTypes;
         private Label labelHours01;
         private Label labelHours02;
         private Label labelHours07;
@@ -1538,5 +1534,6 @@
         private Label labelHours06;
         private Label labelHours05;
         private Label labelHours03;
+        private CustomComboBox customComboBoxProjects;
     }
 }

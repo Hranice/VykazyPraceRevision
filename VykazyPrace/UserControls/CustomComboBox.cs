@@ -28,7 +28,7 @@ namespace VykazyPrace.UserControls
             {
                 Visible = false,
                 IntegralHeight = true,
-                Height = 100
+                Height = 250
             };
 
             Controls.Add(textBox);

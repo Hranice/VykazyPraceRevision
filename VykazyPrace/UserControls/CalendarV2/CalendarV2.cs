@@ -107,7 +107,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             _resizeTimer.Tick += async (_, _) =>
             {
                 _resizeTimer.Stop();
-                await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
+                //await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
             };
 
             _specialDayRepo = specialDayRepo;
@@ -166,7 +166,8 @@ namespace VykazyPrace.UserControls.CalendarV2
                 LoadProjectsAsync(DefaultProjectType),
                 LoadSpecialDaysAsync(),
                 LoadArrivalDeparturesAsync(),
-                RenderCalendar()
+                RenderCalendar(),
+                AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate)
             );
         }
 
@@ -209,6 +210,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             _selectedDate = _selectedDate.AddDays(-7);
             await RenderCalendar();
+            await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
             this.Focus();
             return _selectedDate;
         }
@@ -217,6 +219,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             _selectedDate = _selectedDate.AddDays(7);
             await RenderCalendar();
+            await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
             this.Focus();
             return _selectedDate;
         }

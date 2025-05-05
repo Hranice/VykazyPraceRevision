@@ -31,27 +31,34 @@
             tableLayoutPanel2 = new TableLayoutPanel();
             tableLayoutPanel3 = new TableLayoutPanel();
             panelDay6 = new Panel();
+            labelHours07 = new Label();
             labelDate07 = new Label();
             labelDay07 = new Label();
             panel1 = new Panel();
             label2 = new Label();
             labelDate1 = new Label();
             panelDay0 = new Panel();
+            labelHours01 = new Label();
             labelDate01 = new Label();
             labelDay01 = new Label();
             panelDay3 = new Panel();
+            labelHours04 = new Label();
             labelDate04 = new Label();
             labelDay04 = new Label();
             panelDay5 = new Panel();
+            labelHours06 = new Label();
             labelDate06 = new Label();
             labelDay06 = new Label();
             panelDay4 = new Panel();
+            labelHours05 = new Label();
             labelDate05 = new Label();
             labelDay05 = new Label();
             panelDay2 = new Panel();
+            labelHours03 = new Label();
             labelDate03 = new Label();
             labelDay03 = new Label();
             panelDay1 = new Panel();
+            labelHours02 = new Label();
             labelDate02 = new Label();
             labelDay02 = new Label();
             panelContainer = new Panel();
@@ -181,6 +188,7 @@
             // 
             // panelDay6
             // 
+            panelDay6.Controls.Add(labelHours07);
             panelDay6.Controls.Add(labelDate07);
             panelDay6.Controls.Add(labelDay07);
             panelDay6.Dock = DockStyle.Fill;
@@ -189,6 +197,18 @@
             panelDay6.Name = "panelDay6";
             panelDay6.Size = new Size(63, 65);
             panelDay6.TabIndex = 126;
+            // 
+            // labelHours07
+            // 
+            labelHours07.AutoSize = true;
+            labelHours07.Dock = DockStyle.Top;
+            labelHours07.Font = new Font("Reddit Sans", 9.75F, FontStyle.Bold);
+            labelHours07.Location = new Point(0, 42);
+            labelHours07.Name = "labelHours07";
+            labelHours07.Size = new Size(37, 21);
+            labelHours07.TabIndex = 39;
+            labelHours07.Text = "7,5 h";
+            labelHours07.TextAlign = ContentAlignment.MiddleRight;
             // 
             // labelDate07
             // 
@@ -244,6 +264,7 @@
             // 
             // panelDay0
             // 
+            panelDay0.Controls.Add(labelHours01);
             panelDay0.Controls.Add(labelDate01);
             panelDay0.Controls.Add(labelDay01);
             panelDay0.Dock = DockStyle.Fill;
@@ -252,6 +273,18 @@
             panelDay0.Name = "panelDay0";
             panelDay0.Size = new Size(63, 63);
             panelDay0.TabIndex = 112;
+            // 
+            // labelHours01
+            // 
+            labelHours01.AutoSize = true;
+            labelHours01.Dock = DockStyle.Top;
+            labelHours01.Font = new Font("Reddit Sans", 9.75F, FontStyle.Bold);
+            labelHours01.Location = new Point(0, 42);
+            labelHours01.Name = "labelHours01";
+            labelHours01.Size = new Size(37, 21);
+            labelHours01.TabIndex = 37;
+            labelHours01.Text = "7,5 h";
+            labelHours01.TextAlign = ContentAlignment.MiddleRight;
             // 
             // labelDate01
             // 
@@ -277,6 +310,7 @@
             // 
             // panelDay3
             // 
+            panelDay3.Controls.Add(labelHours04);
             panelDay3.Controls.Add(labelDate04);
             panelDay3.Controls.Add(labelDay04);
             panelDay3.Dock = DockStyle.Fill;
@@ -285,6 +319,18 @@
             panelDay3.Name = "panelDay3";
             panelDay3.Size = new Size(63, 63);
             panelDay3.TabIndex = 114;
+            // 
+            // labelHours04
+            // 
+            labelHours04.AutoSize = true;
+            labelHours04.Dock = DockStyle.Top;
+            labelHours04.Font = new Font("Reddit Sans", 9.75F, FontStyle.Bold);
+            labelHours04.Location = new Point(0, 42);
+            labelHours04.Name = "labelHours04";
+            labelHours04.Size = new Size(37, 21);
+            labelHours04.TabIndex = 39;
+            labelHours04.Text = "7,5 h";
+            labelHours04.TextAlign = ContentAlignment.MiddleRight;
             // 
             // labelDate04
             // 
@@ -310,6 +356,7 @@
             // 
             // panelDay5
             // 
+            panelDay5.Controls.Add(labelHours06);
             panelDay5.Controls.Add(labelDate06);
             panelDay5.Controls.Add(labelDay06);
             panelDay5.Dock = DockStyle.Fill;
@@ -318,6 +365,18 @@
             panelDay5.Name = "panelDay5";
             panelDay5.Size = new Size(63, 63);
             panelDay5.TabIndex = 116;
+            // 
+            // labelHours06
+            // 
+            labelHours06.AutoSize = true;
+            labelHours06.Dock = DockStyle.Top;
+            labelHours06.Font = new Font("Reddit Sans", 9.75F, FontStyle.Bold);
+            labelHours06.Location = new Point(0, 42);
+            labelHours06.Name = "labelHours06";
+            labelHours06.Size = new Size(37, 21);
+            labelHours06.TabIndex = 39;
+            labelHours06.Text = "7,5 h";
+            labelHours06.TextAlign = ContentAlignment.MiddleRight;
             // 
             // labelDate06
             // 
@@ -343,6 +402,7 @@
             // 
             // panelDay4
             // 
+            panelDay4.Controls.Add(labelHours05);
             panelDay4.Controls.Add(labelDate05);
             panelDay4.Controls.Add(labelDay05);
             panelDay4.Dock = DockStyle.Fill;
@@ -351,6 +411,18 @@
             panelDay4.Name = "panelDay4";
             panelDay4.Size = new Size(63, 63);
             panelDay4.TabIndex = 115;
+            // 
+            // labelHours05
+            // 
+            labelHours05.AutoSize = true;
+            labelHours05.Dock = DockStyle.Top;
+            labelHours05.Font = new Font("Reddit Sans", 9.75F, FontStyle.Bold);
+            labelHours05.Location = new Point(0, 42);
+            labelHours05.Name = "labelHours05";
+            labelHours05.Size = new Size(37, 21);
+            labelHours05.TabIndex = 39;
+            labelHours05.Text = "7,5 h";
+            labelHours05.TextAlign = ContentAlignment.MiddleRight;
             // 
             // labelDate05
             // 
@@ -376,6 +448,7 @@
             // 
             // panelDay2
             // 
+            panelDay2.Controls.Add(labelHours03);
             panelDay2.Controls.Add(labelDate03);
             panelDay2.Controls.Add(labelDay03);
             panelDay2.Dock = DockStyle.Fill;
@@ -384,6 +457,19 @@
             panelDay2.Name = "panelDay2";
             panelDay2.Size = new Size(63, 63);
             panelDay2.TabIndex = 113;
+            panelDay2.Paint += panelDay2_Paint;
+            // 
+            // labelHours03
+            // 
+            labelHours03.AutoSize = true;
+            labelHours03.Dock = DockStyle.Top;
+            labelHours03.Font = new Font("Reddit Sans", 9.75F, FontStyle.Bold);
+            labelHours03.Location = new Point(0, 42);
+            labelHours03.Name = "labelHours03";
+            labelHours03.Size = new Size(37, 21);
+            labelHours03.TabIndex = 39;
+            labelHours03.Text = "7,5 h";
+            labelHours03.TextAlign = ContentAlignment.MiddleRight;
             // 
             // labelDate03
             // 
@@ -409,6 +495,7 @@
             // 
             // panelDay1
             // 
+            panelDay1.Controls.Add(labelHours02);
             panelDay1.Controls.Add(labelDate02);
             panelDay1.Controls.Add(labelDay02);
             panelDay1.Dock = DockStyle.Fill;
@@ -417,6 +504,18 @@
             panelDay1.Name = "panelDay1";
             panelDay1.Size = new Size(63, 63);
             panelDay1.TabIndex = 110;
+            // 
+            // labelHours02
+            // 
+            labelHours02.AutoSize = true;
+            labelHours02.Dock = DockStyle.Top;
+            labelHours02.Font = new Font("Reddit Sans", 9.75F, FontStyle.Bold);
+            labelHours02.Location = new Point(0, 42);
+            labelHours02.Name = "labelHours02";
+            labelHours02.Size = new Size(37, 21);
+            labelHours02.TabIndex = 38;
+            labelHours02.Text = "7,5 h";
+            labelHours02.TextAlign = ContentAlignment.MiddleRight;
             // 
             // labelDate02
             // 
@@ -1029,7 +1128,7 @@
             comboBoxProjects.FormattingEnabled = true;
             comboBoxProjects.IntegralHeight = false;
             comboBoxProjects.ItemHeight = 25;
-            comboBoxProjects.Location = new Point(3, 46);
+            comboBoxProjects.Location = new Point(3, 36);
             comboBoxProjects.Name = "comboBoxProjects";
             comboBoxProjects.Size = new Size(231, 33);
             comboBoxProjects.TabIndex = 150;
@@ -1432,5 +1531,12 @@
         private Label labelDate03;
         private Label labelDate02;
         private CustomComboBox customComboBox1;
+        private Label labelHours01;
+        private Label labelHours02;
+        private Label labelHours07;
+        private Label labelHours04;
+        private Label labelHours06;
+        private Label labelHours05;
+        private Label labelHours03;
     }
 }

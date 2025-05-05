@@ -230,6 +230,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             int offset = ((int)today.DayOfWeek + 6) % 7;
             _selectedDate = today.AddDays(-offset);
             await RenderCalendar();
+            await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
             this.Focus();
             return _selectedDate;
         }
@@ -729,6 +730,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             BeginInvoke((Action)(() =>
             {
                 UpdateDateLabels();
+                UpdateHourLabels();
                 panelContainer.AutoScroll = true;
 
                 if (!userHasScrolled)
@@ -763,6 +765,40 @@ namespace VykazyPrace.UserControls.CalendarV2
                 _loadingUC.Visible = false;
             }));
         }
+
+        private async void UpdateHourLabels()
+        {
+            Label[] hourLabels = { labelHours01, labelHours02, labelHours03, labelHours04, labelHours05, labelHours06, labelHours07 };
+
+            for (int row = 0; row < 7; row++)
+            {
+                int totalMinutes = 0;
+
+                foreach (var panel in panels)
+                {
+                    if (tableLayoutPanelCalendar.GetRow(panel) != row)
+                        continue;
+
+                    // Najdi odpovídající TimeEntry
+                    var entry = panel.EntryId > 0
+                        ? await _timeEntryRepo.GetTimeEntryByIdAsync(panel.EntryId)
+                        : null;
+
+                    if (entry.ProjectId == 132 &&
+                   entry.EntryTypeId == 24)
+                        continue;
+
+                    if (entry?.IsValid == 1)
+                    {
+                        totalMinutes += entry.EntryMinutes;
+                    }
+                }
+
+                double hours = totalMinutes / 60.0;
+                hourLabels[row].Text = $"{hours:F1} h";
+            }
+        }
+
 
         private int GetColumnBasedOnTimeEntry(DateTime? timeStamp)
         {
@@ -1177,6 +1213,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 entry.Timestamp = newTimestamp;
                 entry.EntryMinutes = newDuration;
                 await _timeEntryRepo.UpdateTimeEntryAsync(entry);
+                UpdateHourLabels();
             }
 
             string color = entryType?.Color ?? "#ADD8E6";
@@ -1837,6 +1874,11 @@ namespace VykazyPrace.UserControls.CalendarV2
         }
 
         private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void panelDay2_Paint(object sender, PaintEventArgs e)
         {
 
         }

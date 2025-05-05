@@ -47,3 +47,10 @@ System.Runtime.InteropServices.COMException (0x800A03EC): Soubor Export.xlsx nen
 2025-05-05 14:26:25.911 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
 2025-05-05 14:29:15.966 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
 2025-05-05 15:32:05.167 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-05 15:39:31.965 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-05 15:41:01.417 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-05 15:42:06.564 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-05 15:43:26.316 +02:00 [INF] Záznam  - Automatizace: 1,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-05-05 15:44:25.743 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-05 15:44:55.042 +02:00 [INF] Záznam  - Automatizace: 1 h -  byl úspěšně aktualizován.
+2025-05-05 15:44:57.512 +02:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 1 h -  byl smazán z databáze.

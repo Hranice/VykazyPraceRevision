@@ -10,3 +10,8 @@
 2025-05-05 09:47:37.733 +02:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 0,5 h - Seřízení kontrolního systému byl úspěšně aktualizován.
 2025-05-05 09:51:01.860 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
 2025-05-05 10:02:44.982 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-05 10:04:52.240 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-05 10:37:50.969 +02:00 [INF] Uživatel (3000): Radek Bauer - ELEKTRO byl přidán do databáze.
+2025-05-05 12:11:47.565 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-05 12:13:30.382 +02:00 [INF] Záznam 0 - Provoz SD (Sítotisk): 1 h - Seřízení kontrolního systému byl úspěšně aktualizován.
+2025-05-05 12:13:56.363 +02:00 [INF] Záznam  - Automatizace: 1 h - SW - Výkazy hodin byl úspěšně aktualizován.

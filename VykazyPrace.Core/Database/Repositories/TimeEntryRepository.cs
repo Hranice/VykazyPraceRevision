@@ -110,6 +110,23 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
+        /// Získání všech časových záznamů mezi dvěma daty (včetně hran).
+        /// </summary>
+        public async Task<List<TimeEntry>> GetAllTimeEntriesBetweenDatesAsync(DateTime fromDate, DateTime toDate)
+        {
+            return await _context.TimeEntries
+                .Where(te => te.Timestamp.HasValue &&
+                             te.Timestamp.Value.Date >= fromDate.Date &&
+                             te.Timestamp.Value.Date <= toDate.Date)
+                .Include(te => te.User)
+                    .ThenInclude(u => u.UserGroup)
+                .Include(te => te.EntryType)
+                .Include(te => te.Project)
+                .ToListAsync();
+        }
+
+
+        /// <summary>
         /// Získání všech časových záznamů pro konkrétního uživatele a týden zadaného data (po-ne).
         /// </summary>
         public async Task<List<TimeEntry>> GetTimeEntriesByUserAndCurrentWeekAsync(User user, DateTime date)

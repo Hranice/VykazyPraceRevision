@@ -304,7 +304,7 @@ namespace VykazyPrace.Dialogs
                 for (int i = 0; i < headers.Length; i++)
                     worksheet.Cells[1, i + 1] = headers[i];
 
-                var timeEntries = await _timeEntryRepo.GetAllTimeEntriesAsync();
+                var timeEntries = await _timeEntryRepo.GetAllTimeEntriesBetweenDatesAsync(dateTimePicker1.Value, dateTimePicker2.Value);
                 var projects = timeEntries
                     .Where(e => e.Project?.ProjectType == 0)
                     .Select(e => e.Project!)

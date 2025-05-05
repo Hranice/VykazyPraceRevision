@@ -1,8 +1,10 @@
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Windows.Forms;
 using VykazyPrace.Core.Configuration;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
+using VykazyPrace.Core.PowerKey;
 using VykazyPrace.Dialogs;
 using VykazyPrace.Helpers;
 using VykazyPrace.Logging;
@@ -106,6 +108,10 @@ namespace VykazyPrace
             try
             {
                 Invoke(() => _loadingUC.BringToFront());
+
+                var powerKeyHelper = new PowerKeyHelper();
+                int totalRows = await powerKeyHelper.DownloadArrivalsDeparturesAsync(DateTime.Now);
+                AppLogger.Information($"Staženo {totalRows} záznamù pro mìsíc è.{DateTime.Now.Month}.", false);
 
                 var users = await _userRepo.GetAllUsersAsync();
                 _selectedUser = await _userRepo.GetUserByWindowsUsernameAsync(Environment.UserName) ?? new User();

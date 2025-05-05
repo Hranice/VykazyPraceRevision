@@ -41,6 +41,7 @@
             nastaveníToolStripMenuItem = new ToolStripMenuItem();
             testToolStripMenuItem = new ToolStripMenuItem();
             oProgramuToolStripMenuItem = new ToolStripMenuItem();
+            správceToolStripMenuItem = new ToolStripMenuItem();
             radioButton1 = new RadioButton();
             radioButton2 = new RadioButton();
             comboBoxUsers = new ComboBox();
@@ -52,7 +53,6 @@
             buttonPrevious = new Button();
             panelContainer = new Panel();
             panelCalendarContainer = new Panel();
-            správceToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -147,6 +147,14 @@
             oProgramuToolStripMenuItem.Size = new Size(180, 22);
             oProgramuToolStripMenuItem.Text = "O programu";
             oProgramuToolStripMenuItem.Click += oProgramuToolStripMenuItem_Click;
+            // 
+            // správceToolStripMenuItem
+            // 
+            správceToolStripMenuItem.Name = "správceToolStripMenuItem";
+            správceToolStripMenuItem.Size = new Size(180, 22);
+            správceToolStripMenuItem.Text = "Správce";
+            správceToolStripMenuItem.Visible = false;
+            správceToolStripMenuItem.Click += správceToolStripMenuItem_Click;
             // 
             // radioButton1
             // 
@@ -266,13 +274,6 @@
             panelCalendarContainer.Name = "panelCalendarContainer";
             panelCalendarContainer.Size = new Size(966, 769);
             panelCalendarContainer.TabIndex = 1;
-            // 
-            // správceToolStripMenuItem
-            // 
-            správceToolStripMenuItem.Name = "správceToolStripMenuItem";
-            správceToolStripMenuItem.Size = new Size(180, 22);
-            správceToolStripMenuItem.Text = "Správce";
-            správceToolStripMenuItem.Click += správceToolStripMenuItem_Click;
             // 
             // MainForm
             // 

@@ -423,14 +423,18 @@ namespace VykazyPrace.Dialogs
 
             string[] headers = {
         "Osobní číslo", "Jméno", "Projekt", "Popis projektu",
-        "Součet hodin", "Suma", "Docházka (hod)"
+        "Součet hodin", "Suma", "Docházka"
     };
 
             for (int i = 0; i < headers.Length; i++)
                 sheet.Cells[1, i + 1] = headers[i];
 
-            // group by uživatel
-            var grouped = timeEntries
+            // Ignorovat nepřítomnost
+            var filteredEntries = timeEntries
+                .Where(e => e.ProjectId != 23)
+                .ToList();
+
+            var grouped = filteredEntries
                 .GroupBy(e => new
                 {
                     e.User!.PersonalNumber,
@@ -439,6 +443,7 @@ namespace VykazyPrace.Dialogs
                 .OrderBy(g => g.Key.PersonalNumber)
                 .ThenBy(g => g.Key.FullName)
                 .ToList();
+
 
             // načtení docházky z PowerKey do Dictionary
             var pkHelper = new PowerKeyHelper();

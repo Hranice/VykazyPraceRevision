@@ -1,8 +1,10 @@
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Windows.Forms;
 using VykazyPrace.Core.Configuration;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
+using VykazyPrace.Core.PowerKey;
 using VykazyPrace.Dialogs;
 using VykazyPrace.Helpers;
 using VykazyPrace.Logging;
@@ -22,6 +24,7 @@ namespace VykazyPrace
         private readonly TimeEntrySubTypeRepository _timeEntrySubTypeRepo = new TimeEntrySubTypeRepository();
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
         private readonly SpecialDayRepository _specialDayRepo = new SpecialDayRepository();
+        private readonly ArrivalDepartureRepository _arrivalDepartureRepo = new ArrivalDepartureRepository();
         private readonly LoadingUC _loadingUC = new LoadingUC();
         private User _selectedUser = new();
         private int _currentUserLoA = 0;
@@ -106,6 +109,10 @@ namespace VykazyPrace
             {
                 Invoke(() => _loadingUC.BringToFront());
 
+                var powerKeyHelper = new PowerKeyHelper();
+                int totalRows = await powerKeyHelper.DownloadArrivalsDeparturesAsync(DateTime.Now);
+                AppLogger.Information($"Staženo {totalRows} záznamù pro mìsíc è.{DateTime.Now.Month}.", false);
+
                 var users = await _userRepo.GetAllUsersAsync();
                 _selectedUser = await _userRepo.GetUserByWindowsUsernameAsync(Environment.UserName) ?? new User();
                 _currentUserLoA = _selectedUser.LevelOfAccess;
@@ -175,7 +182,14 @@ namespace VykazyPrace
             panelCalendarContainer.Controls.Add(_monthlyCalendar);
 
             // Nový CalendarV2 do panelContainer
-            _calendar = new CalendarV2(_selectedUser, _timeEntryRepo, _timeEntryTypeRepo, _timeEntrySubTypeRepo, _projectRepo, _userRepo, _specialDayRepo)
+            _calendar = new CalendarV2(_selectedUser,
+                                       _timeEntryRepo,
+                                       _timeEntryTypeRepo,
+                                       _timeEntrySubTypeRepo,
+                                       _projectRepo,
+                                       _userRepo,
+                                       _specialDayRepo,
+                                       _arrivalDepartureRepo)
             {
                 Dock = DockStyle.Fill,
                 Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238),
@@ -347,6 +361,11 @@ namespace VykazyPrace
             var config = ConfigService.Load();
             config.AppMaximized = this.WindowState == FormWindowState.Maximized;
             ConfigService.Save(config);
+        }
+
+        private void správceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new ManagerDialog().ShowDialog();
         }
     }
 }

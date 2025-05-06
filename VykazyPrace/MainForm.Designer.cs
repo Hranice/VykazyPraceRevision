@@ -41,6 +41,7 @@
             nastaveníToolStripMenuItem = new ToolStripMenuItem();
             testToolStripMenuItem = new ToolStripMenuItem();
             oProgramuToolStripMenuItem = new ToolStripMenuItem();
+            správceToolStripMenuItem = new ToolStripMenuItem();
             radioButton1 = new RadioButton();
             radioButton2 = new RadioButton();
             comboBoxUsers = new ComboBox();
@@ -121,7 +122,7 @@
             // 
             // toolStripMenuItem1
             // 
-            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { nastaveníToolStripMenuItem, testToolStripMenuItem, oProgramuToolStripMenuItem });
+            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { nastaveníToolStripMenuItem, testToolStripMenuItem, oProgramuToolStripMenuItem, správceToolStripMenuItem });
             toolStripMenuItem1.Name = "toolStripMenuItem1";
             toolStripMenuItem1.Size = new Size(24, 20);
             toolStripMenuItem1.Text = "?";
@@ -146,6 +147,14 @@
             oProgramuToolStripMenuItem.Size = new Size(180, 22);
             oProgramuToolStripMenuItem.Text = "O programu";
             oProgramuToolStripMenuItem.Click += oProgramuToolStripMenuItem_Click;
+            // 
+            // správceToolStripMenuItem
+            // 
+            správceToolStripMenuItem.Name = "správceToolStripMenuItem";
+            správceToolStripMenuItem.Size = new Size(180, 22);
+            správceToolStripMenuItem.Text = "Správce";
+            správceToolStripMenuItem.Visible = false;
+            správceToolStripMenuItem.Click += správceToolStripMenuItem_Click;
             // 
             // radioButton1
             // 
@@ -321,5 +330,6 @@
         private ToolStripMenuItem testToolStripMenuItem;
         private ToolStripMenuItem správaIndexůToolStripMenuItem;
         private Button buttonNow;
+        private ToolStripMenuItem správceToolStripMenuItem;
     }
 }

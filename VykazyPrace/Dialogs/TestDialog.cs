@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Windows.Forms;
 using VykazyPrace.Core.Database.Models;
+using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Logging;
 using VykazyPrace.UserControls.CalendarV2;
 
@@ -9,14 +10,13 @@ namespace VykazyPrace.Dialogs
 {
     public partial class TestDialog : Form
     {
-        private CalendarV2 _calendar;
+        private DataTable? _loadedTable;
+
 
         public TestDialog()
         {
             InitializeComponent();
             DoubleBuffered = true;
-            KeyPreview = true;
-            this.KeyDown += Form1_KeyDown;
 
             LoadFilteredData();
 
@@ -32,7 +32,7 @@ namespace VykazyPrace.Dialogs
         SELECT * 
         FROM pwk.Prenos_pracovni_doby
         WHERE [Id_pracovníka (Os. číslo)] = @OsCislo";
-        //AND [Datum směny] BETWEEN @StartDate AND @EndDate";
+            //AND [Datum směny] BETWEEN @StartDate AND @EndDate";
 
             try
             {
@@ -51,6 +51,8 @@ namespace VykazyPrace.Dialogs
                     dataGridView1.DataSource = table;
                     dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
                     dataGridView1.AutoResizeColumns();
+
+                    _loadedTable = table;
                 }
             }
             catch (Exception ex)
@@ -59,14 +61,6 @@ namespace VykazyPrace.Dialogs
             }
         }
 
-
-        private async void Form1_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Delete)
-            {
-                await _calendar.DeleteRecord();
-            }
-        }
 
         private void DropView()
         {
@@ -130,7 +124,7 @@ WHERE [AR2].[AttnDayID]=[D2].[AttnDayID] AND [D].[InOutType]=2 AND [AR2].[Delete
 ORDER BY [AR2].[RegistrationTime] ASC) AS [PB]
 
 WHERE [PE].[DeletedID] = 0 
-AND [AM].[MonthNumber] = ([pwk].[DateToMonthNumber] (GETDATE()))";
+AND [AM].[MonthNumber] = ([pwk].[DateToMonthNumber] (GETDATE())) - 1";
 
             try
             {
@@ -174,5 +168,73 @@ AND [AM].[MonthNumber] = ([pwk].[DateToMonthNumber] (GETDATE()))";
         {
             LoadFilteredData();
         }
+
+        private async void buttonSave_Click(object sender, EventArgs e)
+        {
+            if (_loadedTable == null || _loadedTable.Rows.Count == 0)
+            {
+                MessageBox.Show("Žádná data k uložení.");
+                return;
+            }
+
+            try
+            {
+                var repo = new ArrivalDepartureRepository();
+                var userRepo = new UserRepository();
+                var result = await userRepo.GetUserByWindowsUsernameAsync("jprochazka");
+                int targetUserId = result.Id;
+                int saved = 0;
+
+                foreach (DataRow row in _loadedTable.Rows)
+                {
+                    try
+                    {
+                        // Získání hodnot
+                        var arrivalStr = row["Příchod"]?.ToString();
+                        var departureStr = row["Odchod"]?.ToString();
+                        var reason = row["Důvod odchodu"]?.ToString();
+                        var workedStr = row["Počet hodin (standard)"]?.ToString()?.Replace(',', '.');
+                        var overtimeStr = row["Počet hodin (přesčas)"]?.ToString()?.Replace(',', '.');
+                        var dateStr = row["Datum směny"]?.ToString();
+
+                        // Parsování
+                        if (!DateTime.TryParse(arrivalStr, out DateTime arrival)) continue;
+                        if (!DateTime.TryParse(departureStr, out DateTime departure)) continue;
+                        if (!DateTime.TryParse(dateStr, out DateTime workDate)) continue;
+                        if (!double.TryParse(workedStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double worked)) continue;
+                        if (!double.TryParse(overtimeStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double overtime)) continue;
+
+                        // Kontrola existence záznamu pro daného uživatele a den
+                        var existing = await repo.GetByUserAndDateAsync(targetUserId, workDate);
+                        if (existing != null) continue;
+
+                        var newEntry = new ArrivalDeparture
+                        {
+                            UserId = targetUserId,
+                            WorkDate = workDate.Date,
+                            ArrivalTimestamp = arrival,
+                            DepartureTimestamp = departure,
+                            DepartureReason = reason,
+                            HoursWorked = worked,
+                            HoursOvertime = overtime
+                        };
+
+                        await repo.CreateArrivalDepartureAsync(newEntry);
+                        saved++;
+                    }
+                    catch (Exception exRow)
+                    {
+                        MessageBox.Show("Chyba při zpracování řádku: " + exRow.Message);
+                    }
+                }
+
+                MessageBox.Show($"Uloženo záznamů: {saved}");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chyba při ukládání dat: " + ex.Message);
+            }
+        }
+
     }
 }

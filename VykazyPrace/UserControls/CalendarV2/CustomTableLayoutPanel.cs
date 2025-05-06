@@ -15,6 +15,8 @@ public class CustomTableLayoutPanel : TableLayoutPanel
     private static readonly Color SelectedColor = Color.FromArgb(241, 255, 255);
     private static readonly Color ActiveDayColor = Color.FromArgb(200, 200, 200);
 
+    private DateTime _selecteDate;
+
     private Dictionary<int, SpecialDay> _specialDayRows = new Dictionary<int, SpecialDay>();
 
 
@@ -23,6 +25,12 @@ public class CustomTableLayoutPanel : TableLayoutPanel
         this.DoubleBuffered = true;
         this.CellPaint += CustomTableLayoutPanel_CellPaint;
         this.MouseClick += CustomTableLayoutPanel_MouseClick;
+    }
+
+    public void SetDate(DateTime date)
+    {
+        _selecteDate = date;
+        Invalidate();
     }
 
     public void SetSpecialDays(List<SpecialDay> specialDays)
@@ -158,14 +166,17 @@ public class CustomTableLayoutPanel : TableLayoutPanel
         }
 
         // Červená čára podle aktuálního času
-        if (todayIndex < rowHeights.Length && halfHourIndex < colWidths.Length)
+        if (_selecteDate == DateTime.Today)
         {
-            int xPos = colWidths.Take(halfHourIndex).Sum();
-            int yPos = rowHeights.Take(todayIndex).Sum();
-
-            using (var redPen = new Pen(Color.Red, 2))
+            if (todayIndex < rowHeights.Length && halfHourIndex < colWidths.Length)
             {
-                e.Graphics.DrawLine(redPen, xPos, yPos, xPos, yPos + rowHeights[todayIndex]);
+                int xPos = colWidths.Take(halfHourIndex).Sum();
+                int yPos = rowHeights.Take(todayIndex).Sum();
+
+                using (var redPen = new Pen(Color.Red, 2))
+                {
+                    e.Graphics.DrawLine(redPen, xPos, yPos, xPos, yPos + rowHeights[todayIndex]);
+                }
             }
         }
     }

@@ -192,10 +192,9 @@
             panelDay6.Controls.Add(labelDate07);
             panelDay6.Controls.Add(labelDay07);
             panelDay6.Dock = DockStyle.Fill;
-            panelDay6.Location = new Point(3, 526);
-            panelDay6.Margin = new Padding(3, 15, 3, 3);
+            panelDay6.Location = new Point(3, 514);
             panelDay6.Name = "panelDay6";
-            panelDay6.Size = new Size(63, 65);
+            panelDay6.Size = new Size(63, 77);
             panelDay6.TabIndex = 126;
             // 
             // labelHours07
@@ -268,10 +267,9 @@
             panelDay0.Controls.Add(labelDate01);
             panelDay0.Controls.Add(labelDay01);
             panelDay0.Dock = DockStyle.Fill;
-            panelDay0.Location = new Point(3, 40);
-            panelDay0.Margin = new Padding(3, 15, 3, 3);
+            panelDay0.Location = new Point(3, 28);
             panelDay0.Name = "panelDay0";
-            panelDay0.Size = new Size(63, 63);
+            panelDay0.Size = new Size(63, 75);
             panelDay0.TabIndex = 112;
             // 
             // labelHours01
@@ -314,10 +312,9 @@
             panelDay3.Controls.Add(labelDate04);
             panelDay3.Controls.Add(labelDay04);
             panelDay3.Dock = DockStyle.Fill;
-            panelDay3.Location = new Point(3, 283);
-            panelDay3.Margin = new Padding(3, 15, 3, 3);
+            panelDay3.Location = new Point(3, 271);
             panelDay3.Name = "panelDay3";
-            panelDay3.Size = new Size(63, 63);
+            panelDay3.Size = new Size(63, 75);
             panelDay3.TabIndex = 114;
             // 
             // labelHours04
@@ -360,10 +357,9 @@
             panelDay5.Controls.Add(labelDate06);
             panelDay5.Controls.Add(labelDay06);
             panelDay5.Dock = DockStyle.Fill;
-            panelDay5.Location = new Point(3, 445);
-            panelDay5.Margin = new Padding(3, 15, 3, 3);
+            panelDay5.Location = new Point(3, 433);
             panelDay5.Name = "panelDay5";
-            panelDay5.Size = new Size(63, 63);
+            panelDay5.Size = new Size(63, 75);
             panelDay5.TabIndex = 116;
             // 
             // labelHours06
@@ -406,10 +402,9 @@
             panelDay4.Controls.Add(labelDate05);
             panelDay4.Controls.Add(labelDay05);
             panelDay4.Dock = DockStyle.Fill;
-            panelDay4.Location = new Point(3, 364);
-            panelDay4.Margin = new Padding(3, 15, 3, 3);
+            panelDay4.Location = new Point(3, 352);
             panelDay4.Name = "panelDay4";
-            panelDay4.Size = new Size(63, 63);
+            panelDay4.Size = new Size(63, 75);
             panelDay4.TabIndex = 115;
             // 
             // labelHours05
@@ -452,10 +447,9 @@
             panelDay2.Controls.Add(labelDate03);
             panelDay2.Controls.Add(labelDay03);
             panelDay2.Dock = DockStyle.Fill;
-            panelDay2.Location = new Point(3, 202);
-            panelDay2.Margin = new Padding(3, 15, 3, 3);
+            panelDay2.Location = new Point(3, 190);
             panelDay2.Name = "panelDay2";
-            panelDay2.Size = new Size(63, 63);
+            panelDay2.Size = new Size(63, 75);
             panelDay2.TabIndex = 113;
             panelDay2.Paint += panelDay2_Paint;
             // 
@@ -499,10 +493,9 @@
             panelDay1.Controls.Add(labelDate02);
             panelDay1.Controls.Add(labelDay02);
             panelDay1.Dock = DockStyle.Fill;
-            panelDay1.Location = new Point(3, 121);
-            panelDay1.Margin = new Padding(3, 15, 3, 3);
+            panelDay1.Location = new Point(3, 109);
             panelDay1.Name = "panelDay1";
-            panelDay1.Size = new Size(63, 63);
+            panelDay1.Size = new Size(63, 75);
             panelDay1.TabIndex = 110;
             // 
             // labelHours02

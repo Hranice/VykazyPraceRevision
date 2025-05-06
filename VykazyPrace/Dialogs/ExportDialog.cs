@@ -10,6 +10,7 @@ using Action = System.Action;
 using Range = Microsoft.Office.Interop.Excel.Range;
 using Application = Microsoft.Office.Interop.Excel.Application;
 using System.Diagnostics;
+using VykazyPrace.Core.PowerKey;
 
 namespace VykazyPrace.Dialogs
 {
@@ -306,7 +307,8 @@ namespace VykazyPrace.Dialogs
                 GenerateTimeEntriesSheet(baseSheet, timeEntries);
 
                 Worksheet summarySheet = (Worksheet)workbook.Sheets.Add(After: baseSheet);
-                GenerateUserSummarySheet(summarySheet, timeEntries);
+                await GenerateUserSummarySheet(summarySheet, timeEntries, dateTimePicker1.Value);
+
 
                 await GenerateProjectSheets(workbook, timeEntries, projects, summarySheet);
 
@@ -415,13 +417,19 @@ namespace VykazyPrace.Dialogs
         }
 
 
-        private void GenerateUserSummarySheet(Worksheet sheet, List<TimeEntry> timeEntries)
+        private async Task GenerateUserSummarySheet(Worksheet sheet, List<TimeEntry> timeEntries, DateTime exportMonth)
         {
             sheet.Name = "Souhrn podle uživatele";
-            string[] headers = { "Osobní číslo", "Jméno", "Projekt", "Popis projektu", "Součet hodin", "Suma" };
+
+            string[] headers = {
+        "Osobní číslo", "Jméno", "Projekt", "Popis projektu",
+        "Součet hodin", "Suma", "Docházka (hod)"
+    };
+
             for (int i = 0; i < headers.Length; i++)
                 sheet.Cells[1, i + 1] = headers[i];
 
+            // group by uživatel
             var grouped = timeEntries
                 .GroupBy(e => new
                 {
@@ -432,11 +440,16 @@ namespace VykazyPrace.Dialogs
                 .ThenBy(g => g.Key.FullName)
                 .ToList();
 
+            // načtení docházky z PowerKey do Dictionary
+            var pkHelper = new PowerKeyHelper();
+            var powerKeyData = await pkHelper.GetWorkedHoursByPersonalNumberForMonthAsync(exportMonth);
+
             int row = 2;
 
             foreach (var userGroup in grouped)
             {
                 var userKey = userGroup.Key;
+
                 var projects = userGroup
                     .GroupBy(e => new
                     {
@@ -445,21 +458,23 @@ namespace VykazyPrace.Dialogs
                     })
                     .OrderBy(g => g.Key.ProjectTitle);
 
-                // Suma řádek
                 double totalHours = userGroup.Sum(e => e.EntryMinutes) / 60.0;
+                double attendance = powerKeyData.TryGetValue(userKey.PersonalNumber, out double h) ? h : 0;
 
+                // souhrnný řádek
                 sheet.Cells[row, 1] = userKey.PersonalNumber;
                 sheet.Cells[row, 2] = userKey.FullName;
                 sheet.Cells[row, 6] = totalHours;
+                sheet.Cells[row, 7] = attendance;
 
-                // ⬇ Tučný styl pro číslo, jméno i sumu
                 ((Range)sheet.Cells[row, 1]).Font.Bold = true;
                 ((Range)sheet.Cells[row, 2]).Font.Bold = true;
                 ((Range)sheet.Cells[row, 6]).Font.Bold = true;
+                ((Range)sheet.Cells[row, 7]).Font.Bold = true;
 
                 row++;
 
-                // Projekty pro daného uživatele
+                // detailní projekty
                 foreach (var proj in projects)
                 {
                     sheet.Cells[row, 3] = proj.Key.ProjectTitle;
@@ -473,20 +488,28 @@ namespace VykazyPrace.Dialogs
                     row++;
                 }
 
-                // Seskupení projektových řádků pod sumu
+                // seskupení projektových řádků pod daného uživatele
                 if (projects.Any())
                 {
-                    sheet.Range[$"A{row - projects.Count()}:F{row - 1}"].Rows.Group();
+                    int startRow = row - projects.Count();
+                    int endRow = row - 1;
+                    sheet.Range[$"A{startRow}:G{endRow}"].Rows.Group();
                 }
             }
 
-            var tableRange = sheet.Range[$"A1:F{row - 1}"];
-            var table = sheet.ListObjects.AddEx(XlListObjectSourceType.xlSrcRange, tableRange, XlYesNoGuess.xlYes);
+            // vytvoření tabulky (pro filtry + vzhled)
+            var tableRange = sheet.Range[$"A1:G{row - 1}"];
+            var table = sheet.ListObjects.AddEx(
+                XlListObjectSourceType.xlSrcRange,
+                tableRange,
+                XlYesNoGuess.xlYes
+            );
             table.Name = "SouhrnUzivatel";
             table.ShowTotals = false;
 
             sheet.Columns.AutoFit();
         }
+
 
 
 

@@ -166,7 +166,7 @@ public class CustomTableLayoutPanel : TableLayoutPanel
         }
 
         // Červená čára podle aktuálního času
-        if (_selecteDate == DateTime.Today)
+        if (IsDateInWeek(DateTime.Today, _selecteDate))
         {
             if (todayIndex < rowHeights.Length && halfHourIndex < colWidths.Length)
             {
@@ -180,4 +180,13 @@ public class CustomTableLayoutPanel : TableLayoutPanel
             }
         }
     }
+
+    private bool IsDateInWeek(DateTime dateToCheck, DateTime weekStartDate)
+    {
+        DateTime startOfWeek = weekStartDate.Date;
+        DateTime endOfWeek = startOfWeek.AddDays(7).AddTicks(-1);
+
+        return dateToCheck >= startOfWeek && dateToCheck <= endOfWeek;
+    }
+
 }

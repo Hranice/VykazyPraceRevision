@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Diagnostics;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 
@@ -195,6 +196,102 @@ AND [AM].[MonthNumber] = {dateToMonthNumber}";
                 throw new Exception($"Chyba při zpracování uživatele {personalNumber}", ex);
             }
         }
+
+        public async Task<Dictionary<int, double>> GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month)
+        {
+            string viewName = $"vw_Prenos_tmp_{Guid.NewGuid():N}";
+            await CreateTemporaryViewAsync(month, viewName);
+
+            try
+            {
+                return await GetWorkedHoursFromViewAsync(viewName);
+            }
+            finally
+            {
+                await DropTemporaryViewAsync(viewName);
+            }
+        }
+
+        private async Task CreateTemporaryViewAsync(DateTime month, string viewName)
+        {
+            string dateToMonth = $"[pwk].[DateToMonthNumber] ('{month:yyyy-MM-dd}')";
+            string viewSql = $@"
+CREATE VIEW [pwk].[{viewName}]
+AS
+SELECT
+    [PE].[PersonalNum] AS [Id_pracovníka (Os. číslo)],
+    [AD].[WorkedHours]/60. AS [Počet hodin (standard)]
+FROM [pwk].[Person] [PE]
+INNER JOIN [pwk].[AttnMonth] [AM] ON [AM].[PersonID] = [PE].[PersonID]
+INNER JOIN [pwk].[AttnDay] [AD] ON [AD].[AttnMonthID] = [AM].[AttnMonthID]
+WHERE [PE].[DeletedID] = 0 
+AND [AM].[MonthNumber] = {dateToMonth}";
+
+            const string setFormat = "SET DATEFORMAT DMY;";
+
+            using var connection = new SqlConnection(ConnectionString);
+            await connection.OpenAsync();
+
+            // 1. Nastavení formátu data (samostatně)
+            using (var cmd1 = new SqlCommand(setFormat, connection))
+            {
+                await cmd1.ExecuteNonQueryAsync();
+            }
+
+            // 2. Vytvoření view (musí být samostatně)
+            using (var cmd2 = new SqlCommand(viewSql, connection))
+            {
+                await cmd2.ExecuteNonQueryAsync();
+            }
+        }
+
+
+        private async Task DropTemporaryViewAsync(string viewName)
+        {
+            string sql = $"DROP VIEW IF EXISTS [pwk].[{viewName}]";
+
+            using var conn = new SqlConnection(ConnectionString);
+            using var cmd = new SqlCommand(sql, conn);
+            await conn.OpenAsync();
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+
+        private async Task<Dictionary<int, double>> GetWorkedHoursFromViewAsync(string viewName)
+        {
+            string sql = $@"
+        SELECT [Id_pracovníka (Os. číslo)] AS PersonalNumber,
+               SUM([Počet hodin (standard)]) AS TotalHours
+        FROM [pwk].[{viewName}]
+        GROUP BY [Id_pracovníka (Os. číslo)]";
+
+            var result = new Dictionary<int, double>();
+
+            using var conn = new SqlConnection(ConnectionString);
+            using var cmd = new SqlCommand(sql, conn);
+            await conn.OpenAsync();
+
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                object personalObj = reader.GetValue(0);
+                int pn;
+
+                if (personalObj is int directPn)
+                    pn = directPn;
+                else if (personalObj is string strPn && int.TryParse(strPn, out int parsedPn))
+                    pn = parsedPn;
+                else
+                    continue;
+
+                double hours = reader.IsDBNull(1) ? 0 : Convert.ToDouble(reader.GetValue(1));
+                result[pn] = hours;
+            }
+
+            return result;
+        }
+
+
 
         private bool TryParseArrivalDepartureRow(DataRow row, out DateTime arrival, out DateTime departure, out DateTime workDate, out double worked, out double overtime, out string? reason)
         {

@@ -1521,6 +1521,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 tableLayoutPanelEntryType.Visible = true;
                 tableLayoutPanelEntrySubType.Visible = true;
                 customComboBoxSubTypes.SetText(string.Empty);
+                customComboBoxProjects.SetText(string.Empty);
                 panel4.Visible = true;
 
                 switch (rb.Text)

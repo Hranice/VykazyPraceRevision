@@ -1,0 +1,52 @@
+2025-05-06 07:39:26.099 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 08:04:22.601 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 08:04:53.033 +02:00 [ERR] Chyba při exportu do Excelu.
+System.Exception: Chyba při načítání docházky z PowerKey.
+ ---> System.InvalidCastException: Unable to cast object of type 'System.String' to type 'System.Int32'.
+   at Microsoft.Data.SqlClient.SqlBuffer.get_Int32()
+   at Microsoft.Data.SqlClient.SqlDataReader.GetInt32(Int32 i)
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.GetWorkedHoursByPersonalNumberAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 219
+   --- End of inner exception stack trace ---
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.GetWorkedHoursByPersonalNumberAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 226
+   at VykazyPrace.Dialogs.ExportDialog.GenerateUserSummarySheet(Worksheet sheet, List`1 timeEntries, DateTime exportMonth) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 439
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 310
+2025-05-06 08:06:13.058 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 08:07:39.279 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 08:10:14.557 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 08:10:27.940 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 08:11:33.002 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 08:12:16.742 +02:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x800A03EC): 0x800A03EC
+   at Microsoft.Office.Interop.Excel.WorkbookClass.SaveAs(Object Filename, Object FileFormat, Object Password, Object WriteResPassword, Object ReadOnlyRecommended, Object CreateBackup, XlSaveAsAccessMode AccessMode, Object ConflictResolution, Object AddToMru, Object TextCodepage, Object TextVisualLayout, Object Local)
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 316
+2025-05-06 08:13:47.229 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 08:21:52.065 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 08:22:14.064 +02:00 [ERR] Chyba při exportu do Excelu.
+Microsoft.Data.SqlClient.SqlException (0x80131904): 'CREATE VIEW' must be the first statement in a query batch.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteNonQueryAsync>b__193_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.CreateTemporaryViewAsync(DateTime month, String viewName) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 234
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 203
+   at VykazyPrace.Dialogs.ExportDialog.GenerateUserSummarySheet(Worksheet sheet, List`1 timeEntries, DateTime exportMonth) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 445
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 310
+ClientConnectionId:6f2391fe-b946-4484-be9c-b24832fdf473
+Číslo chyby: 111, stav: 1, třída: 15
+2025-05-06 08:29:15.943 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 08:29:43.507 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 09:12:02.161 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 09:12:17.708 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 09:14:11.735 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 09:16:12.961 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 09:35:59.900 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 09:36:45.377 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 10:11:04.968 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 10:12:31.075 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-06 10:15:25.058 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.

@@ -21,7 +21,15 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarHorizontal
         private (int row, int col)? _selectedPosition = null;
         private CalendarBlock _clipboardBlock = null;
 
+        private readonly List<Project> _projects = new List<Project>();
+        private readonly List<TimeEntrySubType> _timeEntrySubTypes = new List<TimeEntrySubType>();
+        private readonly List<TimeEntryType> _timeEntryTypes = new List<TimeEntryType>();
+        private User _selectedUser = new User();
         private readonly TimeEntryRepository _timeEntryRepository;
+        private readonly ProjectRepository _projectRepository = new ProjectRepository();
+        private readonly TimeEntrySubTypeRepository _timeEntrySubTypeRepository = new TimeEntrySubTypeRepository();
+        private readonly TimeEntryTypeRepository _timeEntryTypeRepository = new TimeEntryTypeRepository();
+        private readonly UserRepository _userRepository = new UserRepository();
 
         private DateTime _currentWeekReference = DateTime.Now;
         private User _currentUser;
@@ -33,15 +41,31 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarHorizontal
         private readonly List<TimeEntry> _newEntries = new();
         private readonly List<TimeEntry> _deletedEntries = new();
 
-        public WeekCalendar(TimeEntryRepository timeEntryRepository)
+        public WeekCalendar(TimeEntryRepository timeEntryRepository,
+            UserRepository userRepository,
+            ProjectRepository projectRepository,
+            TimeEntrySubTypeRepository timeEntrySubTypeRepository,
+            TimeEntryTypeRepository timeEntryTypeRepository)
         {
             InitializeComponent();
 
             _timeEntryRepository = timeEntryRepository;
+            _userRepository = userRepository;
+            _timeEntrySubTypeRepository = timeEntrySubTypeRepository;
+            _timeEntryTypeRepository = timeEntryTypeRepository;
 
             BuildColumns();
             AddTimeHeaders();
             DrawGridLines();
+        }
+
+
+        public async Task InitializeAsync()
+        {
+            _selectedUser = await _userRepository.GetUserByWindowsUsernameAsync(Environment.UserName);
+            _projects.AddRange(await _projectRepository.GetAllFullProjectsAndPreProjectsAsync());
+            _timeEntrySubTypes.AddRange(await _timeEntrySubTypeRepository.GetAllTimeEntrySubTypesByUserIdAsync(_selectedUser.Id));
+            _timeEntryTypes.AddRange(await _timeEntryTypeRepository.GetAllTimeEntryTypesAsync());
         }
 
         public async Task SaveModifiedEntriesAsync()

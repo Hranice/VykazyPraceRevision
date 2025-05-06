@@ -6,50 +6,59 @@
 
         <!-- Kategorie -->
         <WrapPanel Margin="0,0,0,10" HorizontalAlignment="Center">
-            <ToggleButton Content="PROVOZ" Margin="4"/>
-            <ToggleButton Content="PROJEKT" Margin="4"/>
-            <ToggleButton Content="ŠKOLENÍ" Margin="4"/>
-            <ToggleButton Content="NEPŘÍTOMNOST" Margin="4"/>
-            <ToggleButton Content="OSTATNÍ" Margin="4"/>
+            <ToggleButton Content="PROVOZ" IsChecked="{Binding IsCategoryProvoz}" Margin="4"/>
+            <ToggleButton Content="PROJEKT" IsChecked="{Binding IsCategoryProjekt}" Margin="4"/>
+            <ToggleButton Content="ŠKOLENÍ" IsChecked="{Binding IsCategorySkoleni}" Margin="4"/>
+            <ToggleButton Content="NEPŘÍTOMNOST" IsChecked="{Binding IsCategoryNepritomnost}" Margin="4"/>
+            <ToggleButton Content="OSTATNÍ" IsChecked="{Binding IsCategoryOstatni}" Margin="4"/>
         </WrapPanel>
 
         <!-- Nákladové středisko -->
         <TextBlock Text="Nákladové středisko*" />
-        <ComboBox x:Name="CostCenterCombo" Margin="0,4,0,10" />
+        <ComboBox ItemsSource="{Binding AvailableProjects}"
+                  SelectedItem="{Binding SelectedProject}"
+                  DisplayMemberPath="ProjectTitle"
+                  Margin="0,4,0,10" />
 
         <!-- Typ záznamu -->
         <TextBlock Text="Typ záznamu*" />
         <WrapPanel Margin="0,4,0,10">
-            <ToggleButton Content="Práce" Margin="4"/>
-            <ToggleButton Content="Administrativa" Margin="4"/>
-            <ToggleButton Content="Meeting" Margin="4"/>
+            <ToggleButton Content="Práce" IsChecked="{Binding IsEntryTypePrace}" Margin="4"/>
+            <ToggleButton Content="Administrativa" IsChecked="{Binding IsEntryTypeAdministrativa}" Margin="4"/>
+            <ToggleButton Content="Meeting" IsChecked="{Binding IsEntryTypeMeeting}" Margin="4"/>
         </WrapPanel>
 
         <!-- Index -->
         <TextBlock Text="Index*" />
-        <ComboBox x:Name="IndexCombo" Margin="0,4,0,10" />
+        <ComboBox ItemsSource="{Binding AvailableSubTypes}"
+                  SelectedItem="{Binding SelectedSubType}"
+                  DisplayMemberPath="Title"
+                  Margin="0,4,0,10" />
 
         <!-- Počátek a Ukončení -->
         <WrapPanel Margin="0,0,0,10">
-            <StackPanel Width="50" Margin="0,0,8,0">
+            <StackPanel Width="100" Margin="0,0,8,0">
                 <TextBlock Text="Počátek*" />
-                <ComboBox x:Name="StartTimeCombo" Margin="0,4,0,0"/>
+                <ComboBox ItemsSource="{Binding AvailableStartTimes}"
+                          SelectedItem="{Binding SelectedStartTime}"
+                          Margin="0,4,0,0"/>
             </StackPanel>
-            <StackPanel Width="50">
+            <StackPanel Width="100">
                 <TextBlock Text="Ukončení*" />
-                <ComboBox x:Name="EndTimeCombo" Margin="0,4,0,0"/>
+                <ComboBox ItemsSource="{Binding AvailableEndTimes}"
+                          SelectedItem="{Binding SelectedEndTime}"
+                          Margin="0,4,0,0"/>
             </StackPanel>
-
         </WrapPanel>
 
         <!-- Poznámka -->
         <TextBlock Text="Poznámka" />
-        <TextBox x:Name="NoteBox" Height="80" Margin="0,4,0,10" TextWrapping="Wrap" AcceptsReturn="True"/>
+        <TextBox Text="{Binding Note}" Height="80" Margin="0,4,0,10" TextWrapping="Wrap" AcceptsReturn="True"/>
 
         <!-- Tlačítka -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Odstranit" Width="100" Margin="4" Click="Delete_Click"/>
-            <Button Content="Potvrdit" Width="100" Margin="4" Click="Confirm_Click"/>
+            <Button Content="Odstranit" Width="100" Margin="4" Command="{Binding DeleteCommand}"/>
+            <Button Content="Potvrdit" Width="100" Margin="4" Command="{Binding ConfirmCommand}"/>
         </StackPanel>
 
     </StackPanel>

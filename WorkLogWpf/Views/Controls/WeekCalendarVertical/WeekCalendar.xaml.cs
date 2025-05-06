@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -22,7 +23,14 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
         private (int row, int col)? _selectedPosition = null;
         private CalendarBlock _clipboardBlock = null;
 
+        private List<Project> _projects = new List<Project>();
+        private List<TimeEntrySubType> _timeEntrySubTypes = new List<TimeEntrySubType>();
+        private List<TimeEntryType> _timeEntryTypes = new List<TimeEntryType>();
         private readonly TimeEntryRepository _timeEntryRepository;
+        private readonly ProjectRepository _projectRepository = new ProjectRepository();
+        private readonly TimeEntrySubTypeRepository _timeEntrySubTypeRepository = new TimeEntrySubTypeRepository();
+        private readonly TimeEntryTypeRepository _timeEntryTypeRepository = new TimeEntryTypeRepository();
+        private readonly UserRepository _userRepository = new UserRepository();
 
         private DateTime _currentWeekReference = DateTime.Now;
         private User _currentUser;
@@ -34,15 +42,30 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
         private readonly List<TimeEntry> _newEntries = new();
         private readonly List<TimeEntry> _deletedEntries = new();
 
-        public WeekCalendar(TimeEntryRepository timeEntryRepository)
+        public WeekCalendar(TimeEntryRepository timeEntryRepository,
+     UserRepository userRepository,
+     ProjectRepository projectRepository,
+     TimeEntrySubTypeRepository timeEntrySubTypeRepository,
+     TimeEntryTypeRepository timeEntryTypeRepository)
         {
             InitializeComponent();
 
             _timeEntryRepository = timeEntryRepository;
+            _userRepository = userRepository;
+            _projectRepository = projectRepository;
+            _timeEntrySubTypeRepository = timeEntrySubTypeRepository;
+            _timeEntryTypeRepository = timeEntryTypeRepository;
 
             BuildRows();
             AddTimeHeaders();
             DrawGridLines();
+
+            this.Loaded += WeekCalendar_Loaded;
+        }
+
+        private async void WeekCalendar_Loaded(object sender, RoutedEventArgs e)
+        {
+            await LoadDataAsync();
         }
 
         public async Task SaveModifiedEntriesAsync()
@@ -93,6 +116,13 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
 
             UpdateDayLabels(startOfWeek);
             UpdateWeekLabel(startOfWeek);
+        }
+
+        private async Task LoadDataAsync()
+        {
+            _projects = await _projectRepository.GetAllFullProjectsAndPreProjectsAsync();
+            _timeEntrySubTypes = await _timeEntrySubTypeRepository.GetAllTimeEntrySubTypesByUserIdAsync(_currentUser.Id);
+            _timeEntryTypes = await _timeEntryTypeRepository.GetAllTimeEntryTypesAsync();
         }
 
         private async void PreviousWeek_Click(object sender, RoutedEventArgs e)

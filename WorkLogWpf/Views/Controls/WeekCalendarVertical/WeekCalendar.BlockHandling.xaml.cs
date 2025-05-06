@@ -2,8 +2,8 @@
 using System.Windows.Input;
 using System.Windows;
 using VykazyPrace.Core.Database.Models;
-using System.Diagnostics;
 using WorkLogWpf.Views.Dialogs;
+using VykazyPrace.Core.Database.Repositories;
 
 namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
 {
@@ -22,17 +22,25 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical
                 var targetDate = block.Entry.Timestamp.Value.Date;
 
                 var otherRanges = CalendarGrid.Children.OfType<CalendarBlock>()
-        .Where(b => b != block && b.Entry.Timestamp.HasValue)
-        .Select(b => (
-            Start: b.Entry.Timestamp.Value,
-            End: b.Entry.Timestamp.Value.AddMinutes(b.Entry.EntryMinutes)
-        ))
-        .ToList();
+                    .Where(b => b != block && b.Entry.Timestamp.HasValue)
+                    .Select(b => (
+                        Start: b.Entry.Timestamp.Value,
+                        End: b.Entry.Timestamp.Value.AddMinutes(b.Entry.EntryMinutes)
+                    ))
+                    .ToList();
 
+                var availableProjects = _projects;
+                var availableSubTypes = _timeEntrySubTypes
+                    .Where(st => st.UserId == block.Entry.UserId)
+                    .ToList();
+                var availableEntryTypes = _timeEntryTypes;
 
-
-
-                var dialog = new EntryDialog(block.Entry, otherRanges)
+                var dialog = new EntryDialog(
+                    block.Entry,
+                    otherRanges,
+                    availableProjects,
+                    availableSubTypes,
+                    availableEntryTypes)
                 {
                     Owner = Application.Current.MainWindow,
                 };

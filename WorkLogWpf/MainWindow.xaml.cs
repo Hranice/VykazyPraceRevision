@@ -13,6 +13,9 @@ namespace WorkLogWpf
     {
         private readonly TimeEntryRepository _entryRepository;
         private readonly UserRepository _userRepository;
+        private readonly ProjectRepository _projectRepository;
+        private readonly TimeEntrySubTypeRepository _timeEntrySubTypeRepository;
+        private readonly TimeEntryTypeRepository _timeEntryTypeRepository;
         private WeekCalendar weekCalendar;
 
         public MainWindow()
@@ -21,9 +24,18 @@ namespace WorkLogWpf
 
             Loaded += MainWindow_Loaded;
             PreviewKeyDown += GlobalKeyHandler;
+
             _entryRepository = new TimeEntryRepository();
             _userRepository = new UserRepository();
-            weekCalendar = new WeekCalendar(_entryRepository);
+            _projectRepository = new ProjectRepository();
+            _timeEntrySubTypeRepository = new TimeEntrySubTypeRepository();
+            _timeEntryTypeRepository = new TimeEntryTypeRepository();
+
+            weekCalendar = new WeekCalendar(_entryRepository,
+                _userRepository,
+                _projectRepository,
+                _timeEntrySubTypeRepository,
+                _timeEntryTypeRepository);
         }
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)

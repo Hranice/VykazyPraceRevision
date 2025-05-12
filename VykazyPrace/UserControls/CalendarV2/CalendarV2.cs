@@ -650,9 +650,9 @@ namespace VykazyPrace.UserControls.CalendarV2
         private async Task RenderCalendar()
         {
             tableLayoutPanelCalendar.SuspendLayout();
-            tableLayoutPanelCalendar.SetDate(_selectedDate);
             panelContainer.SuspendLayout();
 
+            tableLayoutPanelCalendar.SetDate(_selectedDate);
             var scrollPosition = panelContainer.AutoScrollPosition;
             panelContainer.AutoScroll = false;
             _loadingUC.BringToFront();
@@ -665,49 +665,46 @@ namespace VykazyPrace.UserControls.CalendarV2
             tableLayoutPanelCalendar.Controls.Clear();
             panels.Clear();
 
-            var entries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _selectedDate);
             var allProjects = await _projectRepo.GetAllProjectsAsync();
             var projectDict = allProjects.ToDictionary(p => p.Id);
+            var allEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesAsync();
 
+            // 1. Načtení speciálních dnů
             await LoadSpecialDaysAsync();
             tableLayoutPanelCalendar.SetSpecialDays(_specialDays);
 
-            // snack entries
+            // 2. Vytvoření chybějících "svačin"
             for (int row = 0; row < 7; row++)
             {
-                bool snackExists = entries.Any(entry =>
-                    entry.ProjectId == 132 &&
-                    entry.EntryTypeId == 24 &&
-                    GetRowBasedOnTimeEntry(entry.Timestamp) == row);
-
-                if (snackExists) continue;
-
-                DateTime defaultSnackTime = _selectedDate.AddDays(row).AddMinutes(18 * 30);
-
-                var newSnack = new TimeEntry
+                DateTime day = _selectedDate.AddDays(row);
+                bool exists = await _timeEntryRepo.ExistsEntryAsync(_selectedUser.Id, day, 132, 24);
+                if (!exists)
                 {
-                    ProjectId = 132,
-                    EntryTypeId = 24,
-                    UserId = _selectedUser.Id,
-                    Timestamp = defaultSnackTime,
-                    EntryMinutes = 30,
-                    IsValid = 1,
-                    IsLocked = 1
-                };
-
-                var created = await _timeEntryRepo.CreateTimeEntryAsync(newSnack);
-                if (created == null)
-                {
-                    AppLogger.Error($"Nepodařilo se vytvořit výchozí svačinu pro den {defaultSnackTime.ToShortDateString()}.");
+                    var defaultSnackTime = day.AddMinutes(18 * 30); // 9:00
+                    var newSnack = new TimeEntry
+                    {
+                        ProjectId = 132,
+                        EntryTypeId = 24,
+                        UserId = _selectedUser.Id,
+                        Timestamp = defaultSnackTime,
+                        EntryMinutes = 30,
+                        IsValid = 1,
+                        IsLocked = 1
+                    };
+                    await _timeEntryRepo.CreateTimeEntryAsync(newSnack);
                 }
             }
 
+            // 3. Znovu načti všechny záznamy (včetně právě vytvořených)
+            var entries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _selectedDate);
+
+            // 4. Vykresli panely
             foreach (var entry in entries)
             {
-                if (entry.Project == null)
-                    continue;
+                if (entry.Project == null && entry.ProjectId.HasValue && projectDict.TryGetValue(entry.ProjectId.Value, out var proj))
+                    entry.Project = proj;
 
-                await CreatePanelForEntry(entry);
+                await CreatePanelForEntry(entry, allEntryTypes);
             }
 
             BeginInvoke((Action)(() =>
@@ -720,27 +717,17 @@ namespace VykazyPrace.UserControls.CalendarV2
                 {
                     int[] columnWidths = tableLayoutPanelCalendar.GetColumnWidths();
                     int currentHourColumn = (DateTime.Now.Hour * 60 + DateTime.Now.Minute) / 30;
-                    int scrollX = 0;
-
-                    for (int i = 0; i < currentHourColumn; i++)
-                    {
-                        scrollX += columnWidths[i];
-                    }
-
-                    int centerOffset = panelContainer.ClientSize.Width / 2;
-                    scrollX -= centerOffset;
-
-                    if (scrollX < 0) scrollX = 0;
-
+                    int scrollX = columnWidths.Take(currentHourColumn).Sum();
+                    scrollX -= panelContainer.ClientSize.Width / 2;
+                    scrollX = Math.Max(scrollX, 0);
                     panelContainer.AutoScrollPosition = new Point(scrollX, 0);
                 }
 
                 DeactivateAllPanels();
 
                 var panelToActivate = tableLayoutPanelCalendar.Controls
-                  .OfType<DayPanel>()
-                  .FirstOrDefault(p => p.EntryId == _selectedTimeEntryId);
-
+                    .OfType<DayPanel>()
+                    .FirstOrDefault(p => p.EntryId == _selectedTimeEntryId);
                 panelToActivate?.Activate();
 
                 tableLayoutPanelCalendar.ResumeLayout(true);
@@ -748,6 +735,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                 _loadingUC.Visible = false;
             }));
         }
+
+
+
 
         private async void UpdateHourLabels()
         {
@@ -922,18 +912,15 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
-        private async Task CreatePanelForEntry(TimeEntry entry)
+        private async Task CreatePanelForEntry(TimeEntry entry, List<TimeEntryType> entryTypes)
         {
             if (entry.Project == null) return;
 
-            var entryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesAsync();
             var entryType = entryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
             string color = entryType?.Color ?? "#ADD8E6";
 
             if (entry.IsValid == 0)
-            {
                 color = "#FF6957";
-            }
 
             var panel = new DayPanel
             {
@@ -946,8 +933,9 @@ namespace VykazyPrace.UserControls.CalendarV2
             if (entry.IsValid == 1)
             {
                 panel.UpdateUi(
-              (entry.Project?.IsArchived == 1 ? "(AFTERCARE) " : "") + (entry.Project.ProjectType == 1 ? entry.Project.ProjectDescription : entry.Project.ProjectTitle),
-              entry.Description);
+                    (entry.Project?.IsArchived == 1 ? "(AFTERCARE) " : "") +
+                    (entry.Project.ProjectType == 1 ? entry.Project.ProjectDescription : entry.Project.ProjectTitle),
+                    entry.Description);
             }
 
             panel.ContextMenuStrip = dayPanelMenu;
@@ -970,6 +958,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             panels.Add(panel);
         }
+
 
 
         #region DayPanel events

@@ -44,9 +44,13 @@ namespace VykazyPrace.Core.Database.Repositories
         {
             return await _context.TimeEntrySubTypes
                 .Where(t => t.UserId == userId && t.IsArchived == 0)
+                .OrderBy(t => t.Order == null)
+                .ThenBy(t => t.Order)
                 .Include(t => t.User)
                 .ToListAsync();
         }
+
+
 
 
         public async Task<TimeEntrySubType?> GetTimeEntrySubTypeByIdAsync(int id)

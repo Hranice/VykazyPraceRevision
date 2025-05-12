@@ -45,6 +45,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         private List<SpecialDay> _specialDays = new();
         private List<ArrivalDeparture> _arrivalDepartures = new();
         private List<DayPanel> panels = new();
+        private List<TimeEntry> _currentEntries = new();
 
 
         // Context
@@ -238,8 +239,8 @@ namespace VykazyPrace.UserControls.CalendarV2
             {
                 _currentProjectType = projectType;
 
-                var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
-                bool isArchived = timeEntry?.AfterCare == 1;
+                var entry = _currentEntries.FirstOrDefault(e => e.Id == _selectedTimeEntryId);
+                bool isArchived = entry?.AfterCare == 1;
 
                 _timeEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesByProjectTypeAsync(projectType);
 
@@ -406,7 +407,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             flowLayoutPanel2.Visible = _selectedTimeEntryId > -1;
             flowLayoutPanel2.Visible = _selectedTimeEntryId > -1;
 
-            var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
+            var timeEntry = _currentEntries.FirstOrDefault(e => e.Id == _selectedTimeEntryId);
             if (timeEntry == null) return;
 
             if (timeEntry.ProjectId == 132 && timeEntry.EntryTypeId == 24)
@@ -650,9 +651,9 @@ namespace VykazyPrace.UserControls.CalendarV2
         private async Task RenderCalendar()
         {
             tableLayoutPanelCalendar.SuspendLayout();
-            tableLayoutPanelCalendar.SetDate(_selectedDate);
             panelContainer.SuspendLayout();
 
+            tableLayoutPanelCalendar.SetDate(_selectedDate);
             var scrollPosition = panelContainer.AutoScrollPosition;
             panelContainer.AutoScroll = false;
             _loadingUC.BringToFront();
@@ -665,49 +666,48 @@ namespace VykazyPrace.UserControls.CalendarV2
             tableLayoutPanelCalendar.Controls.Clear();
             panels.Clear();
 
-            var entries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _selectedDate);
             var allProjects = await _projectRepo.GetAllProjectsAsync();
             var projectDict = allProjects.ToDictionary(p => p.Id);
+            var allEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesAsync();
 
+
+            // 1. Načtení speciálních dnů
             await LoadSpecialDaysAsync();
             tableLayoutPanelCalendar.SetSpecialDays(_specialDays);
 
-            // snack entries
+            // 2. Vytvoření chybějících "svačin"
             for (int row = 0; row < 7; row++)
             {
-                bool snackExists = entries.Any(entry =>
-                    entry.ProjectId == 132 &&
-                    entry.EntryTypeId == 24 &&
-                    GetRowBasedOnTimeEntry(entry.Timestamp) == row);
-
-                if (snackExists) continue;
-
-                DateTime defaultSnackTime = _selectedDate.AddDays(row).AddMinutes(18 * 30);
-
-                var newSnack = new TimeEntry
+                DateTime day = _selectedDate.AddDays(row);
+                bool exists = await _timeEntryRepo.ExistsEntryAsync(_selectedUser.Id, day, 132, 24);
+                if (!exists)
                 {
-                    ProjectId = 132,
-                    EntryTypeId = 24,
-                    UserId = _selectedUser.Id,
-                    Timestamp = defaultSnackTime,
-                    EntryMinutes = 30,
-                    IsValid = 1,
-                    IsLocked = 1
-                };
-
-                var created = await _timeEntryRepo.CreateTimeEntryAsync(newSnack);
-                if (created == null)
-                {
-                    AppLogger.Error($"Nepodařilo se vytvořit výchozí svačinu pro den {defaultSnackTime.ToShortDateString()}.");
+                    var defaultSnackTime = day.AddMinutes(18 * 30); // 9:00
+                    var newSnack = new TimeEntry
+                    {
+                        ProjectId = 132,
+                        EntryTypeId = 24,
+                        UserId = _selectedUser.Id,
+                        Timestamp = defaultSnackTime,
+                        EntryMinutes = 30,
+                        IsValid = 1,
+                        IsLocked = 1
+                    };
+                    await _timeEntryRepo.CreateTimeEntryAsync(newSnack);
                 }
             }
 
-            foreach (var entry in entries)
-            {
-                if (entry.Project == null)
-                    continue;
+            // 3. Znovu načti všechny záznamy (včetně právě vytvořených)
+            _currentEntries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _selectedDate);
 
-                await CreatePanelForEntry(entry);
+
+            // 4. Vykresli panely
+            foreach (var entry in _currentEntries)
+            {
+                if (entry.Project == null && entry.ProjectId.HasValue && projectDict.TryGetValue(entry.ProjectId.Value, out var proj))
+                    entry.Project = proj;
+
+                await CreatePanelForEntry(entry, allEntryTypes);
             }
 
             BeginInvoke((Action)(() =>
@@ -720,27 +720,17 @@ namespace VykazyPrace.UserControls.CalendarV2
                 {
                     int[] columnWidths = tableLayoutPanelCalendar.GetColumnWidths();
                     int currentHourColumn = (DateTime.Now.Hour * 60 + DateTime.Now.Minute) / 30;
-                    int scrollX = 0;
-
-                    for (int i = 0; i < currentHourColumn; i++)
-                    {
-                        scrollX += columnWidths[i];
-                    }
-
-                    int centerOffset = panelContainer.ClientSize.Width / 2;
-                    scrollX -= centerOffset;
-
-                    if (scrollX < 0) scrollX = 0;
-
+                    int scrollX = columnWidths.Take(currentHourColumn).Sum();
+                    scrollX -= panelContainer.ClientSize.Width / 2;
+                    scrollX = Math.Max(scrollX, 0);
                     panelContainer.AutoScrollPosition = new Point(scrollX, 0);
                 }
 
                 DeactivateAllPanels();
 
                 var panelToActivate = tableLayoutPanelCalendar.Controls
-                  .OfType<DayPanel>()
-                  .FirstOrDefault(p => p.EntryId == _selectedTimeEntryId);
-
+                    .OfType<DayPanel>()
+                    .FirstOrDefault(p => p.EntryId == _selectedTimeEntryId);
                 panelToActivate?.Activate();
 
                 tableLayoutPanelCalendar.ResumeLayout(true);
@@ -749,38 +739,28 @@ namespace VykazyPrace.UserControls.CalendarV2
             }));
         }
 
-        private async void UpdateHourLabels()
+
+
+
+        private void UpdateHourLabels()
         {
             Label[] hourLabels = { labelHours01, labelHours02, labelHours03, labelHours04, labelHours05, labelHours06, labelHours07 };
 
             for (int row = 0; row < 7; row++)
             {
-                int totalMinutes = 0;
-
-                foreach (var panel in panels)
-                {
-                    if (tableLayoutPanelCalendar.GetRow(panel) != row)
-                        continue;
-
-                    // Najdi odpovídající TimeEntry
-                    var entry = panel.EntryId > 0
-                        ? await _timeEntryRepo.GetTimeEntryByIdAsync(panel.EntryId)
-                        : null;
-
-                    if (entry.ProjectId == 132 &&
-                   entry.EntryTypeId == 24)
-                        continue;
-
-                    if (entry?.IsValid == 1)
-                    {
-                        totalMinutes += entry.EntryMinutes;
-                    }
-                }
+                int totalMinutes = _currentEntries
+                    .Where(entry =>
+                        entry.Timestamp.HasValue &&
+                        GetRowBasedOnTimeEntry(entry.Timestamp) == row &&
+                        entry.IsValid == 1 &&
+                        !(entry.ProjectId == 132 && entry.EntryTypeId == 24)) // není svačina
+                    .Sum(entry => entry.EntryMinutes);
 
                 double hours = totalMinutes / 60.0;
                 hourLabels[row].Text = $"{hours:F1} h";
             }
         }
+
 
 
         private int GetColumnBasedOnTimeEntry(DateTime? timeStamp)
@@ -922,18 +902,15 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
-        private async Task CreatePanelForEntry(TimeEntry entry)
+        private async Task CreatePanelForEntry(TimeEntry entry, List<TimeEntryType> entryTypes)
         {
             if (entry.Project == null) return;
 
-            var entryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesAsync();
             var entryType = entryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
             string color = entryType?.Color ?? "#ADD8E6";
 
             if (entry.IsValid == 0)
-            {
                 color = "#FF6957";
-            }
 
             var panel = new DayPanel
             {
@@ -946,8 +923,9 @@ namespace VykazyPrace.UserControls.CalendarV2
             if (entry.IsValid == 1)
             {
                 panel.UpdateUi(
-              (entry.Project?.IsArchived == 1 ? "(AFTERCARE) " : "") + (entry.Project.ProjectType == 1 ? entry.Project.ProjectDescription : entry.Project.ProjectTitle),
-              entry.Description);
+                    (entry.Project?.IsArchived == 1 ? "(AFTERCARE) " : "") +
+                    (entry.Project.ProjectType == 1 ? entry.Project.ProjectDescription : entry.Project.ProjectTitle),
+                    entry.Description);
             }
 
             panel.ContextMenuStrip = dayPanelMenu;
@@ -970,6 +948,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             panels.Add(panel);
         }
+
 
 
         #region DayPanel events
@@ -1179,11 +1158,10 @@ namespace VykazyPrace.UserControls.CalendarV2
             var previousTimeEntryId = _selectedTimeEntryId;
             _selectedTimeEntryId = panel.EntryId;
 
-            var entry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
+            var entry = _currentEntries.FirstOrDefault(e => e.Id == _selectedTimeEntryId);
             if (entry == null) return;
 
-            var entryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesAsync();
-            var entryType = entryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
+            var entryType = _timeEntryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
 
             var newTimestamp = _selectedDate
                 .AddDays(tableLayoutPanelCalendar.GetRow(panel))
@@ -1196,32 +1174,26 @@ namespace VykazyPrace.UserControls.CalendarV2
                 entry.Timestamp = newTimestamp;
                 entry.EntryMinutes = newDuration;
                 await _timeEntryRepo.UpdateTimeEntryAsync(entry);
+
                 UpdateHourLabels();
             }
 
             string color = entryType?.Color ?? "#ADD8E6";
-
-            if (entry.IsValid == 0)
-            {
-                color = "#FF6957";
-            }
+            if (entry.IsValid == 0) color = "#FF6957";
             panel.BackColor = ColorTranslator.FromHtml(color);
-
 
             int minutesStart = newTimestamp.Hour * 60 + newTimestamp.Minute;
             int minutesEnd = minutesStart + entry.EntryMinutes;
 
-            int index = minutesStart / 30;
-
-            comboBoxStart.SelectedIndex = index;
+            comboBoxStart.SelectedIndex = minutesStart / 30;
             comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
 
             if (_selectedTimeEntryId != previousTimeEntryId)
             {
                 await LoadSidebar();
             }
-
         }
+
         #endregion
 
         private bool IsOverlapping(int column, int span, int row, DayPanel currentPanel)
@@ -1378,7 +1350,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             var addedTimeEntrySubType = await _timeEntrySubTypeRepo.CreateTimeEntrySubTypeAsync(newSubType);
 
-            var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
+            var timeEntry = _currentEntries.FirstOrDefault(e => e.Id == _selectedTimeEntryId);
             if (timeEntry == null) return;
 
             timeEntry.Description = addedTimeEntrySubType.Title;
@@ -1470,7 +1442,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         public async Task DeleteRecord()
         {
-            var timeEntry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
+            var timeEntry = _currentEntries.FirstOrDefault(e => e.Id == _selectedTimeEntryId);
             if (timeEntry == null) return;
 
             // zamčeno
@@ -1627,7 +1599,8 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             if (_selectedTimeEntryId <= 0) return;
 
-            var entry = await _timeEntryRepo.GetTimeEntryByIdAsync(_selectedTimeEntryId);
+            var entry = _currentEntries.FirstOrDefault(e => e.Id == _selectedTimeEntryId);
+
 
             // svačina
             if (entry.ProjectId == 132 && entry.EntryTypeId == 24) return;
@@ -1776,7 +1749,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             {
                 var panel = kvp.Key;
                 var (newCol, span) = (tableLayoutPanelCalendar.GetColumn(panel), kvp.Value.span);
-                var entry = await _timeEntryRepo.GetTimeEntryByIdAsync(panel.EntryId);
+                var entry = _currentEntries.FirstOrDefault(e => e.Id == _selectedTimeEntryId);
                 if (entry == null) continue;
                 entry.Timestamp = _selectedDate.AddDays(row).AddMinutes(newCol * TimeSlotLengthInMinutes);
                 await _timeEntryRepo.UpdateTimeEntryAsync(entry);

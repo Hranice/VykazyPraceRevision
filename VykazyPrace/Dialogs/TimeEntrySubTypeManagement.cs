@@ -21,7 +21,24 @@ namespace VykazyPrace.Dialogs
             _selectedUser = selectedUser;
             _timeEntrySubTypeRepo = timeEntrySubTypeRepository;
             _timeEntryRepo = timeEntryRepo;
+
+            this.KeyPreview = true;
+            this.KeyDown += TimeEntrySubTypeManagement_KeyDown;
         }
+
+        private async void TimeEntrySubTypeManagement_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.S)
+            {
+                e.SuppressKeyPress = true;
+
+                if (HasOrderChanged())
+                {
+                    await SaveOrderChangesAsync();
+                }
+            }
+        }
+
 
         private async Task LoadTimeEntrySubTypesAsync()
         {
@@ -44,7 +61,7 @@ namespace VykazyPrace.Dialogs
         {
             textBoxTitle.Text = listBoxTimeEntrySubTypes.Text?.ToString();
 
-            if(listBoxTimeEntrySubTypes.SelectedItems.Count > 1)
+            if (listBoxTimeEntrySubTypes.SelectedItems.Count > 1)
             {
                 textBoxTitle.Text = string.Empty;
             }
@@ -55,7 +72,7 @@ namespace VykazyPrace.Dialogs
             if (listBoxTimeEntrySubTypes.SelectedIndex < 0)
                 return;
 
-            if(listBoxTimeEntrySubTypes.SelectedItems.Count > 1)
+            if (listBoxTimeEntrySubTypes.SelectedItems.Count > 1)
             {
                 AppLogger.Error("Nelze přepisovat více položek najednou.");
                 return;
@@ -117,6 +134,90 @@ namespace VykazyPrace.Dialogs
 
             await LoadTimeEntrySubTypesAsync();
         }
+
+        private void buttonMoveUp_Click(object sender, EventArgs e)
+        {
+            int index = listBoxTimeEntrySubTypes.SelectedIndex;
+            if (index <= 0) return;
+
+            var item = _timeEntrySubTypes[index];
+            _timeEntrySubTypes.RemoveAt(index);
+            _timeEntrySubTypes.Insert(index - 1, item);
+
+            RefreshListBox();
+            listBoxTimeEntrySubTypes.SelectedIndex = index - 1;
+        }
+
+
+        private void buttonMoveDown_Click(object sender, EventArgs e)
+        {
+            int index = listBoxTimeEntrySubTypes.SelectedIndex;
+            if (index < 0 || index >= _timeEntrySubTypes.Count - 1) return;
+
+            var item = _timeEntrySubTypes[index];
+            _timeEntrySubTypes.RemoveAt(index);
+            _timeEntrySubTypes.Insert(index + 1, item);
+
+            RefreshListBox();
+            listBoxTimeEntrySubTypes.SelectedIndex = index + 1;
+        }
+
+
+        private void RefreshListBox()
+        {
+            listBoxTimeEntrySubTypes.Items.Clear();
+            listBoxTimeEntrySubTypes.Items.AddRange(
+                _timeEntrySubTypes
+                    .Where(t => t.IsArchived == 0)
+                    .Select(FormatHelper.FormatTimeEntrySubTypeToString)
+                    .ToArray());
+
+            this.Text = HasOrderChanged() ? "Správa indexů*" : "Správa indexů";
+        }
+
+
+        private async void TimeEntrySubTypeManagement_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (HasOrderChanged())
+            {
+                var result = MessageBox.Show("Byly provedeny změny v pořadí. Chcete je uložit?", "Uložit změny?", MessageBoxButtons.YesNoCancel);
+                if (result == DialogResult.Cancel)
+                {
+                    e.Cancel = true;
+                    this.Text = "Správa indexů*";
+                    return;
+                }
+                if (result == DialogResult.Yes)
+                {
+                    await SaveOrderChangesAsync();
+                    this.Text = "Správa indexů";
+                }
+            }
+        }
+
+        private async Task SaveOrderChangesAsync()
+        {
+            for (int i = 0; i < _timeEntrySubTypes.Count; i++)
+            {
+                _timeEntrySubTypes[i].Order = i;
+                await _timeEntrySubTypeRepo.UpdateTimeEntrySubTypeAsync(_timeEntrySubTypes[i]);
+            }
+
+            AppLogger.Information("Změny pořadí byly úspěšně uloženy.");
+        }
+
+
+
+        private bool HasOrderChanged()
+        {
+            for (int i = 0; i < _timeEntrySubTypes.Count; i++)
+            {
+                if ((_timeEntrySubTypes[i].Order ?? -1) != i)
+                    return true;
+            }
+            return false;
+        }
+
 
     }
 }

@@ -232,6 +232,17 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
 
+        public async Task<bool> ExistsEntryAsync(int userId, DateTime day, int projectId, int entryTypeId)
+        {
+            return await _context.TimeEntries.AnyAsync(e =>
+                e.UserId == userId &&
+                e.Timestamp.HasValue &&
+                e.Timestamp.Value.Date == day.Date &&
+                e.ProjectId == projectId &&
+                e.EntryTypeId == entryTypeId);
+        }
+
+
 
         /// <summary>
         /// Smazání časového záznamu podle ID.

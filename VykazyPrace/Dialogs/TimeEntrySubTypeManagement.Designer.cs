@@ -29,13 +29,21 @@
         private void InitializeComponent()
         {
             tableLayoutPanel1 = new TableLayoutPanel();
+            panel3 = new Panel();
             listBoxTimeEntrySubTypes = new ListBox();
+            panel5 = new Panel();
+            panel4 = new Panel();
+            buttonMoveUp = new Button();
+            buttonMoveDown = new Button();
             panel1 = new Panel();
             panel2 = new Panel();
             buttonRename = new Button();
             buttonDelete = new Button();
             textBoxTitle = new TextBox();
             tableLayoutPanel1.SuspendLayout();
+            panel3.SuspendLayout();
+            panel5.SuspendLayout();
+            panel4.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             SuspendLayout();
@@ -45,7 +53,7 @@
             tableLayoutPanel1.ColumnCount = 2;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Controls.Add(listBoxTimeEntrySubTypes, 0, 0);
+            tableLayoutPanel1.Controls.Add(panel3, 0, 0);
             tableLayoutPanel1.Controls.Add(panel1, 1, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(5, 5);
@@ -56,18 +64,69 @@
             tableLayoutPanel1.Size = new Size(525, 349);
             tableLayoutPanel1.TabIndex = 7;
             // 
+            // panel3
+            // 
+            panel3.Controls.Add(listBoxTimeEntrySubTypes);
+            panel3.Controls.Add(panel5);
+            panel3.Dock = DockStyle.Fill;
+            panel3.Location = new Point(3, 3);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(256, 343);
+            panel3.TabIndex = 8;
+            // 
             // listBoxTimeEntrySubTypes
             // 
             listBoxTimeEntrySubTypes.Dock = DockStyle.Fill;
             listBoxTimeEntrySubTypes.FormattingEnabled = true;
             listBoxTimeEntrySubTypes.ItemHeight = 25;
-            listBoxTimeEntrySubTypes.Location = new Point(4, 5);
+            listBoxTimeEntrySubTypes.Location = new Point(0, 0);
             listBoxTimeEntrySubTypes.Margin = new Padding(4, 5, 4, 5);
             listBoxTimeEntrySubTypes.Name = "listBoxTimeEntrySubTypes";
             listBoxTimeEntrySubTypes.SelectionMode = SelectionMode.MultiExtended;
-            listBoxTimeEntrySubTypes.Size = new Size(254, 339);
+            listBoxTimeEntrySubTypes.Size = new Size(256, 311);
             listBoxTimeEntrySubTypes.TabIndex = 7;
             listBoxTimeEntrySubTypes.SelectedIndexChanged += listBoxTimeEntrySubTypes_SelectedIndexChanged;
+            // 
+            // panel5
+            // 
+            panel5.Controls.Add(panel4);
+            panel5.Dock = DockStyle.Bottom;
+            panel5.Location = new Point(0, 311);
+            panel5.Name = "panel5";
+            panel5.Size = new Size(256, 32);
+            panel5.TabIndex = 9;
+            // 
+            // panel4
+            // 
+            panel4.Controls.Add(buttonMoveUp);
+            panel4.Controls.Add(buttonMoveDown);
+            panel4.Dock = DockStyle.Fill;
+            panel4.Location = new Point(0, 0);
+            panel4.Name = "panel4";
+            panel4.Size = new Size(256, 32);
+            panel4.TabIndex = 8;
+            // 
+            // buttonMoveUp
+            // 
+            buttonMoveUp.Dock = DockStyle.Right;
+            buttonMoveUp.Image = Properties.Resources.arrow_up;
+            buttonMoveUp.Location = new Point(192, 0);
+            buttonMoveUp.Name = "buttonMoveUp";
+            buttonMoveUp.Size = new Size(32, 32);
+            buttonMoveUp.TabIndex = 2;
+            buttonMoveUp.UseVisualStyleBackColor = true;
+            buttonMoveUp.Click += buttonMoveUp_Click;
+            // 
+            // buttonMoveDown
+            // 
+            buttonMoveDown.Dock = DockStyle.Right;
+            buttonMoveDown.Image = Properties.Resources.arrow_down;
+            buttonMoveDown.Location = new Point(224, 0);
+            buttonMoveDown.Name = "buttonMoveDown";
+            buttonMoveDown.Size = new Size(32, 32);
+            buttonMoveDown.TabIndex = 1;
+            buttonMoveDown.UseVisualStyleBackColor = true;
+            buttonMoveDown.Click += buttonMoveDown_Click;
             // 
             // panel1
             // 
@@ -132,8 +191,12 @@
             Name = "TimeEntrySubTypeManagement";
             Padding = new Padding(5);
             Text = "Správa indexů";
+            FormClosing += TimeEntrySubTypeManagement_FormClosing;
             Load += TimeEntrySubTypeManagement_Load;
             tableLayoutPanel1.ResumeLayout(false);
+            panel3.ResumeLayout(false);
+            panel5.ResumeLayout(false);
+            panel4.ResumeLayout(false);
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panel2.ResumeLayout(false);
@@ -149,5 +212,10 @@
         private Button buttonRename;
         private Button buttonDelete;
         private TextBox textBoxTitle;
+        private Panel panel3;
+        private Panel panel4;
+        private Panel panel5;
+        private Button buttonMoveUp;
+        private Button buttonMoveDown;
     }
 }

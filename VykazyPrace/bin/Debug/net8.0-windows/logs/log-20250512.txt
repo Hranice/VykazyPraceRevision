@@ -15,3 +15,12 @@
 2025-05-12 10:44:40.292 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - test4 byl úspěšně aktualizován.
 2025-05-12 10:44:51.851 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - Přednatáčení byl úspěšně aktualizován.
 2025-05-12 10:45:27.205 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-12 11:25:39.669 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-12 11:26:08.930 +02:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 1,5 h - test4 byl smazán z databáze.
+2025-05-12 11:26:10.044 +02:00 [INF] Záznam 0 - Provoz Metalizace: 1 h -  byl smazán z databáze.
+2025-05-12 11:26:11.092 +02:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 2,5 h - test4 byl smazán z databáze.
+2025-05-12 11:26:12.108 +02:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 2,5 h - test4 byl smazán z databáze.
+2025-05-12 11:26:12.997 +02:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 1 h - test4 byl smazán z databáze.
+2025-05-12 11:26:14.020 +02:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 2,5 h - test4 byl smazán z databáze.
+2025-05-12 11:26:14.700 +02:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 1,5 h - test4 byl smazán z databáze.
+2025-05-12 11:26:19.364 +02:00 [INF] Záznam  - Automatizace: 1 h - IT byl smazán z databáze.

@@ -2,10 +2,13 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
-    <Compile Update="Views\Controls\CalendarBlock.xaml.cs">
+    <Compile Update="Views\Controls\WeekCalendarVertical\CalendarBlock.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Controls\WeekCalendar.xaml.cs">
+    <Compile Update="Views\Controls\WeekCalendarHorizontal\WeekCalendar.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Dialogs\EntryDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

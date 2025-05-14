@@ -1,0 +1,65 @@
+﻿<Window x:Class="WorkLogWpf.Views.Dialogs.EntryDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Upravit záznam" Height="600" Width="400" WindowStartupLocation="CenterOwner">
+    <StackPanel Margin="20" VerticalAlignment="Top">
+
+        <!-- Kategorie -->
+        <WrapPanel Margin="0,0,0,10" HorizontalAlignment="Center">
+            <ToggleButton Content="PROVOZ" IsChecked="{Binding IsCategoryProvoz}" Margin="4"/>
+            <ToggleButton Content="PROJEKT" IsChecked="{Binding IsCategoryProjekt}" Margin="4"/>
+            <ToggleButton Content="ŠKOLENÍ" IsChecked="{Binding IsCategorySkoleni}" Margin="4"/>
+            <ToggleButton Content="NEPŘÍTOMNOST" IsChecked="{Binding IsCategoryNepritomnost}" Margin="4"/>
+            <ToggleButton Content="OSTATNÍ" IsChecked="{Binding IsCategoryOstatni}" Margin="4"/>
+        </WrapPanel>
+
+        <!-- Nákladové středisko -->
+        <TextBlock Text="Nákladové středisko*" />
+        <ComboBox ItemsSource="{Binding AvailableProjects}"
+                  SelectedItem="{Binding SelectedProject}"
+                  DisplayMemberPath="ProjectTitle"
+                  Margin="0,4,0,10" />
+
+        <!-- Typ záznamu -->
+        <TextBlock Text="Typ záznamu*" />
+        <WrapPanel Margin="0,4,0,10">
+            <ToggleButton Content="Práce" IsChecked="{Binding IsEntryTypePrace}" Margin="4"/>
+            <ToggleButton Content="Administrativa" IsChecked="{Binding IsEntryTypeAdministrativa}" Margin="4"/>
+            <ToggleButton Content="Meeting" IsChecked="{Binding IsEntryTypeMeeting}" Margin="4"/>
+        </WrapPanel>
+
+        <!-- Index -->
+        <TextBlock Text="Index*" />
+        <ComboBox ItemsSource="{Binding AvailableSubTypes}"
+                  SelectedItem="{Binding SelectedSubType}"
+                  DisplayMemberPath="Title"
+                  Margin="0,4,0,10" />
+
+        <!-- Počátek a Ukončení -->
+        <WrapPanel Margin="0,0,0,10">
+            <StackPanel Width="100" Margin="0,0,8,0">
+                <TextBlock Text="Počátek*" />
+                <ComboBox ItemsSource="{Binding AvailableStartTimes}"
+                          SelectedItem="{Binding SelectedStartTime}"
+                          Margin="0,4,0,0"/>
+            </StackPanel>
+            <StackPanel Width="100">
+                <TextBlock Text="Ukončení*" />
+                <ComboBox ItemsSource="{Binding AvailableEndTimes}"
+                          SelectedItem="{Binding SelectedEndTime}"
+                          Margin="0,4,0,0"/>
+            </StackPanel>
+        </WrapPanel>
+
+        <!-- Poznámka -->
+        <TextBlock Text="Poznámka" />
+        <TextBox Text="{Binding Note}" Height="80" Margin="0,4,0,10" TextWrapping="Wrap" AcceptsReturn="True"/>
+
+        <!-- Tlačítka -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Odstranit" Width="100" Margin="4" Command="{Binding DeleteCommand}"/>
+            <Button Content="Potvrdit" Width="100" Margin="4" Command="{Binding ConfirmCommand}"/>
+        </StackPanel>
+
+    </StackPanel>
+</Window>

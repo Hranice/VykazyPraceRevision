@@ -113,3 +113,18 @@ ClientConnectionId:2de722ff-e4d2-4aff-9989-fc7d4b451a31
    at VykazyPrace.Core.PowerKey.PowerKeyHelper.DownloadArrivalsDeparturesAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 26
    at VykazyPrace.MainForm.LoadDataAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 113
 2025-05-15 09:42:40.487 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 09:56:21.717 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 10:23:33.837 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 10:24:27.063 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 10:25:53.051 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 10:27:39.049 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 10:28:27.750 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 10:29:26.469 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 10:45:53.859 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 10:46:39.736 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 10:47:35.385 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 10:48:18.894 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 10:50:05.178 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 10:51:07.512 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 10:51:40.924 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 10:58:55.203 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.

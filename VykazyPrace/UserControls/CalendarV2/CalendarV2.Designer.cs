@@ -196,18 +196,20 @@
             panelDay6.Name = "panelDay6";
             panelDay6.Size = new Size(63, 77);
             panelDay6.TabIndex = 126;
+            panelDay6.Click += panelDay_Click;
             // 
             // labelHours07
             // 
             labelHours07.AutoSize = true;
             labelHours07.Dock = DockStyle.Top;
-            labelHours07.Font = new Font("Reddit Sans", 9.75F, FontStyle.Bold);
+            labelHours07.Font = new Font("Reddit Sans", 9F, FontStyle.Bold);
             labelHours07.Location = new Point(0, 42);
             labelHours07.Name = "labelHours07";
-            labelHours07.Size = new Size(37, 21);
+            labelHours07.Size = new Size(34, 19);
             labelHours07.TabIndex = 39;
             labelHours07.Text = "7,5 h";
             labelHours07.TextAlign = ContentAlignment.MiddleRight;
+            labelHours07.Click += panelDay_Click;
             // 
             // labelDate07
             // 
@@ -219,6 +221,7 @@
             labelDate07.TabIndex = 36;
             labelDate07.Text = "9.3.2025";
             labelDate07.TextAlign = ContentAlignment.MiddleRight;
+            labelDate07.Click += panelDay_Click;
             // 
             // labelDay07
             // 
@@ -230,6 +233,7 @@
             labelDay07.TabIndex = 34;
             labelDay07.Text = "Neděle";
             labelDay07.TextAlign = ContentAlignment.TopRight;
+            labelDay07.Click += panelDay_Click;
             // 
             // panel1
             // 
@@ -271,18 +275,20 @@
             panelDay0.Name = "panelDay0";
             panelDay0.Size = new Size(63, 75);
             panelDay0.TabIndex = 112;
+            panelDay0.Click += panelDay_Click;
             // 
             // labelHours01
             // 
             labelHours01.AutoSize = true;
             labelHours01.Dock = DockStyle.Top;
-            labelHours01.Font = new Font("Reddit Sans", 9.75F, FontStyle.Bold);
+            labelHours01.Font = new Font("Reddit Sans", 9F, FontStyle.Bold);
             labelHours01.Location = new Point(0, 42);
             labelHours01.Name = "labelHours01";
-            labelHours01.Size = new Size(37, 21);
+            labelHours01.Size = new Size(34, 19);
             labelHours01.TabIndex = 37;
             labelHours01.Text = "7,5 h";
             labelHours01.TextAlign = ContentAlignment.MiddleRight;
+            labelHours01.Click += panelDay_Click;
             // 
             // labelDate01
             // 
@@ -294,6 +300,7 @@
             labelDate01.TabIndex = 36;
             labelDate01.Text = "4.3.2025";
             labelDate01.TextAlign = ContentAlignment.MiddleRight;
+            labelDate01.Click += panelDay_Click;
             // 
             // labelDay01
             // 
@@ -305,6 +312,7 @@
             labelDay01.TabIndex = 34;
             labelDay01.Text = "Pondělí";
             labelDay01.TextAlign = ContentAlignment.TopRight;
+            labelDay01.Click += panelDay_Click;
             // 
             // panelDay3
             // 
@@ -316,18 +324,20 @@
             panelDay3.Name = "panelDay3";
             panelDay3.Size = new Size(63, 75);
             panelDay3.TabIndex = 114;
+            panelDay3.Click += panelDay_Click;
             // 
             // labelHours04
             // 
             labelHours04.AutoSize = true;
             labelHours04.Dock = DockStyle.Top;
-            labelHours04.Font = new Font("Reddit Sans", 9.75F, FontStyle.Bold);
+            labelHours04.Font = new Font("Reddit Sans", 9F, FontStyle.Bold);
             labelHours04.Location = new Point(0, 42);
             labelHours04.Name = "labelHours04";
-            labelHours04.Size = new Size(37, 21);
+            labelHours04.Size = new Size(34, 19);
             labelHours04.TabIndex = 39;
             labelHours04.Text = "7,5 h";
             labelHours04.TextAlign = ContentAlignment.MiddleRight;
+            labelHours04.Click += panelDay_Click;
             // 
             // labelDate04
             // 
@@ -339,6 +349,7 @@
             labelDate04.TabIndex = 36;
             labelDate04.Text = "7.3.2025";
             labelDate04.TextAlign = ContentAlignment.MiddleRight;
+            labelDate04.Click += panelDay_Click;
             // 
             // labelDay04
             // 
@@ -350,6 +361,7 @@
             labelDay04.TabIndex = 34;
             labelDay04.Text = "Čtvrtek";
             labelDay04.TextAlign = ContentAlignment.TopRight;
+            labelDay04.Click += panelDay_Click;
             // 
             // panelDay5
             // 
@@ -361,18 +373,20 @@
             panelDay5.Name = "panelDay5";
             panelDay5.Size = new Size(63, 75);
             panelDay5.TabIndex = 116;
+            panelDay5.Click += panelDay_Click;
             // 
             // labelHours06
             // 
             labelHours06.AutoSize = true;
             labelHours06.Dock = DockStyle.Top;
-            labelHours06.Font = new Font("Reddit Sans", 9.75F, FontStyle.Bold);
+            labelHours06.Font = new Font("Reddit Sans", 9F, FontStyle.Bold);
             labelHours06.Location = new Point(0, 42);
             labelHours06.Name = "labelHours06";
-            labelHours06.Size = new Size(37, 21);
+            labelHours06.Size = new Size(34, 19);
             labelHours06.TabIndex = 39;
             labelHours06.Text = "7,5 h";
             labelHours06.TextAlign = ContentAlignment.MiddleRight;
+            labelHours06.Click += panelDay_Click;
             // 
             // labelDate06
             // 
@@ -384,6 +398,7 @@
             labelDate06.TabIndex = 36;
             labelDate06.Text = "9.3.2025";
             labelDate06.TextAlign = ContentAlignment.MiddleRight;
+            labelDate06.Click += panelDay_Click;
             // 
             // labelDay06
             // 
@@ -395,6 +410,7 @@
             labelDay06.TabIndex = 34;
             labelDay06.Text = "Sobota";
             labelDay06.TextAlign = ContentAlignment.TopRight;
+            labelDay06.Click += panelDay_Click;
             // 
             // panelDay4
             // 
@@ -406,18 +422,20 @@
             panelDay4.Name = "panelDay4";
             panelDay4.Size = new Size(63, 75);
             panelDay4.TabIndex = 115;
+            panelDay4.Click += panelDay_Click;
             // 
             // labelHours05
             // 
             labelHours05.AutoSize = true;
             labelHours05.Dock = DockStyle.Top;
-            labelHours05.Font = new Font("Reddit Sans", 9.75F, FontStyle.Bold);
+            labelHours05.Font = new Font("Reddit Sans", 9F, FontStyle.Bold);
             labelHours05.Location = new Point(0, 42);
             labelHours05.Name = "labelHours05";
-            labelHours05.Size = new Size(37, 21);
+            labelHours05.Size = new Size(34, 19);
             labelHours05.TabIndex = 39;
             labelHours05.Text = "7,5 h";
             labelHours05.TextAlign = ContentAlignment.MiddleRight;
+            labelHours05.Click += panelDay_Click;
             // 
             // labelDate05
             // 
@@ -429,6 +447,7 @@
             labelDate05.TabIndex = 36;
             labelDate05.Text = "8.3.2025";
             labelDate05.TextAlign = ContentAlignment.MiddleRight;
+            labelDate05.Click += panelDay_Click;
             // 
             // labelDay05
             // 
@@ -440,6 +459,7 @@
             labelDay05.TabIndex = 34;
             labelDay05.Text = "Pátek";
             labelDay05.TextAlign = ContentAlignment.TopRight;
+            labelDay05.Click += panelDay_Click;
             // 
             // panelDay2
             // 
@@ -451,19 +471,21 @@
             panelDay2.Name = "panelDay2";
             panelDay2.Size = new Size(63, 75);
             panelDay2.TabIndex = 113;
+            panelDay2.Click += panelDay_Click;
             panelDay2.Paint += panelDay2_Paint;
             // 
             // labelHours03
             // 
             labelHours03.AutoSize = true;
             labelHours03.Dock = DockStyle.Top;
-            labelHours03.Font = new Font("Reddit Sans", 9.75F, FontStyle.Bold);
+            labelHours03.Font = new Font("Reddit Sans", 9F, FontStyle.Bold);
             labelHours03.Location = new Point(0, 42);
             labelHours03.Name = "labelHours03";
-            labelHours03.Size = new Size(37, 21);
+            labelHours03.Size = new Size(34, 19);
             labelHours03.TabIndex = 39;
             labelHours03.Text = "7,5 h";
             labelHours03.TextAlign = ContentAlignment.MiddleRight;
+            labelHours03.Click += panelDay_Click;
             // 
             // labelDate03
             // 
@@ -475,6 +497,7 @@
             labelDate03.TabIndex = 36;
             labelDate03.Text = "6.3.2025";
             labelDate03.TextAlign = ContentAlignment.MiddleRight;
+            labelDate03.Click += panelDay_Click;
             // 
             // labelDay03
             // 
@@ -486,6 +509,7 @@
             labelDay03.TabIndex = 34;
             labelDay03.Text = "Středa";
             labelDay03.TextAlign = ContentAlignment.TopRight;
+            labelDay03.Click += panelDay_Click;
             // 
             // panelDay1
             // 
@@ -497,18 +521,20 @@
             panelDay1.Name = "panelDay1";
             panelDay1.Size = new Size(63, 75);
             panelDay1.TabIndex = 110;
+            panelDay1.Click += panelDay_Click;
             // 
             // labelHours02
             // 
             labelHours02.AutoSize = true;
             labelHours02.Dock = DockStyle.Top;
-            labelHours02.Font = new Font("Reddit Sans", 9.75F, FontStyle.Bold);
+            labelHours02.Font = new Font("Reddit Sans", 9F, FontStyle.Bold);
             labelHours02.Location = new Point(0, 42);
             labelHours02.Name = "labelHours02";
-            labelHours02.Size = new Size(37, 21);
+            labelHours02.Size = new Size(34, 19);
             labelHours02.TabIndex = 38;
             labelHours02.Text = "7,5 h";
             labelHours02.TextAlign = ContentAlignment.MiddleRight;
+            labelHours02.Click += panelDay_Click;
             // 
             // labelDate02
             // 
@@ -520,6 +546,7 @@
             labelDate02.TabIndex = 36;
             labelDate02.Text = "5.3.2025";
             labelDate02.TextAlign = ContentAlignment.MiddleRight;
+            labelDate02.Click += panelDay_Click;
             // 
             // labelDay02
             // 
@@ -531,6 +558,7 @@
             labelDay02.TabIndex = 34;
             labelDay02.Text = "Úterý";
             labelDay02.TextAlign = ContentAlignment.TopRight;
+            labelDay02.Click += panelDay_Click;
             // 
             // panelContainer
             // 

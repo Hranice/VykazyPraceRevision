@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using VykazyPrace.Core.Configuration;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Dialogs;
@@ -75,6 +76,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         private ContextMenuStrip tableLayoutMenu;
 
         // Configuration
+        private AppConfig _config;
         private int arrivalColumn = 12;
         private int leaveColumn = 28;
 
@@ -109,6 +111,8 @@ namespace VykazyPrace.UserControls.CalendarV2
             };
 
             _specialDayRepo = specialDayRepo;
+
+            _config = ConfigService.Load();
         }
 
         private void InitializeContextMenus()
@@ -207,6 +211,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         internal async Task<DateTime> ChangeToPreviousWeek()
         {
             _selectedDate = _selectedDate.AddDays(-7);
+            await LoadArrivalDeparturesAsync();
             await RenderCalendar();
             await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
             this.Focus();
@@ -216,6 +221,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         internal async Task<DateTime> ChangeToNextWeek()
         {
             _selectedDate = _selectedDate.AddDays(7);
+            await LoadArrivalDeparturesAsync();
             await RenderCalendar();
             await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
             this.Focus();
@@ -227,6 +233,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             DateTime today = DateTime.Today;
             int offset = ((int)today.DayOfWeek + 6) % 7;
             _selectedDate = today.AddDays(-offset);
+            await LoadArrivalDeparturesAsync();
             await RenderCalendar();
             await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
             this.Focus();
@@ -748,16 +755,61 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             for (int row = 0; row < 7; row++)
             {
+                DateTime day = _selectedDate.AddDays(row);
+
                 int totalMinutes = _currentEntries
                     .Where(entry =>
                         entry.Timestamp.HasValue &&
-                        GetRowBasedOnTimeEntry(entry.Timestamp) == row &&
+                        entry.Timestamp.Value.Date == day.Date &&
                         entry.IsValid == 1 &&
-                        !(entry.ProjectId == 132 && entry.EntryTypeId == 24)) // není svačina
+                        !(entry.ProjectId == 132 && entry.EntryTypeId == 24) && // není svačina
+                        !(entry.ProjectId == 23)) // není nepřítomnost
                     .Sum(entry => entry.EntryMinutes);
 
-                double hours = totalMinutes / 60.0;
-                hourLabels[row].Text = $"{hours:F1} h";
+                double vykazanoHodin = totalMinutes / 60.0;
+
+                var dochazka = _arrivalDepartures.FirstOrDefault(a => a.WorkDate.Date == day.Date);
+                double hoursWorked = 0;
+
+                if (dochazka != null)
+                {
+                    hoursWorked = dochazka.HoursWorked;
+                }
+
+                switch (_config.PanelDayView)
+                {
+                    case PanelDayView.Default:
+                        hourLabels[row].Text = $"{vykazanoHodin:F1}";
+                        hourLabels[row].ForeColor = Color.Black;
+                        break;
+                    case PanelDayView.Range:
+                        hourLabels[row].Text = $"{vykazanoHodin:F1} / {hoursWorked:F1} h";
+                        hourLabels[row].ForeColor = Color.Black;
+                        break;
+                    case PanelDayView.ColorWithinRange:
+                        hourLabels[row].Text = $"{vykazanoHodin:F1}";
+
+                        if (Math.Abs(vykazanoHodin - hoursWorked) < 0.01)
+                            hourLabels[row].ForeColor = Color.Green;
+                        else
+                            hourLabels[row].ForeColor = Color.Red;
+                        break;
+                    case PanelDayView.ColorOvertime:
+                        hourLabels[row].Text = $"{vykazanoHodin:F1}";
+
+                        if (hoursWorked == 7.5)
+                            hourLabels[row].ForeColor = Color.Green;
+                        else if(hoursWorked > 7.5)
+                            hourLabels[row].ForeColor = Color.Blue;
+                        else
+                            hourLabels[row].ForeColor = Color.Red;
+                        break;
+                }
+
+                if (dochazka == null)
+                {
+                    hourLabels[row].ForeColor = Color.Black;
+                }
             }
         }
 
@@ -1792,6 +1844,19 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void panelDay2_Paint(object sender, PaintEventArgs e)
         {
+
+        }
+
+        private void panelDay_Click(object sender, EventArgs e)
+        {
+            var current = _config.PanelDayView;
+            var enumValues = Enum.GetValues(typeof(PanelDayView)).Cast<PanelDayView>().ToArray();
+            int index = Array.IndexOf(enumValues, current);
+            int nextIndex = (index + 1) % enumValues.Length;
+            _config.PanelDayView = enumValues[nextIndex];
+
+            UpdateHourLabels();
+            ConfigService.Save(_config);
 
         }
     }

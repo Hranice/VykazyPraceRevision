@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v8.0": {
-      "WorkLog/1.2.2.0": {
+      "WorkLog/1.2.3.0": {
         "dependencies": {
           "Serilog": "4.2.0",
           "Serilog.Sinks.Console": "6.0.0",
@@ -857,7 +857,7 @@
     }
   },
   "libraries": {
-    "WorkLog/1.2.2.0": {
+    "WorkLog/1.2.3.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

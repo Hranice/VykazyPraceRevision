@@ -1212,10 +1212,10 @@ namespace VykazyPrace.UserControls.CalendarV2
             var previousTimeEntryId = _selectedTimeEntryId;
             _selectedTimeEntryId = panel.EntryId;
 
+            var allEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesAsync();
+
             var entry = _currentEntries.FirstOrDefault(e => e.Id == _selectedTimeEntryId);
             if (entry == null) return;
-
-            var entryType = _timeEntryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
 
             var newTimestamp = _selectedDate
                 .AddDays(tableLayoutPanelCalendar.GetRow(panel))
@@ -1232,7 +1232,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                 UpdateHourLabels();
             }
 
+            var entryType = allEntryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
             string color = entryType?.Color ?? "#ADD8E6";
+
             if (entry.IsValid == 0) color = "#FF6957";
             panel.BackColor = ColorTranslator.FromHtml(color);
 

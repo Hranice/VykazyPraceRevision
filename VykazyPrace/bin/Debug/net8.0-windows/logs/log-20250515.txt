@@ -132,3 +132,8 @@ ClientConnectionId:2de722ff-e4d2-4aff-9989-fc7d4b451a31
 2025-05-15 11:06:28.249 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
 2025-05-15 11:07:08.593 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
 2025-05-15 11:08:40.414 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 11:10:24.742 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 11:10:37.608 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl úspěšně aktualizován.
+2025-05-15 11:10:49.708 +02:00 [INF] Záznam 0 - Nepřítomnost: 2 h -  byl smazán z databáze.
+2025-05-15 11:15:02.187 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 11:17:16.287 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.

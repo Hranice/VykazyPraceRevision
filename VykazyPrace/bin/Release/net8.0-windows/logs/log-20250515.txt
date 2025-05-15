@@ -1,0 +1,2 @@
+2025-05-15 11:20:39.652 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.
+2025-05-15 11:21:06.873 +02:00 [INF] Záznam  - Automatizace: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.

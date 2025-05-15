@@ -200,7 +200,9 @@ namespace VykazyPrace.UserControls.CalendarV2
         public async Task ChangeUser(User newUser)
         {
             _selectedUser = newUser;
+            await LoadArrivalDeparturesAsync();
             await RenderCalendar();
+            await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
 
             // Reset vybraného záznamu a sidebaru po změně uživatele
             DeactivateAllPanels();
@@ -797,9 +799,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                     case PanelDayView.ColorOvertime:
                         hourLabels[row].Text = $"{vykazanoHodin:F1}";
 
-                        if (hoursWorked == 7.5)
+                        if (vykazanoHodin == 7.5)
                             hourLabels[row].ForeColor = Color.Green;
-                        else if(hoursWorked > 7.5)
+                        else if(vykazanoHodin > 7.5)
                             hourLabels[row].ForeColor = Color.Blue;
                         else
                             hourLabels[row].ForeColor = Color.Red;

@@ -808,7 +808,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 ctrl.Dispose();
             }
 
-            var entries = await _arrivalDepartureRepo.GetWeekEntriesForUserAsync(userId, weekStart);
+            var arrivalDepartures = await _arrivalDepartureRepo.GetWeekEntriesForUserAsync(userId, weekStart);
 
             int[] rowHeights = tableLayoutPanelCalendar.GetRowHeights();
             int[] columnWidths = tableLayoutPanelCalendar.GetColumnWidths();
@@ -817,20 +817,20 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             var toolTip = new ToolTip();
 
-            foreach (var entry in entries)
+            foreach (var arrivalDeparture in arrivalDepartures)
             {
-                if (!entry.ArrivalTimestamp.HasValue || !entry.DepartureTimestamp.HasValue)
+                if (!arrivalDeparture.ArrivalTimestamp.HasValue || !arrivalDeparture.DepartureTimestamp.HasValue)
                     continue;
 
-                TimeSpan rawArrival = entry.ArrivalTimestamp.Value.TimeOfDay;
-                TimeSpan rawDeparture = entry.DepartureTimestamp.Value.TimeOfDay;
+                TimeSpan rawArrival = arrivalDeparture.ArrivalTimestamp.Value.TimeOfDay;
+                TimeSpan rawDeparture = arrivalDeparture.DepartureTimestamp.Value.TimeOfDay;
 
                 (TimeSpan roundedArrival, TimeSpan roundedDeparture) = RoundWorkTimeToNearestHalfHour(rawArrival, rawDeparture);
 
                 int arrivalCol = GetColumnIndexFromTime(roundedArrival, minutesPerColumn);
                 int leaveCol = GetColumnIndexFromTime(roundedDeparture, minutesPerColumn);
 
-                int dayIndex = ((int)entry.WorkDate.DayOfWeek - 1 + 7) % 7;
+                int dayIndex = ((int)arrivalDeparture.WorkDate.DayOfWeek - 1 + 7) % 7;
                 int rowHeight = (dayIndex < rowHeights.Length) ? rowHeights[dayIndex] : 69;
                 int yPos = rowHeights.Take(dayIndex).Sum() + headerRowHeights[0];
 

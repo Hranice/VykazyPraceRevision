@@ -1,0 +1,115 @@
+2025-05-15 09:37:14.107 +02:00 [ERR] Došlo k neočekávané chybě při načítání dat.
+System.Exception: Nepodařilo se stáhnout příchody a odchody.
+ ---> System.Exception: Chyba při vytváření view.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'DenoteName'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteNonQueryTds(String methodName, Boolean isAsync, Int32 timeout, Boolean asyncWrite)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry, String methodName)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.CreateView(DateTime targetMonth) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 110
+ClientConnectionId:0a40e633-51ca-4a48-99e3-022d0875af38
+Číslo chyby: 207, stav: 1, třída: 16
+   --- End of inner exception stack trace ---
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.CreateView(DateTime targetMonth) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 115
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.DownloadArrivalsDeparturesAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 20
+   --- End of inner exception stack trace ---
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.DownloadArrivalsDeparturesAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 26
+   at VykazyPrace.MainForm.LoadDataAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 113
+2025-05-15 09:38:51.463 +02:00 [ERR] Došlo k neočekávané chybě při načítání dat.
+System.Exception: Nepodařilo se stáhnout příchody a odchody.
+ ---> System.Exception: Chyba při vytváření view.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'DenoteName'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteNonQueryTds(String methodName, Boolean isAsync, Int32 timeout, Boolean asyncWrite)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry, String methodName)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.CreateView(DateTime targetMonth) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 110
+ClientConnectionId:b42bd52a-5977-4192-85bf-dc56459f2e95
+Číslo chyby: 207, stav: 1, třída: 16
+   --- End of inner exception stack trace ---
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.CreateView(DateTime targetMonth) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 115
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.DownloadArrivalsDeparturesAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 20
+   --- End of inner exception stack trace ---
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.DownloadArrivalsDeparturesAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 26
+   at VykazyPrace.MainForm.LoadDataAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 113
+2025-05-15 09:39:36.733 +02:00 [ERR] Došlo k neočekávané chybě při načítání dat.
+System.Exception: Nepodařilo se stáhnout příchody a odchody.
+ ---> System.Exception: Chyba při vytváření view.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'DenoteName'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteNonQueryTds(String methodName, Boolean isAsync, Int32 timeout, Boolean asyncWrite)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry, String methodName)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.CreateView(DateTime targetMonth) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 110
+ClientConnectionId:6d79e340-a99d-433a-a71a-6e62c87de4c0
+Číslo chyby: 207, stav: 1, třída: 16
+   --- End of inner exception stack trace ---
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.CreateView(DateTime targetMonth) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 115
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.DownloadArrivalsDeparturesAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 20
+   --- End of inner exception stack trace ---
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.DownloadArrivalsDeparturesAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 26
+   at VykazyPrace.MainForm.LoadDataAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 113
+2025-05-15 09:40:38.589 +02:00 [ERR] Došlo k neočekávané chybě při načítání dat.
+System.Exception: Nepodařilo se stáhnout příchody a odchody.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'DenoteName'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteNonQueryTds(String methodName, Boolean isAsync, Int32 timeout, Boolean asyncWrite)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry, String methodName)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.CreateView(DateTime targetMonth) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 110
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.DownloadArrivalsDeparturesAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 20
+ClientConnectionId:2e1605ad-437a-43d0-bc87-9c90d4987a84
+Číslo chyby: 207, stav: 1, třída: 16
+   --- End of inner exception stack trace ---
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.DownloadArrivalsDeparturesAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 26
+   at VykazyPrace.MainForm.LoadDataAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 113
+2025-05-15 09:40:53.762 +02:00 [ERR] Došlo k neočekávané chybě při načítání dat.
+System.Exception: Nepodařilo se stáhnout příchody a odchody.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'DenoteName'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteNonQueryTds(String methodName, Boolean isAsync, Int32 timeout, Boolean asyncWrite)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry, String methodName)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.CreateView(DateTime targetMonth) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 108
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.DownloadArrivalsDeparturesAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 20
+ClientConnectionId:693fabe3-e898-41ad-baa1-717134de193a
+Číslo chyby: 207, stav: 1, třída: 16
+   --- End of inner exception stack trace ---
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.DownloadArrivalsDeparturesAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 26
+   at VykazyPrace.MainForm.LoadDataAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 113
+2025-05-15 09:41:13.845 +02:00 [ERR] Došlo k neočekávané chybě při načítání dat.
+System.Exception: Nepodařilo se stáhnout příchody a odchody.
+ ---> System.Exception: Chyba při vytváření view.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'DenoteName'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteNonQueryTds(String methodName, Boolean isAsync, Int32 timeout, Boolean asyncWrite)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry, String methodName)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.CreateView(DateTime targetMonth) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 110
+ClientConnectionId:2de722ff-e4d2-4aff-9989-fc7d4b451a31
+Číslo chyby: 207, stav: 1, třída: 16
+   --- End of inner exception stack trace ---
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.CreateView(DateTime targetMonth) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 115
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.DownloadArrivalsDeparturesAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 20
+   --- End of inner exception stack trace ---
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.DownloadArrivalsDeparturesAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 26
+   at VykazyPrace.MainForm.LoadDataAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 113
+2025-05-15 09:42:40.487 +02:00 [INF] Staženo 0 záznamů pro měsíc č.5.

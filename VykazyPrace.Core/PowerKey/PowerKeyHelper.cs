@@ -55,37 +55,45 @@ namespace VykazyPrace.Core.PowerKey
 CREATE VIEW [pwk].[Prenos_pracovni_doby]
 AS
 SELECT
-    [PE].[PersonID] AS [Klíč_pracovníka (PersonID)],
-    [PE].[PersonalNum] AS [Id_pracovníka (Os. číslo)],
-    CASE [PB].[RegistrationTime] WHEN [D2].[RegistrationTime] THEN NULL ELSE [PB].[RegistrationTime] END AS [Příchod],
-    [D2].[RegistrationTime] AS [Odchod],
-    [pwk].[GetLocalName] ([PB].[DenoteName],5) as [Důvod odchodu],
-    [AD].[WorkedHours]/60. AS [Počet hodin (standard)],
-    [AD].[BalanceHours]/60. AS [Počet hodin (přesčas)],
-    [pwk].[DayNumberToDate] ([AD].[DayNumber]) AS [Datum směny],
-    CASE [AM].[ApproveState]
+    PE.PersonID AS [Klíč_pracovníka (PersonID)],
+    PE.PersonalNum AS [Id_pracovníka (Os. číslo)],
+    PR.RegistrationTime AS [Příchod],
+    OD.RegistrationTime AS [Odchod],
+    pwk.GetLocalName(D2.DenoteName, 5) AS [Důvod odchodu],
+    AD.WorkedHours / 60.0 AS [Počet hodin (standard)],
+    AD.BalanceHours / 60.0 AS [Počet hodin (přesčas)],
+    pwk.DayNumberToDate(AD.DayNumber) AS [Datum směny],
+    CASE AM.ApproveState
         WHEN 0 THEN 'Nezpracováno'
         WHEN 1 THEN 'Zpracováno'
         WHEN 4 THEN 'Schváleno vedoucím'
         WHEN 7 THEN 'Schváleno HR'
     END AS [Stav schválení měsíce]
-FROM [pwk].[Person] [PE]
-INNER JOIN [pwk].[AttnMonth] [AM] ON [AM].[PersonID] = [PE].[PersonID]
-INNER JOIN [pwk].[AttnDay] [AD] ON [AD].[AttnMonthID] = [AM].[AttnMonthID]
-CROSS APPLY (
-    SELECT TOP (1) * FROM [pwk].[AttnDay_Registration] [AR]
-    WHERE [AR].[AttnDayID]=[AD].[AttnDayID]
-    ORDER BY [AR].[RegistrationTime] DESC
-) [D2]
-INNER JOIN [pwk].[Denote] [D] ON [D2].[DenoteID] = [D].[DenoteID]
-CROSS APPLY (
-    SELECT TOP (1) [RegistrationTime], [DenoteName]
-    FROM [pwk].[AttnDay_Registration] [AR2]
-    WHERE [AR2].[AttnDayID]=[D2].[AttnDayID] AND [D].[InOutType]=2 AND [AR2].[DeletedID]=0
-    ORDER BY [AR2].[RegistrationTime] ASC
-) AS [PB]
-WHERE [PE].[DeletedID] = 0 
-AND [AM].[MonthNumber] = {dateToMonthNumber}";
+FROM pwk.Person PE
+JOIN pwk.AttnMonth AM ON AM.PersonID = PE.PersonID
+JOIN pwk.AttnDay AD ON AD.AttnMonthID = AM.AttnMonthID
+JOIN pwk.AttnDay_Registration PR ON PR.AttnDayID = AD.AttnDayID
+JOIN pwk.AttnDay_Registration OD ON OD.AttnDayID = AD.AttnDayID
+JOIN pwk.Denote D1 ON PR.DenoteID = D1.DenoteID
+JOIN pwk.Denote D2 ON OD.DenoteID = D2.DenoteID
+WHERE 
+    PE.DeletedID = 0
+    AND AM.MonthNumber = {dateToMonthNumber}
+    AND PR.DeletedID = 0 AND OD.DeletedID = 0
+    AND D1.InOutType = 1  -- příchod
+    AND D2.InOutType = 2  -- odchod
+    AND OD.RegistrationTime > PR.RegistrationTime
+    AND NOT EXISTS (
+        SELECT 1 
+        FROM pwk.AttnDay_Registration OTH
+        JOIN pwk.Denote DO ON OTH.DenoteID = DO.DenoteID
+        WHERE 
+            OTH.AttnDayID = AD.AttnDayID 
+            AND DO.InOutType = 2 
+            AND OTH.DeletedID = 0
+            AND OTH.RegistrationTime > PR.RegistrationTime 
+            AND OTH.RegistrationTime < OD.RegistrationTime
+    )";
 
             try
             {
@@ -107,6 +115,8 @@ AND [AM].[MonthNumber] = {dateToMonthNumber}";
                 throw new Exception("Chyba při vytváření view.", ex);
             }
         }
+
+
 
 
 

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             menuStrip1 = new MenuStrip();
             dataToolStripMenuItem = new ToolStripMenuItem();
@@ -37,6 +38,7 @@
             projektyToolStripMenuItem = new ToolStripMenuItem();
             správaProjektůToolStripMenuItem = new ToolStripMenuItem();
             správaIndexůToolStripMenuItem = new ToolStripMenuItem();
+            návrhProjektuToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem1 = new ToolStripMenuItem();
             nastaveníToolStripMenuItem = new ToolStripMenuItem();
             testToolStripMenuItem = new ToolStripMenuItem();
@@ -53,11 +55,15 @@
             buttonPrevious = new Button();
             panelContainer = new Panel();
             panelCalendarContainer = new Panel();
-            návrhProjektuToolStripMenuItem = new ToolStripMenuItem();
+            notifyIcon1 = new NotifyIcon(components);
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            zobrazitToolStripMenuItem = new ToolStripMenuItem();
+            ukoncitToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             panelContainer.SuspendLayout();
+            contextMenuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
@@ -109,7 +115,7 @@
             // správaProjektůToolStripMenuItem
             // 
             správaProjektůToolStripMenuItem.Name = "správaProjektůToolStripMenuItem";
-            správaProjektůToolStripMenuItem.Size = new Size(180, 22);
+            správaProjektůToolStripMenuItem.Size = new Size(156, 22);
             správaProjektůToolStripMenuItem.Text = "Správa projektů";
             správaProjektůToolStripMenuItem.Visible = false;
             správaProjektůToolStripMenuItem.Click += správaProjektůToolStripMenuItem_Click;
@@ -117,9 +123,16 @@
             // správaIndexůToolStripMenuItem
             // 
             správaIndexůToolStripMenuItem.Name = "správaIndexůToolStripMenuItem";
-            správaIndexůToolStripMenuItem.Size = new Size(180, 22);
+            správaIndexůToolStripMenuItem.Size = new Size(156, 22);
             správaIndexůToolStripMenuItem.Text = "Správa indexů";
             správaIndexůToolStripMenuItem.Click += správaIndexůToolStripMenuItem_Click;
+            // 
+            // návrhProjektuToolStripMenuItem
+            // 
+            návrhProjektuToolStripMenuItem.Name = "návrhProjektuToolStripMenuItem";
+            návrhProjektuToolStripMenuItem.Size = new Size(156, 22);
+            návrhProjektuToolStripMenuItem.Text = "Návrh projektu";
+            návrhProjektuToolStripMenuItem.Click += návrhProjektuToolStripMenuItem_Click;
             // 
             // toolStripMenuItem1
             // 
@@ -276,12 +289,31 @@
             panelCalendarContainer.Size = new Size(966, 769);
             panelCalendarContainer.TabIndex = 1;
             // 
-            // návrhProjektuToolStripMenuItem
+            // notifyIcon1
             // 
-            návrhProjektuToolStripMenuItem.Name = "návrhProjektuToolStripMenuItem";
-            návrhProjektuToolStripMenuItem.Size = new Size(180, 22);
-            návrhProjektuToolStripMenuItem.Text = "Návrh projektu";
-            návrhProjektuToolStripMenuItem.Click += návrhProjektuToolStripMenuItem_Click;
+            notifyIcon1.ContextMenuStrip = contextMenuStrip1;
+            notifyIcon1.Icon = (Icon)resources.GetObject("notifyIcon1.Icon");
+            notifyIcon1.Text = "WorkLog";
+            notifyIcon1.Visible = true;
+            notifyIcon1.MouseDoubleClick += notifyIcon1_MouseDoubleClick;
+            // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { zobrazitToolStripMenuItem, ukoncitToolStripMenuItem });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(118, 48);
+            // 
+            // zobrazitToolStripMenuItem
+            // 
+            zobrazitToolStripMenuItem.Name = "zobrazitToolStripMenuItem";
+            zobrazitToolStripMenuItem.Size = new Size(117, 22);
+            zobrazitToolStripMenuItem.Text = "Zobrazit";
+            // 
+            // ukoncitToolStripMenuItem
+            // 
+            ukoncitToolStripMenuItem.Name = "ukoncitToolStripMenuItem";
+            ukoncitToolStripMenuItem.Size = new Size(117, 22);
+            ukoncitToolStripMenuItem.Text = "Ukončit";
             // 
             // MainForm
             // 
@@ -309,6 +341,7 @@
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
             panelContainer.ResumeLayout(false);
+            contextMenuStrip1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -340,5 +373,9 @@
         private Button buttonNow;
         private ToolStripMenuItem správceToolStripMenuItem;
         private ToolStripMenuItem návrhProjektuToolStripMenuItem;
+        private NotifyIcon notifyIcon1;
+        private ContextMenuStrip contextMenuStrip1;
+        private ToolStripMenuItem zobrazitToolStripMenuItem;
+        private ToolStripMenuItem ukoncitToolStripMenuItem;
     }
 }

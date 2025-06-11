@@ -35,7 +35,25 @@ namespace VykazyPrace
         public MainForm()
         {
             InitializeComponent();
+
+            zobrazitToolStripMenuItem.Click += new System.EventHandler(zobrazitToolStripMenuItem_Click);
+            ukoncitToolStripMenuItem.Click += new System.EventHandler(ukoncitToolStripMenuItem_Click);
+
         }
+
+        private void zobrazitToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+            this.BringToFront();
+        }
+
+        private void ukoncitToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+            notifyIcon1.Visible = false;
+            Application.Exit();
+        }
+
 
         private async void MainForm_Load(object sender, EventArgs e)
         {
@@ -361,6 +379,12 @@ namespace VykazyPrace
             var config = ConfigService.Load();
             config.AppMaximized = this.WindowState == FormWindowState.Maximized;
             ConfigService.Save(config);
+
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                this.Hide();
+            }
         }
 
         private void správceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -372,5 +396,21 @@ namespace VykazyPrace
         {
             new Dialogs.ProposeProjectDialog(_selectedUser).ShowDialog();
         }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            ShowFromTray();
+        }
+
+        public void ShowFromTray()
+        {
+            this.Invoke(() =>
+            {
+                this.Show();
+                this.WindowState = FormWindowState.Normal;
+                this.BringToFront();
+            });
+        }
+
     }
 }

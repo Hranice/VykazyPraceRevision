@@ -32,6 +32,10 @@ namespace VykazyPrace
         private CalendarV2 _calendar;
         private CalendarUC _monthlyCalendar;
 
+        // Notifications
+        private System.Windows.Forms.Timer _notificationTimer;
+        private DateTime? _lastNotificationDate = null;
+
         public MainForm()
         {
             InitializeComponent();
@@ -70,8 +74,37 @@ namespace VykazyPrace
 
             _ = Task.Run(LoadDataAsync);
 
+            _notificationTimer = new System.Windows.Forms.Timer();
+            _notificationTimer.Interval = 60 * 1000;
+            _notificationTimer.Tick += NotificationTimer_Tick;
+            _notificationTimer.Start();
+
             Enabled = true;
         }
+
+        private void NotificationTimer_Tick(object? sender, EventArgs e)
+        {
+            var config = ConfigService.Load();
+
+            if (!config.NotificationOn)
+                return;
+
+            var now = DateTime.Now;
+            var todayTarget = new DateTime(now.Year, now.Month, now.Day,
+                                            config.NotificationTime.Hour,
+                                            config.NotificationTime.Minute, 0);
+
+            if (_lastNotificationDate != DateTime.Today && now >= todayTarget && now < todayTarget.AddMinutes(1))
+            {
+                notifyIcon1.BalloonTipTitle = config.NotificationTitle;
+                notifyIcon1.BalloonTipText = config.NotificationText;
+                notifyIcon1.BalloonTipIcon = ToolTipIcon.Warning;
+                notifyIcon1.ShowBalloonTip(5000);
+
+                _lastNotificationDate = DateTime.Today;
+            }
+        }
+
 
         private void InitFormUI()
         {
@@ -380,10 +413,13 @@ namespace VykazyPrace
             config.AppMaximized = this.WindowState == FormWindowState.Maximized;
             ConfigService.Save(config);
 
-            if (e.CloseReason == CloseReason.UserClosing)
+            if (config.MinimizeToTray)
             {
-                e.Cancel = true;
-                this.Hide();
+                if (e.CloseReason == CloseReason.UserClosing)
+                {
+                    e.Cancel = true;
+                    this.Hide();
+                }
             }
         }
 

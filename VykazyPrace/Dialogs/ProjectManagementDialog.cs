@@ -1,5 +1,6 @@
 ﻿using System.Reflection.Metadata.Ecma335;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Helpers;
@@ -12,10 +13,12 @@ namespace VykazyPrace.Dialogs
     {
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
         private readonly TimeEntryTypeRepository _timeEntryTypeRepo = new TimeEntryTypeRepository();
+        private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
         private readonly LoadingUC _loadingUC = new LoadingUC();
         private readonly User _currentUser;
         private List<Project> _filteredProjects = new List<Project>();
         private List<TimeEntryType> _timeEntryTypes = new List<TimeEntryType>();
+        private bool waitForProjectSelection = false;
 
         public ProjectManagementDialog(User currentUser)
         {
@@ -75,9 +78,11 @@ namespace VykazyPrace.Dialogs
                             comboBoxProjects.Items.Clear();
 
                             var projectItems = filteredProjects
-                                .Where(p => p.IsArchived == (checkBoxArchive.Checked ? 1 : 0))
-                                .Select(FormatHelper.FormatProjectToString)
-                                .ToArray();
+                             .Where(p => p.IsArchived == (checkBoxArchived.Checked ? 1 : 0))
+                             .Where(p => !checkBoxProposed.Checked || Regex.IsMatch(p.ProjectDescription ?? "", @"^000\dN\d\d$"))
+                             .Select(FormatHelper.FormatProjectToString)
+                             .ToArray();
+
 
                             listBoxProject.Items.AddRange(projectItems);
                             comboBoxProjects.Items.AddRange(projectItems);
@@ -149,7 +154,7 @@ namespace VykazyPrace.Dialogs
         private async void checkBoxArchive_CheckedChanged(object sender, EventArgs e)
         {
             await LoadProjectsAsync(1);
-            buttonArchiveProject.Text = checkBoxArchive.Checked ? "Obnovit" : "Archivovat";
+            buttonArchiveProject.Text = checkBoxArchived.Checked ? "Obnovit" : "Archivovat";
         }
 
         private async void buttonAddOperation_Click(object sender, EventArgs e)
@@ -194,9 +199,17 @@ namespace VykazyPrace.Dialogs
                 await _projectRepo.CreateProjectAsync(project);
             }
 
+            else if (buttonAddProject.Text == "Schválit")
+            {
+                project.Id = int.Parse(labelProjectId.Text);
+                GenerateNextDescription();
+                project.ProjectDescription = textBoxProjectDescription.Text;
+                await _projectRepo.UpdateProjectAsync(project);
+            }
+
             else
             {
-                project.Id = _filteredProjects.Find(x => x.ProjectDescription == textBoxProjectDescription.Text).Id;
+                project.Id = int.Parse(labelProjectId.Text);
                 await _projectRepo.UpdateProjectAsync(project);
             }
 
@@ -430,6 +443,7 @@ namespace VykazyPrace.Dialogs
             groupBox2.Text = "Nový projekt";
 
             buttonArchiveProject.Visible = false;
+            buttonDeclineAndReplace.Visible = false;
         }
 
         private void listBoxOperation_SelectedIndexChanged(object sender, EventArgs e)
@@ -450,8 +464,10 @@ namespace VykazyPrace.Dialogs
             buttonAddOther.Text = "Uložit";
         }
 
-        private void listBoxProject_SelectedIndexChanged(object sender, EventArgs e)
+        private async void listBoxProject_SelectedIndexChanged(object sender, EventArgs e)
         {
+            int.TryParse(labelProjectId.Text, out int originalProjectId);
+
             if (listBoxProject.SelectedItem is not null)
             {
                 buttonArchiveProject.Visible = true;
@@ -462,10 +478,56 @@ namespace VykazyPrace.Dialogs
 
                 textBoxProjectTitle.Text = listBoxProject.SelectedItem.ToString().Split(':')[1].TrimStart(' ');
                 textBoxProjectDescription.Text = _filteredProjects.Find(x => x.ProjectTitle == textBoxProjectTitle.Text).ProjectDescription;
+                labelProjectId.Text = _filteredProjects.Find(x => x.ProjectTitle == textBoxProjectTitle.Text).Id.ToString();
 
-                buttonAddProject.Text = "Uložit";
-                buttonArchiveProject.Text = checkBoxArchive.Checked ? "Obnovit" : "Archivovat";
+                var active = _filteredProjects.Find(x => x.Id == int.Parse(labelProjectId.Text));
+
+                var proposed = Regex.IsMatch(active.ProjectDescription ?? "", @"^000\dN\d\d$");
+                buttonAddProject.Text = proposed ? "Schválit" : "Uložit";
+                buttonDeclineAndReplace.Visible = proposed;
+                buttonArchiveProject.Text = checkBoxArchived.Checked ? "Obnovit" : "Archivovat";
                 groupBox2.Text = "Úprava projektu";
+
+
+                if (waitForProjectSelection)
+                {
+                    var result = MessageBox.Show($"Akce je nevratná.\n\nPřejete si vykázané hodiny převést na projekt {FormatHelper.FormatProjectToString(active)}?", "Nahradit a smazat", MessageBoxButtons.YesNoCancel);
+                    if (result == DialogResult.Yes)
+                    {
+                        waitForProjectSelection = false;
+                        groupBox1.Enabled = true;
+                        groupBox2.Enabled = true;
+                        listBoxProject.BackColor = Color.FromKnownColor(KnownColor.Window);
+
+                        var affected = await _timeEntryRepo.UpdateProjectIdForEntriesAsync(originalProjectId, active.Id);
+                        AppLogger.Information($"Přepsáno {affected} záznamů.", true);
+
+                        await _projectRepo.DeleteProjectAsync(originalProjectId);
+                        AppLogger.Information($"Projekt s ID {originalProjectId} byl smazán.");
+
+                        await LoadProjectsAsync(1);
+                    }
+
+                    else if (result == DialogResult.Cancel)
+                    {
+                        waitForProjectSelection = false;
+                        groupBox1.Enabled = true;
+                        groupBox2.Enabled = true;
+                        listBoxProject.BackColor = Color.FromKnownColor(KnownColor.Window);
+                    }
+                }
+            }
+        }
+
+        private void buttonDeclineAndReplace_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Návrh bude smazán.\n\nVyberte prosím ze seznamu projekt, na který budou připsané již vykázané hodiny.", "Zamítnout a nahradit", MessageBoxButtons.OKCancel);
+            if (result == DialogResult.OK)
+            {
+                waitForProjectSelection = true;
+                groupBox1.Enabled = false;
+                groupBox2.Enabled = false;
+                listBoxProject.BackColor = Color.FromArgb(255, 255, 227, 95);
             }
         }
     }

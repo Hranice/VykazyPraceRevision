@@ -16,6 +16,9 @@
     <Compile Update="Dialogs\ProjectManagementDialog.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Dialogs\ProposeProjectDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Dialogs\ReplaceOrMoveDialog.cs">
       <SubType>Form</SubType>
     </Compile>

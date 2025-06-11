@@ -1,0 +1,5 @@
+2025-06-11 08:43:40.159 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-11 08:44:04.463 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-06-11 08:44:25.285 +02:00 [INF] Přepsáno 1 záznamů.
+2025-06-11 08:44:26.346 +02:00 [INF] Projekt s ID 278 byl smazán.
+2025-06-11 08:45:31.316 +02:00 [INF] Záznam 017I21 - Kamerový systém pro K15-3: 0,5 h - SW - Výkazy hodin byl smazán z databáze.

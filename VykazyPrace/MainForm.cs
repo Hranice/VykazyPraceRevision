@@ -367,5 +367,10 @@ namespace VykazyPrace
         {
             new ManagerDialog().ShowDialog();
         }
+
+        private void návrhProjektuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new Dialogs.ProposeProjectDialog(_selectedUser).ShowDialog();
+        }
     }
 }

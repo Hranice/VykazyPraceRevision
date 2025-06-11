@@ -312,6 +312,28 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
+        /// Nahradí všechny záznamy s daným původním ID projektu novým ID projektu.
+        /// </summary>
+        /// <param name="oldProjectId">Původní ID projektu.</param>
+        /// <param name="newProjectId">Nové ID projektu.</param>
+        /// <returns>Počet upravených záznamů.</returns>
+        public async Task<int> UpdateProjectIdForEntriesAsync(int oldProjectId, int newProjectId)
+        {
+            var entriesToUpdate = await _context.TimeEntries
+                .Where(e => e.ProjectId == oldProjectId)
+                .ToListAsync();
+
+            foreach (var entry in entriesToUpdate)
+            {
+                entry.ProjectId = newProjectId;
+            }
+
+            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            return entriesToUpdate.Count;
+        }
+
+
+        /// <summary>
         /// Pomocná třída pro souhrnné záznamy.
         /// </summary>
         public class TimeEntrySummary

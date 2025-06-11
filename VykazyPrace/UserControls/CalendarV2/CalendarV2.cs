@@ -801,7 +801,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                         if (vykazanoHodin == 7.5)
                             hourLabels[row].ForeColor = Color.Green;
-                        else if(vykazanoHodin > 7.5)
+                        else if (vykazanoHodin > 7.5)
                             hourLabels[row].ForeColor = Color.Blue;
                         else
                             hourLabels[row].ForeColor = Color.Red;

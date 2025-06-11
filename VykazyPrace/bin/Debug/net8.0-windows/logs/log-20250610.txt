@@ -1,0 +1,36 @@
+2025-06-10 07:06:43.958 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 07:23:26.278 +02:00 [INF] Staženo 13 záznamů pro měsíc č.6.
+2025-06-10 07:23:50.697 +02:00 [INF] Staženo 13 záznamů pro měsíc č.6.
+2025-06-10 07:26:29.640 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 07:35:15.578 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 07:35:58.728 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 07:36:52.011 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 07:37:43.158 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 07:39:24.011 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 07:42:41.710 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 07:49:16.581 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 07:52:24.369 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 07:54:45.702 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 07:55:14.666 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 07:56:14.455 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 07:58:11.900 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 08:24:22.255 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 08:49:00.933 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 08:49:22.084 +02:00 [INF] Přepsáno 0 záznamů.
+2025-06-10 10:10:00.579 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 10:10:21.228 +02:00 [INF] Přepsáno 0 záznamů.
+2025-06-10 10:10:22.438 +02:00 [INF] Projekt s ID 280 byl smazán.
+2025-06-10 10:11:23.515 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 10:11:41.913 +02:00 [INF] Přepsáno 0 záznamů.
+2025-06-10 10:11:43.107 +02:00 [INF] Projekt s ID 278 byl smazán.
+2025-06-10 10:12:45.731 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 10:13:07.014 +02:00 [INF] Přepsáno 0 záznamů.
+2025-06-10 10:13:08.244 +02:00 [INF] Projekt s ID 279 byl smazán.
+2025-06-10 10:13:42.036 +02:00 [INF] Přepsáno 0 záznamů.
+2025-06-10 10:13:43.085 +02:00 [INF] Projekt s ID 283 byl smazán.
+2025-06-10 10:17:53.789 +02:00 [INF] Přepsáno 0 záznamů.
+2025-06-10 10:17:55.379 +02:00 [INF] Projekt s ID 284 byl smazán.
+2025-06-10 10:19:20.597 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 10:20:26.046 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-10 10:21:58.183 +02:00 [INF] Přepsáno 0 záznamů.
+2025-06-10 10:21:58.848 +02:00 [INF] Projekt s ID 286 byl smazán.

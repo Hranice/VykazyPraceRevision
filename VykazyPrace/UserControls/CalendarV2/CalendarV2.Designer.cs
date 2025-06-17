@@ -145,7 +145,7 @@
             // tableLayoutPanel2
             // 
             tableLayoutPanel2.ColumnCount = 3;
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 75F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 85F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 76.3145447F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23.6854572F));
             tableLayoutPanel2.Controls.Add(tableLayoutPanel3, 0, 0);
@@ -183,7 +183,7 @@
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 14.2851019F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 14.2851019F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 14.2893877F));
-            tableLayoutPanel3.Size = new Size(69, 594);
+            tableLayoutPanel3.Size = new Size(79, 594);
             tableLayoutPanel3.TabIndex = 145;
             // 
             // panelDay6
@@ -194,7 +194,7 @@
             panelDay6.Dock = DockStyle.Fill;
             panelDay6.Location = new Point(3, 514);
             panelDay6.Name = "panelDay6";
-            panelDay6.Size = new Size(63, 77);
+            panelDay6.Size = new Size(73, 77);
             panelDay6.TabIndex = 126;
             panelDay6.Click += panelDay_Click;
             // 
@@ -273,7 +273,7 @@
             panelDay0.Dock = DockStyle.Fill;
             panelDay0.Location = new Point(3, 28);
             panelDay0.Name = "panelDay0";
-            panelDay0.Size = new Size(63, 75);
+            panelDay0.Size = new Size(73, 75);
             panelDay0.TabIndex = 112;
             panelDay0.Click += panelDay_Click;
             // 
@@ -322,7 +322,7 @@
             panelDay3.Dock = DockStyle.Fill;
             panelDay3.Location = new Point(3, 271);
             panelDay3.Name = "panelDay3";
-            panelDay3.Size = new Size(63, 75);
+            panelDay3.Size = new Size(73, 75);
             panelDay3.TabIndex = 114;
             panelDay3.Click += panelDay_Click;
             // 
@@ -371,7 +371,7 @@
             panelDay5.Dock = DockStyle.Fill;
             panelDay5.Location = new Point(3, 433);
             panelDay5.Name = "panelDay5";
-            panelDay5.Size = new Size(63, 75);
+            panelDay5.Size = new Size(73, 75);
             panelDay5.TabIndex = 116;
             panelDay5.Click += panelDay_Click;
             // 
@@ -420,7 +420,7 @@
             panelDay4.Dock = DockStyle.Fill;
             panelDay4.Location = new Point(3, 352);
             panelDay4.Name = "panelDay4";
-            panelDay4.Size = new Size(63, 75);
+            panelDay4.Size = new Size(73, 75);
             panelDay4.TabIndex = 115;
             panelDay4.Click += panelDay_Click;
             // 
@@ -469,7 +469,7 @@
             panelDay2.Dock = DockStyle.Fill;
             panelDay2.Location = new Point(3, 190);
             panelDay2.Name = "panelDay2";
-            panelDay2.Size = new Size(63, 75);
+            panelDay2.Size = new Size(73, 75);
             panelDay2.TabIndex = 113;
             panelDay2.Click += panelDay_Click;
             panelDay2.Paint += panelDay2_Paint;
@@ -519,7 +519,7 @@
             panelDay1.Dock = DockStyle.Fill;
             panelDay1.Location = new Point(3, 109);
             panelDay1.Name = "panelDay1";
-            panelDay1.Size = new Size(63, 75);
+            panelDay1.Size = new Size(73, 75);
             panelDay1.TabIndex = 110;
             panelDay1.Click += panelDay_Click;
             // 
@@ -567,9 +567,9 @@
             panelContainer.Controls.Add(tableLayoutPanelCalendar);
             panelContainer.Controls.Add(customTableLayoutPanel1);
             panelContainer.Dock = DockStyle.Fill;
-            panelContainer.Location = new Point(78, 3);
+            panelContainer.Location = new Point(88, 3);
             panelContainer.Name = "panelContainer";
-            panelContainer.Size = new Size(796, 594);
+            panelContainer.Size = new Size(788, 594);
             panelContainer.TabIndex = 130;
             // 
             // tableLayoutPanelCalendar
@@ -1054,9 +1054,9 @@
             flowLayoutPanel2.Controls.Add(tableLayoutPanel4);
             flowLayoutPanel2.Dock = DockStyle.Top;
             flowLayoutPanel2.Font = new Font("Reddit Sans", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            flowLayoutPanel2.Location = new Point(880, 3);
+            flowLayoutPanel2.Location = new Point(882, 3);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
-            flowLayoutPanel2.Size = new Size(243, 583);
+            flowLayoutPanel2.Size = new Size(241, 583);
             flowLayoutPanel2.TabIndex = 146;
             flowLayoutPanel2.Visible = false;
             flowLayoutPanel2.SizeChanged += flowLayoutPanel2_SizeChanged;
@@ -1104,7 +1104,7 @@
             // 
             radioButton4.Appearance = Appearance.Button;
             radioButton4.AutoSize = true;
-            radioButton4.Location = new Point(95, 44);
+            radioButton4.Location = new Point(3, 85);
             radioButton4.Name = "radioButton4";
             radioButton4.Size = new Size(144, 35);
             radioButton4.TabIndex = 4;
@@ -1117,7 +1117,7 @@
             // 
             radioButton5.Appearance = Appearance.Button;
             radioButton5.AutoSize = true;
-            radioButton5.Location = new Point(3, 85);
+            radioButton5.Location = new Point(3, 126);
             radioButton5.Name = "radioButton5";
             radioButton5.Size = new Size(87, 35);
             radioButton5.TabIndex = 5;
@@ -1133,7 +1133,7 @@
             tableLayoutPanelProject.Controls.Add(customComboBoxProjects, 0, 1);
             tableLayoutPanelProject.Controls.Add(panel2, 0, 0);
             tableLayoutPanelProject.Dock = DockStyle.Top;
-            tableLayoutPanelProject.Location = new Point(3, 126);
+            tableLayoutPanelProject.Location = new Point(3, 167);
             tableLayoutPanelProject.Name = "tableLayoutPanelProject";
             tableLayoutPanelProject.RowCount = 3;
             tableLayoutPanelProject.RowStyles.Add(new RowStyle());
@@ -1192,7 +1192,7 @@
             tableLayoutPanelEntryType.Controls.Add(comboBoxEntryType, 0, 1);
             tableLayoutPanelEntryType.Controls.Add(labelType, 0, 0);
             tableLayoutPanelEntryType.Dock = DockStyle.Top;
-            tableLayoutPanelEntryType.Location = new Point(3, 204);
+            tableLayoutPanelEntryType.Location = new Point(3, 245);
             tableLayoutPanelEntryType.Name = "tableLayoutPanelEntryType";
             tableLayoutPanelEntryType.RowCount = 2;
             tableLayoutPanelEntryType.RowStyles.Add(new RowStyle());
@@ -1229,7 +1229,7 @@
             tableLayoutPanelEntrySubType.Controls.Add(label10, 0, 0);
             tableLayoutPanelEntrySubType.Controls.Add(customComboBoxSubTypes, 0, 1);
             tableLayoutPanelEntrySubType.Dock = DockStyle.Top;
-            tableLayoutPanelEntrySubType.Location = new Point(3, 280);
+            tableLayoutPanelEntrySubType.Location = new Point(3, 321);
             tableLayoutPanelEntrySubType.Name = "tableLayoutPanelEntrySubType";
             tableLayoutPanelEntrySubType.RowCount = 2;
             tableLayoutPanelEntrySubType.RowStyles.Add(new RowStyle());
@@ -1262,7 +1262,7 @@
             panel4.Controls.Add(tableLayoutPanel13);
             panel4.Controls.Add(tableLayoutPanel12);
             panel4.Dock = DockStyle.Top;
-            panel4.Location = new Point(3, 351);
+            panel4.Location = new Point(3, 392);
             panel4.Name = "panel4";
             panel4.Size = new Size(238, 65);
             panel4.TabIndex = 152;
@@ -1350,7 +1350,7 @@
             tableLayoutPanel6.Controls.Add(label4, 0, 0);
             tableLayoutPanel6.Controls.Add(textBoxNote, 0, 1);
             tableLayoutPanel6.Dock = DockStyle.Top;
-            tableLayoutPanel6.Location = new Point(3, 422);
+            tableLayoutPanel6.Location = new Point(3, 463);
             tableLayoutPanel6.Name = "tableLayoutPanel6";
             tableLayoutPanel6.RowCount = 2;
             tableLayoutPanel6.RowStyles.Add(new RowStyle());
@@ -1386,7 +1386,7 @@
             tableLayoutPanel4.Controls.Add(buttonConfirm, 1, 0);
             tableLayoutPanel4.Controls.Add(buttonRemove, 0, 0);
             tableLayoutPanel4.Dock = DockStyle.Top;
-            tableLayoutPanel4.Location = new Point(3, 539);
+            tableLayoutPanel4.Location = new Point(3, 580);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 1;
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));

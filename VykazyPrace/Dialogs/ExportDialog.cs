@@ -2,8 +2,6 @@
 using System.Runtime.InteropServices;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
-using VykazyPrace.Helpers;
-using VykazyPrace.Logging;
 using VykazyPrace.UserControls;
 using Microsoft.Office.Interop.Excel;
 using Action = System.Action;
@@ -12,6 +10,7 @@ using Application = Microsoft.Office.Interop.Excel.Application;
 using System.Diagnostics;
 using VykazyPrace.Core.PowerKey;
 using VykazyPrace.Core.Logging.VykazyPrace.Logging;
+using VykazyPrace.Core.Helpers;
 
 namespace VykazyPrace.Dialogs
 {

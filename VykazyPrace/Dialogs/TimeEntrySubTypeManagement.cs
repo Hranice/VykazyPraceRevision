@@ -1,10 +1,8 @@
 ﻿using System.Data;
-using System.Windows.Forms;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
+using VykazyPrace.Core.Helpers;
 using VykazyPrace.Core.Logging.VykazyPrace.Logging;
-using VykazyPrace.Helpers;
-using VykazyPrace.Logging;
 
 namespace VykazyPrace.Dialogs
 {

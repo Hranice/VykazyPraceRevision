@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using VykazyPrace.Core.Database.Models;
+using VykazyPrace.Core.Helpers;
+using VykazyPrace.Core.Logging.VykazyPrace.Logging;
 
 namespace VykazyPrace.Core.Database.Repositories
 {
@@ -24,6 +26,7 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<TimeEntry> CreateTimeEntryAsync(TimeEntry timeEntry)
         {
+            AppLogger.Debug($"Přidán záznam '{FormatHelper.FormatTimeEntryToString(timeEntry)}'");
             _context.TimeEntries.Add(timeEntry);
             await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return timeEntry;

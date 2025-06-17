@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
+using VykazyPrace.Core.Logging.VykazyPrace.Logging;
 using VykazyPrace.Logging;
 
 namespace VykazyPrace

@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
+using VykazyPrace.Core.Logging.VykazyPrace.Logging;
 using VykazyPrace.Helpers;
 using VykazyPrace.Logging;
 using VykazyPrace.UserControls;

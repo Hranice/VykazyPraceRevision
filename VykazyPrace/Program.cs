@@ -2,6 +2,8 @@ using System.IO.Pipes;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
+using VykazyPrace.Logging.VykazyPrace;
+using VykazyPrace.Core.Logging.VykazyPrace.Logging;
 
 namespace VykazyPrace
 {
@@ -18,14 +20,19 @@ namespace VykazyPrace
             {
                 if (isFirstInstance)
                 {
+                    AppLogger.RegisterPopupService(new WinFormsLoggerPopupService());
+                    AppLogger.Debug("Aplikace spuštìna.");
+
                     StartPipeServer();
 
                     ApplicationConfiguration.Initialize();
                     MainFormInstance = new MainForm();
                     Application.Run(MainFormInstance);
                 }
+
                 else
                 {
+                    AppLogger.Debug("Aplikace již bìží, obnovuji pùvodní instanci.");
                     // Druhá instance => pošli požadavek na zobrazení hlavního okna
                     try
                     {
@@ -41,10 +48,10 @@ namespace VykazyPrace
                     }
                     catch
                     {
-                        // Nepodaøilo se spojit – asi první instance nereaguje
+                        AppLogger.Debug("Pùvodní instance nereaguje.");
                     }
 
-                    // Ukonèí se hned po odeslání zprávy
+                    AppLogger.Debug("Pùvodní instance obnovena.");
                 }
             }
         }

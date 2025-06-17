@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Gaowdu3CDrE=",
+  "dgSpecHash": "6mkBkCJbjtE=",
   "success": true,
   "projectFilePath": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\VykazyPrace.Core.csproj",
   "expectedPackageFiles": [
@@ -48,6 +48,9 @@
     "C:\\Users\\jprochazka\\.nuget\\packages\\microsoft.identitymodel.tokens\\7.5.0\\microsoft.identitymodel.tokens.7.5.0.nupkg.sha512",
     "C:\\Users\\jprochazka\\.nuget\\packages\\microsoft.sqlserver.server\\1.0.0\\microsoft.sqlserver.server.1.0.0.nupkg.sha512",
     "C:\\Users\\jprochazka\\.nuget\\packages\\mono.texttemplating\\3.0.0\\mono.texttemplating.3.0.0.nupkg.sha512",
+    "C:\\Users\\jprochazka\\.nuget\\packages\\serilog\\4.3.0\\serilog.4.3.0.nupkg.sha512",
+    "C:\\Users\\jprochazka\\.nuget\\packages\\serilog.sinks.console\\6.0.0\\serilog.sinks.console.6.0.0.nupkg.sha512",
+    "C:\\Users\\jprochazka\\.nuget\\packages\\serilog.sinks.file\\7.0.0\\serilog.sinks.file.7.0.0.nupkg.sha512",
     "C:\\Users\\jprochazka\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.1.10\\sqlitepclraw.bundle_e_sqlite3.2.1.10.nupkg.sha512",
     "C:\\Users\\jprochazka\\.nuget\\packages\\sqlitepclraw.core\\2.1.10\\sqlitepclraw.core.2.1.10.nupkg.sha512",
     "C:\\Users\\jprochazka\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.1.10\\sqlitepclraw.lib.e_sqlite3.2.1.10.nupkg.sha512",

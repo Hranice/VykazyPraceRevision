@@ -16,6 +16,7 @@ namespace VykazyPrace.Core.Configuration
         public DateTime NotificationTime { get; set; } = new DateTime(2000, 1, 1, 13, 30, 0);
         public string NotificationTitle { get; set; } = "Už je čas!";
         public string NotificationText { get; set; } = "Čas vykázat hodiny!";
+        public string LogLevel { get; set; } = "Information";
     }
 
     public enum PanelDayView

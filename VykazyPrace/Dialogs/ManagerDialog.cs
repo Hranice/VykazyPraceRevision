@@ -1,4 +1,5 @@
-﻿using VykazyPrace.Core.PowerKey;
+﻿using VykazyPrace.Core.Logging.VykazyPrace.Logging;
+using VykazyPrace.Core.PowerKey;
 using VykazyPrace.Logging;
 
 namespace VykazyPrace.Dialogs

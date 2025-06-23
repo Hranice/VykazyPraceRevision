@@ -2,7 +2,8 @@
 using System.Text;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
-using VykazyPrace.Helpers;
+using VykazyPrace.Core.Helpers;
+using VykazyPrace.Core.Logging.VykazyPrace.Logging;
 using VykazyPrace.Logging;
 using VykazyPrace.UserControls;
 

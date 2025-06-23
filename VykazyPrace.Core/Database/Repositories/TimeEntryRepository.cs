@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using VykazyPrace.Core.Database.Models;
+using VykazyPrace.Core.Helpers;
+using VykazyPrace.Core.Logging.VykazyPrace.Logging;
 
 namespace VykazyPrace.Core.Database.Repositories
 {
@@ -24,8 +26,10 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<TimeEntry> CreateTimeEntryAsync(TimeEntry timeEntry)
         {
+            AppLogger.Debug($"[ČAS.ZÁZNAM_PŘIDÁNÍ]: '{FormatHelper.FormatTimeEntryToString(timeEntry)}'.");
             _context.TimeEntries.Add(timeEntry);
             await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            AppLogger.Debug($"[ČAS.ZÁZNAM_PŘIDÁNÍ]: 'HOTOVO'.");
             return timeEntry;
         }
 
@@ -34,12 +38,16 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<List<TimeEntry>> GetAllTimeEntriesAsync()
         {
-            return await _context.TimeEntries
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY'.");
+            var result = await _context.TimeEntries
                 .Include(t => t.User)
                 .ThenInclude(t => t.UserGroup)
                 .Include(t => t.EntryType)
                 .Include(t => t.Project)
                 .ToListAsync();
+
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'HOTOVO' 'VRÁCENO {result.Count} ZÁZNAMŮ'.");
+            return result;
         }
 
 
@@ -48,9 +56,12 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<List<TimeEntry>> GetAllTimeEntriesByUserAsync(User user, bool includeSnacks = false)
         {
+            List<TimeEntry> result = new List<TimeEntry>();
+
             if (includeSnacks)
             {
-                return await _context.TimeEntries
+                AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY VČETNĚ SVAČIN' PRO UŽIVATELE '{FormatHelper.FormatUserToString(user)}'.");
+                result = await _context.TimeEntries
                     .AsNoTracking()
                     .Where(te => te.UserId == user.Id)
                     .Include(te => te.Project)
@@ -59,14 +70,17 @@ namespace VykazyPrace.Core.Database.Repositories
 
             else
             {
-                return await _context.TimeEntries
+                AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY BEZ SVAČIN' PRO UŽIVATELE '{FormatHelper.FormatUserToString(user)}'.");
+                result = await _context.TimeEntries
                     .AsNoTracking()
                     .Where(te => te.UserId == user.Id &&
                                 !(te.ProjectId == 132 && te.EntryTypeId == 24))
                     .Include(te => te.Project)
                     .ToListAsync();
-
             }
+
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'HOTOVO' 'VRÁCENO {result.Count} ZÁZNAMŮ'.");
+            return result;
         }
 
         /// <summary>
@@ -74,10 +88,14 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<List<TimeEntry>> GetAllTimeEntriesByUserAsync(User user, int projectType)
         {
-            return await _context.TimeEntries
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' PRO UŽIVATELE '{FormatHelper.FormatUserToString(user)}' A TYPU PROJEKTU '{projectType}'.");
+            var result = await _context.TimeEntries
                 .Where(te => te.UserId == user.Id && te.Project != null && te.Project.ProjectType == projectType)
                 .Include(te => te.Project)
                 .ToListAsync();
+
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'HOTOVO' 'VRÁCENO {result.Count} ZÁZNAMŮ'.");
+            return result;
         }
 
         /// <summary>
@@ -85,7 +103,8 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<List<TimeEntry>> GetTimeEntriesByProjectTypeAndDateAsync(User user, int projectType, DateTime date)
         {
-            return await _context.TimeEntries
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' PRO UŽIVATELE '{FormatHelper.FormatUserToString(user)}' A TYPU PROJEKTU '{projectType}' A KONKRÉTNÍ DEN '{date}'.");
+            var result = await _context.TimeEntries
                 .Where(te => te.UserId == user.Id
                              && te.Project != null
                              && te.Project.ProjectType == projectType
@@ -93,6 +112,9 @@ namespace VykazyPrace.Core.Database.Repositories
                              && te.Timestamp.Value.Date == date.Date)
                 .Include(te => te.Project)
                 .ToListAsync();
+
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'HOTOVO' 'VRÁCENO {result.Count} ZÁZNAMŮ'.");
+            return result;
         }
 
         /// <summary>
@@ -100,13 +122,17 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<List<TimeEntry>> GetTimeEntriesByUserAndDateAsync(User user, DateTime date)
         {
-            return await _context.TimeEntries
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' PRO UŽIVATELE '{FormatHelper.FormatUserToString(user)}' A KONKRÉTNÍ DEN '{date}'.");
+            var result = await _context.TimeEntries
                 .Where(te => te.UserId == user.Id
                              && te.Project != null
                              && te.Timestamp.HasValue
                              && te.Timestamp.Value.Date == date.Date)
                 .Include(te => te.Project)
                 .ToListAsync();
+
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'HOTOVO' 'VRÁCENO {result.Count} ZÁZNAMŮ'.");
+            return result;
         }
 
         /// <summary>
@@ -114,7 +140,8 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<List<TimeEntry>> GetAllTimeEntriesBetweenDatesAsync(DateTime fromDate, DateTime toDate)
         {
-            return await _context.TimeEntries
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' PRO ČASOVÉ ROZMEZÍ '{fromDate}-{toDate}'.");
+            var result = await _context.TimeEntries
                 .Where(te => te.Timestamp.HasValue &&
                              te.Timestamp.Value.Date >= fromDate.Date &&
                              te.Timestamp.Value.Date <= toDate.Date)
@@ -123,6 +150,9 @@ namespace VykazyPrace.Core.Database.Repositories
                 .Include(te => te.EntryType)
                 .Include(te => te.Project)
                 .ToListAsync();
+
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'HOTOVO' 'VRÁCENO {result.Count} ZÁZNAMŮ'.");
+            return result;
         }
 
 
@@ -133,8 +163,9 @@ namespace VykazyPrace.Core.Database.Repositories
         {
             var startOfWeek = date.Date.AddDays(-(int)date.DayOfWeek + (date.DayOfWeek == DayOfWeek.Sunday ? -6 : 1));
             var endOfWeek = startOfWeek.AddDays(6);
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' PRO UŽIVATELE '{FormatHelper.FormatUserToString(user)}' A ČASOVÉ ROZMEZÍ '{startOfWeek}-{endOfWeek}'.");
 
-            return await _context.TimeEntries
+            var result = await _context.TimeEntries
                 .AsNoTracking()
                 .Where(te => te.UserId == user.Id
                              && te.Project != null
@@ -143,6 +174,9 @@ namespace VykazyPrace.Core.Database.Repositories
                              && te.Timestamp.Value.Date <= endOfWeek)
                 .Include(te => te.Project)
                 .ToListAsync();
+
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'HOTOVO' 'VRÁCENO {result.Count} ZÁZNAMŮ'.");
+            return result;
         }
 
 
@@ -152,12 +186,16 @@ namespace VykazyPrace.Core.Database.Repositories
         public async Task<int> GetTotalMinutesForUserByDayAsync(User user, DateTime date)
         {
             DateTime today = DateTime.Today;
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'SUMA ODPRACOVANÝCH MINUT' PRO UŽIVATELE '{FormatHelper.FormatUserToString(user)}' A KONKRÉTNÍ DEN '{date}'.");
 
-            return await _context.TimeEntries
+            var result = await _context.TimeEntries
                 .Where(te => te.UserId == user.Id
                              && te.Timestamp.HasValue
                              && te.Timestamp.Value.Date == date.Date)
                 .SumAsync(te => te.EntryMinutes);
+
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'HOTOVO' 'ODPRACOVÁNO: {result} MINUT'.");
+            return result;
         }
 
         /// <summary>
@@ -166,14 +204,18 @@ namespace VykazyPrace.Core.Database.Repositories
         public async Task<int> GetTotalMinutesForUserByDayAsync(User user, DateTime date, int projectType)
         {
             DateTime today = DateTime.Today;
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'SUMA ODPRACOVANÝCH MINUT' PRO UŽIVATELE '{FormatHelper.FormatUserToString(user)}' A KONKRÉTNÍ DEN '{date}' A TYP PROJEKTU '{projectType}'.");
 
-            return await _context.TimeEntries
+            var result = await _context.TimeEntries
                 .Where(te => te.UserId == user.Id
                              && te.Project != null
                              && te.Project.ProjectType == projectType
                              && te.Timestamp.HasValue
                              && te.Timestamp.Value.Date == date.Date)
                 .SumAsync(te => te.EntryMinutes);
+
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'HOTOVO' 'ODPRACOVÁNO: {result} MINUT'.");
+            return result;
         }
 
 
@@ -182,11 +224,15 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<TimeEntry?> GetTimeEntryByIdAsync(int id)
         {
-            return await _context.TimeEntries
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'KONKRÉTNÍ' PODLE ID '{id}'.");
+            var result = await _context.TimeEntries
                 .AsNoTracking()
                 .Include(t => t.User)
                 .Include(t => t.Project)
                 .FirstOrDefaultAsync(t => t.Id == id);
+
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'HOTOVO' 'VRÁCENO: {FormatHelper.FormatTimeEntryToString(result)}'.");
+            return result;
         }
 
 
@@ -196,6 +242,8 @@ namespace VykazyPrace.Core.Database.Repositories
         public async Task<bool> UpdateTimeEntryAsync(TimeEntry? timeEntry)
         {
             var existingEntry = await _context.TimeEntries.FindAsync(timeEntry.Id);
+            AppLogger.Debug($"[ČAS.ZÁZNAM_AKTUALIZACE]: '{FormatHelper.FormatTimeEntryToString(existingEntry)}' NA '{FormatHelper.FormatTimeEntryToString(timeEntry)}'.");
+
             if (existingEntry == null)
                 return false;
 
@@ -210,11 +258,13 @@ namespace VykazyPrace.Core.Database.Repositories
             existingEntry.Note = timeEntry.Note;
 
             await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            AppLogger.Debug($"[ČAS.ZÁZNAM_AKTUALIZACE]: 'HOTOVO'.");
             return true;
         }
 
         public async Task<int> UpdateUnlockedDescriptionsForUserAsync(int userId, string oldDescription, string newDescription)
         {
+            AppLogger.Debug($"[ČAS.ZÁZNAM_AKTUALIZACE]: 'VŠECHNY ODEMČENÉ' PRO UŽIVATELE S ID '{userId}'.");
             var entriesToUpdate = await _context.TimeEntries
                 .Where(e => e.UserId == userId &&
                             e.IsLocked == 0 &&
@@ -223,10 +273,12 @@ namespace VykazyPrace.Core.Database.Repositories
 
             foreach (var entry in entriesToUpdate)
             {
+                AppLogger.Debug($"[ČAS.ZÁZNAM_AKTUALIZACE]: 'POPIS' Z '{entry.Description}' NA '{newDescription}'.");
                 entry.Description = newDescription;
             }
 
             await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            AppLogger.Debug($"[ČAS.ZÁZNAM_AKTUALIZACE]: 'HOTOVO' 'UPRAVENO: {entriesToUpdate.Count} ZÁZNAMŮ'.");
 
             return entriesToUpdate.Count;
         }
@@ -234,12 +286,16 @@ namespace VykazyPrace.Core.Database.Repositories
 
         public async Task<bool> ExistsEntryAsync(int userId, DateTime day, int projectId, int entryTypeId)
         {
-            return await _context.TimeEntries.AnyAsync(e =>
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'EXISTUJE?' PRO UŽIVATELE S ID '{userId}' A KONKRÉTNÍ DEN '{day}' A ID PROJEKTU '{projectId}' A ID TYPU ZÁZNAMU '{entryTypeId}'.");
+            bool result = await _context.TimeEntries.AnyAsync(e =>
                 e.UserId == userId &&
                 e.Timestamp.HasValue &&
                 e.Timestamp.Value.Date == day.Date &&
                 e.ProjectId == projectId &&
                 e.EntryTypeId == entryTypeId);
+
+            AppLogger.Debug($"[ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'HOTOVO' 'EXISTUJE: {result}'.");
+            return result;
         }
 
 
@@ -249,12 +305,17 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<bool> DeleteTimeEntryAsync(int id)
         {
+            AppLogger.Debug($"[ČAS.ZÁZNAM_SMAZÁNÍ]: 'SMAZAT' PRO ID '{id}'.");
             var entry = await _context.TimeEntries.FindAsync(id);
             if (entry == null)
+            {
+                AppLogger.Debug($"[ČAS.ZÁZNAM_SMAZÁNÍ]: 'HOTOVO' 'ÚSPĚCH: NE'.");
                 return false;
+            }
 
             _context.TimeEntries.Remove(entry);
             await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            AppLogger.Debug($"[ČAS.ZÁZNAM_SMAZÁNÍ]: 'HOTOVO' 'ÚSPĚCH: ANO'.");
             return true;
         }
 
@@ -281,6 +342,7 @@ namespace VykazyPrace.Core.Database.Repositories
 
         public async Task LockAllEntriesInMonth(string month)
         {
+            AppLogger.Debug($"[ČAS.ZÁZNAM_AKTUALIZACE]: 'ZAMKNOUT' PRO MĚSÍC '{month}'.");
             var monthNumber = month switch
             {
                 "Leden" => 1,
@@ -309,6 +371,7 @@ namespace VykazyPrace.Core.Database.Repositories
             }
 
             await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            AppLogger.Debug($"[ČAS.ZÁZNAM_AKTUALIZACE]: 'HOTOVO'.");
         }
 
         /// <summary>
@@ -319,6 +382,7 @@ namespace VykazyPrace.Core.Database.Repositories
         /// <returns>Počet upravených záznamů.</returns>
         public async Task<int> UpdateProjectIdForEntriesAsync(int oldProjectId, int newProjectId)
         {
+            AppLogger.Debug($"[ČAS.ZÁZNAM_AKTUALIZACE]: 'AKTUALIZACE ID PROJEKTU' PRO ID PROJEKTU '{oldProjectId}' NA '{newProjectId}'.");
             var entriesToUpdate = await _context.TimeEntries
                 .Where(e => e.ProjectId == oldProjectId)
                 .ToListAsync();
@@ -329,6 +393,7 @@ namespace VykazyPrace.Core.Database.Repositories
             }
 
             await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            AppLogger.Debug($"[ČAS.ZÁZNAM_AKTUALIZACE]: 'HOTOVO' 'UPRAVENO {entriesToUpdate.Count} ZÁZNAMŮ'.");
             return entriesToUpdate.Count;
         }
 

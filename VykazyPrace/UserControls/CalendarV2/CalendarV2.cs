@@ -748,9 +748,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             }));
         }
 
-
-
-
         private void UpdateHourLabels()
         {
             Label[] hourLabels = { labelHours01, labelHours02, labelHours03, labelHours04, labelHours05, labelHours06, labelHours07 };
@@ -855,41 +852,44 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async Task AdjustIndicatorsAsync(Point scrollPosition, int userId, DateTime weekStart)
         {
-            var oldIndicators = panelContainer.Controls.OfType<Panel>().Where(p => p.Name == "indicator").ToList();
+            var oldIndicators = panelContainer.Controls
+                .OfType<Panel>()
+                .Where(p => p.Name == "indicator")
+                .ToList();
             foreach (var ctrl in oldIndicators)
             {
                 panelContainer.Controls.Remove(ctrl);
                 ctrl.Dispose();
             }
 
-            var arrivalDepartures = await _arrivalDepartureRepo.GetWeekEntriesForUserAsync(userId, weekStart);
+            var entries = await _arrivalDepartureRepo
+                .GetWeekEntriesForUserAsync(userId, weekStart);
 
             int[] rowHeights = tableLayoutPanelCalendar.GetRowHeights();
             int[] columnWidths = tableLayoutPanelCalendar.GetColumnWidths();
             int[] headerRowHeights = customTableLayoutPanel1.GetRowHeights();
-            int minutesPerColumn = 30;
-
+            const int minutesPerColumn = 30;
             var toolTip = new ToolTip();
 
-            foreach (var arrivalDeparture in arrivalDepartures)
+            foreach (var e in entries)
             {
-                if (!arrivalDeparture.ArrivalTimestamp.HasValue || !arrivalDeparture.DepartureTimestamp.HasValue)
+                if (!e.ArrivalTimestamp.HasValue || !e.DepartureTimestamp.HasValue)
                     continue;
 
-                TimeSpan rawArrival = arrivalDeparture.ArrivalTimestamp.Value.TimeOfDay;
-                TimeSpan rawDeparture = arrivalDeparture.DepartureTimestamp.Value.TimeOfDay;
+                TimeSpan rawArrival = e.ArrivalTimestamp.Value.TimeOfDay;
+                TimeSpan rawDeparture = e.DepartureTimestamp.Value.TimeOfDay;
 
-                (TimeSpan roundedArrival, TimeSpan roundedDeparture) = RoundWorkTimeToNearestHalfHour(rawArrival, rawDeparture);
+                (TimeSpan roundedArrival, TimeSpan roundedDeparture)
+                    = RoundWorkTimeToNearestHalfHour(rawArrival, rawDeparture);
 
+                // Přepočet na sloupcové indexy a pozice
                 int arrivalCol = GetColumnIndexFromTime(roundedArrival, minutesPerColumn);
                 int leaveCol = GetColumnIndexFromTime(roundedDeparture, minutesPerColumn);
-
-                int dayIndex = ((int)arrivalDeparture.WorkDate.DayOfWeek - 1 + 7) % 7;
-                int rowHeight = (dayIndex < rowHeights.Length) ? rowHeights[dayIndex] : 69;
+                int dayIndex = ((int)e.WorkDate.DayOfWeek - 1 + 7) % 7;
+                int rowHeight = dayIndex < rowHeights.Length ? rowHeights[dayIndex] : 69;
                 int yPos = rowHeights.Take(dayIndex).Sum() + headerRowHeights[0];
-
-                int arrivalX = (columnWidths[0] * arrivalCol) - Math.Abs(scrollPosition.X);
-                int leaveX = (columnWidths[0] * leaveCol) - Math.Abs(scrollPosition.X);
+                int arrivalX = columnWidths[0] * arrivalCol - Math.Abs(scrollPosition.X);
+                int leaveX = columnWidths[0] * leaveCol - Math.Abs(scrollPosition.X);
 
                 var arrivalIndicator = new Panel
                 {
@@ -898,7 +898,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                     Location = new Point(arrivalX, yPos),
                     BackColor = Color.Green
                 };
-                toolTip.SetToolTip(arrivalIndicator, $"{rawArrival:hh\\:mm}\n-\n{rawDeparture:hh\\:mm}");
+                toolTip.SetToolTip(arrivalIndicator, $"{rawArrival:hh\\:mm} – {rawDeparture:hh\\:mm}");
 
                 var leaveIndicator = new Panel
                 {
@@ -907,7 +907,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                     Location = new Point(leaveX, yPos),
                     BackColor = Color.Red
                 };
-                toolTip.SetToolTip(leaveIndicator, $"{rawArrival:hh\\:mm}\n-\n{rawDeparture:hh\\:mm}");
+                toolTip.SetToolTip(leaveIndicator, $"{rawArrival:hh\\:mm} – {rawDeparture:hh\\:mm}");
 
                 panelContainer.Controls.Add(arrivalIndicator);
                 panelContainer.Controls.Add(leaveIndicator);
@@ -916,17 +916,23 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
-
-        private (TimeSpan, TimeSpan) RoundWorkTimeToNearestHalfHour(TimeSpan rawArrival, TimeSpan rawDeparture)
+        /// <summary>
+        /// Zaokrouhlí příchod na nejbližší půlhodinu a k odpracované době přičte 5 minut, 
+        /// pak tuto dobu zaokrouhlí dolů na půlhodinu.
+        /// </summary>
+        private (TimeSpan roundedArrival, TimeSpan roundedDeparture)
+            RoundWorkTimeToNearestHalfHour(TimeSpan rawArrival, TimeSpan rawDeparture)
         {
-            double arrivalMinutes = rawArrival.TotalMinutes;
-            double roundedArrivalMinutes = Math.Round(arrivalMinutes / 30.0) * 30;
-            var roundedArrival = TimeSpan.FromMinutes(roundedArrivalMinutes);
+            var roundedArrival = TimeSpan.FromMinutes(
+                Math.Round(rawArrival.TotalMinutes / 30.0, 0, MidpointRounding.AwayFromZero)
+                * 30
+            );
 
             var realDuration = rawDeparture - rawArrival;
 
-            double roundedDurationMinutes = Math.Floor(realDuration.TotalMinutes / 30.0) * 30;
-            var roundedDeparture = roundedArrival + TimeSpan.FromMinutes(roundedDurationMinutes);
+            double durWithOffset = realDuration.TotalMinutes + 5;
+            double roundedDurMin = Math.Floor(durWithOffset / 30.0) * 30;
+            var roundedDeparture = roundedArrival + TimeSpan.FromMinutes(roundedDurMin);
 
             return (roundedArrival, roundedDeparture);
         }

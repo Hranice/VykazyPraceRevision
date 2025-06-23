@@ -115,11 +115,6 @@ WHERE
                 throw new Exception("Chyba při vytváření view.", ex);
             }
         }
-
-
-
-
-
         private async Task<int> SaveToDatabaseAsync()
         {
             try
@@ -151,7 +146,6 @@ WHERE
                             var latestDate = await arrivalRepo.GetLatestWorkDateAsync(user.Id);
                             if (latestDate.HasValue && workDate <= latestDate.Value)
                                 continue;
-
 
                             var newEntry = new ArrivalDeparture
                             {
@@ -254,8 +248,6 @@ AND [AM].[MonthNumber] = {dateToMonth}";
                 await cmd2.ExecuteNonQueryAsync();
             }
         }
-
-
         private async Task DropTemporaryViewAsync(string viewName)
         {
             string sql = $"DROP VIEW IF EXISTS [pwk].[{viewName}]";
@@ -265,8 +257,6 @@ AND [AM].[MonthNumber] = {dateToMonth}";
             await conn.OpenAsync();
             await cmd.ExecuteNonQueryAsync();
         }
-
-
         private async Task<Dictionary<int, double>> GetWorkedHoursFromViewAsync(string viewName)
         {
             string sql = $@"
@@ -300,8 +290,6 @@ AND [AM].[MonthNumber] = {dateToMonth}";
 
             return result;
         }
-
-
 
         private bool TryParseArrivalDepartureRow(DataRow row, out DateTime arrival, out DateTime departure, out DateTime workDate, out double worked, out double overtime, out string? reason)
         {

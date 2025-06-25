@@ -42,15 +42,19 @@ namespace VykazyPrace.Core.Database.Repositories
 
         public async Task<List<TimeEntrySubType>> GetAllTimeEntrySubTypesByUserIdAsync(int userId)
         {
-            return await _context.TimeEntrySubTypes
+            var uniqueIds = await _context.TimeEntrySubTypes
                 .Where(t => t.UserId == userId && t.IsArchived == 0)
+                .GroupBy(t => t.Title)
+                .Select(g => g.Min(t => t.Id))
+                .ToListAsync();
+
+            return await _context.TimeEntrySubTypes
+                .Where(t => uniqueIds.Contains(t.Id))
                 .OrderBy(t => t.Order == null)
                 .ThenBy(t => t.Order)
                 .Include(t => t.User)
                 .ToListAsync();
         }
-
-
 
 
         public async Task<TimeEntrySubType?> GetTimeEntrySubTypeByIdAsync(int id)

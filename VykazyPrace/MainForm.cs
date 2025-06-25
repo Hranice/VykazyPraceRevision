@@ -200,6 +200,7 @@ namespace VykazyPrace
                 uživateléToolStripMenuItem.Visible = true;
                 správaProjektùToolStripMenuItem.Visible = true;
                 comboBoxUsers.Visible = true;
+                správceToolStripMenuItem.Visible = true;
             }
             else if (levelOfAccess == 2)
             {

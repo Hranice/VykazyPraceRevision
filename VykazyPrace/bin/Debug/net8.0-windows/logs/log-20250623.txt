@@ -1,0 +1,54 @@
+2025-06-23 06:13:57.840 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 06:16:30.625 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 06:17:34.052 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 06:18:19.708 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 06:25:03.196 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 06:36:46.182 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 06:38:42.425 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 06:38:57.939 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 06:51:29.134 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 06:57:34.282 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 07:20:35.887 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 07:21:59.315 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 07:23:45.706 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 07:25:37.555 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 07:27:56.310 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 07:28:46.221 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 07:29:27.075 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 07:37:52.349 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 07:48:47.041 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 07:50:33.709 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 07:52:26.971 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 08:11:32.003 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 08:11:44.677 +02:00 [INF] Záznam  - Automatizace: 2,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-06-23 08:11:56.001 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-06-23 08:12:19.452 +02:00 [INF] Změny pořadí byly úspěšně uloženy.
+2025-06-23 08:12:30.088 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - test4 byl úspěšně aktualizován.
+2025-06-23 08:12:38.389 +02:00 [INF] Záznam  - Automatizace: 0,5 h - test4 byl smazán z databáze.
+2025-06-23 08:15:34.014 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
+2025-06-23 08:15:36.256 +02:00 [ERR] Chyba při načítání sub-typů (indexů) časových záznamů.
+System.InvalidOperationException: The LINQ expression 'DbSet<TimeEntrySubType>()
+    .Where(t => t.UserId == __userId_0 && t.IsArchived == (int?)0)
+    .DistinctBy(t => t.Title)' could not be translated. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information.
+   at Microsoft.EntityFrameworkCore.Query.Internal.NavigationExpandingExpressionVisitor.VisitMethodCall(MethodCallExpression methodCallExpression)
+   at Microsoft.EntityFrameworkCore.Query.Internal.NavigationExpandingExpressionVisitor.VisitMethodCall(MethodCallExpression methodCallExpression)
+   at Microsoft.EntityFrameworkCore.Query.Internal.NavigationExpandingExpressionVisitor.VisitMethodCall(MethodCallExpression methodCallExpression)
+   at Microsoft.EntityFrameworkCore.Query.Internal.NavigationExpandingExpressionVisitor.VisitMethodCall(MethodCallExpression methodCallExpression)
+   at Microsoft.EntityFrameworkCore.Query.Internal.NavigationExpandingExpressionVisitor.Expand(Expression query)
+   at Microsoft.EntityFrameworkCore.Query.QueryTranslationPreprocessor.Process(Expression query)
+   at Microsoft.EntityFrameworkCore.Query.QueryCompilationContext.CreateQueryExecutorExpression[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Query.QueryCompilationContext.CreateQueryExecutor[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Storage.Database.CompileQuery[TResult](Expression query, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.CompileQueryCore[TResult](IDatabase database, Expression query, IModel model, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.<>c__DisplayClass11_0`1.<ExecuteCore>b__0()
+   at Microsoft.EntityFrameworkCore.Query.Internal.CompiledQueryCache.GetOrAddQuery[TResult](Object cacheKey, Func`1 compiler)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteCore[TResult](Expression query, Boolean async, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteAsync[TResult](Expression query, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.ExecuteAsync[TResult](Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable`1.GetAsyncEnumerator(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.IncludableQueryable`2.GetAsyncEnumerator(CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.ConfiguredCancelableAsyncEnumerable`1.GetAsyncEnumerator()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at VykazyPrace.Core.Database.Repositories.TimeEntrySubTypeRepository.GetAllTimeEntrySubTypesByUserIdAsync(Int32 userId) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\Repositories\TimeEntrySubTypeRepository.cs:line 45
+   at VykazyPrace.UserControls.CalendarV2.CalendarV2.LoadTimeEntrySubTypesAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\UserControls\CalendarV2\CalendarV2.cs:line 369
+2025-06-23 08:16:24.770 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.

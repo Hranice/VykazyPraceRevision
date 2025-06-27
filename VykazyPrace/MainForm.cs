@@ -5,7 +5,7 @@ using VykazyPrace.Core.Configuration;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Core.Helpers;
-using VykazyPrace.Core.Logging.VykazyPrace.Logging;
+using VykazyPrace.Core.Logging;
 using VykazyPrace.Core.PowerKey;
 using VykazyPrace.Dialogs;
 using VykazyPrace.UserControls;

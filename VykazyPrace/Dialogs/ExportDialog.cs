@@ -9,7 +9,7 @@ using Range = Microsoft.Office.Interop.Excel.Range;
 using Application = Microsoft.Office.Interop.Excel.Application;
 using System.Diagnostics;
 using VykazyPrace.Core.PowerKey;
-using VykazyPrace.Core.Logging.VykazyPrace.Logging;
+using VykazyPrace.Core.Logging;
 using VykazyPrace.Core.Helpers;
 
 namespace VykazyPrace.Dialogs

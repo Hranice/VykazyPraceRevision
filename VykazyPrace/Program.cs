@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
 using VykazyPrace.Logging.VykazyPrace;
-using VykazyPrace.Core.Logging.VykazyPrace.Logging;
+using VykazyPrace.Core.Logging;
 
 namespace VykazyPrace
 {

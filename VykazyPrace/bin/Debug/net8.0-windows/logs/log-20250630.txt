@@ -1,0 +1,7 @@
+2025-06-30 13:18:57.073 +02:00 [INF] Staženo 16 záznamů pro měsíc č.6.
+2025-06-30 13:19:13.454 +02:00 [INF] Záznam 0 - Provoz Metalizace: 2 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-06-30 13:19:22.086 +02:00 [INF] Záznam 0 - Provoz ostatní: 2 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-06-30 13:19:35.103 +02:00 [INF] Změněn typ záznamu: 'SW - Výkazy hodin' -> 'test'. Přejmenováno 8 záznamů.
+2025-06-30 13:19:39.300 +02:00 [INF] Změny pořadí byly úspěšně uloženy.
+2025-06-30 13:19:56.447 +02:00 [INF] Změněn typ záznamu: 'test' -> 'SW - Výkazy hodin'. Přejmenováno 8 záznamů.
+2025-06-30 13:21:31.090 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.

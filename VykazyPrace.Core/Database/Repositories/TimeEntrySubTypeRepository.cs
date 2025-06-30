@@ -29,7 +29,7 @@ namespace VykazyPrace.Core.Database.Repositories
         /// <param name="action">Action name (e.g., "PŘIDÁNÍ").</param>
         /// <param name="message">Detail message.</param>
         private void Log(string action, string message)
-            => AppLogger.Debug($"[ČAS.ZÁZNAM_PODTYP_{action}]: {message}");
+            => AppLogger.Debug($"[PODTYPZÁZNAMU_{action}]: {message}");
 
         /// <summary>
         /// Builds base query for <see cref="TimeEntrySubType"/>, including related user.

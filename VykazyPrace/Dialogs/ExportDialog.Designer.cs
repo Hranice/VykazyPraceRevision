@@ -35,9 +35,8 @@
             dataGridView1 = new DataGridView();
             button2 = new Button();
             comboBoxMonth = new ComboBox();
-            checkedListBoxUsers = new CheckedListBox();
+            checkedListBoxUserGroups = new CheckedListBox();
             buttonLockEntries = new Button();
-            label1 = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -117,15 +116,14 @@
             comboBoxMonth.Text = "Březen";
             comboBoxMonth.SelectionChangeCommitted += ComboBoxMonth_SelectionChangeCommitted;
             // 
-            // checkedListBoxUsers
+            // checkedListBoxUserGroups
             // 
-            checkedListBoxUsers.Enabled = false;
-            checkedListBoxUsers.FormattingEnabled = true;
-            checkedListBoxUsers.Location = new Point(557, 90);
-            checkedListBoxUsers.Name = "checkedListBoxUsers";
-            checkedListBoxUsers.Size = new Size(309, 349);
-            checkedListBoxUsers.TabIndex = 12;
-            checkedListBoxUsers.SelectedValueChanged += checkedListBoxUsers_SelectedValueChanged;
+            checkedListBoxUserGroups.FormattingEnabled = true;
+            checkedListBoxUserGroups.Location = new Point(557, 90);
+            checkedListBoxUserGroups.Name = "checkedListBoxUserGroups";
+            checkedListBoxUserGroups.Size = new Size(309, 349);
+            checkedListBoxUserGroups.TabIndex = 12;
+            checkedListBoxUserGroups.SelectedValueChanged += checkedListBoxUsers_SelectedValueChanged;
             // 
             // buttonLockEntries
             // 
@@ -137,24 +135,13 @@
             buttonLockEntries.UseVisualStyleBackColor = true;
             buttonLockEntries.Click += buttonLockEntries_Click;
             // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.ForeColor = Color.Red;
-            label1.Location = new Point(681, 219);
-            label1.Name = "label1";
-            label1.Size = new Size(40, 25);
-            label1.TabIndex = 14;
-            label1.Text = "WIP";
-            // 
             // ExportDialog
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(881, 505);
-            Controls.Add(label1);
             Controls.Add(buttonLockEntries);
-            Controls.Add(checkedListBoxUsers);
+            Controls.Add(checkedListBoxUserGroups);
             Controls.Add(comboBoxMonth);
             Controls.Add(button2);
             Controls.Add(dataGridView1);
@@ -182,8 +169,7 @@
         private DataGridView dataGridView1;
         private Button button2;
         private ComboBox comboBoxMonth;
-        private CheckedListBox checkedListBoxUsers;
+        private CheckedListBox checkedListBoxUserGroups;
         private Button buttonLockEntries;
-        private Label label1;
     }
 }

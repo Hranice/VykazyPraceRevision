@@ -70,27 +70,21 @@ namespace VykazyPrace.Dialogs
         {
             InitializeLoadingControl();
             InitializeDatePickers();
-            InitializeUsers();
+            InitializeUserGroups();
             this.Shown += async (s, ev) => await LoadTimeEntriesSummaryAsync(dateTimePicker1.Value, dateTimePicker2.Value);
         }
 
-        private async Task InitializeUsers()
+        private async Task InitializeUserGroups()
         {
-            var users = await _userRepo.GetAllUsersAsync();
-            UpdateCheckedListBox(users);
+            var userGroups = await _userGroupRepository.GetAllUserGroupsAsync();
+            UpdateCheckedListBox(userGroups);
         }
 
-        private void UpdateCheckedListBox(IEnumerable<User> users)
+        private void UpdateCheckedListBox(IEnumerable<UserGroup> userGroups)
         {
-            var userNames = users.Select(FormatHelper.FormatUserToString).ToArray();
-            if (checkedListBoxUsers.InvokeRequired)
-            {
-                checkedListBoxUsers.Invoke(new Action(() => checkedListBoxUsers.Items.AddRange(userNames)));
-            }
-            else
-            {
-                checkedListBoxUsers.Items.AddRange(userNames);
-            }
+            checkedListBoxUserGroups.Items.Clear();
+            checkedListBoxUserGroups.Items.AddRange(userGroups.ToArray());
+            checkedListBoxUserGroups.DisplayMember = nameof(UserGroup.Title);
         }
 
         private void InitializeLoadingControl()
@@ -293,9 +287,24 @@ namespace VykazyPrace.Dialogs
             try
             {
                 var workbook = excelApp.Workbooks.Add();
-                var timeEntries = (await _timeEntryRepo.GetAllTimeEntriesBetweenDatesAsync(dateTimePicker1.Value, dateTimePicker2.Value))
-                    .Where(e => !(e.ProjectId == 132 && e.EntryTypeId == 24))
+
+                var allEntries = await _timeEntryRepo
+                    .GetAllTimeEntriesBetweenDatesAsync(dateTimePicker1.Value, dateTimePicker2.Value);
+
+                var selectedGroupIds = checkedListBoxUserGroups.CheckedItems
+                    .Cast<UserGroup>()
+                    .Select(g => g.Id)
                     .ToList();
+
+                var timeEntries = allEntries
+                    .Where(e =>
+                        e.User?.UserGroup != null
+                        && selectedGroupIds.Contains(e.User.UserGroup.Id)
+                        && !(e.ProjectId == 132 && e.EntryTypeId == 24)
+                    )
+                    .ToList();
+
+
 
                 var projects = timeEntries
                     .Where(e => e.Project?.ProjectType == 0)

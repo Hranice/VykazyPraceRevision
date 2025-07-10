@@ -132,6 +132,11 @@ namespace VykazyPrace.UserControls.CalendarV2
             await LoadSidebar();
         }
 
+        public async Task ForceReloadIndicators()
+        {
+            await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
+        }
+
         private void SafeInvoke(Action action)
         {
             if (InvokeRequired) Invoke(action);

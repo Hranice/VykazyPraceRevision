@@ -47,9 +47,7 @@ namespace VykazyPrace
 
         private void zobrazitToolStripMenuItem_Click(object? sender, EventArgs e)
         {
-            this.Show();
-            this.WindowState = FormWindowState.Normal;
-            this.BringToFront();
+            ShowFromTray();
         }
 
         private void ukoncitToolStripMenuItem_Click(object? sender, EventArgs e)
@@ -441,11 +439,12 @@ namespace VykazyPrace
 
         public void ShowFromTray()
         {
-            this.Invoke(() =>
+            this.Invoke(async () =>
             {
                 this.Show();
                 this.WindowState = FormWindowState.Normal;
                 this.BringToFront();
+                await _calendar.ForceReloadIndicators();
             });
         }
 

@@ -662,6 +662,62 @@ namespace VykazyPrace.UserControls.CalendarV2
         }
 
 
+        // Přidejte pole:
+        private readonly Queue<DayPanel> _panelPool = new();
+        private readonly List<DayPanel> _activePanels = new();
+
+        private Dictionary<int, Color> _colorCache = new Dictionary<int, Color>();
+
+        private readonly ToolTip _sharedTooltip = new ToolTip()
+        {
+            AutoPopDelay = 5000,
+            InitialDelay = 300,
+            ReshowDelay = 100,
+            ShowAlways = true
+        };
+
+
+        // Metoda pro získání panelu (pool first):
+        private DayPanel GetPooledPanel()
+        {
+            DayPanel panel;
+            if (_panelPool.Count > 0)
+            {
+                panel = _panelPool.Dequeue();
+                panel.Visible = true;
+            }
+            else
+            {
+                panel = new DayPanel
+                {
+                    Dock = DockStyle.Fill,
+                    BorderStyle = BorderStyle.FixedSingle
+                };
+                // jednorázová registrace handlerů
+                panel.MouseMove += dayPanel_MouseMove;
+                panel.MouseDown += dayPanel_MouseDown;
+                panel.MouseUp += dayPanel_MouseUp;
+                panel.MouseLeave += dayPanel_MouseLeave;
+                panel.MouseClick += dayPanel_MouseClick;
+                panel.ContextMenuStrip = dayPanelMenu;
+            }
+            return panel;
+        }
+
+
+        // Na konci RenderCalendar, vraťte přebytečné:
+        private void ReleaseUnusedPanels()
+        {
+            foreach (var panel in _activePanels)
+            {
+                panel.Visible = false;
+                tableLayoutPanelCalendar.Controls.Remove(panel);
+                _panelPool.Enqueue(panel);
+            }
+            _activePanels.Clear();
+        }
+
+
         private async Task RenderCalendar()
         {
             var swTotal = Stopwatch.StartNew();
@@ -670,6 +726,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             tableLayoutPanelCalendar.SuspendLayout();
             panelContainer.SuspendLayout();
 
+            // 1) Load special days
             var swSpecialDays = Stopwatch.StartNew();
             await LoadSpecialDaysAsync();
             swSpecialDays.Stop();
@@ -677,15 +734,16 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             tableLayoutPanelCalendar.SetDate(_selectedDate);
 
+            // 2) Load/create snacks + entries
             var swSnackAndEntries = Stopwatch.StartNew();
-            // 1) Načti všechny záznamy týdne
             var weekEntries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _selectedDate);
-            // 2) Vypočti chybějící svačiny
+
             var snackDates = new HashSet<DateTime>(
                 weekEntries
                     .Where(e => e.ProjectId == 132 && e.EntryTypeId == 24 && e.Timestamp.HasValue)
                     .Select(e => e.Timestamp.Value.Date)
             );
+
             var toCreate = Enumerable.Range(0, 7)
                 .Select(i => _selectedDate.AddDays(i))
                 .Where(d => !snackDates.Contains(d))
@@ -694,12 +752,13 @@ namespace VykazyPrace.UserControls.CalendarV2
                     ProjectId = 132,
                     EntryTypeId = 24,
                     UserId = _selectedUser.Id,
-                    Timestamp = day.AddMinutes(18 * 30),
-                    EntryMinutes = 30,
+                    Timestamp = day.AddMinutes(18 * TimeSlotLengthInMinutes),
+                    EntryMinutes = TimeSlotLengthInMinutes,
                     IsValid = 1,
                     IsLocked = 1
                 })
                 .ToList();
+
             if (toCreate.Any())
             {
                 await Task.WhenAll(toCreate.Select(snack => _timeEntryRepo.CreateTimeEntryAsync(snack)));
@@ -709,61 +768,98 @@ namespace VykazyPrace.UserControls.CalendarV2
             swSnackAndEntries.Stop();
             AppLogger.Information($"Load/Create snacks + GetTimeEntries: {swSnackAndEntries.ElapsedMilliseconds} ms");
 
+            // 3) UI reset + lookup + cache
             var swUISetup = Stopwatch.StartNew();
-            // 3) Reset UI
-            tableLayoutPanelCalendar.Controls.Clear();
-            panels.Clear();
+            ReleaseUnusedPanels();
 
-            // 4) Načti statické slovníky pro rychlé lookupy
             var allProjects = await _projectRepo.GetAllProjectsAsync();
             var projectDict = allProjects.ToDictionary(p => p.Id);
             var allEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesAsync();
+            _colorCache = allEntryTypes
+                .ToDictionary(
+                    t => t.Id,
+                    t => ColorTranslator.FromHtml(t.Color ?? "#ADD8E6")
+                );
             swUISetup.Stop();
             AppLogger.Information($"UI reset + load lookup data: {swUISetup.ElapsedMilliseconds} ms");
 
-            // 5) Vykresli panely
+            // 4) Create panels
             var swPanels = Stopwatch.StartNew();
             foreach (var entry in _currentEntries)
             {
                 if (entry.Project == null && entry.ProjectId.HasValue && projectDict.TryGetValue(entry.ProjectId.Value, out var proj))
                     entry.Project = proj;
-                await CreatePanelForEntry(entry, allEntryTypes);
+
+                var panel = GetPooledPanel();
+
+                panel.EntryId = entry.Id;
+                Color baseColor;
+                if (!_colorCache.TryGetValue((int)entry.EntryTypeId, out baseColor))
+                    baseColor = ColorTranslator.FromHtml("#ADD8E6");
+
+                panel.BackColor = entry.IsValid == 1
+                    ? baseColor
+                    : ColorTranslator.FromHtml("#FF6957");
+
+                if (entry.IsValid == 1)
+                {
+                    panel.UpdateUi(
+                        (entry.Project.IsArchived == 1 ? "(AFTERCARE) " : "") +
+                        (entry.Project.ProjectType == 1 ? entry.Project.ProjectDescription : entry.Project.ProjectTitle),
+                        entry.Description
+                    );
+                }
+
+                _sharedTooltip.SetToolTip(
+                    panel,
+                    $"{entry.Project?.ProjectTitle ?? "Projekt neznámý"}\n{entry.Note ?? "Bez poznámky"}"
+                );
+
+                int col = GetColumnBasedOnTimeEntry(entry.Timestamp);
+                int row = GetRowBasedOnTimeEntry(entry.Timestamp);
+                int span = GetColumnSpanBasedOnTimeEntry(entry.EntryMinutes);
+
+                tableLayoutPanelCalendar.Controls.Add(panel, col, row);
+                tableLayoutPanelCalendar.SetColumnSpan(panel, span);
+                _activePanels.Add(panel);
             }
             swPanels.Stop();
             AppLogger.Information($"CreatePanelForEntry loop: {swPanels.ElapsedMilliseconds} ms");
 
-            // 6) Finální UI aktualizace
+            // 5) Final UI update
+            var swFinalUI = Stopwatch.StartNew();
             BeginInvoke((Action)(() =>
             {
-                var swFinalUI = Stopwatch.StartNew();
                 UpdateDateLabels();
                 UpdateHourLabels();
                 panelContainer.AutoScroll = true;
 
                 if (!userHasScrolled)
                 {
-                    int[] colWidths = tableLayoutPanelCalendar.GetColumnWidths();
-                    int currentHourColumn = (DateTime.Now.Hour * 60 + DateTime.Now.Minute) / 30;
-                    int scrollX = colWidths.Take(currentHourColumn).Sum() - panelContainer.ClientSize.Width / 2;
+                    var widths = tableLayoutPanelCalendar.GetColumnWidths();
+                    int currentCol = (DateTime.Now.Hour * 60 + DateTime.Now.Minute) / TimeSlotLengthInMinutes;
+                    int scrollX = widths.Take(currentCol).Sum() - panelContainer.ClientSize.Width / 2;
                     panelContainer.AutoScrollPosition = new Point(Math.Max(scrollX, 0), 0);
                 }
 
                 DeactivateAllPanels();
-                var panelToActivate = tableLayoutPanelCalendar.Controls
+                var toActivate = tableLayoutPanelCalendar.Controls
                     .OfType<DayPanel>()
                     .FirstOrDefault(p => p.EntryId == _selectedTimeEntryId);
-                panelToActivate?.Activate();
+                toActivate?.Activate();
 
                 tableLayoutPanelCalendar.ResumeLayout(true);
                 panelContainer.ResumeLayout(true);
                 _loadingUC.Visible = false;
+
                 swFinalUI.Stop();
                 AppLogger.Information($"Final UI update: {swFinalUI.ElapsedMilliseconds} ms");
             }));
-
             swTotal.Stop();
             AppLogger.Information($"RenderCalendar – total: {swTotal.ElapsedMilliseconds} ms");
         }
+
+
 
 
         private void UpdateHourLabels()

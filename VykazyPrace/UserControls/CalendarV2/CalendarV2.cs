@@ -1,13 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Diagnostics;
 using VykazyPrace.Core.Configuration;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
@@ -36,7 +27,6 @@ namespace VykazyPrace.UserControls.CalendarV2
         private readonly TimeEntrySubTypeRepository _timeEntrySubTypeRepo;
         private readonly ProjectRepository _projectRepo;
         private readonly SpecialDayRepository _specialDayRepo;
-        private readonly UserRepository _userRepo;
         private readonly ArrivalDepartureRepository _arrivalDepartureRepo;
 
         // Data cache
@@ -62,7 +52,6 @@ namespace VykazyPrace.UserControls.CalendarV2
         private bool isMoving = false;
         private bool isResizingLeft = false;
         private int startMouseX;
-        private int startPanelX;
         private int originalColumn;
         private int originalColumnSpan;
 
@@ -77,8 +66,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         // Configuration
         private AppConfig _config;
-        private int arrivalColumn = 12;
-        private int leaveColumn = 28;
 
 
         public CalendarV2(User currentUser,
@@ -100,7 +87,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             _timeEntryTypeRepo = timeEntryTypeRepo;
             _timeEntrySubTypeRepo = timeEntrySubTypeRepo;
             _projectRepo = projectRepo;
-            _userRepo = userRepo;
             _specialDayRepo = specialDayRepo;
             _arrivalDepartureRepo = arrivalDepartureRepo;
 
@@ -158,7 +144,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             Controls.Add(_loadingUC);
             _ = LoadInitialDataAsync();
         }
-
 
         private void PanelContainer_Scroll(object? sender, ScrollEventArgs e)
         {
@@ -366,7 +351,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
-
         private async Task LoadTimeEntrySubTypesAsync()
         {
             try
@@ -540,7 +524,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
-
         private void SelectRadioButtonByText(string text)
         {
             var rb = flowLayoutPanel2.Controls
@@ -549,8 +532,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             if (rb != null) rb.Checked = true;
         }
-
-
 
         private TableLayoutPanelCellPosition GetCellAt(TableLayoutPanel panel, Point clickPosition)
         {
@@ -661,8 +642,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             await LoadSidebar();
         }
 
-
-        // Přidejte pole:
         private readonly Queue<DayPanel> _panelPool = new();
         private readonly List<DayPanel> _activePanels = new();
 
@@ -675,7 +654,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             ReshowDelay = 100,
             ShowAlways = true
         };
-
 
         // Metoda pro získání panelu (pool first):
         private DayPanel GetPooledPanel()
@@ -704,7 +682,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             return panel;
         }
 
-
         // Na konci RenderCalendar, vraťte přebytečné:
         private void ReleaseUnusedPanels()
         {
@@ -716,7 +693,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
             _activePanels.Clear();
         }
-
 
         private async Task RenderCalendar()
         {
@@ -859,9 +835,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             AppLogger.Information($"RenderCalendar – total: {swTotal.ElapsedMilliseconds} ms");
         }
 
-
-
-
         private void UpdateHourLabels()
         {
             Label[] hourLabels = { labelHours01, labelHours02, labelHours03, labelHours04, labelHours05, labelHours06, labelHours07 };
@@ -925,8 +898,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                 }
             }
         }
-
-
 
         private int GetColumnBasedOnTimeEntry(DateTime? timeStamp)
         {
@@ -1056,74 +1027,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             return (int)(timeOfDay.TotalMinutes / minutesPerColumn);
         }
 
-        private void AttachTooltipToPanel(DayPanel panel, TimeEntry entry)
-        {
-            if (entry.IsValid == 1)
-            {
-                string projectName = entry.Project?.ProjectTitle ?? "Projekt neznámý";
-                string note = string.IsNullOrWhiteSpace(entry.Note) ? "Bez poznámky" : entry.Note;
-
-                var tooltip = new ToolTip()
-                {
-                    AutoPopDelay = 5000,
-                    InitialDelay = 300,
-                    ReshowDelay = 100,
-                    ShowAlways = true
-                };
-
-                string text = $"{projectName}\n{note}";
-                tooltip.SetToolTip(panel, text);
-            }
-        }
-
-        private async Task CreatePanelForEntry(TimeEntry entry, List<TimeEntryType> entryTypes)
-        {
-            if (entry.Project == null) return;
-
-            var entryType = entryTypes.FirstOrDefault(x => x.Id == entry.EntryTypeId);
-            string color = entryType?.Color ?? "#ADD8E6";
-
-            if (entry.IsValid == 0)
-                color = "#FF6957";
-
-            var panel = new DayPanel
-            {
-                Dock = DockStyle.Fill,
-                BackColor = ColorTranslator.FromHtml(color),
-                BorderStyle = BorderStyle.FixedSingle,
-                EntryId = entry.Id
-            };
-
-            if (entry.IsValid == 1)
-            {
-                panel.UpdateUi(
-                    (entry.Project?.IsArchived == 1 ? "(AFTERCARE) " : "") +
-                    (entry.Project.ProjectType == 1 ? entry.Project.ProjectDescription : entry.Project.ProjectTitle),
-                    entry.Description);
-            }
-
-            panel.ContextMenuStrip = dayPanelMenu;
-
-            panel.MouseMove += dayPanel_MouseMove;
-            panel.MouseDown += dayPanel_MouseDown;
-            panel.MouseUp += dayPanel_MouseUp;
-            panel.MouseLeave += dayPanel_MouseLeave;
-            panel.MouseClick += dayPanel_MouseClick;
-
-            AttachTooltipToPanel(panel, entry);
-
-            int column = GetColumnBasedOnTimeEntry(entry.Timestamp);
-            int row = GetRowBasedOnTimeEntry(entry.Timestamp);
-            int columnSpan = GetColumnSpanBasedOnTimeEntry(entry.EntryMinutes);
-
-            tableLayoutPanelCalendar.Controls.Add(panel, column, row);
-            tableLayoutPanelCalendar.SetColumnSpan(panel, columnSpan);
-            panel.Tag = (entry.ProjectId == 132 && entry.EntryTypeId == 24) ? "snack" : entry.IsLocked == 1 ? "locked" : null;
-
-            panels.Add(panel);
-        }
-
-
 
         #region DayPanel events
         private void dayPanel_MouseClick(object? sender, MouseEventArgs e)
@@ -1143,7 +1046,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             tableLayoutPanelCalendar.ClearSelection();
         }
 
-
         private void DeactivateAllPanels()
         {
             foreach (var ctrl in tableLayoutPanelCalendar.Controls)
@@ -1157,8 +1059,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void dayPanel_MouseMove(object? sender, MouseEventArgs e)
         {
-
-
             if (sender is not DayPanel panel) return;
 
             int rowHeight = tableLayoutPanelCalendar.Height / tableLayoutPanelCalendar.RowCount;
@@ -1183,9 +1083,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
-
         private bool mouseMoved = false;
-
         private void dayPanel_MouseDown(object? sender, MouseEventArgs e)
         {
             if (sender is not DayPanel panel) return;
@@ -1213,7 +1111,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             panel.BackColor = Color.LightCoral;
         }
 
-
         private void dayPanel_MouseLeave(object? sender, EventArgs e)
         {
             if (!isResizing && !isMoving)
@@ -1221,7 +1118,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                 Cursor = Cursors.Default;
             }
         }
-
 
         private void HandleResize(DayPanel panel, int deltaX, int columnWidth)
         {
@@ -1290,7 +1186,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                 }
             }
         }
-
 
         private void UpdateCursor(MouseEventArgs e, DayPanel panel)
         {
@@ -1431,53 +1326,10 @@ namespace VykazyPrace.UserControls.CalendarV2
             return maxColumn;
         }
 
-        private DateTime GetTimestampBasedOnColumn(int column)
-        {
-            int totalMinutes = column * 30;
-            return _selectedDate.AddMinutes(totalMinutes);
-        }
-
         private int GetEntryMinutesBasedOnColumnSpan(int columnSpan)
         {
             return columnSpan * 30;
         }
-
-        #region Timespans
-        private int GetNumberOfMinutesFromDateSpan(DateTime start, DateTime end)
-        {
-            return (int)(end - start).TotalMinutes;
-        }
-
-        private void comboBoxEnd_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            //if (comboBoxStart.SelectedIndex > 0)
-            //{
-            //    if (TimeDifferenceOutOfRange())
-            //    {
-            //        comboBoxEnd.SelectedIndex = comboBoxStart.SelectedIndex + 1;
-            //    }
-            //}
-        }
-
-        private void comboBoxStart_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //if (comboBoxEnd.SelectedIndex > 0)
-            //{
-            //    if (TimeDifferenceOutOfRange())
-            //    {
-            //        comboBoxStart.SelectedIndex = comboBoxEnd.SelectedIndex - 1;
-            //    }
-            //}
-        }
-
-        private bool TimeDifferenceOutOfRange()
-        {
-            int minutesStart = comboBoxStart.SelectedIndex * 30;
-            int minutesEnd = comboBoxEnd.SelectedIndex * 30;
-
-            return minutesEnd - minutesStart <= 0;
-        }
-        #endregion
 
         private async void buttonConfirm_Click(object sender, EventArgs e)
         {
@@ -1608,8 +1460,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             return (true, "");
         }
-
-
 
         private async void buttonRemove_Click(object sender, EventArgs e)
         {
@@ -1767,9 +1617,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             return control.Focused ? control : null;
         }
-
-
-
 
         private async void CopySelectedPanel()
         {
@@ -1959,16 +1806,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                     ClearComboBoxSelections(control);
                 }
             }
-        }
-
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void panelDay2_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void panelDay_Click(object sender, EventArgs e)

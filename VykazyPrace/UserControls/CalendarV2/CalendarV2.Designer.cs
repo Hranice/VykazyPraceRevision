@@ -472,7 +472,6 @@
             panelDay2.Size = new Size(73, 75);
             panelDay2.TabIndex = 113;
             panelDay2.Click += panelDay_Click;
-            panelDay2.Paint += panelDay2_Paint;
             // 
             // labelHours03
             // 
@@ -637,7 +636,6 @@
             tableLayoutPanelCalendar.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanelCalendar.Size = new Size(1969, 550);
             tableLayoutPanelCalendar.TabIndex = 149;
-            tableLayoutPanelCalendar.Paint += tableLayoutPanel1_Paint;
             tableLayoutPanelCalendar.MouseClick += tableLayoutPanel1_MouseClick;
             tableLayoutPanelCalendar.MouseDoubleClick += TableLayoutPanel1_MouseDoubleClick;
             tableLayoutPanelCalendar.MouseUp += tableLayoutPanel1_MouseUp;
@@ -1293,7 +1291,6 @@
             comboBoxEnd.Name = "comboBoxEnd";
             comboBoxEnd.Size = new Size(121, 33);
             comboBoxEnd.TabIndex = 134;
-            comboBoxEnd.SelectionChangeCommitted += comboBoxEnd_SelectionChangeCommitted;
             // 
             // label40
             // 
@@ -1331,7 +1328,6 @@
             comboBoxStart.Name = "comboBoxStart";
             comboBoxStart.Size = new Size(105, 33);
             comboBoxStart.TabIndex = 134;
-            comboBoxStart.SelectedIndexChanged += comboBoxStart_SelectedIndexChanged;
             // 
             // label38
             // 

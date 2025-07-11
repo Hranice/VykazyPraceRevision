@@ -664,84 +664,91 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async Task RenderCalendar()
         {
+            var swTotal = Stopwatch.StartNew();
+            AppLogger.Information("RenderCalendar – start");
+
             tableLayoutPanelCalendar.SuspendLayout();
             panelContainer.SuspendLayout();
 
+            var swSpecialDays = Stopwatch.StartNew();
+            await LoadSpecialDaysAsync();
+            swSpecialDays.Stop();
+            AppLogger.Information($"LoadSpecialDaysAsync: {swSpecialDays.ElapsedMilliseconds} ms");
+
             tableLayoutPanelCalendar.SetDate(_selectedDate);
-            var scrollPosition = panelContainer.AutoScrollPosition;
-            panelContainer.AutoScroll = false;
-            _loadingUC.BringToFront();
 
-            var currentUser = await _userRepo.GetUserByWindowsUsernameAsync(Environment.UserName);
-            bool isCurrentUser = _selectedUser.WindowsUsername == currentUser.WindowsUsername;
-            tableLayoutPanelCalendar.Enabled = isCurrentUser;
-            flowLayoutPanel2.Enabled = isCurrentUser;
+            var swSnackAndEntries = Stopwatch.StartNew();
+            // 1) Načti všechny záznamy týdne
+            var weekEntries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _selectedDate);
+            // 2) Vypočti chybějící svačiny
+            var snackDates = new HashSet<DateTime>(
+                weekEntries
+                    .Where(e => e.ProjectId == 132 && e.EntryTypeId == 24 && e.Timestamp.HasValue)
+                    .Select(e => e.Timestamp.Value.Date)
+            );
+            var toCreate = Enumerable.Range(0, 7)
+                .Select(i => _selectedDate.AddDays(i))
+                .Where(d => !snackDates.Contains(d))
+                .Select(day => new TimeEntry
+                {
+                    ProjectId = 132,
+                    EntryTypeId = 24,
+                    UserId = _selectedUser.Id,
+                    Timestamp = day.AddMinutes(18 * 30),
+                    EntryMinutes = 30,
+                    IsValid = 1,
+                    IsLocked = 1
+                })
+                .ToList();
+            if (toCreate.Any())
+            {
+                await Task.WhenAll(toCreate.Select(snack => _timeEntryRepo.CreateTimeEntryAsync(snack)));
+                weekEntries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _selectedDate);
+            }
+            _currentEntries = weekEntries;
+            swSnackAndEntries.Stop();
+            AppLogger.Information($"Load/Create snacks + GetTimeEntries: {swSnackAndEntries.ElapsedMilliseconds} ms");
 
+            var swUISetup = Stopwatch.StartNew();
+            // 3) Reset UI
             tableLayoutPanelCalendar.Controls.Clear();
             panels.Clear();
 
+            // 4) Načti statické slovníky pro rychlé lookupy
             var allProjects = await _projectRepo.GetAllProjectsAsync();
             var projectDict = allProjects.ToDictionary(p => p.Id);
             var allEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesAsync();
+            swUISetup.Stop();
+            AppLogger.Information($"UI reset + load lookup data: {swUISetup.ElapsedMilliseconds} ms");
 
-
-            // 1. Načtení speciálních dnů
-            await LoadSpecialDaysAsync();
-            tableLayoutPanelCalendar.SetSpecialDays(_specialDays);
-
-            // 2. Vytvoření chybějících "svačin"
-            for (int row = 0; row < 7; row++)
-            {
-                DateTime day = _selectedDate.AddDays(row);
-                bool exists = await _timeEntryRepo.ExistsEntryAsync(_selectedUser.Id, day, 132, 24);
-                if (!exists)
-                {
-                    var defaultSnackTime = day.AddMinutes(18 * 30); // 9:00
-                    var newSnack = new TimeEntry
-                    {
-                        ProjectId = 132,
-                        EntryTypeId = 24,
-                        UserId = _selectedUser.Id,
-                        Timestamp = defaultSnackTime,
-                        EntryMinutes = 30,
-                        IsValid = 1,
-                        IsLocked = 1
-                    };
-                    await _timeEntryRepo.CreateTimeEntryAsync(newSnack);
-                }
-            }
-
-            // 3. Znovu načti všechny záznamy (včetně právě vytvořených)
-            _currentEntries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _selectedDate);
-
-
-            // 4. Vykresli panely
+            // 5) Vykresli panely
+            var swPanels = Stopwatch.StartNew();
             foreach (var entry in _currentEntries)
             {
                 if (entry.Project == null && entry.ProjectId.HasValue && projectDict.TryGetValue(entry.ProjectId.Value, out var proj))
                     entry.Project = proj;
-
                 await CreatePanelForEntry(entry, allEntryTypes);
             }
+            swPanels.Stop();
+            AppLogger.Information($"CreatePanelForEntry loop: {swPanels.ElapsedMilliseconds} ms");
 
+            // 6) Finální UI aktualizace
             BeginInvoke((Action)(() =>
             {
+                var swFinalUI = Stopwatch.StartNew();
                 UpdateDateLabels();
                 UpdateHourLabels();
                 panelContainer.AutoScroll = true;
 
                 if (!userHasScrolled)
                 {
-                    int[] columnWidths = tableLayoutPanelCalendar.GetColumnWidths();
+                    int[] colWidths = tableLayoutPanelCalendar.GetColumnWidths();
                     int currentHourColumn = (DateTime.Now.Hour * 60 + DateTime.Now.Minute) / 30;
-                    int scrollX = columnWidths.Take(currentHourColumn).Sum();
-                    scrollX -= panelContainer.ClientSize.Width / 2;
-                    scrollX = Math.Max(scrollX, 0);
-                    panelContainer.AutoScrollPosition = new Point(scrollX, 0);
+                    int scrollX = colWidths.Take(currentHourColumn).Sum() - panelContainer.ClientSize.Width / 2;
+                    panelContainer.AutoScrollPosition = new Point(Math.Max(scrollX, 0), 0);
                 }
 
                 DeactivateAllPanels();
-
                 var panelToActivate = tableLayoutPanelCalendar.Controls
                     .OfType<DayPanel>()
                     .FirstOrDefault(p => p.EntryId == _selectedTimeEntryId);
@@ -750,8 +757,14 @@ namespace VykazyPrace.UserControls.CalendarV2
                 tableLayoutPanelCalendar.ResumeLayout(true);
                 panelContainer.ResumeLayout(true);
                 _loadingUC.Visible = false;
+                swFinalUI.Stop();
+                AppLogger.Information($"Final UI update: {swFinalUI.ElapsedMilliseconds} ms");
             }));
+
+            swTotal.Stop();
+            AppLogger.Information($"RenderCalendar – total: {swTotal.ElapsedMilliseconds} ms");
         }
+
 
         private void UpdateHourLabels()
         {

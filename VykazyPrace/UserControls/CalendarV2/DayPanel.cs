@@ -8,37 +8,37 @@ namespace VykazyPrace.UserControls.CalendarV2
     public partial class DayPanel : UserControl
     {
         public int EntryId { get; set; }
-        private int _borderThickness = 0;
-        private string? _title;
-        private string? _subtitle;
         private List<string> _lines = new();
+        private Color _assignedColor;
+
 
         public DayPanel()
         {
             InitializeComponent();
             this.DoubleBuffered = true;
         }
-
         public void UpdateUi(string? title, string? subtitle)
         {
-            _title = title;
-            _subtitle = subtitle;
             _lines = WrapTextIntoLines($"{title}\n{subtitle}", this.Font, this.Width - 6, maxLines: 4);
-            this.Invalidate(); // Vykresli znovu
+            this.Invalidate();
+        }
+
+        public void SetAssignedColor(Color color)
+        {
+            _assignedColor = color;
+            this.BackColor = color;
         }
 
         public void Activate()
         {
-            this.Font = new Font(this.Font, FontStyle.Bold);
-            _borderThickness = 1;
-            this.Invalidate();
+            this.BackColor = ControlPaint.Light(_assignedColor, 0.4f);
+            this.Refresh();
         }
 
         public void Deactivate()
         {
-            this.Font = new Font(this.Font, FontStyle.Regular);
-            _borderThickness = 0;
-            this.Invalidate();
+            this.BackColor = _assignedColor; // vrať přesně tu barvu, která tam byla původně
+            this.Refresh();
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -48,30 +48,25 @@ namespace VykazyPrace.UserControls.CalendarV2
             Graphics g = e.Graphics;
             g.Clear(this.BackColor);
 
-            // Border
-            if (_borderThickness > 0)
-            {
-                using Pen pen = new Pen(Color.Black, _borderThickness);
-                g.DrawRectangle(pen, _borderThickness / 2, _borderThickness / 2,
-                    this.Width - _borderThickness, this.Height - _borderThickness);
-            }
+            int padding = 3;
+            float availableWidth = this.Width - padding * 2;
+            float availableHeight = this.Height - padding * 2;
+
 
             if (_lines.Count == 0) return;
 
-            // Text
-            int padding = 3;
-            float y = padding;
             SizeF oneLineSize = g.MeasureString("A", this.Font);
             float lineHeight = oneLineSize.Height;
+            float y = padding;
 
             using Brush textBrush = new SolidBrush(this.ForeColor);
             foreach (var line in _lines)
             {
-                g.DrawString(line, this.Font, textBrush, new RectangleF(padding, y, this.Width - padding * 2, lineHeight));
+                g.DrawString(line, this.Font, textBrush,
+                    new RectangleF(padding, y, availableWidth, lineHeight));
                 y += lineHeight;
             }
         }
-
         private List<string> WrapTextIntoLines(string text, Font font, int maxWidth, int maxLines)
         {
             List<string> result = new();
@@ -122,9 +117,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                         if (len <= 0) len = 1;
                         if (len > remaining.Length) len = remaining.Length;
 
-                        string line = remaining.Substring(0, len);
+                        string line = remaining.Substring(0, Math.Min(len, remaining.Length));
                         result.Add(line);
-                        remaining = remaining.Substring(len);
+                        remaining = remaining.Substring(Math.Min(len, remaining.Length));
 
                         if (result.Count >= maxLines)
                             break;
@@ -150,15 +145,16 @@ namespace VykazyPrace.UserControls.CalendarV2
             if (result.Count == maxLines)
             {
                 string last = result[^1];
-                while (g.MeasureString(last + "…", font).Width > maxWidth && last.Length > 0)
+                if (!last.EndsWith("…"))
                 {
-                    last = last[..^1];
+                    while (g.MeasureString(last + "…", font).Width > maxWidth && last.Length > 0)
+                    {
+                        last = last.Substring(0, last.Length - 1);
+                    }
+                    result[^1] = last + "…";
                 }
-                result[^1] = last + "…";
             }
-
             return result;
         }
-
     }
 }

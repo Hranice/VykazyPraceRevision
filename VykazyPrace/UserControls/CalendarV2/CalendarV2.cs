@@ -17,7 +17,6 @@ namespace VykazyPrace.UserControls.CalendarV2
         private const int DefaultProjectType = 0;
 
         // UI + State
-        private readonly LoadingUC _loadingUC = new();
         private readonly Timer _resizeTimer = new() { Interval = 50 };
         private bool userHasScrolled = false;
 
@@ -30,6 +29,10 @@ namespace VykazyPrace.UserControls.CalendarV2
         private readonly ArrivalDepartureRepository _arrivalDepartureRepo;
 
         // Data cache
+        private static List<TimeEntryType>? _cacheTypes;
+        private static List<TimeEntrySubType>? _cacheSubTypes;
+        private static List<Project>? _cacheProjects;
+
         private List<Project> _projects = new();
         private List<TimeEntryType> _timeEntryTypes = new();
         private List<TimeEntrySubType> _timeEntrySubTypes = new();
@@ -140,8 +143,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             InitializeContextMenus();
 
             panelContainer.Scroll += PanelContainer_Scroll;
-            _loadingUC.Size = Size;
-            Controls.Add(_loadingUC);
             _ = LoadInitialDataAsync();
         }
 
@@ -152,16 +153,50 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async Task LoadInitialDataAsync()
         {
-            await Task.WhenAll(
-                LoadTimeEntryTypesAsync(DefaultProjectType),
-                LoadTimeEntrySubTypesAsync(),
-                LoadProjectsAsync(DefaultProjectType),
-                LoadSpecialDaysAsync(),
-                LoadArrivalDeparturesAsync(),
-                RenderCalendar(),
-                AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate)
-            );
+            await LoadReferenceDataAsync();
+
+            SafeInvoke(() =>
+            {
+                customComboBoxProjects.SetItems(_projects
+                    .Select(FormatHelper.FormatProjectToString)
+                    .ToArray());
+
+                UpdateEntryTypeControls(_currentProjectType);
+
+                customComboBoxSubTypes.SetItems(_timeEntrySubTypes
+                    .Where(t => t.IsArchived == 0)
+                    .Select(FormatHelper.FormatTimeEntrySubTypeToString)
+                    .ToArray());
+            });
+
+            var specialTask = LoadSpecialDaysAsync();
+            var arrivalTask = LoadArrivalDeparturesAsync();
+
+            await Task.WhenAll(specialTask, arrivalTask);
+
+            await RenderCalendar();
+            await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
         }
+
+
+
+        private async Task LoadReferenceDataAsync()
+        {
+            if (_cacheTypes == null)
+                _cacheTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesByProjectTypeAsync(DefaultProjectType);
+            _timeEntryTypes = _cacheTypes;
+
+            if (_cacheSubTypes == null)
+                _cacheSubTypes = await _timeEntrySubTypeRepo.GetAllTimeEntrySubTypesByUserIdAsync(_selectedUser.Id);
+            _timeEntrySubTypes = _cacheSubTypes;
+
+            if (_cacheProjects == null)
+                _cacheProjects = DefaultProjectType == 1
+                    ? await _projectRepo.GetAllFullProjectsAndPreProjectsAsync(checkBoxArchivedProjects.Checked)
+                    : await _projectRepo.GetAllProjectsAsyncByProjectType(DefaultProjectType);
+            _projects = _cacheProjects;
+        }
+
 
         private async Task LoadArrivalDeparturesAsync()
         {
@@ -972,7 +1007,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                     ? baseColor
                     : ColorTranslator.FromHtml("#FF6957");
 
-                panel.SetAssignedColor(finalColor); 
+                panel.SetAssignedColor(finalColor);
 
                 // Tooltip
                 _sharedTooltip.SetToolTip(
@@ -1014,8 +1049,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             swPanels.Stop();
             AppLogger.Information($"CreatePanelForEntry loop: {swPanels.ElapsedMilliseconds} ms");
 
-
-
             // 5) Final UI update
             var swFinalUI = Stopwatch.StartNew();
             BeginInvoke((Action)(() =>
@@ -1040,7 +1073,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                 tableLayoutPanelCalendar.ResumeLayout(true);
                 panelContainer.ResumeLayout(true);
-                _loadingUC.Visible = false;
 
                 swFinalUI.Stop();
                 AppLogger.Information($"Final UI update: {swFinalUI.ElapsedMilliseconds} ms");
@@ -1360,7 +1392,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         }
         #endregion
 
-      
+
         public async Task DeleteRecord()
         {
             var timeEntry = _currentEntries.FirstOrDefault(e => e.Id == _selectedTimeEntryId);
@@ -1401,8 +1433,8 @@ namespace VykazyPrace.UserControls.CalendarV2
             return result == DialogResult.Yes;
         }
 
-       
-    
+
+
         private Control? GetFocusedControl(Control control)
         {
             foreach (Control child in control.Controls)

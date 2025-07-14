@@ -18,6 +18,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         // UI + State
         private readonly Timer _resizeTimer = new() { Interval = 50 };
+        private readonly Dictionary<DayPanel, Timer> _uiTimers = new();
         private bool userHasScrolled = false;
 
         // Repositories
@@ -932,6 +933,14 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             foreach (var panel in _activePanels)
             {
+                // zastavíme a zrušíme timer pro tento panel, pokud existuje
+                if (_uiTimers.TryGetValue(panel, out var t))
+                {
+                    t.Stop();
+                    t.Dispose();
+                    _uiTimers.Remove(panel);
+                }
+
                 panel.Visible = false;
                 tableLayoutPanelCalendar.Controls.Remove(panel);
                 _panelPool.Enqueue(panel);
@@ -1041,17 +1050,28 @@ namespace VykazyPrace.UserControls.CalendarV2
                 tableLayoutPanelCalendar.SetColumnSpan(panel, span);
                 _activePanels.Add(panel);
 
+                // nejdřív vyčistíme starý timer, pokud zbyl z předchozího použití
+                if (_uiTimers.TryGetValue(panel, out var oldTimer))
+                {
+                    oldTimer.Stop();
+                    oldTimer.Dispose();
+                    _uiTimers.Remove(panel);
+                }
+
                 // ⚠️ Odložené volání UpdateUi pomocí Timeru – čekáme na správnou velikost
                 if (entry.IsValid == 1)
                 {
-                    var timer = new System.Windows.Forms.Timer();
+                    var timer = new Timer();
                     timer.Interval = 10; // 10 ms = rychlá kontrola
+                    _uiTimers[panel] = timer;
+
                     timer.Tick += (s, e) =>
                     {
                         if (panel.Width > 10) // máme platnou šířku?
                         {
                             timer.Stop();
                             timer.Dispose();
+                            _uiTimers.Remove(panel);
 
                             panel.UpdateUi(
                                 (entry.Project?.IsArchived == 1 ? "(AFTERCARE) " : "") +
@@ -1061,6 +1081,11 @@ namespace VykazyPrace.UserControls.CalendarV2
                         }
                     };
                     timer.Start();
+                }
+                else
+                {
+                    // invalidní: hned vyčistíme text
+                    panel.UpdateUi(null, null);
                 }
             }
             swPanels.Stop();

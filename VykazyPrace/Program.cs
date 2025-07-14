@@ -4,6 +4,7 @@ using System.Threading;
 using System.Windows.Forms;
 using VykazyPrace.Logging.VykazyPrace;
 using VykazyPrace.Core.Logging;
+using VykazyPrace.Core.Database.Repositories;
 
 namespace VykazyPrace
 {
@@ -20,6 +21,19 @@ namespace VykazyPrace
             {
                 if (isFirstInstance)
                 {
+                    AppLogger.Debug("Zahøívací dotaz na databázi...");
+                    try
+                    {
+                        var warmup = new UserRepository();
+                        var _ = warmup.GetAllUsersAsync().Result.FirstOrDefault();
+                        AppLogger.Debug("Databáze zahøáta.");
+                    }
+                    catch (Exception ex)
+                    {
+                        AppLogger.Error("Zahøívací dotaz selhal: " + ex.Message);
+                    }
+
+
                     AppLogger.RegisterPopupService(new WinFormsLoggerPopupService());
                     AppLogger.Debug("Aplikace spuštìna.");
 

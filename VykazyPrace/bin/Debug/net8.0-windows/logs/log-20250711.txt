@@ -261,3 +261,257 @@
 2025-07-11 10:48:18.967 +02:00 [INF] CreatePanelForEntry loop: 111 ms
 2025-07-11 10:48:18.967 +02:00 [INF] RenderCalendar – total: 141 ms
 2025-07-11 10:48:19.017 +02:00 [INF] Final UI update: 49 ms
+2025-07-11 13:57:34.525 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-11 13:57:37.920 +02:00 [INF] RenderCalendar – start
+2025-07-11 13:57:37.931 +02:00 [INF] LoadSpecialDaysAsync: 10 ms
+2025-07-11 13:57:37.979 +02:00 [INF] Load/Create snacks + GetTimeEntries: 47 ms
+2025-07-11 13:57:38.016 +02:00 [INF] UI reset + load lookup data: 36 ms
+2025-07-11 13:57:38.280 +02:00 [INF] CreatePanelForEntry loop: 264 ms
+2025-07-11 13:57:38.280 +02:00 [INF] RenderCalendar – total: 359 ms
+2025-07-11 13:57:39.682 +02:00 [INF] RenderCalendar – start
+2025-07-11 13:57:39.697 +02:00 [INF] LoadSpecialDaysAsync: 15 ms
+2025-07-11 13:57:39.714 +02:00 [INF] Load/Create snacks + GetTimeEntries: 16 ms
+2025-07-11 13:57:39.775 +02:00 [INF] UI reset + load lookup data: 61 ms
+2025-07-11 13:57:39.900 +02:00 [INF] CreatePanelForEntry loop: 124 ms
+2025-07-11 13:57:39.900 +02:00 [INF] RenderCalendar – total: 218 ms
+2025-07-11 13:57:40.067 +02:00 [INF] Final UI update: 1787 ms
+2025-07-11 13:57:40.169 +02:00 [INF] Final UI update: 268 ms
+2025-07-11 14:09:30.098 +02:00 [ERR] Databáze je neplatná nebo ji nelze načíst.
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 14: 'unable to open database file'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteConnectionInternal..ctor(SqliteConnectionStringBuilder connectionOptions, SqliteConnectionPool pool)
+   at Microsoft.Data.Sqlite.SqliteConnectionPool.GetConnection()
+   at Microsoft.Data.Sqlite.SqliteConnectionFactory.GetConnection(SqliteConnection outerConnection)
+   at Microsoft.Data.Sqlite.SqliteConnection.Open()
+   at VykazyPrace.Core.Database.DatabaseValidator.ValidateStructure(VykazyPraceContext context) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\DatabaseValidator.cs:line 27
+   at VykazyPrace.MainForm.ValidateDatabase() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 135
+2025-07-11 14:09:32.797 +02:00 [INF] Aplikace se nyní ukončí.
+2025-07-11 14:09:58.696 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-11 14:10:01.907 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:10:01.908 +02:00 [INF] LoadSpecialDaysAsync: 0 ms
+2025-07-11 14:10:01.936 +02:00 [INF] Load/Create snacks + GetTimeEntries: 28 ms
+2025-07-11 14:10:01.951 +02:00 [INF] UI reset + load lookup data: 14 ms
+2025-07-11 14:10:02.222 +02:00 [INF] CreatePanelForEntry loop: 270 ms
+2025-07-11 14:10:02.222 +02:00 [INF] RenderCalendar – total: 315 ms
+2025-07-11 14:10:03.546 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:10:03.547 +02:00 [INF] LoadSpecialDaysAsync: 0 ms
+2025-07-11 14:10:03.551 +02:00 [INF] Load/Create snacks + GetTimeEntries: 3 ms
+2025-07-11 14:10:03.583 +02:00 [INF] UI reset + load lookup data: 32 ms
+2025-07-11 14:10:03.695 +02:00 [INF] CreatePanelForEntry loop: 111 ms
+2025-07-11 14:10:03.695 +02:00 [INF] RenderCalendar – total: 149 ms
+2025-07-11 14:10:03.817 +02:00 [INF] Final UI update: 1595 ms
+2025-07-11 14:10:03.933 +02:00 [INF] Final UI update: 237 ms
+2025-07-11 14:10:14.202 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:10:14.242 +02:00 [ERR] Chyba při načítání speciálních dnů.
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 10: 'disk I/O error'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at VykazyPrace.Core.Database.Repositories.SpecialDayRepository.GetSpecialDaysForWeekAsync(DateTime weekStart) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\Repositories\SpecialDayRepository.cs:line 95
+   at VykazyPrace.UserControls.CalendarV2.CalendarV2.LoadSpecialDaysAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\UserControls\CalendarV2\CalendarV2.cs:line 182
+2025-07-11 14:10:17.237 +02:00 [INF] LoadSpecialDaysAsync: 3034 ms
+2025-07-11 14:11:09.545 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-11 14:11:12.070 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:11:12.071 +02:00 [INF] LoadSpecialDaysAsync: 0 ms
+2025-07-11 14:11:12.093 +02:00 [INF] Load/Create snacks + GetTimeEntries: 21 ms
+2025-07-11 14:11:12.105 +02:00 [INF] UI reset + load lookup data: 11 ms
+2025-07-11 14:11:12.384 +02:00 [INF] CreatePanelForEntry loop: 279 ms
+2025-07-11 14:11:12.385 +02:00 [INF] RenderCalendar – total: 314 ms
+2025-07-11 14:11:13.417 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:11:13.417 +02:00 [INF] LoadSpecialDaysAsync: 0 ms
+2025-07-11 14:11:13.421 +02:00 [INF] Load/Create snacks + GetTimeEntries: 2 ms
+2025-07-11 14:11:13.466 +02:00 [INF] UI reset + load lookup data: 45 ms
+2025-07-11 14:11:13.622 +02:00 [INF] CreatePanelForEntry loop: 156 ms
+2025-07-11 14:11:13.623 +02:00 [INF] RenderCalendar – total: 205 ms
+2025-07-11 14:11:13.737 +02:00 [INF] Final UI update: 1352 ms
+2025-07-11 14:11:13.858 +02:00 [INF] Final UI update: 235 ms
+2025-07-11 14:11:20.329 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:11:20.330 +02:00 [ERR] Chyba při načítání speciálních dnů.
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 10: 'disk I/O error'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at VykazyPrace.Core.Database.Repositories.SpecialDayRepository.GetSpecialDaysForWeekAsync(DateTime weekStart) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\Repositories\SpecialDayRepository.cs:line 95
+   at VykazyPrace.UserControls.CalendarV2.CalendarV2.LoadSpecialDaysAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\UserControls\CalendarV2\CalendarV2.cs:line 182
+2025-07-11 14:11:21.746 +02:00 [INF] LoadSpecialDaysAsync: 1417 ms
+2025-07-11 14:12:50.991 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:12:50.993 +02:00 [INF] LoadSpecialDaysAsync: 2 ms
+2025-07-11 14:12:50.996 +02:00 [INF] Load/Create snacks + GetTimeEntries: 2 ms
+2025-07-11 14:12:51.022 +02:00 [INF] UI reset + load lookup data: 25 ms
+2025-07-11 14:12:51.169 +02:00 [INF] CreatePanelForEntry loop: 147 ms
+2025-07-11 14:12:51.169 +02:00 [INF] RenderCalendar – total: 178 ms
+2025-07-11 14:12:51.172 +02:00 [INF] Final UI update: 2 ms
+2025-07-11 14:12:54.189 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:12:54.193 +02:00 [INF] LoadSpecialDaysAsync: 3 ms
+2025-07-11 14:12:54.195 +02:00 [INF] Load/Create snacks + GetTimeEntries: 2 ms
+2025-07-11 14:12:54.307 +02:00 [INF] UI reset + load lookup data: 111 ms
+2025-07-11 14:12:54.409 +02:00 [INF] CreatePanelForEntry loop: 102 ms
+2025-07-11 14:12:54.409 +02:00 [INF] RenderCalendar – total: 220 ms
+2025-07-11 14:12:54.415 +02:00 [INF] Final UI update: 6 ms
+2025-07-11 14:13:00.616 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:13:00.617 +02:00 [INF] LoadSpecialDaysAsync: 0 ms
+2025-07-11 14:13:00.620 +02:00 [INF] Load/Create snacks + GetTimeEntries: 2 ms
+2025-07-11 14:13:00.652 +02:00 [INF] UI reset + load lookup data: 32 ms
+2025-07-11 14:13:00.747 +02:00 [INF] CreatePanelForEntry loop: 93 ms
+2025-07-11 14:13:00.747 +02:00 [INF] RenderCalendar – total: 130 ms
+2025-07-11 14:13:00.767 +02:00 [INF] Final UI update: 20 ms
+2025-07-11 14:13:23.567 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-11 14:13:26.049 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:13:26.050 +02:00 [INF] LoadSpecialDaysAsync: 0 ms
+2025-07-11 14:13:26.074 +02:00 [INF] Load/Create snacks + GetTimeEntries: 23 ms
+2025-07-11 14:13:26.086 +02:00 [INF] UI reset + load lookup data: 11 ms
+2025-07-11 14:13:26.359 +02:00 [INF] CreatePanelForEntry loop: 273 ms
+2025-07-11 14:13:26.359 +02:00 [INF] RenderCalendar – total: 309 ms
+2025-07-11 14:13:27.457 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:13:27.458 +02:00 [INF] LoadSpecialDaysAsync: 0 ms
+2025-07-11 14:13:27.461 +02:00 [INF] Load/Create snacks + GetTimeEntries: 2 ms
+2025-07-11 14:13:27.490 +02:00 [INF] UI reset + load lookup data: 29 ms
+2025-07-11 14:13:27.606 +02:00 [INF] CreatePanelForEntry loop: 115 ms
+2025-07-11 14:13:27.606 +02:00 [INF] RenderCalendar – total: 149 ms
+2025-07-11 14:13:27.673 +02:00 [INF] Final UI update: 1313 ms
+2025-07-11 14:13:27.786 +02:00 [INF] Final UI update: 180 ms
+2025-07-11 14:13:38.010 +02:00 [INF] Záznam 017I21 - Kamerový systém pro K15-3: 0,5 h -  byl smazán z databáze.
+2025-07-11 14:13:38.010 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:13:38.016 +02:00 [INF] LoadSpecialDaysAsync: 5 ms
+2025-07-11 14:13:38.019 +02:00 [INF] Load/Create snacks + GetTimeEntries: 2 ms
+2025-07-11 14:13:38.109 +02:00 [INF] UI reset + load lookup data: 89 ms
+2025-07-11 14:13:38.256 +02:00 [INF] CreatePanelForEntry loop: 146 ms
+2025-07-11 14:13:38.256 +02:00 [INF] RenderCalendar – total: 245 ms
+2025-07-11 14:13:38.262 +02:00 [INF] Final UI update: 6 ms
+2025-07-11 14:13:40.032 +02:00 [INF] Záznam 017I21 - Kamerový systém pro K15-3: 0,5 h -  byl smazán z databáze.
+2025-07-11 14:13:40.032 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:13:40.042 +02:00 [INF] LoadSpecialDaysAsync: 9 ms
+2025-07-11 14:13:40.050 +02:00 [INF] Load/Create snacks + GetTimeEntries: 8 ms
+2025-07-11 14:13:40.082 +02:00 [INF] UI reset + load lookup data: 31 ms
+2025-07-11 14:13:40.210 +02:00 [INF] CreatePanelForEntry loop: 128 ms
+2025-07-11 14:13:40.210 +02:00 [INF] RenderCalendar – total: 178 ms
+2025-07-11 14:13:40.254 +02:00 [INF] Final UI update: 43 ms
+2025-07-11 14:13:41.383 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-07-11 14:13:41.383 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:13:41.390 +02:00 [INF] LoadSpecialDaysAsync: 6 ms
+2025-07-11 14:13:41.392 +02:00 [INF] Load/Create snacks + GetTimeEntries: 2 ms
+2025-07-11 14:13:41.419 +02:00 [INF] UI reset + load lookup data: 26 ms
+2025-07-11 14:13:41.560 +02:00 [INF] CreatePanelForEntry loop: 140 ms
+2025-07-11 14:13:41.560 +02:00 [INF] RenderCalendar – total: 176 ms
+2025-07-11 14:13:41.620 +02:00 [INF] Final UI update: 60 ms
+2025-07-11 14:13:46.485 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-07-11 14:13:46.485 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:13:46.491 +02:00 [INF] LoadSpecialDaysAsync: 5 ms
+2025-07-11 14:13:46.494 +02:00 [INF] Load/Create snacks + GetTimeEntries: 2 ms
+2025-07-11 14:13:46.523 +02:00 [INF] UI reset + load lookup data: 29 ms
+2025-07-11 14:13:46.672 +02:00 [INF] CreatePanelForEntry loop: 149 ms
+2025-07-11 14:13:46.672 +02:00 [INF] RenderCalendar – total: 187 ms
+2025-07-11 14:13:46.710 +02:00 [INF] Final UI update: 37 ms
+2025-07-11 14:13:51.179 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl smazán z databáze.
+2025-07-11 14:13:51.179 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:13:51.184 +02:00 [INF] LoadSpecialDaysAsync: 5 ms
+2025-07-11 14:13:51.188 +02:00 [INF] Load/Create snacks + GetTimeEntries: 3 ms
+2025-07-11 14:13:51.227 +02:00 [INF] UI reset + load lookup data: 38 ms
+2025-07-11 14:13:51.360 +02:00 [INF] CreatePanelForEntry loop: 133 ms
+2025-07-11 14:13:51.360 +02:00 [INF] RenderCalendar – total: 181 ms
+2025-07-11 14:13:51.394 +02:00 [INF] Final UI update: 33 ms
+2025-07-11 14:14:09.377 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-11 14:14:12.476 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:14:12.477 +02:00 [INF] LoadSpecialDaysAsync: 0 ms
+2025-07-11 14:14:12.502 +02:00 [INF] Load/Create snacks + GetTimeEntries: 25 ms
+2025-07-11 14:14:12.517 +02:00 [INF] UI reset + load lookup data: 14 ms
+2025-07-11 14:14:12.787 +02:00 [INF] CreatePanelForEntry loop: 270 ms
+2025-07-11 14:14:12.788 +02:00 [INF] RenderCalendar – total: 311 ms
+2025-07-11 14:14:14.152 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:14:14.153 +02:00 [INF] LoadSpecialDaysAsync: 0 ms
+2025-07-11 14:14:14.156 +02:00 [INF] Load/Create snacks + GetTimeEntries: 3 ms
+2025-07-11 14:14:14.181 +02:00 [INF] UI reset + load lookup data: 24 ms
+2025-07-11 14:14:14.302 +02:00 [INF] CreatePanelForEntry loop: 120 ms
+2025-07-11 14:14:14.302 +02:00 [INF] RenderCalendar – total: 149 ms
+2025-07-11 14:14:14.421 +02:00 [INF] Final UI update: 1633 ms
+2025-07-11 14:14:14.515 +02:00 [INF] Final UI update: 213 ms
+2025-07-11 14:14:17.580 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:14:17.584 +02:00 [INF] LoadSpecialDaysAsync: 4 ms
+2025-07-11 14:14:17.586 +02:00 [INF] Load/Create snacks + GetTimeEntries: 2 ms
+2025-07-11 14:14:17.613 +02:00 [INF] UI reset + load lookup data: 26 ms
+2025-07-11 14:14:17.782 +02:00 [INF] CreatePanelForEntry loop: 168 ms
+2025-07-11 14:14:17.782 +02:00 [INF] RenderCalendar – total: 202 ms
+2025-07-11 14:14:18.002 +02:00 [INF] Final UI update: 219 ms
+2025-07-11 14:14:28.095 +02:00 [INF] Záznam 0 - Provoz Metalizace: 2 h -  byl smazán z databáze.
+2025-07-11 14:14:28.095 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:14:28.100 +02:00 [INF] LoadSpecialDaysAsync: 4 ms
+2025-07-11 14:14:28.102 +02:00 [INF] Load/Create snacks + GetTimeEntries: 2 ms
+2025-07-11 14:14:28.133 +02:00 [INF] UI reset + load lookup data: 30 ms
+2025-07-11 14:14:28.236 +02:00 [INF] CreatePanelForEntry loop: 102 ms
+2025-07-11 14:14:28.236 +02:00 [INF] RenderCalendar – total: 141 ms
+2025-07-11 14:14:28.239 +02:00 [INF] Final UI update: 2 ms
+2025-07-11 14:14:30.930 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:14:30.936 +02:00 [INF] LoadSpecialDaysAsync: 5 ms
+2025-07-11 14:14:30.940 +02:00 [INF] Load/Create snacks + GetTimeEntries: 4 ms
+2025-07-11 14:14:30.986 +02:00 [INF] UI reset + load lookup data: 45 ms
+2025-07-11 14:14:31.125 +02:00 [INF] CreatePanelForEntry loop: 139 ms
+2025-07-11 14:14:31.125 +02:00 [INF] RenderCalendar – total: 195 ms
+2025-07-11 14:14:31.249 +02:00 [INF] Final UI update: 124 ms
+2025-07-11 14:14:32.574 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:14:32.584 +02:00 [INF] LoadSpecialDaysAsync: 9 ms
+2025-07-11 14:14:32.586 +02:00 [INF] Load/Create snacks + GetTimeEntries: 1 ms
+2025-07-11 14:14:32.611 +02:00 [INF] UI reset + load lookup data: 24 ms
+2025-07-11 14:14:32.734 +02:00 [INF] CreatePanelForEntry loop: 123 ms
+2025-07-11 14:14:32.734 +02:00 [INF] RenderCalendar – total: 159 ms
+2025-07-11 14:14:32.744 +02:00 [INF] Final UI update: 9 ms
+2025-07-11 14:14:48.336 +02:00 [INF] Záznam 017I21 - Kamerový systém pro K15-3: 0,5 h - Seřízení kontrolního systému byl úspěšně aktualizován.
+2025-07-11 14:14:48.343 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:14:48.343 +02:00 [INF] LoadSpecialDaysAsync: 0 ms
+2025-07-11 14:14:48.346 +02:00 [INF] Load/Create snacks + GetTimeEntries: 2 ms
+2025-07-11 14:14:48.378 +02:00 [INF] UI reset + load lookup data: 32 ms
+2025-07-11 14:14:48.493 +02:00 [INF] CreatePanelForEntry loop: 115 ms
+2025-07-11 14:14:48.494 +02:00 [INF] RenderCalendar – total: 150 ms
+2025-07-11 14:14:48.517 +02:00 [INF] Final UI update: 23 ms
+2025-07-11 14:15:02.521 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-11 14:15:05.753 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:15:05.753 +02:00 [INF] LoadSpecialDaysAsync: 0 ms
+2025-07-11 14:15:05.779 +02:00 [INF] Load/Create snacks + GetTimeEntries: 24 ms
+2025-07-11 14:15:05.792 +02:00 [INF] UI reset + load lookup data: 12 ms
+2025-07-11 14:15:06.051 +02:00 [INF] CreatePanelForEntry loop: 259 ms
+2025-07-11 14:15:06.051 +02:00 [INF] RenderCalendar – total: 298 ms
+2025-07-11 14:15:07.456 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:15:07.457 +02:00 [INF] LoadSpecialDaysAsync: 0 ms
+2025-07-11 14:15:07.460 +02:00 [INF] Load/Create snacks + GetTimeEntries: 2 ms
+2025-07-11 14:15:07.486 +02:00 [INF] UI reset + load lookup data: 26 ms
+2025-07-11 14:15:07.604 +02:00 [INF] CreatePanelForEntry loop: 118 ms
+2025-07-11 14:15:07.604 +02:00 [INF] RenderCalendar – total: 148 ms
+2025-07-11 14:15:07.715 +02:00 [INF] Final UI update: 1664 ms
+2025-07-11 14:15:07.826 +02:00 [INF] Final UI update: 221 ms
+2025-07-11 14:15:39.952 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:15:39.960 +02:00 [INF] LoadSpecialDaysAsync: 8 ms
+2025-07-11 14:15:39.962 +02:00 [INF] Load/Create snacks + GetTimeEntries: 2 ms
+2025-07-11 14:15:39.994 +02:00 [INF] UI reset + load lookup data: 31 ms
+2025-07-11 14:15:40.142 +02:00 [INF] CreatePanelForEntry loop: 147 ms
+2025-07-11 14:15:40.142 +02:00 [INF] RenderCalendar – total: 190 ms
+2025-07-11 14:15:40.157 +02:00 [INF] Final UI update: 14 ms
+2025-07-11 14:15:47.954 +02:00 [INF] Záznam 017I21 - Kamerový systém pro K15-3: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-07-11 14:15:47.964 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:15:47.965 +02:00 [INF] LoadSpecialDaysAsync: 0 ms
+2025-07-11 14:15:47.968 +02:00 [INF] Load/Create snacks + GetTimeEntries: 2 ms
+2025-07-11 14:15:47.999 +02:00 [INF] UI reset + load lookup data: 30 ms
+2025-07-11 14:15:48.118 +02:00 [INF] CreatePanelForEntry loop: 118 ms
+2025-07-11 14:15:48.118 +02:00 [INF] RenderCalendar – total: 153 ms
+2025-07-11 14:15:48.144 +02:00 [INF] Final UI update: 26 ms
+2025-07-11 14:15:52.265 +02:00 [INF] RenderCalendar – start
+2025-07-11 14:15:52.270 +02:00 [INF] LoadSpecialDaysAsync: 5 ms
+2025-07-11 14:15:52.274 +02:00 [INF] Load/Create snacks + GetTimeEntries: 3 ms
+2025-07-11 14:15:52.322 +02:00 [INF] UI reset + load lookup data: 47 ms
+2025-07-11 14:15:52.454 +02:00 [INF] CreatePanelForEntry loop: 132 ms
+2025-07-11 14:15:52.454 +02:00 [INF] RenderCalendar – total: 189 ms
+2025-07-11 14:15:52.485 +02:00 [INF] Final UI update: 31 ms

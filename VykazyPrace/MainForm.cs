@@ -217,6 +217,12 @@ namespace VykazyPrace
                 {
                     new Dialogs.SettingsDialog(_selectedUser).ShowDialog();
                 }
+
+                else
+                {
+                    AppLogger.Information("Aplikace se nyní ukonèí.", true);
+                    Environment.Exit(0);
+                }
             });
         }
 

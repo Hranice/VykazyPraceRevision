@@ -224,27 +224,27 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         public async Task ChangeUser(User newUser)
         {
-            var sw = Stopwatch.StartNew();
-
             _selectedUser = newUser;
-
-            // paralelně načti docházku i vykresli kalendář + indikátory
+            // spustíme najednou arrival+render+indicators
             var arrivalTask = LoadArrivalDeparturesAsync();
-            var renderAndIndicators = Task.Run(async () =>
-            {
-                await RenderCalendar();
-                await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
-            });
+            var renderTask = RenderCalendar();
+            // AdjustIndicatorsAsync by měl jít až po RenderCalendar, ale nemusí čekat na arrival
+            await Task.WhenAll(
+                arrivalTask,
+                Task.Run(async () => {
+                    await renderTask;
+                    await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
+                })
+            );
 
-            await Task.WhenAll(arrivalTask, renderAndIndicators);
-
+            // UI cleanup
             DeactivateAllPanels();
             _selectedTimeEntryId = -1;
-            _ = LoadSidebar();
 
-            sw.Stop();
-            AppLogger.Information($"ChangeUser() trvalo {sw.ElapsedMilliseconds} ms");
+            // Sidebar klidně na pozadí (není kritický path pro vykreslení tygdne)
+            _ = LoadSidebar();
         }
+
 
 
         internal async Task<DateTime> ChangeToPreviousWeek()

@@ -1,7 +1,7 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace VykazyPrace.UserControls.CalendarV2
 {
@@ -9,9 +9,9 @@ namespace VykazyPrace.UserControls.CalendarV2
     {
         public int EntryId { get; set; }
         private int _borderThickness = 0;
-
         private string? _title;
         private string? _subtitle;
+        private List<string> _lines = new();
 
         public DayPanel()
         {
@@ -21,94 +21,144 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         public void UpdateUi(string? title, string? subtitle)
         {
-            _title = PrepareTrimmedText(title, this.Font, this.Width, 2);
-            _subtitle = PrepareTrimmedText(subtitle, this.Font, this.Width, 2);
-            Invalidate(); // Překreslí panel
+            _title = title;
+            _subtitle = subtitle;
+            _lines = WrapTextIntoLines($"{title}\n{subtitle}", this.Font, this.Width - 6, maxLines: 4);
+            this.Invalidate(); // Vykresli znovu
         }
-
-        private string PrepareTrimmedText(string? text, Font font, int maxWidth, int maxLines)
-        {
-            if (string.IsNullOrEmpty(text))
-                return "";
-
-            string current = "";
-            List<string> lines = new List<string>();
-
-            using var g = this.CreateGraphics();
-            foreach (char c in text)
-            {
-                string test = current + c;
-
-                // 🟡 Použij MeasureString místo MeasureText pro přesnější šířku
-                var size = g.MeasureString(test, font);
-
-                if (size.Width > maxWidth - 8) // posun o něco víc než 6
-                {
-                    lines.Add(current);
-                    current = c.ToString();
-
-                    if (lines.Count == maxLines)
-                        break;
-                }
-                else
-                {
-                    current = test;
-                }
-            }
-
-            if (lines.Count < maxLines && !string.IsNullOrEmpty(current))
-                lines.Add(current);
-
-            int totalLength = lines.Sum(l => l.Length);
-            if (totalLength < text.Length)
-            {
-                if (lines.Count == maxLines)
-                    lines[maxLines - 1] = lines[maxLines - 1].TrimEnd() + "…";
-                else
-                    lines[^1] += "…";
-            }
-
-            return string.Join("\n", lines);
-        }
-
 
         public void Activate()
         {
             this.Font = new Font(this.Font, FontStyle.Bold);
             _borderThickness = 1;
-            Invalidate();
+            this.Invalidate();
         }
 
         public void Deactivate()
         {
             this.Font = new Font(this.Font, FontStyle.Regular);
             _borderThickness = 0;
-            Invalidate();
+            this.Invalidate();
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
 
-            e.Graphics.Clear(this.BackColor);
+            Graphics g = e.Graphics;
+            g.Clear(this.BackColor);
 
-            // Vykreslení rámečku
+            // Border
             if (_borderThickness > 0)
             {
-                using (Pen pen = new Pen(Color.Black, _borderThickness))
+                using Pen pen = new Pen(Color.Black, _borderThickness);
+                g.DrawRectangle(pen, _borderThickness / 2, _borderThickness / 2,
+                    this.Width - _borderThickness, this.Height - _borderThickness);
+            }
+
+            if (_lines.Count == 0) return;
+
+            // Text
+            int padding = 3;
+            float y = padding;
+            SizeF oneLineSize = g.MeasureString("A", this.Font);
+            float lineHeight = oneLineSize.Height;
+
+            using Brush textBrush = new SolidBrush(this.ForeColor);
+            foreach (var line in _lines)
+            {
+                g.DrawString(line, this.Font, textBrush, new RectangleF(padding, y, this.Width - padding * 2, lineHeight));
+                y += lineHeight;
+            }
+        }
+
+        private List<string> WrapTextIntoLines(string text, Font font, int maxWidth, int maxLines)
+        {
+            List<string> result = new();
+            if (string.IsNullOrWhiteSpace(text)) return result;
+
+            using Graphics g = this.CreateGraphics();
+
+            string[] tokens = text.Replace("\r", "").Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            List<string> words = new();
+
+            foreach (string token in tokens)
+                words.AddRange(token.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+
+            string currentLine = "";
+
+            foreach (string word in words)
+            {
+                string testLine = string.IsNullOrEmpty(currentLine) ? word : currentLine + " " + word;
+                SizeF testSize = g.MeasureString(testLine, font);
+
+                if (testSize.Width > maxWidth)
                 {
-                    e.Graphics.DrawRectangle(pen, _borderThickness / 2, _borderThickness / 2,
-                        this.Width - _borderThickness * 3, this.Height - _borderThickness * 3);
+                    if (!string.IsNullOrEmpty(currentLine))
+                    {
+                        result.Add(currentLine);
+                        if (result.Count >= maxLines)
+                            break;
+                        currentLine = "";
+                    }
+
+                    // Rozdělení dlouhého slova na více řádků
+                    string remaining = word;
+                    while (remaining.Length > 0)
+                    {
+                        int len = 1;
+                        while (len <= remaining.Length)
+                        {
+                            string part = remaining.Substring(0, len);
+                            if (g.MeasureString(part, font).Width > maxWidth)
+                            {
+                                len--;
+                                break;
+                            }
+                            len++;
+                        }
+
+                        // bezpečnostní korekce
+                        if (len <= 0) len = 1;
+                        if (len > remaining.Length) len = remaining.Length;
+
+                        string line = remaining.Substring(0, len);
+                        result.Add(line);
+                        remaining = remaining.Substring(len);
+
+                        if (result.Count >= maxLines)
+                            break;
+                    }
+
+
+                    if (result.Count >= maxLines)
+                        break;
+                }
+                else
+                {
+                    currentLine = testLine;
                 }
             }
 
-            // Vykreslení textů
-            Rectangle textArea = new Rectangle(3, 3, this.Width - 6, this.Height - 6);
-            using var brush = new SolidBrush(this.ForeColor);
+            if (!string.IsNullOrEmpty(currentLine) && result.Count < maxLines)
+                result.Add(currentLine);
 
-            string fullText = (_title ?? "") + "\n" + (_subtitle ?? "");
-            TextRenderer.DrawText(e.Graphics, fullText, this.Font, textArea, this.ForeColor,
-                TextFormatFlags.Top | TextFormatFlags.WordBreak | TextFormatFlags.NoPadding);
+            // Ořezání s „…“ pokud je stále text navíc
+            if (result.Count > maxLines)
+                result = result.GetRange(0, maxLines);
+
+            if (result.Count == maxLines)
+            {
+                string last = result[^1];
+                while (g.MeasureString(last + "…", font).Width > maxWidth && last.Length > 0)
+                {
+                    last = last[..^1];
+                }
+                result[^1] = last + "…";
+            }
+
+            return result;
         }
+
     }
 }

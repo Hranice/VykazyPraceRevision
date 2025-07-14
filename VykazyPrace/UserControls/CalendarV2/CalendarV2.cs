@@ -44,6 +44,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         // Context
         private User _selectedUser;
+        private User _loggedUser;
         private DateTime _selectedDate;
         private int _selectedTimeEntryId = -1;
         private int _currentProjectType;
@@ -85,6 +86,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             _selectedDate = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
             _selectedUser = currentUser;
+            _loggedUser = currentUser;
 
             _timeEntryRepo = timeEntryRepo;
             _timeEntryTypeRepo = timeEntryTypeRepo;
@@ -225,23 +227,22 @@ namespace VykazyPrace.UserControls.CalendarV2
         public async Task ChangeUser(User newUser)
         {
             _selectedUser = newUser;
-            // spustíme najednou arrival+render+indicators
+
+            // 1) paralelně spusť načtení docházky a vykreslení kalendáře
             var arrivalTask = LoadArrivalDeparturesAsync();
             var renderTask = RenderCalendar();
-            // AdjustIndicatorsAsync by měl jít až po RenderCalendar, ale nemusí čekat na arrival
-            await Task.WhenAll(
-                arrivalTask,
-                Task.Run(async () => {
-                    await renderTask;
-                    await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
-                })
-            );
 
-            // UI cleanup
+            // 2) počkej, až oba dokončí (docházku i vykreslení)
+            await Task.WhenAll(arrivalTask, renderTask);
+
+            // 3) až po dokončení načtení docházky i vykreslení kalendáře spusť indikátory
+            await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
+
+            // 4) úklid UI
             DeactivateAllPanels();
             _selectedTimeEntryId = -1;
 
-            // Sidebar klidně na pozadí (není kritický path pro vykreslení tygdne)
+            // 5) sidebar může jít asynchronně na pozadí
             _ = LoadSidebar();
         }
 
@@ -464,7 +465,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             int minutesStart = timeStamp.Hour * 60 + timeStamp.Minute;
             int minutesEnd = minutesStart + timeEntry.EntryMinutes;
 
-            flowLayoutPanel2.Enabled = timeEntry.IsLocked == 0;
+            flowLayoutPanel2.Enabled = timeEntry.IsLocked == 0 && timeEntry.UserId == _loggedUser.Id;
 
             if (timeEntry.IsValid == 1)
             {
@@ -569,6 +570,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                 }));
             }
+
         }
 
         private void SelectRadioButtonByText(string text)
@@ -618,6 +620,8 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async void TableLayoutPanel1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            if (_selectedUser.Id != _loggedUser.Id) return;
+
             TableLayoutPanelCellPosition cell = GetCellAt(tableLayoutPanelCalendar, e.Location);
 
             if (_projects.Count == 0 || _timeEntryTypes.Count == 0)
@@ -1009,6 +1013,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                 var panel = GetPooledPanel();
                 panel.EntryId = entry.Id;
+                panel.OwnerId = _selectedUser.Id;
                 panel.Tag = (entry.ProjectId == 132 && entry.EntryTypeId == 24) ? "snack" : string.Empty;
 
                 // Barva podle typu a validity
@@ -1125,6 +1130,8 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             if (sender is not DayPanel panel) return;
 
+            if (panel.OwnerId != _loggedUser.Id) return;
+
             int rowHeight = tableLayoutPanelCalendar.Height / tableLayoutPanelCalendar.RowCount;
             int currentMouseY = tableLayoutPanelCalendar.PointToClient(Cursor.Position).Y;
             int newRow = Math.Max(0, Math.Min(currentMouseY / rowHeight, tableLayoutPanelCalendar.RowCount - 1));
@@ -1152,8 +1159,9 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             if (sender is not DayPanel panel) return;
 
-            if (panel.Tag as string == "locked")
-                return;
+            if (panel.Tag as string == "locked") return;
+
+            if (panel.OwnerId != _loggedUser.Id) return;
 
             mouseMoved = false;
             DeactivateAllPanels();
@@ -1180,8 +1188,9 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void HandleResize(DayPanel panel, int deltaX, int columnWidth)
         {
-            if (panel.Tag as string == "snack")
-                return;
+            if (panel.Tag as string == "snack") return;
+
+            if (panel.OwnerId != _loggedUser.Id) return;
 
             if (isResizingLeft)
             {
@@ -1213,6 +1222,8 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void HandleMove(DayPanel panel, int deltaX, int columnWidth)
         {
+            if (panel.OwnerId != _loggedUser.Id) return;
+
             // 1) náš původní řádek
             int originalRow = tableLayoutPanelCalendar.GetRow(panel);
 
@@ -1467,6 +1478,8 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             if (_selectedTimeEntryId <= 0) return;
 
+            if (_selectedUser.Id != _loggedUser.Id) return;
+
             var entry = _currentEntries.FirstOrDefault(e => e.Id == _selectedTimeEntryId);
 
             // svačina
@@ -1498,6 +1511,8 @@ namespace VykazyPrace.UserControls.CalendarV2
         private async void PasteCopiedPanel()
         {
             if (copiedEntry == null || pasteTargetCell == null) return;
+
+            if (_selectedUser.Id != _loggedUser.Id) return;
 
             int column = pasteTargetCell.Value.Column;
             int row = pasteTargetCell.Value.Row;

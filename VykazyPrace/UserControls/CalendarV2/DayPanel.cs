@@ -8,6 +8,7 @@ namespace VykazyPrace.UserControls.CalendarV2
     public partial class DayPanel : UserControl
     {
         public int EntryId { get; set; }
+        public int OwnerId { get; set; }
         private List<string> _lines = new();
         private Color _assignedColor;
 

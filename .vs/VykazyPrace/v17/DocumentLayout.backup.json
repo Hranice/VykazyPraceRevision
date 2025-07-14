@@ -83,14 +83,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 7,
-              "Title": "CalendarV2.cs [Design]",
+              "Title": "CalendarV2.cs [N\u00E1vrh]",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs",
-              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs [Design]",
-              "RelativeToolTip": "VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs [Design]",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs [N\u00E1vrh]",
+              "RelativeToolTip": "VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs [N\u00E1vrh]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-10T06:32:01.709Z",
-              "EditorCaption": " [Design]"
+              "EditorCaption": " [N\u00E1vrh]"
             },
             {
               "$type": "Document",
@@ -102,8 +102,7 @@
               "RelativeToolTip": "VykazyPrace.Core\\Database\\Repositories\\UserRepository.cs",
               "ViewState": "AgIAAEUAAAAAAAAAAAA2wEwAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-14T08:00:19.862Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-14T08:00:19.862Z"
             },
             {
               "$type": "Document",
@@ -113,7 +112,7 @@
               "RelativeDocumentMoniker": "VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs",
               "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs",
               "RelativeToolTip": "VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs",
-              "ViewState": "AgIAAH8AAAAAAAAAAAArwJEAAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAANkAAAAAAAAAAAAqwOIAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-10T06:32:03.696Z",
               "EditorCaption": ""
@@ -132,14 +131,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "MainForm.cs [N\u00E1vrh]",
+              "Title": "MainForm.cs [Design]",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\MainForm.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\MainForm.cs",
-              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\MainForm.cs [N\u00E1vrh]",
-              "RelativeToolTip": "VykazyPrace\\MainForm.cs [N\u00E1vrh]",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\MainForm.cs [Design]",
+              "RelativeToolTip": "VykazyPrace\\MainForm.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-10T06:31:23.915Z",
-              "EditorCaption": " [N\u00E1vrh]"
+              "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
@@ -149,7 +148,7 @@
               "RelativeDocumentMoniker": "VykazyPrace\\MainForm.cs",
               "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\MainForm.cs",
               "RelativeToolTip": "VykazyPrace\\MainForm.cs",
-              "ViewState": "AgIAAFwAAAAAAAAAAAAqwHAAAAAnAAAAAAAAAA==",
+              "ViewState": "AgIAAEEBAAAAAAAAAAAqwFUBAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-10T06:31:27.788Z",
               "EditorCaption": ""
@@ -164,8 +163,7 @@
               "RelativeToolTip": "VykazyPrace\\Program.cs",
               "ViewState": "AgIAAAsAAAAAAAAAAAAUwBsAAABSAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-14T07:31:29.002Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-14T07:31:29.002Z"
             },
             {
               "$type": "Document",
@@ -177,8 +175,7 @@
               "RelativeToolTip": "VykazyPrace\\UserControls\\CalendarV2\\DayPanel.cs",
               "ViewState": "AgIAABMAAAAAAAAAAAAmwCIAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-14T08:04:09.121Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-14T08:04:09.121Z"
             },
             {
               "$type": "Document",

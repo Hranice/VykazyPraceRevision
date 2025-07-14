@@ -28,41 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            label2 = new Label();
-            label1 = new Label();
             SuspendLayout();
-            // 
-            // label2
-            // 
-            label2.Dock = DockStyle.Bottom;
-            label2.Enabled = false;
-            label2.Font = new Font("Arial Narrow", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label2.Location = new Point(3, 165);
-            label2.Name = "label2";
-            label2.Size = new Size(194, 32);
-            label2.TabIndex = 3;
-            label2.Text = "!";
-            label2.TextAlign = ContentAlignment.BottomLeft;
-            // 
-            // label1
-            // 
-            label1.Dock = DockStyle.Top;
-            label1.Enabled = false;
-            label1.Font = new Font("Arial Narrow", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label1.Location = new Point(3, 3);
-            label1.Name = "label1";
-            label1.Size = new Size(194, 32);
-            label1.TabIndex = 2;
-            label1.Text = "!";
             // 
             // DayPanel
             // 
-            AutoScaleDimensions = new SizeF(8F, 21F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.FromArgb(255, 105, 87);
-            Controls.Add(label1);
-            Controls.Add(label2);
-            Font = new Font("Reddit Sans", 10F);
+            Font = new Font("Arial Narrow", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
             Margin = new Padding(3, 4, 3, 4);
             Name = "DayPanel";
             Padding = new Padding(3);
@@ -71,8 +43,5 @@
         }
 
         #endregion
-
-        private Label label2;
-        private Label label1;
     }
 }

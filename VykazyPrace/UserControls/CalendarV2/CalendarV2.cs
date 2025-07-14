@@ -767,30 +767,23 @@ namespace VykazyPrace.UserControls.CalendarV2
                     entry.Project = proj;
 
                 var panel = GetPooledPanel();
-
                 panel.EntryId = entry.Id;
-                Color baseColor;
-                if (!_colorCache.TryGetValue((int)entry.EntryTypeId, out baseColor))
+
+                // Barva podle typu a validity
+                if (!_colorCache.TryGetValue((int)entry.EntryTypeId, out var baseColor))
                     baseColor = ColorTranslator.FromHtml("#ADD8E6");
 
                 panel.BackColor = entry.IsValid == 1
                     ? baseColor
                     : ColorTranslator.FromHtml("#FF6957");
 
-                if (entry.IsValid == 1)
-                {
-                    panel.UpdateUi(
-                        (entry.Project.IsArchived == 1 ? "(AFTERCARE) " : "") +
-                        (entry.Project.ProjectType == 1 ? entry.Project.ProjectDescription : entry.Project.ProjectTitle),
-                        entry.Description
-                    );
-                }
-
+                // Tooltip
                 _sharedTooltip.SetToolTip(
                     panel,
                     $"{entry.Project?.ProjectTitle ?? "Projekt neznámý"}\n{entry.Note ?? "Bez poznámky"}"
                 );
 
+                // Umístění do TableLayout
                 int col = GetColumnBasedOnTimeEntry(entry.Timestamp);
                 int row = GetRowBasedOnTimeEntry(entry.Timestamp);
                 int span = GetColumnSpanBasedOnTimeEntry(entry.EntryMinutes);
@@ -798,9 +791,32 @@ namespace VykazyPrace.UserControls.CalendarV2
                 tableLayoutPanelCalendar.Controls.Add(panel, col, row);
                 tableLayoutPanelCalendar.SetColumnSpan(panel, span);
                 _activePanels.Add(panel);
+
+                // ⚠️ Odložené volání UpdateUi pomocí Timeru – čekáme na správnou velikost
+                if (entry.IsValid == 1)
+                {
+                    var timer = new System.Windows.Forms.Timer();
+                    timer.Interval = 10; // 10 ms = rychlá kontrola
+                    timer.Tick += (s, e) =>
+                    {
+                        if (panel.Width > 10) // máme platnou šířku?
+                        {
+                            timer.Stop();
+                            timer.Dispose();
+
+                            panel.UpdateUi(
+                                (entry.Project?.IsArchived == 1 ? "(AFTERCARE) " : "") +
+                                (entry.Project?.ProjectType == 1 ? entry.Project?.ProjectDescription : entry.Project?.ProjectTitle),
+                                entry.Description
+                            );
+                        }
+                    };
+                    timer.Start();
+                }
             }
             swPanels.Stop();
             AppLogger.Information($"CreatePanelForEntry loop: {swPanels.ElapsedMilliseconds} ms");
+
 
             // 5) Final UI update
             var swFinalUI = Stopwatch.StartNew();

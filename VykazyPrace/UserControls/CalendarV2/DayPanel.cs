@@ -1,46 +1,53 @@
-﻿namespace VykazyPrace.UserControls.CalendarV2
+﻿using System.Drawing;
+using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace VykazyPrace.UserControls.CalendarV2
 {
     public partial class DayPanel : UserControl
     {
         public int EntryId { get; set; }
         private int _borderThickness = 0;
 
+        private string? _title;
+        private string? _subtitle;
+
         public DayPanel()
         {
             InitializeComponent();
+            this.DoubleBuffered = true;
         }
 
         public void UpdateUi(string? title, string? subtitle)
         {
-            SetLabelHeightForLines(label1, 2);
-            SetLabelHeightForLines(label2, 2);
-
-            label1.Text = TrimTextToFitTwoLines(label1, title);
-            label2.Text = TrimTextToFitTwoLines(label2, subtitle);
+            _title = PrepareTrimmedText(title, this.Font, this.Width, 2);
+            _subtitle = PrepareTrimmedText(subtitle, this.Font, this.Width, 2);
+            Invalidate(); // Překreslí panel
         }
 
-
-        private string TrimTextToFitTwoLines(Label label, string? text)
+        private string PrepareTrimmedText(string? text, Font font, int maxWidth, int maxLines)
         {
             if (string.IsNullOrEmpty(text))
                 return "";
 
-            int maxWidth = label.Width - label.Padding.Horizontal - 4;
-            using var g = label.CreateGraphics();
             string current = "";
             List<string> lines = new List<string>();
 
+            using var g = this.CreateGraphics();
             foreach (char c in text)
             {
                 string test = current + c;
-                Size size = TextRenderer.MeasureText(g, test, label.Font);
 
-                if (size.Width > maxWidth)
+                // 🟡 Použij MeasureString místo MeasureText pro přesnější šířku
+                var size = g.MeasureString(test, font);
+
+                if (size.Width > maxWidth - 8) // posun o něco víc než 6
                 {
                     lines.Add(current);
                     current = c.ToString();
 
-                    if (lines.Count == 2)
+                    if (lines.Count == maxLines)
                         break;
                 }
                 else
@@ -49,30 +56,19 @@
                 }
             }
 
-            if (lines.Count < 2 && !string.IsNullOrEmpty(current))
+            if (lines.Count < maxLines && !string.IsNullOrEmpty(current))
                 lines.Add(current);
 
-            // Přidáme … pokud jsme text ořízli
             int totalLength = lines.Sum(l => l.Length);
             if (totalLength < text.Length)
             {
-                if (lines.Count == 2)
-                    lines[1] = lines[1].TrimEnd() + "…";
+                if (lines.Count == maxLines)
+                    lines[maxLines - 1] = lines[maxLines - 1].TrimEnd() + "…";
                 else
                     lines[^1] += "…";
             }
 
-            return string.Join(Environment.NewLine, lines);
-        }
-
-
-        private void SetLabelHeightForLines(Label label, int lineCount)
-        {
-            using Graphics g = label.CreateGraphics();
-            Size oneLine = TextRenderer.MeasureText(g, "A", label.Font);
-
-            int totalHeight = oneLine.Height * lineCount + label.Padding.Vertical + 2;
-            label.Height = totalHeight;
+            return string.Join("\n", lines);
         }
 
 
@@ -80,18 +76,23 @@
         {
             this.Font = new Font(this.Font, FontStyle.Bold);
             _borderThickness = 1;
+            Invalidate();
         }
 
         public void Deactivate()
         {
             this.Font = new Font(this.Font, FontStyle.Regular);
             _borderThickness = 0;
+            Invalidate();
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
 
+            e.Graphics.Clear(this.BackColor);
+
+            // Vykreslení rámečku
             if (_borderThickness > 0)
             {
                 using (Pen pen = new Pen(Color.Black, _borderThickness))
@@ -100,7 +101,14 @@
                         this.Width - _borderThickness * 3, this.Height - _borderThickness * 3);
                 }
             }
+
+            // Vykreslení textů
+            Rectangle textArea = new Rectangle(3, 3, this.Width - 6, this.Height - 6);
+            using var brush = new SolidBrush(this.ForeColor);
+
+            string fullText = (_title ?? "") + "\n" + (_subtitle ?? "");
+            TextRenderer.DrawText(e.Graphics, fullText, this.Font, textArea, this.ForeColor,
+                TextFormatFlags.Top | TextFormatFlags.WordBreak | TextFormatFlags.NoPadding);
         }
     }
-
 }

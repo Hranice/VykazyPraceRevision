@@ -142,8 +142,6 @@ namespace VykazyPrace
             }
         }
 
-
-
         private async void MainForm_KeyDown(object? sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
@@ -226,8 +224,6 @@ namespace VykazyPrace
             });
         }
 
-
-
         private void InitializeCalendar(List<User> users)
         {
             // Pùvodní CalendarUC do panelCalendarContainer
@@ -267,7 +263,6 @@ namespace VykazyPrace
             _calendar.BringToFront();
             _loadingUC.Visible = false;
         }
-
 
         private void správaUživatelùToolStripMenuItem_Click(object sender, EventArgs e)
         {

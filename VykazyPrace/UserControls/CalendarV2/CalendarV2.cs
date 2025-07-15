@@ -99,6 +99,13 @@ namespace VykazyPrace.UserControls.CalendarV2
             _resizeTimer.Tick += async (_, _) =>
             {
                 _resizeTimer.Stop();
+                int headerH = customTableLayoutPanel1.Height;
+                int newH = this.ClientSize.Height - headerH;
+
+                // nastav ji, vyvolej layout a překresli
+                tableLayoutPanelCalendar.Height = Math.Max(0, newH);
+                tableLayoutPanelCalendar.PerformLayout();
+                tableLayoutPanelCalendar.Invalidate();
                 await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
             };
 
@@ -139,20 +146,6 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             _resizeTimer.Stop();
             _resizeTimer.Start();
-        }
-
-        protected override void OnSizeChanged(EventArgs e)
-        {
-            base.OnSizeChanged(e);
-
-            // spočti novou výšku tableLayoutPanelCalendar
-            int headerH = customTableLayoutPanel1.Height;
-            int newH = this.ClientSize.Height - headerH;
-
-            // nastav ji, vyvolej layout a překresli
-            tableLayoutPanelCalendar.Height = Math.Max(0, newH);
-            tableLayoutPanelCalendar.PerformLayout();
-            tableLayoutPanelCalendar.Invalidate();
         }
 
         private void CalendarV2_Load(object sender, EventArgs e)

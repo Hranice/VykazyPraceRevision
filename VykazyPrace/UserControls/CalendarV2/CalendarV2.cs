@@ -596,12 +596,18 @@ namespace VykazyPrace.UserControls.CalendarV2
                 if (tableLayoutMenu.Items.Count > 0)
                 {
                     var pasteItem = tableLayoutMenu.Items[0];
-                    pasteItem.Enabled = copiedEntry != null;
+
+                    // vypočítáme datum buňky
+                    var targetDate = _selectedDate.AddDays(pasteTargetCell.Value.Row);
+                    bool isLockedDay = _specialDays.Any(d => d.Date.Date == targetDate.Date && d.Locked);
+
+                    pasteItem.Enabled = copiedEntry != null && !isLockedDay;
                 }
 
                 tableLayoutMenu.Show(tableLayoutPanelCalendar, e.Location);
             }
         }
+
 
         /// <summary>
         /// Zpracuje kolize v řádku před vložením záznamu:
@@ -777,6 +783,9 @@ namespace VykazyPrace.UserControls.CalendarV2
             if (copiedEntry == null || pasteTargetCell == null) return;
             if (_selectedUser.Id != _loggedUser.Id) return;
 
+            var targetDate = _selectedDate.AddDays(pasteTargetCell.Value.Row);
+            if (_specialDays.Any(d => d.Date.Date == targetDate.Date && d.Locked)) return;
+
             int column = pasteTargetCell.Value.Column;
             int row = pasteTargetCell.Value.Row;
             int span = copiedEntry.EntryMinutes / TimeSlotLengthInMinutes;
@@ -818,6 +827,9 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             var cell = GetCellAt(tableLayoutPanelCalendar, e.Location);
             if (_projects.Count == 0 || _timeEntryTypes.Count == 0) return;
+
+            var targetDate = _selectedDate.AddDays(cell.Row);
+            if (_specialDays.Any(d => d.Date.Date == targetDate.Date && d.Locked)) return;
 
             int column = cell.Column;
             int row = cell.Row;
@@ -1265,6 +1277,8 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             if (panel.OwnerId != _loggedUser.Id) return;
 
+            if (panel.Tag as string == "locked") return;
+
             int rowHeight = tableLayoutPanelCalendar.Height / tableLayoutPanelCalendar.RowCount;
             int currentMouseY = tableLayoutPanelCalendar.PointToClient(Cursor.Position).Y;
             int newRow = Math.Max(0, Math.Min(currentMouseY / rowHeight, tableLayoutPanelCalendar.RowCount - 1));
@@ -1291,8 +1305,6 @@ namespace VykazyPrace.UserControls.CalendarV2
         private void dayPanel_MouseDown(object? sender, MouseEventArgs e)
         {
             if (sender is not DayPanel panel) return;
-
-            if (panel.Tag as string == "locked") return;
 
             if (panel.OwnerId != _loggedUser.Id) return;
 
@@ -1322,6 +1334,8 @@ namespace VykazyPrace.UserControls.CalendarV2
         private void HandleResize(DayPanel panel, int deltaX, int columnWidth)
         {
             if (panel.Tag as string == "snack") return;
+
+            if (panel.Tag as string == "locked") return;
 
             if (panel.OwnerId != _loggedUser.Id) return;
 
@@ -1357,6 +1371,8 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             if (panel.OwnerId != _loggedUser.Id) return;
 
+            if (panel.Tag as string == "locked") return;
+
             // 1) náš původní řádek
             int originalRow = tableLayoutPanelCalendar.GetRow(panel);
 
@@ -1375,6 +1391,10 @@ namespace VykazyPrace.UserControls.CalendarV2
                 int currentMouseY = tableLayoutPanelCalendar.PointToClient(Cursor.Position).Y;
                 targetRow = Math.Max(0, Math.Min(currentMouseY / rowHeight, tableLayoutPanelCalendar.RowCount - 1));
             }
+
+            var targetDate = _selectedDate.AddDays(targetRow);
+            if (_specialDays.Any(d => d.Date.Date == targetDate.Date && d.Locked))
+                return;
 
             int span = originalColumnSpan;
 
@@ -1659,9 +1679,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
-      
-
-
         /// <summary>
         /// Vytvoří (nebo z poolu vyzvedne) panel pro jeden TimeEntry a přidá ho do kalendáře.
         /// </summary>
@@ -1671,7 +1688,15 @@ namespace VykazyPrace.UserControls.CalendarV2
             var panel = GetPooledPanel();
             panel.EntryId = entry.Id;
             panel.OwnerId = _selectedUser.Id;
-            panel.Tag = (entry.ProjectId == 132 && entry.EntryTypeId == 24) ? "snack" : string.Empty;
+            if (entry.ProjectId == 132 && entry.EntryTypeId == 24)
+            {
+                panel.Tag = "snack";
+            }
+
+            else if (entry.IsLocked == 1)
+            {
+                panel.Tag = "locked";
+            }
 
             // 2) barva podle typu a validity
             if (!_colorCache.TryGetValue((int)entry.EntryTypeId, out var baseColor))
@@ -1807,7 +1832,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             );
         }
 
-    
+
 
         private void flowLayoutPanel2_SizeChanged(object sender, EventArgs e)
         {

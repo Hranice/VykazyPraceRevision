@@ -1948,6 +1948,12 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async void buttonConfirm_Click(object sender, EventArgs e)
         {
+            // 1) Zachytíme, že uživatel scrolloval, a uložíme pozici
+            userHasScrolled = true;
+            int scrollX = panelContainer.HorizontalScroll.Value;
+            int scrollY = panelContainer.VerticalScroll.Value;
+
+            // 2) Validace vstupů
             var (valid, reason) = CheckForEmptyOrIncorrectFields();
             if (!valid)
             {
@@ -1955,16 +1961,14 @@ namespace VykazyPrace.UserControls.CalendarV2
                 return;
             }
 
+            // 3) Určení EntryTypeId z radio/comboboxu
             int selectedEntryTypeId = 0;
-
             if (_currentProjectType is 0 or 1 or 2)
             {
-                // Projektový typ s radio buttony
                 var radioButtons = tableLayoutPanelEntryType.Controls
                     .OfType<TableLayoutPanel>()
                     .SelectMany(panel => panel.Controls.OfType<RadioButton>())
                     .ToList();
-
                 for (int i = 0; i < radioButtons.Count; i++)
                 {
                     if (radioButtons[i].Checked)
@@ -1985,55 +1989,69 @@ namespace VykazyPrace.UserControls.CalendarV2
                 selectedEntryTypeId = _timeEntryTypes[comboBoxEntryType.SelectedIndex].Id;
             }
 
+            // 4) Vytvoření (a případné vložení) nového SubType
             var newSubType = new TimeEntrySubType
             {
                 Title = customComboBoxSubTypes.GetText(),
                 UserId = _selectedUser.Id
             };
+            var addedTimeEntrySubType = await _timeEntrySubTypeRepo
+                .CreateTimeEntrySubTypeAsync(newSubType);
 
-            var addedTimeEntrySubType = await _timeEntrySubTypeRepo.CreateTimeEntrySubTypeAsync(newSubType);
-
-            var timeEntry = _currentEntries.FirstOrDefault(e => e.Id == _selectedTimeEntryId);
+            // 5) Najdi aktuálně editovaný TimeEntry
+            var timeEntry = _currentEntries
+                .FirstOrDefault(e => e.Id == _selectedTimeEntryId);
             if (timeEntry == null) return;
 
+            // 6) Aplikuj změny do entity
             timeEntry.Description = addedTimeEntrySubType.Title;
             timeEntry.EntryTypeId = selectedEntryTypeId;
             timeEntry.Note = textBoxNote.Text;
 
             var selectedProject = _projects.FirstOrDefault(p =>
-                FormatHelper.FormatProjectToString(p).Equals(customComboBoxProjects.SelectedItem, StringComparison.InvariantCultureIgnoreCase));
-
+                FormatHelper.FormatProjectToString(p)
+                    .Equals(customComboBoxProjects.SelectedItem,
+                            StringComparison.InvariantCultureIgnoreCase));
             if (selectedProject != null)
-            {
                 timeEntry.ProjectId = selectedProject.Id;
-            }
 
-            if (radioButton5.Checked)
-            {
-                timeEntry.ProjectId = 25;
-            }
-            else if (radioButton4.Checked)
-            {
-                timeEntry.ProjectId = 23;
-            }
+            if (radioButton5.Checked) timeEntry.ProjectId = 25;
+            else if (radioButton4.Checked) timeEntry.ProjectId = 23;
             else if (radioButton3.Checked)
             {
                 timeEntry.ProjectId = 26;
                 timeEntry.EntryTypeId = 16;
             }
 
-            timeEntry.AfterCare = _projects.FirstOrDefault(x => x.Id == timeEntry.ProjectId)?.IsArchived ?? 0;
+            timeEntry.AfterCare = _projects
+                .FirstOrDefault(x => x.Id == timeEntry.ProjectId)?
+                .IsArchived ?? 0;
             timeEntry.IsValid = 1;
 
+            // 7) Ulož do DB
             bool success = await _timeEntryRepo.UpdateTimeEntryAsync(timeEntry);
             if (success)
             {
-                AppLogger.Information($"Záznam {FormatHelper.FormatTimeEntryToString(timeEntry)} byl úspěšně aktualizován.");
+                AppLogger.Information(
+                    $"Záznam {FormatHelper.FormatTimeEntryToString(timeEntry)} byl úspěšně aktualizován.");
+
+                // 8) Obnovení subtypů, kompletní překreslení i sidebar
                 await LoadTimeEntrySubTypesAsync();
                 await RenderCalendar();
+                UpdateHourLabels();
                 await LoadSidebar();
+
+                // 9) Vrácení scrollu do původní pozice
+                BeginInvoke((Action)(() =>
+                {
+                    panelContainer.HorizontalScroll.Value =
+                        Math.Max(0, Math.Min(scrollX, panelContainer.HorizontalScroll.Maximum));
+                    panelContainer.VerticalScroll.Value =
+                        Math.Max(0, Math.Min(scrollY, panelContainer.VerticalScroll.Maximum));
+                }));
             }
         }
+
 
         private async void buttonRemove_Click(object sender, EventArgs e)
         {

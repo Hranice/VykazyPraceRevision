@@ -1602,3 +1602,47 @@
 2025-07-15 10:49:08.330 +02:00 [INF] RenderCalendar – total: 17 ms
 2025-07-15 10:49:08.409 +02:00 [INF] Final UI update: 1206 ms
 2025-07-15 10:49:08.412 +02:00 [INF] Final UI update: 81 ms
+2025-07-15 12:14:03.904 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-15 12:14:06.807 +02:00 [INF] RenderCalendar – start
+2025-07-15 12:14:06.808 +02:00 [INF] LoadSpecialDaysAsync: 0 ms
+2025-07-15 12:14:06.830 +02:00 [INF] Load/Create snacks + GetTimeEntries: 21 ms
+2025-07-15 12:14:06.841 +02:00 [INF] UI reset + load lookup data: 11 ms
+2025-07-15 12:14:06.854 +02:00 [INF] CreatePanelForEntry loop: 12 ms
+2025-07-15 12:14:06.854 +02:00 [INF] RenderCalendar – total: 47 ms
+2025-07-15 12:14:08.011 +02:00 [INF] RenderCalendar – start
+2025-07-15 12:14:08.012 +02:00 [INF] LoadSpecialDaysAsync: 0 ms
+2025-07-15 12:14:08.014 +02:00 [INF] Load/Create snacks + GetTimeEntries: 1 ms
+2025-07-15 12:14:08.020 +02:00 [INF] UI reset + load lookup data: 6 ms
+2025-07-15 12:14:08.031 +02:00 [INF] CreatePanelForEntry loop: 10 ms
+2025-07-15 12:14:08.031 +02:00 [INF] RenderCalendar – total: 19 ms
+2025-07-15 12:14:08.193 +02:00 [INF] Final UI update: 1339 ms
+2025-07-15 12:14:08.197 +02:00 [INF] Final UI update: 166 ms
+2025-07-15 12:14:09.981 +02:00 [INF] RenderCalendar – start
+2025-07-15 12:14:09.981 +02:00 [INF] LoadSpecialDaysAsync: 0 ms
+2025-07-15 12:14:09.983 +02:00 [INF] Load/Create snacks + GetTimeEntries: 2 ms
+2025-07-15 12:14:09.988 +02:00 [INF] UI reset + load lookup data: 4 ms
+2025-07-15 12:14:10.028 +02:00 [INF] CreatePanelForEntry loop: 40 ms
+2025-07-15 12:14:10.029 +02:00 [INF] RenderCalendar – total: 48 ms
+2025-07-15 12:14:10.064 +02:00 [INF] Final UI update: 35 ms
+2025-07-15 12:14:12.092 +02:00 [INF] RenderCalendar – start
+2025-07-15 12:14:12.094 +02:00 [INF] LoadSpecialDaysAsync: 1 ms
+2025-07-15 12:14:12.098 +02:00 [INF] Load/Create snacks + GetTimeEntries: 4 ms
+2025-07-15 12:14:12.136 +02:00 [INF] UI reset + load lookup data: 37 ms
+2025-07-15 12:14:12.146 +02:00 [INF] CreatePanelForEntry loop: 9 ms
+2025-07-15 12:14:12.146 +02:00 [INF] RenderCalendar – total: 53 ms
+2025-07-15 12:14:12.167 +02:00 [INF] Final UI update: 20 ms
+2025-07-15 12:14:57.047 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-15 12:15:00.051 +02:00 [INF] RenderCalendar – start
+2025-07-15 12:15:00.052 +02:00 [INF] LoadSpecialDaysAsync: 0 ms
+2025-07-15 12:15:00.076 +02:00 [INF] Load/Create snacks + GetTimeEntries: 23 ms
+2025-07-15 12:15:00.089 +02:00 [INF] UI reset + load lookup data: 12 ms
+2025-07-15 12:15:00.105 +02:00 [INF] CreatePanelForEntry loop: 16 ms
+2025-07-15 12:15:00.105 +02:00 [INF] RenderCalendar – total: 53 ms
+2025-07-15 12:15:01.272 +02:00 [INF] RenderCalendar – start
+2025-07-15 12:15:01.273 +02:00 [INF] LoadSpecialDaysAsync: 0 ms
+2025-07-15 12:15:01.276 +02:00 [INF] Load/Create snacks + GetTimeEntries: 2 ms
+2025-07-15 12:15:01.283 +02:00 [INF] UI reset + load lookup data: 7 ms
+2025-07-15 12:15:01.295 +02:00 [INF] CreatePanelForEntry loop: 11 ms
+2025-07-15 12:15:01.295 +02:00 [INF] RenderCalendar – total: 22 ms
+2025-07-15 12:15:01.335 +02:00 [INF] Final UI update: 1230 ms
+2025-07-15 12:15:01.393 +02:00 [INF] Final UI update: 98 ms

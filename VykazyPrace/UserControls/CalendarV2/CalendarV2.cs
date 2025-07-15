@@ -1899,6 +1899,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                         tableLayoutPanelEntryType.Visible = true;
                         tableLayoutPanelEntrySubType.Visible = true;
                         checkBoxArchivedProjects.Visible = false;
+                        checkBoxArchivedProjects.Checked = false;
                         break;
                     case "PROJEKT":
                         index = 1;
@@ -1915,6 +1916,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                         tableLayoutPanelEntryType.Visible = false;
                         tableLayoutPanelEntrySubType.Visible = false;
                         checkBoxArchivedProjects.Visible = false;
+                        checkBoxArchivedProjects.Checked = false;
                         label4.Text = "Poznámka*";
                         break;
                     case "NEPŘÍTOMNOST":
@@ -1923,6 +1925,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                         tableLayoutPanelEntryType.Visible = true;
                         tableLayoutPanelEntrySubType.Visible = false;
                         checkBoxArchivedProjects.Visible = false;
+                        checkBoxArchivedProjects.Checked = false;
                         index = 4;
                         break;
                     default:
@@ -1932,6 +1935,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                         tableLayoutPanelEntryType.Visible = true;
                         tableLayoutPanelEntrySubType.Visible = true;
                         checkBoxArchivedProjects.Visible = false;
+                        checkBoxArchivedProjects.Checked = false;
                         break;
                 }
 

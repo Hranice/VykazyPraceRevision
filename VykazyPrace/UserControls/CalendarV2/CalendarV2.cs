@@ -141,6 +141,20 @@ namespace VykazyPrace.UserControls.CalendarV2
             _resizeTimer.Start();
         }
 
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
+
+            // spočti novou výšku tableLayoutPanelCalendar
+            int headerH = customTableLayoutPanel1.Height;
+            int newH = this.ClientSize.Height - headerH;
+
+            // nastav ji, vyvolej layout a překresli
+            tableLayoutPanelCalendar.Height = Math.Max(0, newH);
+            tableLayoutPanelCalendar.PerformLayout();
+            tableLayoutPanelCalendar.Invalidate();
+        }
+
         private void CalendarV2_Load(object sender, EventArgs e)
         {
             InitializeContextMenus();

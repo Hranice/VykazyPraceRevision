@@ -284,9 +284,10 @@
             // 
             // panelCalendarContainer
             // 
+            panelCalendarContainer.Dock = DockStyle.Fill;
             panelCalendarContainer.Location = new Point(0, 0);
             panelCalendarContainer.Name = "panelCalendarContainer";
-            panelCalendarContainer.Size = new Size(966, 769);
+            panelCalendarContainer.Size = new Size(1140, 590);
             panelCalendarContainer.TabIndex = 1;
             // 
             // notifyIcon1

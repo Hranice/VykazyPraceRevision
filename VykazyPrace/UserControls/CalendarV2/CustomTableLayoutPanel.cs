@@ -22,14 +22,44 @@ public class CustomTableLayoutPanel : TableLayoutPanel
 
     public CustomTableLayoutPanel()
     {
+        // aby se při změně velikosti vždy překreslilo
+        this.SetStyle(ControlStyles.ResizeRedraw, true);
         this.DoubleBuffered = true;
+
         this.CellPaint += CustomTableLayoutPanel_CellPaint;
         this.MouseClick += CustomTableLayoutPanel_MouseClick;
+        this.Resize += CustomTableLayoutPanel_Resize;
+
+        Debug.WriteLine("[Calendar] Constructor: initialized");
+    }
+
+    private void CustomTableLayoutPanel_Resize(object sender, EventArgs e)
+    {
+        Debug.WriteLine($"[Calendar] Resize event: New Size = {Width}x{Height}");
+        LogRowColSizes();
+        Invalidate();
+    }
+
+    protected override void OnSizeChanged(EventArgs e)
+    {
+        base.OnSizeChanged(e);
+        Debug.WriteLine($"[Calendar] OnSizeChanged: Size = {Width}x{Height}");
+        LogRowColSizes();
+        //Invalidate(); // už volá Resize
+    }
+
+    protected override void OnLayout(LayoutEventArgs e)
+    {
+        base.OnLayout(e);
+        Debug.WriteLine($"[Calendar] OnLayout: {e.AffectedControl?.Name ?? "n/a"}");
+        LogRowColSizes();
+        //Invalidate();
     }
 
     public void SetDate(DateTime date)
     {
         _selecteDate = date;
+        Debug.WriteLine($"[Calendar] SetDate: {_selecteDate:yyyy-MM-dd}");
         Invalidate();
     }
 
@@ -43,9 +73,17 @@ public class CustomTableLayoutPanel : TableLayoutPanel
             _specialDayRows[row] = specialDay;
         }
 
+        Debug.WriteLine($"[Calendar] SetSpecialDays: {_specialDayRows.Count} items");
         Invalidate();
     }
 
+    private void LogRowColSizes()
+    {
+        var rows = GetRowHeights();
+        var cols = GetColumnWidths();
+        Debug.WriteLine($"[Calendar] RowHeights ({rows.Length}): {string.Join(",", rows.Select(h => h.ToString()))}");
+        Debug.WriteLine($"[Calendar] ColWidths  ({cols.Length}): {string.Join(",", cols.Select(w => w.ToString()))}");
+    }
 
     private void CustomTableLayoutPanel_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
     {
@@ -144,6 +182,9 @@ public class CustomTableLayoutPanel : TableLayoutPanel
 
     protected override void OnPaint(PaintEventArgs e)
     {
+        Debug.WriteLine($"[Calendar] OnPaint: Bounds = {e.ClipRectangle.Width}x{e.ClipRectangle.Height}");
+        LogRowColSizes();
+
         base.OnPaint(e);
         int[] colWidths = GetColumnWidths();
         int[] rowHeights = GetRowHeights();
@@ -155,7 +196,7 @@ public class CustomTableLayoutPanel : TableLayoutPanel
         int halfHourIndex = now.Hour * 2 + now.Minute / 30;
 
         // Kreslení mřížky
-        using (var pen = new Pen(Color.FromArgb(145,145,145)))
+        using (var pen = new Pen(Color.FromArgb(145, 145, 145)))
         {
             int x = 0, y = 0;
             foreach (var width in colWidths)

@@ -573,6 +573,7 @@
             // 
             // tableLayoutPanelCalendar
             // 
+            tableLayoutPanelCalendar.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             tableLayoutPanelCalendar.ColumnCount = 48;
             tableLayoutPanelCalendar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.08333254F));
             tableLayoutPanelCalendar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.08333254F));
@@ -622,7 +623,6 @@
             tableLayoutPanelCalendar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.08333254F));
             tableLayoutPanelCalendar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.08333254F));
             tableLayoutPanelCalendar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.08333254F));
-            tableLayoutPanelCalendar.Dock = DockStyle.Left;
             tableLayoutPanelCalendar.Location = new Point(0, 25);
             tableLayoutPanelCalendar.Name = "tableLayoutPanelCalendar";
             tableLayoutPanelCalendar.RowCount = 7;

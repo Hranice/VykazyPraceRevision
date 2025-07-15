@@ -9,18 +9,44 @@ namespace VykazyPrace.UserControls.CalendarV2
     {
         public int EntryId { get; set; }
         public int OwnerId { get; set; }
+
         private List<string> _lines = new();
         private Color _assignedColor;
 
+        // nově ukládáme title/subtitle, abychom je mohli přepočítat při resize
+        private string? _lastTitle;
+        private string? _lastSubtitle;
 
         public DayPanel()
         {
             InitializeComponent();
             this.DoubleBuffered = true;
+
+            // kdykoliv se změní velikost, přepočteme řádky
+            this.SizeChanged += (s, e) =>
+            {
+                UpdateUi(_lastTitle, _lastSubtitle);
+            };
         }
+
+        /// <summary>
+        /// Přepočte a vykreslí nové linky textu podle aktuální šířky.
+        /// </summary>
         public void UpdateUi(string? title, string? subtitle)
         {
-            _lines = WrapTextIntoLines($"{title}\n{subtitle}", this.Font, this.Width - 6, maxLines: 4);
+            // uložím si nové originální hodnoty
+            _lastTitle = title;
+            _lastSubtitle = subtitle;
+
+            // zabalíme text do řádků podle aktuální šířky
+            _lines = WrapTextIntoLines(
+                $"{title}\n{subtitle}",
+                this.Font,
+                this.Width - 6,
+                maxLines: 4
+            );
+
+            // přerender
             this.Invalidate();
         }
 
@@ -38,124 +64,88 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         public void Deactivate()
         {
-            this.BackColor = _assignedColor; // vrať přesně tu barvu, která tam byla původně
+            this.BackColor = _assignedColor;
             this.Refresh();
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-
-            Graphics g = e.Graphics;
+            var g = e.Graphics;
             g.Clear(this.BackColor);
 
             int padding = 3;
-            float availableWidth = this.Width - padding * 2;
-            float availableHeight = this.Height - padding * 2;
-
-
-            if (_lines.Count == 0) return;
-
-            SizeF oneLineSize = g.MeasureString("A", this.Font);
-            float lineHeight = oneLineSize.Height;
+            float availW = this.Width - padding * 2;
             float y = padding;
+            using var b = new SolidBrush(this.ForeColor);
 
-            using Brush textBrush = new SolidBrush(this.ForeColor);
+            SizeF lineSz = g.MeasureString("A", this.Font);
+            float lineH = lineSz.Height;
+
             foreach (var line in _lines)
             {
-                g.DrawString(line, this.Font, textBrush,
-                    new RectangleF(padding, y, availableWidth, lineHeight));
-                y += lineHeight;
+                g.DrawString(line, this.Font, b,
+                    new RectangleF(padding, y, availW, lineH));
+                y += lineH;
             }
         }
+
         private List<string> WrapTextIntoLines(string text, Font font, int maxWidth, int maxLines)
         {
-            List<string> result = new();
+            var result = new List<string>();
             if (string.IsNullOrWhiteSpace(text)) return result;
 
-            using Graphics g = this.CreateGraphics();
+            using var g = this.CreateGraphics();
+            var tokens = text.Replace("\r", "").Split('\n');
+            var words = tokens.SelectMany(t => t.Split(' ')).Where(w => w.Length > 0);
 
-            string[] tokens = text.Replace("\r", "").Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            List<string> words = new();
-
-            foreach (string token in tokens)
-                words.AddRange(token.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
-
-            string currentLine = "";
-
-            foreach (string word in words)
+            string current = "";
+            foreach (var w in words)
             {
-                string testLine = string.IsNullOrEmpty(currentLine) ? word : currentLine + " " + word;
-                SizeF testSize = g.MeasureString(testLine, font);
-
-                if (testSize.Width > maxWidth)
+                var test = string.IsNullOrEmpty(current) ? w : current + " " + w;
+                if (g.MeasureString(test, font).Width > maxWidth)
                 {
-                    if (!string.IsNullOrEmpty(currentLine))
+                    if (!string.IsNullOrEmpty(current))
                     {
-                        result.Add(currentLine);
-                        if (result.Count >= maxLines)
-                            break;
-                        currentLine = "";
+                        result.Add(current);
+                        if (result.Count >= maxLines) break;
+                        current = "";
                     }
-
-                    // Rozdělení dlouhého slova na více řádků
-                    string remaining = word;
-                    while (remaining.Length > 0)
+                    // zbytek slova
+                    var rem = w;
+                    while (rem.Length > 0 && result.Count < maxLines)
                     {
                         int len = 1;
-                        while (len <= remaining.Length)
-                        {
-                            string part = remaining.Substring(0, len);
-                            if (g.MeasureString(part, font).Width > maxWidth)
-                            {
-                                len--;
-                                break;
-                            }
+                        while (len <= rem.Length && g.MeasureString(rem.Substring(0, len), font).Width <= maxWidth)
                             len++;
-                        }
-
-                        // bezpečnostní korekce
-                        if (len <= 0) len = 1;
-                        if (len > remaining.Length) len = remaining.Length;
-
-                        string line = remaining.Substring(0, Math.Min(len, remaining.Length));
-                        result.Add(line);
-                        remaining = remaining.Substring(Math.Min(len, remaining.Length));
-
-                        if (result.Count >= maxLines)
-                            break;
+                        len = Math.Max(1, len - 1);
+                        result.Add(rem.Substring(0, len));
+                        rem = rem.Substring(len);
                     }
-
-
-                    if (result.Count >= maxLines)
-                        break;
+                    if (result.Count >= maxLines) break;
                 }
                 else
                 {
-                    currentLine = testLine;
+                    current = test;
                 }
             }
+            if (!string.IsNullOrEmpty(current) && result.Count < maxLines)
+                result.Add(current);
 
-            if (!string.IsNullOrEmpty(currentLine) && result.Count < maxLines)
-                result.Add(currentLine);
-
-            // Ořezání s „…“ pokud je stále text navíc
-            if (result.Count > maxLines)
-                result = result.GetRange(0, maxLines);
-
+            // ořez a "…"
+            if (result.Count > maxLines) result = result.Take(maxLines).ToList();
             if (result.Count == maxLines)
             {
-                string last = result[^1];
+                var last = result[^1];
                 if (!last.EndsWith("…"))
                 {
                     while (g.MeasureString(last + "…", font).Width > maxWidth && last.Length > 0)
-                    {
                         last = last.Substring(0, last.Length - 1);
-                    }
                     result[^1] = last + "…";
                 }
             }
             return result;
         }
     }
+
 }

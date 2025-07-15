@@ -181,8 +181,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
         }
 
-
-
         private async Task LoadReferenceDataAsync()
         {
             if (_cacheTypes == null)

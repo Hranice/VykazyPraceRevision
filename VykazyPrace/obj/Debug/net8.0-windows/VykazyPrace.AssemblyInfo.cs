@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCopyrightAttribute("© 2025 Jan Procházka")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("Výkazy hodin")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.3.2.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.3.2.0+e56100bde11e814e82be1632240a67217102afcd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.3.2.0+a539a98fa9b6cc674688c468e6d2192f940e748b")]
 [assembly: System.Reflection.AssemblyProductAttribute("WorkLog")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WorkLog")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.3.2.0")]

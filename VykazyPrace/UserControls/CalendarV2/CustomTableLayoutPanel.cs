@@ -50,40 +50,45 @@ public class CustomTableLayoutPanel : TableLayoutPanel
     private void CustomTableLayoutPanel_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
     {
         int todayIndex = ((int)DateTime.Now.DayOfWeek + 6) % 7; // Pondělí = 0
+        bool isCurrentWeek = IsDateInWeek(DateTime.Today, _selecteDate);
 
         Color? backgroundColor = null;
 
+        // speciální dny mají přednost
         if (_specialDayRows.TryGetValue(e.Row, out var specialDay))
         {
             backgroundColor = ColorTranslator.FromHtml(specialDay.Color);
         }
-        else if (e.Row == todayIndex)
+        // aktivní (dnešní) den pouze pokud je v aktuálním týdnu
+        else if (e.Row == todayIndex && isCurrentWeek)
         {
             backgroundColor = ActiveDayColor;
         }
 
-        if(e.Row > 4)
+        // víkend (řádky 5 a 6) zůstává beze změny, nebo jiná barva pokud chcete
+        if (e.Row > 4)
         {
             backgroundColor = ColorTranslator.FromHtml("#FFCDC7");
         }
 
+        // nakreslení pozadí buňky
         if (backgroundColor.HasValue)
         {
             using (var brush = new SolidBrush(backgroundColor.Value))
-            {
                 e.Graphics.FillRectangle(brush, e.CellBounds);
-            }
         }
 
+        // výběr buňky (highlight)
         if (e.Row == selectedRow && e.Column == selectedColumn)
         {
-            Color highlightColor = (e.Row == todayIndex) ? SelectedTodayColor : SelectedColor;
+            var highlightColor = (e.Row == todayIndex && isCurrentWeek)
+                ? SelectedTodayColor
+                : SelectedColor;
             using (var brush = new SolidBrush(highlightColor))
-            {
                 e.Graphics.FillRectangle(brush, e.CellBounds);
-            }
         }
     }
+
 
     private void CustomTableLayoutPanel_MouseClick(object sender, MouseEventArgs e)
     {

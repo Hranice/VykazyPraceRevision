@@ -1551,33 +1551,50 @@ namespace VykazyPrace.UserControls.CalendarV2
         #endregion
 
 
+        /// <summary>
+        /// Smaže vybraný TimeEntry z DB i UI a aktualizuje součet hodin.
+        /// </summary>
         public async Task DeleteRecord()
         {
             var timeEntry = _currentEntries.FirstOrDefault(e => e.Id == _selectedTimeEntryId);
             if (timeEntry == null) return;
+
+            // zamčeno nebo svačina
             if (timeEntry.IsLocked == 1 ||
-                (timeEntry.ProjectId == 132 && timeEntry.EntryTypeId == 24)) return;
+                (timeEntry.ProjectId == 132 && timeEntry.EntryTypeId == 24))
+                return;
+
             if (!ShowDeleteConfirmation(timeEntry)) return;
 
             bool success = await _timeEntryRepo.DeleteTimeEntryAsync(_selectedTimeEntryId);
-            if (!success) return;
-            AppLogger.Information($"Záznam smazán.");
+            if (!success)
+            {
+                AppLogger.Error($"Nepodařilo se smazat záznam {FormatHelper.FormatTimeEntryToString(timeEntry)} z DB.");
+                return;
+            }
 
-            // 1) ulož scroll
-            int scrollX = panelContainer.HorizontalScroll.Value;
+            AppLogger.Information($"Záznam {FormatHelper.FormatTimeEntryToString(timeEntry)} byl smazán z DB.");
 
-            // 2) aktualizuj kolekci a UI
+            // 1) Odeber z lokální kolekce
             _currentEntries.Remove(timeEntry);
             _selectedTimeEntryId = -1;
+
+            // 2) Odeber panel z UI + obnov scroll a hodiny
+            int scrollX = panelContainer.HorizontalScroll.Value;
             BeginInvoke((Action)(() =>
             {
                 RemoveEntryPanel(timeEntry.Id);
+
                 panelContainer.HorizontalScroll.Value =
                     Math.Max(0, Math.Min(scrollX, panelContainer.HorizontalScroll.Maximum));
+
+                UpdateHourLabels();
             }));
 
+            // 3) Aktualizuj sidebar
             await LoadSidebar();
         }
+
 
 
 
@@ -1733,33 +1750,42 @@ namespace VykazyPrace.UserControls.CalendarV2
         }
 
         /// <summary>
-        /// Po vytvoření nového záznamu vloží panel a obnoví původní scroll.
+        /// Po vytvoření nového TimeEntry ho uloží do DB i do lokální kolekce,
+        /// inkrementálně přidá jeho panel a aktualizuje součet hodin.
         /// </summary>
         private async Task OnNewEntryCreated(TimeEntry newEntry)
         {
+            // 1) Ujisti se, že Id je 0, aby EF vložil nový záznam
             newEntry.Id = 0;
+
+            // 2) Vlož do DB a detachni ji
             var created = await _timeEntryRepo.CreateTimeEntryAsync(newEntry);
             if (created == null) return;
-
             _currentEntries.Add(created);
+
+            // 3) Ujisti se, že mám barvy/projekty před prvním vykreslením
             if (_colorCache == null || _colorCache.Count == 0)
                 await LoadCachesAsync();
 
-            // 1) ulož aktuální scroll
+            // 4) Ulož si scroll, přidej panel a obnov scroll + hodiny
             int scrollX = panelContainer.HorizontalScroll.Value;
-
-            // 2) na UI vlákne
             BeginInvoke((Action)(() =>
             {
                 CreateOrUpdatePanel(created);
-                // 3) obnov scroll (omezen rozsahy)
+
+                // obnov scroll tam, kde byl
                 panelContainer.HorizontalScroll.Value =
                     Math.Max(0, Math.Min(scrollX, panelContainer.HorizontalScroll.Maximum));
+
+                // teď přepočítej a vykresli nové součty hodin
+                UpdateHourLabels();
             }));
 
+            // 5) Označ nově vybraný a doplň sidebar
             _selectedTimeEntryId = created.Id;
             _ = LoadSidebar();
         }
+
 
 
 

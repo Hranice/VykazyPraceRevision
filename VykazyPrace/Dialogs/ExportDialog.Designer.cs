@@ -48,7 +48,6 @@
             dateTimePicker1.Size = new Size(256, 28);
             dateTimePicker1.TabIndex = 2;
             dateTimePicker1.Value = new DateTime(2025, 3, 1, 15, 43, 0, 0);
-            dateTimePicker1.ValueChanged += DateTimePicker_ValueChanged;
             // 
             // dateTimePicker2
             // 
@@ -58,7 +57,6 @@
             dateTimePicker2.Size = new Size(256, 28);
             dateTimePicker2.TabIndex = 4;
             dateTimePicker2.Value = new DateTime(2025, 3, 31, 15, 44, 0, 0);
-            dateTimePicker2.ValueChanged += DateTimePicker_ValueChanged;
             // 
             // label2
             // 
@@ -123,7 +121,6 @@
             checkedListBoxUserGroups.Name = "checkedListBoxUserGroups";
             checkedListBoxUserGroups.Size = new Size(309, 349);
             checkedListBoxUserGroups.TabIndex = 12;
-            checkedListBoxUserGroups.SelectedValueChanged += checkedListBoxUsers_SelectedValueChanged;
             // 
             // buttonLockEntries
             // 

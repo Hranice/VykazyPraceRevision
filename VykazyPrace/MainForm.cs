@@ -297,7 +297,7 @@ namespace VykazyPrace
 
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new Dialogs.ExportDialog(_selectedUser).ShowDialog();
+            new Dialogs.ExportDialog().ShowDialog();
         }
 
         private void nastaveníToolStripMenuItem_Click(object sender, EventArgs e)

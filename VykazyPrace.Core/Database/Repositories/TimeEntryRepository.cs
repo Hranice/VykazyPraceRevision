@@ -95,6 +95,7 @@ namespace VykazyPrace.Core.Database.Repositories
             Log("PŘIDÁNÍ", $"'{FormatHelper.FormatTimeEntryToString(timeEntry)}'.");
             _context.TimeEntries.Add(timeEntry);
             await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            _context.Entry(timeEntry).State = EntityState.Detached;
             Log("PŘIDÁNÍ", "HOTOVO.");
             return timeEntry;
         }

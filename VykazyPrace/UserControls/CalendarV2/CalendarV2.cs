@@ -163,6 +163,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async Task LoadInitialDataAsync()
         {
+            _cacheSubTypes = await _timeEntrySubTypeRepo.GetAllTimeEntrySubTypesByUserIdAsync(_selectedUser.Id);
             await LoadReferenceDataAsync();
 
             SafeInvoke(() =>
@@ -563,8 +564,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                 }
             }));
         }
-
-
         private void SelectRadioButtonByText(string text)
         {
             var rb = flowLayoutPanel2.Controls
@@ -584,6 +583,274 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             return new TableLayoutPanelCellPosition(col, row);
         }
+
+        /// <summary>
+        /// Dvojklikem vloží nový záznam mezi stávající, s Replace/Move dialogem.
+        /// </summary>
+        private async void TableLayoutPanel1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (_selectedUser.Id != _loggedUser.Id) return;
+
+            var cell = GetCellAt(tableLayoutPanelCalendar, e.Location);
+            if (_projects.Count == 0 || _timeEntryTypes.Count == 0) return;
+
+            var targetDate = _selectedDate.AddDays(cell.Row);
+            if (_specialDays.Any(d => d.Date.Date == targetDate.Date && d.Locked)) return;
+
+            int column = cell.Column;
+            int row = cell.Row;
+            int span = 1;
+
+            // Najdi volné místo, ale pak ošetři kolizi
+            while (column + span <= tableLayoutPanelCalendar.ColumnCount)
+            {
+                bool ov = tableLayoutPanelCalendar.Controls
+                           .OfType<DayPanel>()
+                           .Any(p =>
+                           {
+                               int r = tableLayoutPanelCalendar.GetRow(p);
+                               if (r != row) return false;
+                               int c = tableLayoutPanelCalendar.GetColumn(p);
+                               int s = tableLayoutPanelCalendar.GetColumnSpan(p);
+                               return !(column + span - 1 < c || column > c + s - 1);
+                           });
+                if (!ov) break;
+                column++;
+            }
+            if (column + span > tableLayoutPanelCalendar.ColumnCount) return;
+
+            if (!await HandleOverlapAsync(column, row, span))
+                return;
+
+            DateTime ts = _selectedDate.AddDays(row)
+                                       .AddMinutes(column * TimeSlotLengthInMinutes);
+            if (_specialDays.Any(d => d.Date.Date == ts.Date && d.Locked)) return;
+
+            int idx = customComboBoxProjects.SelectedIndex >= 0
+                ? customComboBoxProjects.SelectedIndex
+                : 0;
+            int projId = _projects[idx].Id;
+
+            var newEntry = new TimeEntry
+            {
+                ProjectId = projId,
+                EntryTypeId = _timeEntryTypes[0].Id,
+                UserId = _selectedUser.Id,
+                Timestamp = ts,
+                EntryMinutes = 30,
+                AfterCare = _projects.First(p => p.Id == projId).IsArchived,
+                IsLocked = 0
+            };
+
+            await OnNewEntryCreated(newEntry);
+            await LoadSidebar();
+        }
+
+        private void UpdateHourLabels()
+        {
+            Label[] hourLabels = { labelHours01, labelHours02, labelHours03, labelHours04, labelHours05, labelHours06, labelHours07 };
+
+            for (int row = 0; row < 7; row++)
+            {
+                DateTime day = _selectedDate.AddDays(row);
+
+                int totalMinutes = _currentEntries
+                    .Where(entry =>
+                        entry.Timestamp.HasValue &&
+                        entry.Timestamp.Value.Date == day.Date &&
+                        entry.IsValid == 1 &&
+                        !(entry.ProjectId == 132 && entry.EntryTypeId == 24) && // není svačina
+                        !(entry.ProjectId == 23)) // není nepřítomnost
+                    .Sum(entry => entry.EntryMinutes);
+
+                double vykazanoHodin = totalMinutes / 60.0;
+
+                var dochazka = _arrivalDepartures.FirstOrDefault(a => a.WorkDate.Date == day.Date);
+                double hoursWorked = 0;
+
+                if (dochazka != null)
+                {
+                    hoursWorked = dochazka.HoursWorked;
+                }
+
+                switch (_config.PanelDayView)
+                {
+                    case PanelDayView.Default:
+                        hourLabels[row].Text = $"{vykazanoHodin:F1}";
+                        hourLabels[row].ForeColor = Color.Black;
+                        break;
+                    case PanelDayView.Range:
+                        hourLabels[row].Text = $"{vykazanoHodin:F1} / {hoursWorked:F1} h";
+                        hourLabels[row].ForeColor = Color.Black;
+                        break;
+                    case PanelDayView.ColorWithinRange:
+                        hourLabels[row].Text = $"{vykazanoHodin:F1}";
+
+                        if (Math.Abs(vykazanoHodin - hoursWorked) < 0.01)
+                            hourLabels[row].ForeColor = Color.Green;
+                        else
+                            hourLabels[row].ForeColor = Color.Red;
+                        break;
+                    case PanelDayView.ColorOvertime:
+                        hourLabels[row].Text = $"{vykazanoHodin:F1}";
+
+                        if (vykazanoHodin == 7.5)
+                            hourLabels[row].ForeColor = Color.Green;
+                        else if (vykazanoHodin > 7.5)
+                            hourLabels[row].ForeColor = Color.Blue;
+                        else
+                            hourLabels[row].ForeColor = Color.Red;
+                        break;
+                }
+
+                if (dochazka == null)
+                {
+                    hourLabels[row].ForeColor = Color.Black;
+                }
+            }
+        }
+
+        private int GetColumnBasedOnTimeEntry(DateTime? timeStamp)
+        {
+            var minutes = timeStamp.Value.Hour * 60 + timeStamp.Value.Minute;
+            return minutes / TimeSlotLengthInMinutes;
+        }
+
+        private int GetColumnSpanBasedOnTimeEntry(int entryMinutes)
+        {
+            return Math.Max(1, entryMinutes / TimeSlotLengthInMinutes);
+        }
+
+        private int GetRowBasedOnTimeEntry(DateTime? timeStamp)
+        {
+            return ((int)timeStamp.Value.DayOfWeek + 6) % 7;
+        }
+
+        private void UpdateDateLabels()
+        {
+            Color special = Color.FromArgb(255, 98, 92);
+            Color regular = Color.FromArgb(0, 0, 0);
+
+            Label[] dateLabels = { labelDate01, labelDate02, labelDate03, labelDate04, labelDate05, labelDate06, labelDate07 };
+            Label[] dayLabels = { labelDay01, labelDay02, labelDay03, labelDay04, labelDay05, labelDay06, labelDay07 };
+
+            for (int i = 0; i < 7; i++)
+            {
+                DateTime date = _selectedDate.AddDays(i);
+                bool isSpecial = _specialDays.Any(x => x.Date.Date == date);
+
+                dateLabels[i].Text = date.ToString("d.M.yyyy");
+                dateLabels[i].ForeColor = isSpecial ? special : regular;
+                dayLabels[i].ForeColor = isSpecial ? special : regular;
+            }
+        }
+
+        private async Task AdjustIndicatorsAsync(Point scrollPosition, int userId, DateTime weekStart)
+        {
+            var oldIndicators = panelContainer.Controls
+                .OfType<Panel>()
+                .Where(p => p.Name == "indicator")
+                .ToList();
+            foreach (var ctrl in oldIndicators)
+            {
+                panelContainer.Controls.Remove(ctrl);
+                ctrl.Dispose();
+            }
+
+            var entries = await _arrivalDepartureRepo
+                .GetWeekEntriesForUserAsync(userId, weekStart);
+
+            int[] rowHeights = tableLayoutPanelCalendar.GetRowHeights();
+            int[] columnWidths = tableLayoutPanelCalendar.GetColumnWidths();
+            int[] headerRowHeights = customTableLayoutPanel1.GetRowHeights();
+            const int minutesPerColumn = 30;
+            var toolTip = new ToolTip();
+
+            foreach (var e in entries)
+            {
+                if (!e.ArrivalTimestamp.HasValue || !e.DepartureTimestamp.HasValue)
+                    continue;
+
+                TimeSpan rawArrival = e.ArrivalTimestamp.Value.TimeOfDay;
+                TimeSpan rawDeparture = e.DepartureTimestamp.Value.TimeOfDay;
+
+                (TimeSpan roundedArrival, TimeSpan roundedDeparture)
+                    = RoundWorkTimeToNearestHalfHour(rawArrival, rawDeparture);
+
+                // Přepočet na sloupcové indexy a pozice
+                int arrivalCol = GetColumnIndexFromTime(roundedArrival, minutesPerColumn);
+                int leaveCol = GetColumnIndexFromTime(roundedDeparture, minutesPerColumn);
+                int dayIndex = ((int)e.WorkDate.DayOfWeek - 1 + 7) % 7;
+                int rowHeight = dayIndex < rowHeights.Length ? rowHeights[dayIndex] : 69;
+                int yPos = rowHeights.Take(dayIndex).Sum() + headerRowHeights[0];
+                int arrivalX = columnWidths[0] * arrivalCol - Math.Abs(scrollPosition.X);
+                int leaveX = columnWidths[0] * leaveCol - Math.Abs(scrollPosition.X);
+
+                var arrivalIndicator = new Panel
+                {
+                    Name = "indicator",
+                    Size = new Size(2, rowHeight),
+                    Location = new Point(arrivalX, yPos),
+                    BackColor = Color.Green
+                };
+                toolTip.SetToolTip(arrivalIndicator, $"{rawArrival:hh\\:mm} – {rawDeparture:hh\\:mm}");
+
+                var leaveIndicator = new Panel
+                {
+                    Name = "indicator",
+                    Size = new Size(2, rowHeight),
+                    Location = new Point(leaveX, yPos),
+                    BackColor = Color.Red
+                };
+                toolTip.SetToolTip(leaveIndicator, $"{rawArrival:hh\\:mm} – {rawDeparture:hh\\:mm}");
+
+                panelContainer.Controls.Add(arrivalIndicator);
+                panelContainer.Controls.Add(leaveIndicator);
+                arrivalIndicator.BringToFront();
+                leaveIndicator.BringToFront();
+            }
+        }
+
+        /// <summary>
+        /// Zaokrouhlí příchod na nejbližší půlhodinu a k odpracované době přičte 5 minut, 
+        /// pak tuto dobu zaokrouhlí dolů na půlhodinu.
+        /// </summary>
+        private (TimeSpan roundedArrival, TimeSpan roundedDeparture)
+            RoundWorkTimeToNearestHalfHour(TimeSpan rawArrival, TimeSpan rawDeparture)
+        {
+            var roundedArrival = TimeSpan.FromMinutes(
+                Math.Round(rawArrival.TotalMinutes / 30.0, 0, MidpointRounding.AwayFromZero)
+                * 30
+            );
+
+            var realDuration = rawDeparture - rawArrival;
+
+            double durWithOffset = realDuration.TotalMinutes + 5;
+            double roundedDurMin = Math.Floor(durWithOffset / 30.0) * 30;
+            var roundedDeparture = roundedArrival + TimeSpan.FromMinutes(roundedDurMin);
+
+            return (roundedArrival, roundedDeparture);
+        }
+
+        private int GetColumnIndexFromTime(TimeSpan timeOfDay, int minutesPerColumn)
+        {
+            return (int)(timeOfDay.TotalMinutes / minutesPerColumn);
+        }
+
+
+        #region DayPanels
+        private readonly Queue<DayPanel> _panelPool = new();
+        private readonly List<DayPanel> _activePanels = new();
+
+        private Dictionary<int, Color> _colorCache = new Dictionary<int, Color>();
+
+        private readonly ToolTip _sharedTooltip = new ToolTip()
+        {
+            AutoPopDelay = 5000,
+            InitialDelay = 300,
+            ReshowDelay = 100,
+            ShowAlways = true
+        };
 
         private void tableLayoutPanel1_MouseClick(object sender, MouseEventArgs e)
         {
@@ -824,276 +1091,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             await OnNewEntryCreated(newEntry);
             await LoadSidebar();
         }
-
-        /// <summary>
-        /// Dvojklikem vloží nový záznam mezi stávající, s Replace/Move dialogem.
-        /// </summary>
-        private async void TableLayoutPanel1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (_selectedUser.Id != _loggedUser.Id) return;
-
-            var cell = GetCellAt(tableLayoutPanelCalendar, e.Location);
-            if (_projects.Count == 0 || _timeEntryTypes.Count == 0) return;
-
-            var targetDate = _selectedDate.AddDays(cell.Row);
-            if (_specialDays.Any(d => d.Date.Date == targetDate.Date && d.Locked)) return;
-
-            int column = cell.Column;
-            int row = cell.Row;
-            int span = 1;
-
-            // Najdi volné místo, ale pak ošetři kolizi
-            while (column + span <= tableLayoutPanelCalendar.ColumnCount)
-            {
-                bool ov = tableLayoutPanelCalendar.Controls
-                           .OfType<DayPanel>()
-                           .Any(p =>
-                           {
-                               int r = tableLayoutPanelCalendar.GetRow(p);
-                               if (r != row) return false;
-                               int c = tableLayoutPanelCalendar.GetColumn(p);
-                               int s = tableLayoutPanelCalendar.GetColumnSpan(p);
-                               return !(column + span - 1 < c || column > c + s - 1);
-                           });
-                if (!ov) break;
-                column++;
-            }
-            if (column + span > tableLayoutPanelCalendar.ColumnCount) return;
-
-            if (!await HandleOverlapAsync(column, row, span))
-                return;
-
-            DateTime ts = _selectedDate.AddDays(row)
-                                       .AddMinutes(column * TimeSlotLengthInMinutes);
-            if (_specialDays.Any(d => d.Date.Date == ts.Date && d.Locked)) return;
-
-            int idx = customComboBoxProjects.SelectedIndex >= 0
-                ? customComboBoxProjects.SelectedIndex
-                : 0;
-            int projId = _projects[idx].Id;
-
-            var newEntry = new TimeEntry
-            {
-                ProjectId = projId,
-                EntryTypeId = _timeEntryTypes[0].Id,
-                UserId = _selectedUser.Id,
-                Timestamp = ts,
-                EntryMinutes = 30,
-                AfterCare = _projects.First(p => p.Id == projId).IsArchived,
-                IsLocked = 0
-            };
-
-            await OnNewEntryCreated(newEntry);
-            await LoadSidebar();
-        }
-
-
-        private void UpdateHourLabels()
-        {
-            Label[] hourLabels = { labelHours01, labelHours02, labelHours03, labelHours04, labelHours05, labelHours06, labelHours07 };
-
-            for (int row = 0; row < 7; row++)
-            {
-                DateTime day = _selectedDate.AddDays(row);
-
-                int totalMinutes = _currentEntries
-                    .Where(entry =>
-                        entry.Timestamp.HasValue &&
-                        entry.Timestamp.Value.Date == day.Date &&
-                        entry.IsValid == 1 &&
-                        !(entry.ProjectId == 132 && entry.EntryTypeId == 24) && // není svačina
-                        !(entry.ProjectId == 23)) // není nepřítomnost
-                    .Sum(entry => entry.EntryMinutes);
-
-                double vykazanoHodin = totalMinutes / 60.0;
-
-                var dochazka = _arrivalDepartures.FirstOrDefault(a => a.WorkDate.Date == day.Date);
-                double hoursWorked = 0;
-
-                if (dochazka != null)
-                {
-                    hoursWorked = dochazka.HoursWorked;
-                }
-
-                switch (_config.PanelDayView)
-                {
-                    case PanelDayView.Default:
-                        hourLabels[row].Text = $"{vykazanoHodin:F1}";
-                        hourLabels[row].ForeColor = Color.Black;
-                        break;
-                    case PanelDayView.Range:
-                        hourLabels[row].Text = $"{vykazanoHodin:F1} / {hoursWorked:F1} h";
-                        hourLabels[row].ForeColor = Color.Black;
-                        break;
-                    case PanelDayView.ColorWithinRange:
-                        hourLabels[row].Text = $"{vykazanoHodin:F1}";
-
-                        if (Math.Abs(vykazanoHodin - hoursWorked) < 0.01)
-                            hourLabels[row].ForeColor = Color.Green;
-                        else
-                            hourLabels[row].ForeColor = Color.Red;
-                        break;
-                    case PanelDayView.ColorOvertime:
-                        hourLabels[row].Text = $"{vykazanoHodin:F1}";
-
-                        if (vykazanoHodin == 7.5)
-                            hourLabels[row].ForeColor = Color.Green;
-                        else if (vykazanoHodin > 7.5)
-                            hourLabels[row].ForeColor = Color.Blue;
-                        else
-                            hourLabels[row].ForeColor = Color.Red;
-                        break;
-                }
-
-                if (dochazka == null)
-                {
-                    hourLabels[row].ForeColor = Color.Black;
-                }
-            }
-        }
-
-        private int GetColumnBasedOnTimeEntry(DateTime? timeStamp)
-        {
-            var minutes = timeStamp.Value.Hour * 60 + timeStamp.Value.Minute;
-            return minutes / TimeSlotLengthInMinutes;
-        }
-
-        private int GetColumnSpanBasedOnTimeEntry(int entryMinutes)
-        {
-            return Math.Max(1, entryMinutes / TimeSlotLengthInMinutes);
-        }
-
-        private int GetRowBasedOnTimeEntry(DateTime? timeStamp)
-        {
-            return ((int)timeStamp.Value.DayOfWeek + 6) % 7;
-        }
-
-        private void UpdateDateLabels()
-        {
-            Color special = Color.FromArgb(255, 98, 92);
-            Color regular = Color.FromArgb(0, 0, 0);
-
-            Label[] dateLabels = { labelDate01, labelDate02, labelDate03, labelDate04, labelDate05, labelDate06, labelDate07 };
-            Label[] dayLabels = { labelDay01, labelDay02, labelDay03, labelDay04, labelDay05, labelDay06, labelDay07 };
-
-            for (int i = 0; i < 7; i++)
-            {
-                DateTime date = _selectedDate.AddDays(i);
-                bool isSpecial = _specialDays.Any(x => x.Date.Date == date);
-
-                dateLabels[i].Text = date.ToString("d.M.yyyy");
-                dateLabels[i].ForeColor = isSpecial ? special : regular;
-                dayLabels[i].ForeColor = isSpecial ? special : regular;
-            }
-        }
-
-
-        private async Task AdjustIndicatorsAsync(Point scrollPosition, int userId, DateTime weekStart)
-        {
-            var oldIndicators = panelContainer.Controls
-                .OfType<Panel>()
-                .Where(p => p.Name == "indicator")
-                .ToList();
-            foreach (var ctrl in oldIndicators)
-            {
-                panelContainer.Controls.Remove(ctrl);
-                ctrl.Dispose();
-            }
-
-            var entries = await _arrivalDepartureRepo
-                .GetWeekEntriesForUserAsync(userId, weekStart);
-
-            int[] rowHeights = tableLayoutPanelCalendar.GetRowHeights();
-            int[] columnWidths = tableLayoutPanelCalendar.GetColumnWidths();
-            int[] headerRowHeights = customTableLayoutPanel1.GetRowHeights();
-            const int minutesPerColumn = 30;
-            var toolTip = new ToolTip();
-
-            foreach (var e in entries)
-            {
-                if (!e.ArrivalTimestamp.HasValue || !e.DepartureTimestamp.HasValue)
-                    continue;
-
-                TimeSpan rawArrival = e.ArrivalTimestamp.Value.TimeOfDay;
-                TimeSpan rawDeparture = e.DepartureTimestamp.Value.TimeOfDay;
-
-                (TimeSpan roundedArrival, TimeSpan roundedDeparture)
-                    = RoundWorkTimeToNearestHalfHour(rawArrival, rawDeparture);
-
-                // Přepočet na sloupcové indexy a pozice
-                int arrivalCol = GetColumnIndexFromTime(roundedArrival, minutesPerColumn);
-                int leaveCol = GetColumnIndexFromTime(roundedDeparture, minutesPerColumn);
-                int dayIndex = ((int)e.WorkDate.DayOfWeek - 1 + 7) % 7;
-                int rowHeight = dayIndex < rowHeights.Length ? rowHeights[dayIndex] : 69;
-                int yPos = rowHeights.Take(dayIndex).Sum() + headerRowHeights[0];
-                int arrivalX = columnWidths[0] * arrivalCol - Math.Abs(scrollPosition.X);
-                int leaveX = columnWidths[0] * leaveCol - Math.Abs(scrollPosition.X);
-
-                var arrivalIndicator = new Panel
-                {
-                    Name = "indicator",
-                    Size = new Size(2, rowHeight),
-                    Location = new Point(arrivalX, yPos),
-                    BackColor = Color.Green
-                };
-                toolTip.SetToolTip(arrivalIndicator, $"{rawArrival:hh\\:mm} – {rawDeparture:hh\\:mm}");
-
-                var leaveIndicator = new Panel
-                {
-                    Name = "indicator",
-                    Size = new Size(2, rowHeight),
-                    Location = new Point(leaveX, yPos),
-                    BackColor = Color.Red
-                };
-                toolTip.SetToolTip(leaveIndicator, $"{rawArrival:hh\\:mm} – {rawDeparture:hh\\:mm}");
-
-                panelContainer.Controls.Add(arrivalIndicator);
-                panelContainer.Controls.Add(leaveIndicator);
-                arrivalIndicator.BringToFront();
-                leaveIndicator.BringToFront();
-            }
-        }
-
-        /// <summary>
-        /// Zaokrouhlí příchod na nejbližší půlhodinu a k odpracované době přičte 5 minut, 
-        /// pak tuto dobu zaokrouhlí dolů na půlhodinu.
-        /// </summary>
-        private (TimeSpan roundedArrival, TimeSpan roundedDeparture)
-            RoundWorkTimeToNearestHalfHour(TimeSpan rawArrival, TimeSpan rawDeparture)
-        {
-            var roundedArrival = TimeSpan.FromMinutes(
-                Math.Round(rawArrival.TotalMinutes / 30.0, 0, MidpointRounding.AwayFromZero)
-                * 30
-            );
-
-            var realDuration = rawDeparture - rawArrival;
-
-            double durWithOffset = realDuration.TotalMinutes + 5;
-            double roundedDurMin = Math.Floor(durWithOffset / 30.0) * 30;
-            var roundedDeparture = roundedArrival + TimeSpan.FromMinutes(roundedDurMin);
-
-            return (roundedArrival, roundedDeparture);
-        }
-
-        private int GetColumnIndexFromTime(TimeSpan timeOfDay, int minutesPerColumn)
-        {
-            return (int)(timeOfDay.TotalMinutes / minutesPerColumn);
-        }
-
-
-        #region DayPanels
-        private readonly Queue<DayPanel> _panelPool = new();
-        private readonly List<DayPanel> _activePanels = new();
-
-        private Dictionary<int, Color> _colorCache = new Dictionary<int, Color>();
-
-        private readonly ToolTip _sharedTooltip = new ToolTip()
-        {
-            AutoPopDelay = 5000,
-            InitialDelay = 300,
-            ReshowDelay = 100,
-            ShowAlways = true
-        };
 
         // Metoda pro získání panelu (pool first):
         private DayPanel GetPooledPanel()
@@ -1573,8 +1570,6 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             return columnSpan * 30;
         }
-        #endregion
-
 
         /// <summary>
         /// Smaže vybraný TimeEntry z DB i UI a aktualizuje součet hodin.
@@ -1620,9 +1615,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             await LoadSidebar();
         }
 
-
-
-
         private bool ShowDeleteConfirmation(TimeEntry entry)
         {
             var result = MessageBox.Show(
@@ -1633,8 +1625,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             return result == DialogResult.Yes;
         }
-
-
 
         private Control? GetFocusedControl(Control control)
         {
@@ -1815,9 +1805,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             _selectedTimeEntryId = created.Id;
             _ = LoadSidebar();
         }
-
-
-
+        #endregion
 
         /// <summary>
         /// Načte nebo obnoví cache projektů a typů záznamů (pro CreateOrUpdatePanel mimo RenderCalendar).
@@ -1838,8 +1826,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                 t => ColorTranslator.FromHtml(t.Color ?? "#ADD8E6")
             );
         }
-
-
 
         private void flowLayoutPanel2_SizeChanged(object sender, EventArgs e)
         {

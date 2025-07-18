@@ -1,11 +1,9 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Core.Helpers;
 using VykazyPrace.Core.Logging;
-using VykazyPrace.UserControls;
+using static VykazyPrace.Core.Helpers.Enums;
 
 namespace VykazyPrace.Dialogs
 {
@@ -14,7 +12,6 @@ namespace VykazyPrace.Dialogs
         private readonly ProjectRepository _projectRepo = new ProjectRepository();
         private readonly TimeEntryTypeRepository _timeEntryTypeRepo = new TimeEntryTypeRepository();
         private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
-        private readonly LoadingUC _loadingUC = new LoadingUC();
         private readonly User _currentUser;
         private List<Project> _filteredProjects = new List<Project>();
         private List<TimeEntryType> _timeEntryTypes = new List<TimeEntryType>();
@@ -30,18 +27,13 @@ namespace VykazyPrace.Dialogs
 
         private async void ProjectManagementDialog_Load(object sender, EventArgs e)
         {
-            listBoxProject.Items.Clear();
-            listBoxProject.Items.Add("Načítání...");
-
-            _loadingUC.Size = this.Size;
-            this.Controls.Add(_loadingUC);
-
             await LoadProjectsAsync(0);
         }
 
-        private async Task LoadTimeEntryTypes(int projectType)
+        private async Task LoadTimeEntryTypesAsync(int projectType)
         {
-            _timeEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesByProjectTypeAsync(projectType);
+            _timeEntryTypes = await _timeEntryTypeRepo
+                .GetAllTimeEntryTypesByProjectTypeAsync(projectType);
         }
 
         private bool comboBoxProjectsLoading = false;
@@ -50,106 +42,124 @@ namespace VykazyPrace.Dialogs
         {
             try
             {
-                var _projects = await _projectRepo.GetAllProjectsAsync(true);
+                // Načtení všech položek
+                var allProjects = await _projectRepo.GetAllProjectsAsync(true);
+                // Filtrování podle zadaného typu
+                var filtered = FilterProjects(allProjects, projectType);
 
-                Invoke(new Action(async () =>
-                {
-                    var filteredProjects = _projects
-                        .Where(p => (projectType == 1 || projectType == 2)
-                            ? (p.ProjectType == 1 || p.ProjectType == 2)
-                            : p.ProjectType == projectType)
-                        .ToArray();
+                // Pro typy 4 a 5 navíc načteme time entry types
+                if (projectType == (int)ProjectType.Absence || projectType == (int)ProjectType.Other)
+                    await LoadTimeEntryTypesAsync(projectType);
 
-                    switch (projectType)
-                    {
-                        case 0:
-                            // PROVOZ
-                            listBoxOperation.Items.Clear();
-                            listBoxOperation.Items.AddRange(
-                                filteredProjects.Select(FormatHelper.FormatProjectToString).ToArray()
-                            );
-                            break;
+                // Naplníme ovládací prvky
+                PopulateControls(projectType, filtered);
 
-                        case 1:
-                        case 2:
-                            // PROJEKT nebo PŘEDPROJEKT
-                            comboBoxProjectsLoading = true;
-                            listBoxProject.Items.Clear();
-                            comboBoxProjects.Items.Clear();
+                _filteredProjects = filtered.ToList();
 
-                            var projectItems = filteredProjects
-                             .Where(p => p.IsArchived == (checkBoxArchived.Checked ? 1 : 0))
-                             .Where(p => !checkBoxProposed.Checked || Regex.IsMatch(p.ProjectDescription ?? "", @"^000\dN\d\d$"))
-                             .Select(FormatHelper.FormatProjectToString)
-                             .ToArray();
-
-
-                            listBoxProject.Items.AddRange(projectItems);
-                            comboBoxProjects.Items.AddRange(projectItems);
-
-                            if (comboBoxProjects.Items.Count > 0)
-                                comboBoxProjects.SelectedIndex = 0;
-                            else
-                                comboBoxProjects.Text = "";
-
-                            comboBoxProjectsLoading = false;
-                            break;
-
-                        case 3:
-                            // ŠKOLENÍ
-                            break;
-
-                        case 4:
-                            // NEPŘÍTOMNOST
-                            await LoadTimeEntryTypes(projectType);
-                            listBoxAbsence.Items.Clear();
-                            listBoxAbsence.Items.AddRange(
-                                _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray()
-                            );
-                            break;
-
-                        case 5:
-                            // OSTATNÍ
-                            await LoadTimeEntryTypes(projectType);
-                            listBoxOther.Items.Clear();
-                            listBoxOther.Items.AddRange(
-                                _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString).ToArray()
-                            );
-                            break;
-                    }
-
-                    _filteredProjects = filteredProjects.ToList();
-                    ClearSelection();
-                    GenerateNextDescription();
-                }));
+                ClearSelection();
+                GenerateNextDescription();
             }
             catch (Exception ex)
             {
-                Invoke(new Action(() =>
-                {
-                    AppLogger.Error("Chyba při načítání projektů.", ex);
-                }));
+                AppLogger.Error($"Chyba při načítání typu {projectType}.", ex);
             }
+        }
+
+        private IEnumerable<Project> FilterProjects(IEnumerable<Project> projects, int projectType)
+        {
+            return projects.Where(p =>
+                projectType switch
+                {
+                    1 or 2 => (p.ProjectType == 1 || p.ProjectType == 2),
+                    _ => p.ProjectType == projectType
+                }
+            )
+            .Where(p =>
+                projectType == 1 || projectType == 2
+                    ? p.IsArchived == (checkBoxArchived.Checked ? 1 : 0)
+                    : true
+            )
+            .Where(p =>
+                projectType == 1 || projectType == 2
+                    ? (!checkBoxProposed.Checked
+                       || Regex.IsMatch(p.ProjectDescription ?? "", @"^000\dN\d\d$"))
+                    : true
+            );
+        }
+
+        private void PopulateControls(int projectType, IEnumerable<Project> projects)
+        {
+            // Pro projekty (typy 1 a 2) vytvoříme wrappery
+            if (projectType == 1 || projectType == 2)
+            {
+                var items = projects
+                    .Select(p => new ProjectItem(p))
+                    .Cast<object>()
+                    .ToArray();
+
+                FillListBox(listBoxProject, items);
+                FillComboBox(comboBoxProjects, items);
+            }
+            else if (projectType == 0)
+            {
+                var items = projects
+                    .Select(p => new ProjectItem(p))
+                    .Cast<object>()
+                    .ToArray();
+
+                FillListBox(listBoxOperation, items);
+            }
+            else if (projectType == 4)
+            {
+                var items = _timeEntryTypes
+                    .Select(t => FormatHelper.FormatTimeEntryTypeToString(t))
+                    .ToArray();
+                FillListBox(listBoxAbsence, items.Cast<object>().ToArray());
+            }
+            else if (projectType == 5)
+            {
+                var items = _timeEntryTypes
+                    .Select(t => FormatHelper.FormatTimeEntryTypeToString(t))
+                    .ToArray();
+                FillListBox(listBoxOther, items.Cast<object>().ToArray());
+            }
+        }
+
+        private void FillListBox(ListBox lb, object[] items)
+        {
+            lb.BeginUpdate();
+            lb.Items.Clear();
+            lb.Items.AddRange(items);
+            lb.EndUpdate();
+        }
+
+        private void FillComboBox(ComboBox cb, object[] items)
+        {
+            comboBoxProjectsLoading = true;
+            cb.BeginUpdate();
+            cb.Items.Clear();
+            cb.Items.AddRange(items);
+            if (cb.Items.Count > 0)
+                cb.SelectedIndex = 0;
+            else
+                cb.Text = "";
+            cb.EndUpdate();
+            comboBoxProjectsLoading = false;
         }
 
         private async void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (tabControl1.SelectedTab.Text)
+            int type = tabControl1.SelectedTab.Text switch
             {
-                case "PROVOZ":
-                    await LoadProjectsAsync(0);
-                    break;
-                case "PROJEKT":
-                    await LoadProjectsAsync(1);
-                    break;
-                case "NEPŘÍTOMNOST":
-                    await LoadProjectsAsync(4);
-                    break;
-                case "OSTATNÍ":
-                    await LoadProjectsAsync(5);
-                    break;
-            }
+                "PROVOZ" => 0,
+                "PROJEKT" => 1,
+                "NEPŘÍTOMNOST" => 4,
+                "OSTATNÍ" => 5,
+                _ => 0
+            };
+            await LoadProjectsAsync(type);
         }
+
 
         private async void checkBoxArchive_CheckedChanged(object sender, EventArgs e)
         {
@@ -207,6 +217,7 @@ namespace VykazyPrace.Dialogs
                 await _projectRepo.UpdateProjectAsync(project);
             }
 
+            // ULOŽIT
             else
             {
                 project.Id = int.Parse(labelProjectId.Text);
@@ -421,8 +432,6 @@ namespace VykazyPrace.Dialogs
             return null;
         }
 
-
-
         private void ClearSelection()
         {
             listBoxOperation.ClearSelected();
@@ -466,54 +475,60 @@ namespace VykazyPrace.Dialogs
 
         private async void listBoxProject_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int.TryParse(labelProjectId.Text, out int originalProjectId);
-
-            if (listBoxProject.SelectedItem is not null)
+            if (listBoxProject.SelectedItem is ProjectItem pi)
             {
+                var active = pi.Project;
                 buttonArchiveProject.Visible = true;
 
+                // Synchronizace comboBoxu
                 comboBoxProjectsLoading = true;
-                comboBoxProjects.SelectedIndex = comboBoxProjects.FindString(listBoxProject.SelectedItem.ToString());
+                int idx = comboBoxProjects.Items
+                    .OfType<ProjectItem>()
+                    .ToList()
+                    .FindIndex(x => x.Project.Id == active.Id);
+                if (idx >= 0) comboBoxProjects.SelectedIndex = idx;
                 comboBoxProjectsLoading = false;
 
-                textBoxProjectTitle.Text = listBoxProject.SelectedItem.ToString().Split(':')[1].TrimStart(' ');
-                textBoxProjectDescription.Text = _filteredProjects.Find(x => x.ProjectTitle == textBoxProjectTitle.Text).ProjectDescription;
-                labelProjectId.Text = _filteredProjects.Find(x => x.ProjectTitle == textBoxProjectTitle.Text).Id.ToString();
+                // Naplnění detailů
+                labelProjectId.Text = active.Id.ToString();
+                textBoxProjectTitle.Text = active.ProjectTitle;
+                textBoxProjectDescription.Text = active.ProjectDescription;
 
-                var active = _filteredProjects.Find(x => x.Id == int.Parse(labelProjectId.Text));
-
-                var proposed = Regex.IsMatch(active.ProjectDescription ?? "", @"^000\dN\d\d$");
+                bool proposed = Regex.IsMatch(active.ProjectDescription ?? "", @"^000\dN\d\d$");
                 buttonAddProject.Text = proposed ? "Schválit" : "Uložit";
                 buttonDeclineAndReplace.Visible = proposed;
                 buttonArchiveProject.Text = checkBoxArchived.Checked ? "Obnovit" : "Archivovat";
                 groupBox2.Text = "Úprava projektu";
 
-
+                // Logika pro replace-and-delete
                 if (waitForProjectSelection)
                 {
-                    var result = MessageBox.Show($"Akce je nevratná.\n\nPřejete si vykázané hodiny převést na projekt {FormatHelper.FormatProjectToString(active)}?", "Nahradit a smazat", MessageBoxButtons.YesNoCancel);
+                    var originalId = int.TryParse(labelProjectId.Text, out var oid) ? oid : 0;
+                    var result = MessageBox.Show(
+                        $"Akce je nevratná.\n\nPřejete si vykázané hodiny převést na projekt {pi}?",
+                        "Nahradit a smazat",
+                        MessageBoxButtons.YesNoCancel
+                    );
+
                     if (result == DialogResult.Yes)
                     {
                         waitForProjectSelection = false;
-                        groupBox1.Enabled = true;
-                        groupBox2.Enabled = true;
-                        listBoxProject.BackColor = Color.FromKnownColor(KnownColor.Window);
+                        groupBox1.Enabled = groupBox2.Enabled = true;
+                        listBoxProject.BackColor = SystemColors.Window;
 
-                        var affected = await _timeEntryRepo.UpdateProjectIdForEntriesAsync(originalProjectId, active.Id);
+                        var affected = await _timeEntryRepo.UpdateProjectIdForEntriesAsync(originalId, active.Id);
                         AppLogger.Information($"Přepsáno {affected} záznamů.", true);
 
-                        await _projectRepo.DeleteProjectAsync(originalProjectId);
-                        AppLogger.Information($"Projekt s ID {originalProjectId} byl smazán.");
+                        await _projectRepo.DeleteProjectAsync(originalId);
+                        AppLogger.Information($"Projekt s ID {originalId} byl smazán.");
 
                         await LoadProjectsAsync(1);
                     }
-
                     else if (result == DialogResult.Cancel)
                     {
                         waitForProjectSelection = false;
-                        groupBox1.Enabled = true;
-                        groupBox2.Enabled = true;
-                        listBoxProject.BackColor = Color.FromKnownColor(KnownColor.Window);
+                        groupBox1.Enabled = groupBox2.Enabled = true;
+                        listBoxProject.BackColor = SystemColors.Window;
                     }
                 }
             }
@@ -529,6 +544,14 @@ namespace VykazyPrace.Dialogs
                 groupBox2.Enabled = false;
                 listBoxProject.BackColor = Color.FromArgb(255, 255, 227, 95);
             }
+        }
+
+        public class ProjectItem
+        {
+            public Project Project { get; }
+            public ProjectItem(Project project) => Project = project;
+            public override string ToString() =>
+                FormatHelper.FormatProjectToString(Project);
         }
     }
 }

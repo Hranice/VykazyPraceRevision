@@ -449,5 +449,11 @@ namespace VykazyPrace
             });
         }
 
+        private async void buttonReloadData_Click(object sender, EventArgs e)
+        {
+            _loadingUC.BringToFront();
+            await _calendar.ForceReloadAsync();
+            _loadingUC.Visible = false;
+        }
     }
 }

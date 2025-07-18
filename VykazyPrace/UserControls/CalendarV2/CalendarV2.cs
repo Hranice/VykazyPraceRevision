@@ -52,7 +52,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         // Drag & drop
         private DayPanel? activePanel = null;
-        private DayPanel? lastPanel = null;
         private bool isResizing = false;
         private bool isMoving = false;
         private bool isResizingLeft = false;
@@ -127,9 +126,44 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         public async Task ForceReloadAsync()
         {
-            await LoadInitialDataAsync();
-            await LoadSidebar();
+            // 1) Vymažeme všechny cache
+            _cacheTypes = null;
+            _cacheSubTypes = null;
+            _cacheProjects = null;
+
+            // 2) Obecné referenční datové sady
+            await LoadReferenceDataAsync();
+
+            // 3) Explicitně znovu nahraj projekty & typy pro právě vybraný projectType
+            await LoadProjectsAsync(_currentProjectType);
+            await LoadTimeEntryTypesAsync(_currentProjectType);
+
+            // 4) Aktualizuj UI ComboBoxy
+            SafeInvoke(() =>
+            {
+                customComboBoxProjects.SetItems(
+                    _projects.Select(FormatHelper.FormatProjectToString).ToArray()
+                );
+                UpdateEntryTypeControls(_currentProjectType);
+                customComboBoxSubTypes.SetItems(
+                    _timeEntrySubTypes
+                        .Where(t => t.IsArchived == 0)
+                        .Select(FormatHelper.FormatTimeEntrySubTypeToString)
+                        .ToArray()
+                );
+            });
+
+            // 5) Načti znovu týdenní data
+            var specialTask = LoadSpecialDaysAsync();
+            var arrivalTask = LoadArrivalDeparturesAsync();
+            await Task.WhenAll(specialTask, arrivalTask);
+
+            // 6) Překresli kalendář a indikátory
+            await RenderCalendar();
+            await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
         }
+
+
 
         public async Task ForceReloadIndicators()
         {
@@ -163,7 +197,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async Task LoadInitialDataAsync()
         {
-            _cacheSubTypes = await _timeEntrySubTypeRepo.GetAllTimeEntrySubTypesByUserIdAsync(_selectedUser.Id);
             await LoadReferenceDataAsync();
 
             SafeInvoke(() =>

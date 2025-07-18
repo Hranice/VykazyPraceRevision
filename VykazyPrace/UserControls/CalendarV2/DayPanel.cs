@@ -10,7 +10,8 @@ namespace VykazyPrace.UserControls.CalendarV2
         public int EntryId { get; set; }
         public int OwnerId { get; set; }
 
-        private List<string> _lines = new();
+        private List<string> _titleLines = new();
+        private List<string> _subtitleLines = new();
         private Color _assignedColor;
 
         // nově ukládáme title/subtitle, abychom je mohli přepočítat při resize
@@ -39,12 +40,8 @@ namespace VykazyPrace.UserControls.CalendarV2
             _lastSubtitle = subtitle;
 
             // zabalíme text do řádků podle aktuální šířky
-            _lines = WrapTextIntoLines(
-                $"{title}\n{subtitle}",
-                this.Font,
-                this.Width - 6,
-                maxLines: 4
-            );
+            _titleLines = WrapTextIntoLines(title ?? "", this.Font, this.Width - 6, maxLines: 2);
+            _subtitleLines = WrapTextIntoLines(subtitle ?? "", this.Font, this.Width - 6, maxLines: 2);
 
             // přerender
             this.Invalidate();
@@ -76,20 +73,26 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             int padding = 3;
             float availW = this.Width - padding * 2;
+            float lineH = g.MeasureString("A", this.Font).Height;
+            using var b = new SolidBrush(Color.FromArgb(240, this.ForeColor));
+
+            // vykreslíme title odshora
             float y = padding;
-            using var b = new SolidBrush(this.ForeColor);
-
-            SizeF lineSz = g.MeasureString("A", this.Font);
-            float lineH = lineSz.Height;
-
-            foreach (var line in _lines)
+            foreach (var line in _titleLines)
             {
-                g.DrawString(line, this.Font, b,
-                    new RectangleF(padding, y, availW, lineH));
+                g.DrawString(line, this.Font, b, new RectangleF(padding, y, availW, lineH));
                 y += lineH;
             }
-        }
 
+            // spočítáme, kde začíná subtitle (odspodu)
+            float subtitleHeight = _subtitleLines.Count * lineH;
+            float ySub = this.Height - padding - subtitleHeight - 2;
+            foreach (var line in _subtitleLines)
+            {
+                g.DrawString(line, this.Font, b, new RectangleF(padding, ySub, availW, lineH));
+                ySub += lineH;
+            }
+        }
         private List<string> WrapTextIntoLines(string text, Font font, int maxWidth, int maxLines)
         {
             var result = new List<string>();

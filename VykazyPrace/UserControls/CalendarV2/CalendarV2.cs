@@ -19,6 +19,8 @@ namespace VykazyPrace.UserControls.CalendarV2
         // UI + State
         private readonly Timer _resizeTimer = new() { Interval = 50 };
         private readonly Dictionary<DayPanel, Timer> _uiTimers = new();
+        private readonly Queue<DayPanel> _panelPool = new();
+        private readonly List<DayPanel> _activePanels = new();
         private bool userHasScrolled = false;
 
         // Repositories
@@ -33,6 +35,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         private static List<TimeEntryType>? _cacheTypes;
         private static List<TimeEntrySubType>? _cacheSubTypes;
         private static List<Project>? _cacheProjects;
+        private Dictionary<int, Color> _colorCache = new Dictionary<int, Color>();
 
         private List<Project> _projects = new();
         private List<TimeEntryType> _timeEntryTypes = new();
@@ -52,6 +55,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         // Drag & drop
         private DayPanel? activePanel = null;
+        private bool mouseMoved = false;
         private bool isResizing = false;
         private bool isMoving = false;
         private bool isResizingLeft = false;
@@ -64,9 +68,16 @@ namespace VykazyPrace.UserControls.CalendarV2
         private TableLayoutPanelCellPosition? pasteTargetCell;
         private ToolTip copyToolTip = new();
 
-        // Right click context
+        // Right click context and tooltips
         private ContextMenuStrip dayPanelMenu;
         private ContextMenuStrip tableLayoutMenu;
+        private readonly ToolTip _sharedTooltip = new ToolTip()
+        {
+            AutoPopDelay = 5000,
+            InitialDelay = 300,
+            ReshowDelay = 100,
+            ShowAlways = true
+        };
 
         // Configuration
         private AppConfig _config;
@@ -872,19 +883,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
 
         #region DayPanels
-        private readonly Queue<DayPanel> _panelPool = new();
-        private readonly List<DayPanel> _activePanels = new();
-
-        private Dictionary<int, Color> _colorCache = new Dictionary<int, Color>();
-
-        private readonly ToolTip _sharedTooltip = new ToolTip()
-        {
-            AutoPopDelay = 5000,
-            InitialDelay = 300,
-            ReshowDelay = 100,
-            ShowAlways = true
-        };
-
         private void tableLayoutPanel1_MouseClick(object sender, MouseEventArgs e)
         {
             var cell = GetCellAt(tableLayoutPanelCalendar, e.Location);
@@ -1314,7 +1312,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
-        private bool mouseMoved = false;
         private void dayPanel_MouseDown(object? sender, MouseEventArgs e)
         {
             if (sender is not DayPanel panel) return;
@@ -1440,7 +1437,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
-
         private void UpdateCursor(MouseEventArgs e, DayPanel panel)
         {
             if (panel.Tag as string == "snack")
@@ -1536,8 +1532,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             return false;
         }
-
-
         private int GetNearestLeftColumn(int currentColumn, int row, DayPanel currentPanel)
         {
             int minColumn = 0;
@@ -1694,6 +1688,8 @@ namespace VykazyPrace.UserControls.CalendarV2
             var panel = GetPooledPanel();
             panel.EntryId = entry.Id;
             panel.OwnerId = _selectedUser.Id;
+            panel.Tag = null;
+
             if (entry.ProjectId == 132 && entry.EntryTypeId == 24)
             {
                 panel.Tag = "snack";

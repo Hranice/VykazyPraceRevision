@@ -1174,22 +1174,14 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async Task RenderCalendar()
         {
-            var swTotal = Stopwatch.StartNew();
-            AppLogger.Information("RenderCalendar – start");
-
             tableLayoutPanelCalendar.SuspendLayout();
             panelContainer.SuspendLayout();
 
-            // 1) Load special days
-            var swSpecialDays = Stopwatch.StartNew();
             await LoadSpecialDaysAsync();
-            swSpecialDays.Stop();
-            AppLogger.Information($"LoadSpecialDaysAsync: {swSpecialDays.ElapsedMilliseconds} ms");
 
             tableLayoutPanelCalendar.SetDate(_selectedDate);
 
-            // 2) Load/create snacks + entries
-            var swSnackAndEntries = Stopwatch.StartNew();
+            // Load/create snacks + entries
             var weekEntries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _selectedDate);
 
             var snackDates = new HashSet<DateTime>(
@@ -1219,11 +1211,8 @@ namespace VykazyPrace.UserControls.CalendarV2
                 weekEntries = await _timeEntryRepo.GetTimeEntriesByUserAndCurrentWeekAsync(_selectedUser, _selectedDate);
             }
             _currentEntries = weekEntries;
-            swSnackAndEntries.Stop();
-            AppLogger.Information($"Load/Create snacks + GetTimeEntries: {swSnackAndEntries.ElapsedMilliseconds} ms");
 
-            // 3) UI reset + lookup + cache
-            var swUISetup = Stopwatch.StartNew();
+            // UI reset + lookup + cache
             ReleaseUnusedPanels();
 
             var allProjects = await _projectRepo.GetAllProjectsAsync();
@@ -1233,19 +1222,11 @@ namespace VykazyPrace.UserControls.CalendarV2
                 t => t.Id,
                 t => ColorTranslator.FromHtml(t.Color ?? "#ADD8E6")
             );
-            swUISetup.Stop();
-            AppLogger.Information($"UI reset + load lookup data: {swUISetup.ElapsedMilliseconds} ms");
 
-            // 4) Create panels
-            var swPanels = Stopwatch.StartNew();
+            // Create panels
             foreach (var entry in _currentEntries)
                 CreateOrUpdatePanel(entry);
 
-            swPanels.Stop();
-            AppLogger.Information($"CreatePanelForEntry loop: {swPanels.ElapsedMilliseconds} ms");
-
-            // 5) Final UI update
-            var swFinalUI = Stopwatch.StartNew();
             BeginInvoke((Action)(() =>
             {
                 UpdateDateLabels();
@@ -1271,12 +1252,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                 tableLayoutPanelCalendar.ResumeLayout(true);
                 panelContainer.ResumeLayout(true);
-
-                swFinalUI.Stop();
-                AppLogger.Information($"Final UI update: {swFinalUI.ElapsedMilliseconds} ms");
             }));
-            swTotal.Stop();
-            AppLogger.Information($"RenderCalendar – total: {swTotal.ElapsedMilliseconds} ms");
         }
 
 

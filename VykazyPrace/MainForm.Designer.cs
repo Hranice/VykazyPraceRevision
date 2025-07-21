@@ -219,6 +219,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(buttonReloadData);
             panel1.Controls.Add(radioButton1);
             panel1.Controls.Add(radioButton2);
             panel1.Dock = DockStyle.Left;
@@ -229,7 +230,6 @@
             // 
             // panel2
             // 
-            panel2.Controls.Add(buttonReloadData);
             panel2.Controls.Add(buttonNow);
             panel2.Controls.Add(labelSelectedDate);
             panel2.Controls.Add(buttonNext);
@@ -243,9 +243,9 @@
             // 
             // buttonReloadData
             // 
-            buttonReloadData.Location = new Point(907, 7);
+            buttonReloadData.Location = new Point(10, 556);
             buttonReloadData.Name = "buttonReloadData";
-            buttonReloadData.Size = new Size(48, 33);
+            buttonReloadData.Size = new Size(106, 33);
             buttonReloadData.TabIndex = 5;
             buttonReloadData.Text = "⟳";
             buttonReloadData.UseVisualStyleBackColor = true;

@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using VykazyPrace.Core.Configuration;
 using VykazyPrace.Core.Database.Models;
@@ -454,6 +455,12 @@ namespace VykazyPrace
             _loadingUC.BringToFront();
             await _calendar.ForceReloadAsync();
             _loadingUC.Visible = false;
+        }
+
+        private void pøehledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var overviewDialog = new OverviewDialog(_selectedUser, DateRangeHelper.GetMonthRange(_selectedDate));
+            overviewDialog.ShowDialog();
         }
     }
 }

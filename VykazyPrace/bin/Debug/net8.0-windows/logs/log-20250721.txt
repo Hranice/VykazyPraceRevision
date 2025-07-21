@@ -61,3 +61,10 @@
 2025-07-21 10:32:11.050 +02:00 [INF] Záznam  - : 0,5 h -  byl úspěšně aktualizován.
 2025-07-21 10:32:27.091 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
 2025-07-21 10:32:41.961 +02:00 [INF] Záznam 0 - Nepřítomnost: 4 h -  byl úspěšně aktualizován.
+2025-07-21 13:20:39.141 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-21 13:22:48.592 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-21 13:27:11.204 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-21 13:28:08.581 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-21 13:52:03.208 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-21 13:55:05.037 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-21 13:55:41.883 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.

@@ -1,0 +1,2 @@
+2025-07-22 08:14:39.372 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-22 08:16:21.745 +02:00 [INF] Záznam 0 - Provoz Metalizace: 1,5 h - SW - Výkazy hodin byl úspěšně aktualizován.

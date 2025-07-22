@@ -9,10 +9,10 @@
       "VykazyPrace.Core/1.0.0": {
         "dependencies": {
           "Microsoft.Data.SqlClient": "6.0.2",
+          "Microsoft.Data.Sqlite": "9.0.2",
           "Microsoft.EntityFrameworkCore.Design": "9.0.2",
           "Microsoft.EntityFrameworkCore.Sqlite": "9.0.2",
           "Microsoft.EntityFrameworkCore.Tools": "9.0.2",
-          "Microsoft.NET.ILLink.Tasks": "8.0.15",
           "Serilog": "4.3.0",
           "Serilog.Sinks.Console": "6.0.0",
           "Serilog.Sinks.File": "7.0.0"
@@ -461,6 +461,13 @@
           }
         }
       },
+      "Microsoft.Data.Sqlite/9.0.2": {
+        "dependencies": {
+          "Microsoft.Data.Sqlite.Core": "9.0.2",
+          "SQLitePCLRaw.bundle_e_sqlite3": "2.1.10",
+          "SQLitePCLRaw.core": "2.1.10"
+        }
+      },
       "Microsoft.Data.Sqlite.Core/9.0.2": {
         "dependencies": {
           "SQLitePCLRaw.core": "2.1.10"
@@ -768,7 +775,6 @@
           }
         }
       },
-      "Microsoft.NET.ILLink.Tasks/8.0.15": {},
       "Microsoft.SqlServer.Server/1.0.0": {
         "runtime": {
           "lib/netstandard2.0/Microsoft.SqlServer.Server.dll": {
@@ -1291,6 +1297,13 @@
       "path": "microsoft.data.sqlclient.sni.runtime/6.0.2",
       "hashPath": "microsoft.data.sqlclient.sni.runtime.6.0.2.nupkg.sha512"
     },
+    "Microsoft.Data.Sqlite/9.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-61su148W1dVLxlTnDAQb870RhYrzHJ1OE4ggtOpM/V+xRlzWL9nbJ9Gj6lROhpZnYxoVXXBxOm9rnk12mn2vtA==",
+      "path": "microsoft.data.sqlite/9.0.2",
+      "hashPath": "microsoft.data.sqlite.9.0.2.nupkg.sha512"
+    },
     "Microsoft.Data.Sqlite.Core/9.0.2": {
       "type": "package",
       "serviceable": true,
@@ -1479,13 +1492,6 @@
       "sha512": "sha512-owe33wqe0ZbwBxM3D90I0XotxNyTdl85jud03d+OrUOJNnTiqnYePwBk3WU9yW0Rk5CYX+sfSim7frmu6jeEzQ==",
       "path": "microsoft.identitymodel.tokens/7.5.0",
       "hashPath": "microsoft.identitymodel.tokens.7.5.0.nupkg.sha512"
-    },
-    "Microsoft.NET.ILLink.Tasks/8.0.15": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-s4eXlcRGyHeCgFUGQnhq0e/SCHBPp0jOHgMqZg3fQ2OCHJSm1aOUhI6RFWuVIcEb9ig2WgI2kWukk8wu72EbUQ==",
-      "path": "microsoft.net.illink.tasks/8.0.15",
-      "hashPath": "microsoft.net.illink.tasks.8.0.15.nupkg.sha512"
     },
     "Microsoft.SqlServer.Server/1.0.0": {
       "type": "package",

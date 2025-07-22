@@ -22,15 +22,16 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<UserTimeReport?> GetUserTimeReportAsync(int userId, DateTime fromDate, DateTime toDate)
         {
-            // 1) ReportedHours bez dovolené (6), svačiny (7) a lékaře (24)
+            // 1) ReportedHours bez dovolené (6), svačiny (7), lékaře (24) a bez IsValid==0
             double reportedHours = await _context.TimeEntries
                 .Where(te => te.UserId == userId
                           && te.Timestamp.HasValue
                           && te.Timestamp.Value.Date >= fromDate.Date
                           && te.Timestamp.Value.Date <= toDate.Date
-                          && te.EntryTypeId != 6
-                          && te.EntryTypeId != 7
-                          && te.EntryTypeId != 24)
+                          && te.IsValid != 0                      // nedoplněno
+                          && te.EntryTypeId != 6                 // dovolená
+                          && te.EntryTypeId != 7                 // svačina
+                          && te.EntryTypeId != 24)               // lékař
                 .SumAsync(te => (double)te.EntryMinutes)
                 / 60.0;
 
@@ -47,7 +48,7 @@ namespace VykazyPrace.Core.Database.Repositories
                 })
                 .FirstOrDefaultAsync();
 
-            // 3) Uživatel
+            // 3) Načíst uživatele
             var user = await _context.Users
                 .Where(u => u.Id == userId)
                 .Select(u => new { Name = u.FirstName + " " + u.Surname })
@@ -67,6 +68,7 @@ namespace VykazyPrace.Core.Database.Repositories
                 MissingHours = actual - reportedHours
             };
         }
+
 
 
         /// <summary>

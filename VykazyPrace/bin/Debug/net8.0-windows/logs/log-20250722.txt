@@ -1,0 +1,12 @@
+2025-07-22 07:41:59.171 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-22 07:47:20.863 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-22 07:48:40.837 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-22 07:49:15.145 +02:00 [INF] Záznam 0 - Nepřítomnost: 8,5 h - Školení byl smazán z DB.
+2025-07-22 07:49:16.092 +02:00 [INF] Záznam 0 - Nepřítomnost: 8,5 h - Školení byl smazán z DB.
+2025-07-22 07:49:16.838 +02:00 [INF] Záznam 0 - Nepřítomnost: 8,5 h - Školení byl smazán z DB.
+2025-07-22 07:49:26.722 +02:00 [INF] Záznam  - : 0,5 h -  byl úspěšně aktualizován.
+2025-07-22 07:49:39.375 +02:00 [INF] Záznam 0 - Nepřítomnost: 8 h -  byl smazán z DB.
+2025-07-22 07:50:21.740 +02:00 [INF] Záznam  - : 0,5 h -  byl smazán z DB.
+2025-07-22 07:50:43.357 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-22 07:52:36.559 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-22 07:56:01.048 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.

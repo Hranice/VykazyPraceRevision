@@ -9,73 +9,68 @@ using VykazyPrace.Core.Configuration;
 
 namespace VykazyPrace.Core.Logging
 {
-
-    namespace VykazyPrace.Logging
+    public static class AppLogger
     {
-        public static class AppLogger
+        public static ILogger Logger { get; private set; }
+
+        private static ILoggerPopupService? _popupService;
+
+        public static void RegisterPopupService(ILoggerPopupService service)
         {
-            public static ILogger Logger { get; private set; }
+            _popupService = service;
+        }
 
-            private static ILoggerPopupService? _popupService;
+        static AppLogger()
+        {
+            var config = ConfigService.Load();
 
-            public static void RegisterPopupService(ILoggerPopupService service)
+            var level = ParseLogLevel(config.LogLevel);
+
+            Logger = new LoggerConfiguration()
+                .MinimumLevel.Is(level)
+                .WriteTo.Console()
+                .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+        }
+
+        private static LogEventLevel ParseLogLevel(string level)
+        {
+            return level?.ToLower() switch
             {
-                _popupService = service;
-            }
+                "debug" => LogEventLevel.Debug,
+                "information" => LogEventLevel.Information,
+                "warning" => LogEventLevel.Warning,
+                "error" => LogEventLevel.Error,
+                "fatal" => LogEventLevel.Fatal,
+                "verbose" => LogEventLevel.Verbose,
+                _ => LogEventLevel.Information
+            };
+        }
 
-            static AppLogger()
+        public static void Debug(string message)
+        {
+            Logger.Debug(message);
+        }
+
+        public static void Information(string message, bool showDialog = false)
+        {
+            Logger.Information(message);
+            if (showDialog && _popupService != null)
             {
-                var config = ConfigService.Load();
-
-                var level = ParseLogLevel(config.LogLevel);
-
-                Logger = new LoggerConfiguration()
-                    .MinimumLevel.Is(level)
-                    .WriteTo.Console()
-                    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
-                    .CreateLogger();
-            }
-
-            private static LogEventLevel ParseLogLevel(string level)
-            {
-                return level?.ToLower() switch
-                {
-                    "debug" => LogEventLevel.Debug,
-                    "information" => LogEventLevel.Information,
-                    "warning" => LogEventLevel.Warning,
-                    "error" => LogEventLevel.Error,
-                    "fatal" => LogEventLevel.Fatal,
-                    "verbose" => LogEventLevel.Verbose,
-                    _ => LogEventLevel.Information
-                };
-            }
-
-            public static void Debug(string message)
-            {
-                Logger.Debug(message);
-            }
-
-            public static void Information(string message, bool showDialog = false)
-            {
-                Logger.Information(message);
-                if (showDialog && _popupService != null)
-                {
-                    _popupService.ShowInformation(message);
-                }
-            }
-
-            public static void Error(string message, Exception ex)
-            {
-                Logger.Error(ex, message);
-                _popupService?.ShowError(message, ex);
-            }
-
-            public static void Error(string message)
-            {
-                Logger.Error(message);
-                _popupService?.ShowError(message);
+                _popupService.ShowInformation(message);
             }
         }
-    }
 
+        public static void Error(string message, Exception ex)
+        {
+            Logger.Error(ex, message);
+            _popupService?.ShowError(message, ex);
+        }
+
+        public static void Error(string message)
+        {
+            Logger.Error(message);
+            _popupService?.ShowError(message);
+        }
+    }
 }

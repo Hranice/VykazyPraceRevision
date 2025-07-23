@@ -1,11 +1,12 @@
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using VykazyPrace.Core.Configuration;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Core.Helpers;
-using VykazyPrace.Core.Logging.VykazyPrace.Logging;
+using VykazyPrace.Core.Logging;
 using VykazyPrace.Core.PowerKey;
 using VykazyPrace.Dialogs;
 using VykazyPrace.UserControls;
@@ -47,9 +48,7 @@ namespace VykazyPrace
 
         private void zobrazitToolStripMenuItem_Click(object? sender, EventArgs e)
         {
-            this.Show();
-            this.WindowState = FormWindowState.Normal;
-            this.BringToFront();
+            ShowFromTray();
         }
 
         private void ukoncitToolStripMenuItem_Click(object? sender, EventArgs e)
@@ -144,8 +143,6 @@ namespace VykazyPrace
             }
         }
 
-
-
         private async void MainForm_KeyDown(object? sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
@@ -219,10 +216,14 @@ namespace VykazyPrace
                 {
                     new Dialogs.SettingsDialog(_selectedUser).ShowDialog();
                 }
+
+                else
+                {
+                    AppLogger.Information("Aplikace se nyní ukonèí.", true);
+                    Environment.Exit(0);
+                }
             });
         }
-
-
 
         private void InitializeCalendar(List<User> users)
         {
@@ -264,7 +265,6 @@ namespace VykazyPrace
             _loadingUC.Visible = false;
         }
 
-
         private void správaUživatelùToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (_currentUserLoA > 1)
@@ -293,7 +293,7 @@ namespace VykazyPrace
 
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new Dialogs.ExportDialog(_selectedUser).ShowDialog();
+            new Dialogs.ExportDialog().ShowDialog();
         }
 
         private void nastaveníToolStripMenuItem_Click(object sender, EventArgs e)
@@ -441,13 +441,26 @@ namespace VykazyPrace
 
         public void ShowFromTray()
         {
-            this.Invoke(() =>
+            this.Invoke(async () =>
             {
                 this.Show();
                 this.WindowState = FormWindowState.Normal;
                 this.BringToFront();
+                await _calendar.ForceReloadIndicators();
             });
         }
 
+        private async void buttonReloadData_Click(object sender, EventArgs e)
+        {
+            _loadingUC.BringToFront();
+            await _calendar.ForceReloadAsync();
+            _loadingUC.Visible = false;
+        }
+
+        private void pøehledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var overviewDialog = new OverviewDialog(_selectedUser, DateRangeHelper.GetMonthRange(_selectedDate));
+            overviewDialog.ShowDialog();
+        }
     }
 }

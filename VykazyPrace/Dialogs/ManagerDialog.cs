@@ -1,4 +1,4 @@
-﻿using VykazyPrace.Core.Logging.VykazyPrace.Logging;
+﻿using VykazyPrace.Core.Logging;
 using VykazyPrace.Core.PowerKey;
 using VykazyPrace.Logging;
 

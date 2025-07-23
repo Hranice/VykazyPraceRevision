@@ -42,7 +42,10 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<List<Project>> GetAllProjectsAsync(bool includeArchived = false)
         {
+            _context.ChangeTracker.Clear();
+
             IQueryable<Project> projectsQuery = _context.Projects
+                .AsNoTracking()
                 .Include(p => p.CreatedByNavigation);
 
             if (!includeArchived)

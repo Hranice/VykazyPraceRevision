@@ -1,0 +1,12 @@
+2025-07-22 08:14:39.372 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-22 08:16:21.745 +02:00 [INF] Záznam 0 - Provoz Metalizace: 1,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-07-22 09:49:15.005 +02:00 [INF] Záznam  - : 0,5 h - Obchůzka byl úspěšně aktualizován.
+2025-07-22 09:49:25.400 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - Sklad byl úspěšně aktualizován.
+2025-07-22 09:52:58.872 +02:00 [INF] Záznam 0 - Nepřítomnost: 8,5 h - Školení byl smazán z DB.
+2025-07-22 09:53:51.408 +02:00 [INF] Záznam  - : 0,5 h -  byl úspěšně aktualizován.
+2025-07-22 11:40:02.792 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-22 11:40:11.399 +02:00 [INF] Záznam 0 - Nepřítomnost: 7,5 h -  byl smazán z DB.
+2025-07-22 11:40:12.047 +02:00 [INF] Záznam 0 - Nepřítomnost: 7,5 h -  byl smazán z DB.
+2025-07-22 14:54:18.594 +02:00 [INF] Staženo 0 záznamů pro měsíc č.7.
+2025-07-22 14:54:30.034 +02:00 [INF] Záznam  - : 0,5 h -  byl smazán z DB.
+2025-07-22 14:54:47.360 +02:00 [INF] Záznam  - : 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.

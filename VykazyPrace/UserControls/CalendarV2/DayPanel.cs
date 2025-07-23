@@ -1,105 +1,153 @@
-﻿namespace VykazyPrace.UserControls.CalendarV2
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace VykazyPrace.UserControls.CalendarV2
 {
     public partial class DayPanel : UserControl
     {
         public int EntryId { get; set; }
-        private int _borderThickness = 0;
+        public int OwnerId { get; set; }
+
+        private List<string> _titleLines = new();
+        private List<string> _subtitleLines = new();
+        private Color _assignedColor;
+
+        // nově ukládáme title/subtitle, abychom je mohli přepočítat při resize
+        private string? _lastTitle;
+        private string? _lastSubtitle;
 
         public DayPanel()
         {
             InitializeComponent();
+            this.DoubleBuffered = true;
+
+            // kdykoliv se změní velikost, přepočteme řádky
+            this.SizeChanged += (s, e) =>
+            {
+                UpdateUi(_lastTitle, _lastSubtitle);
+            };
         }
 
+        /// <summary>
+        /// Přepočte a vykreslí nové linky textu podle aktuální šířky.
+        /// </summary>
         public void UpdateUi(string? title, string? subtitle)
         {
-            SetLabelHeightForLines(label1, 2);
-            SetLabelHeightForLines(label2, 2);
+            // uložím si nové originální hodnoty
+            _lastTitle = title;
+            _lastSubtitle = subtitle;
 
-            label1.Text = TrimTextToFitTwoLines(label1, title);
-            label2.Text = TrimTextToFitTwoLines(label2, subtitle);
+            // zabalíme text do řádků podle aktuální šířky
+            _titleLines = WrapTextIntoLines(title ?? "", this.Font, this.Width - 6, maxLines: 2);
+            _subtitleLines = WrapTextIntoLines(subtitle ?? "", this.Font, this.Width - 6, maxLines: 2);
+
+            // přerender
+            this.Invalidate();
         }
 
-
-        private string TrimTextToFitTwoLines(Label label, string? text)
+        public void SetAssignedColor(Color color)
         {
-            if (string.IsNullOrEmpty(text))
-                return "";
+            _assignedColor = color;
+            this.BackColor = color;
+        }
 
-            int maxWidth = label.Width - label.Padding.Horizontal - 4;
-            using var g = label.CreateGraphics();
-            string current = "";
-            List<string> lines = new List<string>();
+        public void Activate()
+        {
+            this.BackColor = ControlPaint.Light(_assignedColor, 0.4f);
+            this.Refresh();
+        }
 
-            foreach (char c in text)
+        public void Deactivate()
+        {
+            this.BackColor = _assignedColor;
+            this.Refresh();
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            var g = e.Graphics;
+            g.Clear(this.BackColor);
+
+            int padding = 3;
+            float availW = this.Width - padding * 2;
+            float lineH = g.MeasureString("A", this.Font).Height;
+            using var b = new SolidBrush(Color.FromArgb(240, this.ForeColor));
+
+            // vykreslíme title odshora
+            float y = padding;
+            foreach (var line in _titleLines)
             {
-                string test = current + c;
-                Size size = TextRenderer.MeasureText(g, test, label.Font);
+                g.DrawString(line, this.Font, b, new RectangleF(padding, y, availW, lineH));
+                y += lineH;
+            }
 
-                if (size.Width > maxWidth)
+            // spočítáme, kde začíná subtitle (odspodu)
+            float subtitleHeight = _subtitleLines.Count * lineH;
+            float ySub = this.Height - padding - subtitleHeight - 2;
+            foreach (var line in _subtitleLines)
+            {
+                g.DrawString(line, this.Font, b, new RectangleF(padding, ySub, availW, lineH));
+                ySub += lineH;
+            }
+        }
+        private List<string> WrapTextIntoLines(string text, Font font, int maxWidth, int maxLines)
+        {
+            var result = new List<string>();
+            if (string.IsNullOrWhiteSpace(text)) return result;
+
+            using var g = this.CreateGraphics();
+            var tokens = text.Replace("\r", "").Split('\n');
+            var words = tokens.SelectMany(t => t.Split(' ')).Where(w => w.Length > 0);
+
+            string current = "";
+            foreach (var w in words)
+            {
+                var test = string.IsNullOrEmpty(current) ? w : current + " " + w;
+                if (g.MeasureString(test, font).Width > maxWidth)
                 {
-                    lines.Add(current);
-                    current = c.ToString();
-
-                    if (lines.Count == 2)
-                        break;
+                    if (!string.IsNullOrEmpty(current))
+                    {
+                        result.Add(current);
+                        if (result.Count >= maxLines) break;
+                        current = "";
+                    }
+                    // zbytek slova
+                    var rem = w;
+                    while (rem.Length > 0 && result.Count < maxLines)
+                    {
+                        int len = 1;
+                        while (len <= rem.Length && g.MeasureString(rem.Substring(0, len), font).Width <= maxWidth)
+                            len++;
+                        len = Math.Max(1, len - 1);
+                        result.Add(rem.Substring(0, len));
+                        rem = rem.Substring(len);
+                    }
+                    if (result.Count >= maxLines) break;
                 }
                 else
                 {
                     current = test;
                 }
             }
+            if (!string.IsNullOrEmpty(current) && result.Count < maxLines)
+                result.Add(current);
 
-            if (lines.Count < 2 && !string.IsNullOrEmpty(current))
-                lines.Add(current);
-
-            // Přidáme … pokud jsme text ořízli
-            int totalLength = lines.Sum(l => l.Length);
-            if (totalLength < text.Length)
+            // ořez a "…"
+            if (result.Count > maxLines) result = result.Take(maxLines).ToList();
+            if (result.Count == maxLines)
             {
-                if (lines.Count == 2)
-                    lines[1] = lines[1].TrimEnd() + "…";
-                else
-                    lines[^1] += "…";
-            }
-
-            return string.Join(Environment.NewLine, lines);
-        }
-
-
-        private void SetLabelHeightForLines(Label label, int lineCount)
-        {
-            using Graphics g = label.CreateGraphics();
-            Size oneLine = TextRenderer.MeasureText(g, "A", label.Font);
-
-            int totalHeight = oneLine.Height * lineCount + label.Padding.Vertical + 2;
-            label.Height = totalHeight;
-        }
-
-
-        public void Activate()
-        {
-            this.Font = new Font(this.Font, FontStyle.Bold);
-            _borderThickness = 1;
-        }
-
-        public void Deactivate()
-        {
-            this.Font = new Font(this.Font, FontStyle.Regular);
-            _borderThickness = 0;
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-
-            if (_borderThickness > 0)
-            {
-                using (Pen pen = new Pen(Color.Black, _borderThickness))
+                var last = result[^1];
+                if (!last.EndsWith("…"))
                 {
-                    e.Graphics.DrawRectangle(pen, _borderThickness / 2, _borderThickness / 2,
-                        this.Width - _borderThickness * 3, this.Height - _borderThickness * 3);
+                    while (g.MeasureString(last + "…", font).Width > maxWidth && last.Length > 0)
+                        last = last.Substring(0, last.Length - 1);
+                    result[^1] = last + "…";
                 }
             }
+            return result;
         }
     }
 

@@ -44,11 +44,13 @@
             testToolStripMenuItem = new ToolStripMenuItem();
             oProgramuToolStripMenuItem = new ToolStripMenuItem();
             správceToolStripMenuItem = new ToolStripMenuItem();
+            přehledToolStripMenuItem = new ToolStripMenuItem();
             radioButton1 = new RadioButton();
             radioButton2 = new RadioButton();
             comboBoxUsers = new ComboBox();
             panel1 = new Panel();
             panel2 = new Panel();
+            buttonReloadData = new Button();
             buttonNow = new Button();
             labelSelectedDate = new Label();
             buttonNext = new Button();
@@ -136,7 +138,7 @@
             // 
             // toolStripMenuItem1
             // 
-            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { nastaveníToolStripMenuItem, testToolStripMenuItem, oProgramuToolStripMenuItem, správceToolStripMenuItem });
+            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { nastaveníToolStripMenuItem, testToolStripMenuItem, oProgramuToolStripMenuItem, správceToolStripMenuItem, přehledToolStripMenuItem });
             toolStripMenuItem1.Name = "toolStripMenuItem1";
             toolStripMenuItem1.Size = new Size(24, 20);
             toolStripMenuItem1.Text = "?";
@@ -169,6 +171,13 @@
             správceToolStripMenuItem.Text = "Správce";
             správceToolStripMenuItem.Visible = false;
             správceToolStripMenuItem.Click += správceToolStripMenuItem_Click;
+            // 
+            // přehledToolStripMenuItem
+            // 
+            přehledToolStripMenuItem.Name = "přehledToolStripMenuItem";
+            přehledToolStripMenuItem.Size = new Size(139, 22);
+            přehledToolStripMenuItem.Text = "Přehled";
+            přehledToolStripMenuItem.Click += přehledToolStripMenuItem_Click;
             // 
             // radioButton1
             // 
@@ -210,6 +219,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(buttonReloadData);
             panel1.Controls.Add(radioButton1);
             panel1.Controls.Add(radioButton2);
             panel1.Dock = DockStyle.Left;
@@ -230,6 +240,16 @@
             panel2.Name = "panel2";
             panel2.Size = new Size(1269, 45);
             panel2.TabIndex = 6;
+            // 
+            // buttonReloadData
+            // 
+            buttonReloadData.Location = new Point(10, 556);
+            buttonReloadData.Name = "buttonReloadData";
+            buttonReloadData.Size = new Size(106, 33);
+            buttonReloadData.TabIndex = 5;
+            buttonReloadData.Text = "⟳";
+            buttonReloadData.UseVisualStyleBackColor = true;
+            buttonReloadData.Click += buttonReloadData_Click;
             // 
             // buttonNow
             // 
@@ -284,9 +304,10 @@
             // 
             // panelCalendarContainer
             // 
+            panelCalendarContainer.Dock = DockStyle.Fill;
             panelCalendarContainer.Location = new Point(0, 0);
             panelCalendarContainer.Name = "panelCalendarContainer";
-            panelCalendarContainer.Size = new Size(966, 769);
+            panelCalendarContainer.Size = new Size(1140, 590);
             panelCalendarContainer.TabIndex = 1;
             // 
             // notifyIcon1
@@ -377,5 +398,7 @@
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem zobrazitToolStripMenuItem;
         private ToolStripMenuItem ukoncitToolStripMenuItem;
+        private Button buttonReloadData;
+        private ToolStripMenuItem přehledToolStripMenuItem;
     }
 }

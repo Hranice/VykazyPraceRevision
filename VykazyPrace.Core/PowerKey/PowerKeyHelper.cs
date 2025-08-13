@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Diagnostics;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 
@@ -8,18 +7,78 @@ namespace VykazyPrace.Core.PowerKey
 {
     public class PowerKeyHelper
     {
-        private const string ConnectionString = "Server=10.130.10.100;Database=powerkey;User Id=vykazprace;Password=!Vykaz2025!;TrustServerCertificate=True;";
+        private const string ConnectionString =
+            "Server=10.130.10.100;Database=powerkey;User Id=vykazprace;Password=!Vykaz2025!;TrustServerCertificate=True;";
 
+        // === NOVÉ: stažení pro jednoho uživatele přes SP s filtrem na měsíc + PersonalNum ===
+        public async Task<int> DownloadForUserAsync(DateTime month, User user)
+        {
+            if (user is null) throw new ArgumentNullException(nameof(user));
+            if (user.PersonalNumber <= 0)
+                throw new ArgumentException("Uživatel nemá vyplněné osobní číslo.", nameof(user));
 
-        // TODO: Vzít pouze pokud je stav Nezpracováno (prnvě by bylo fajn zjistit, co to znamená)
+            try
+            {
+                var data = await GetUserDataFromSpAsync(user.PersonalNumber, month);
+                if (data == null || data.Rows.Count == 0) return 0;
+
+                var repo = new ArrivalDepartureRepository();
+                int saved = 0;
+
+                foreach (DataRow row in data.Rows)
+                {
+                    if (!TryParseRowFlexible(row,
+                                             out DateTime workDate,
+                                             out DateTime? arrival,
+                                             out DateTime? departure,
+                                             out double worked,
+                                             out double overtime,
+                                             out string? reason))
+                        continue;
+
+                    // neukládej starší nebo rovné poslednímu uloženému dni
+                    var latest = await repo.GetLatestWorkDateAsync(user.Id);
+                    if (latest.HasValue && workDate <= latest.Value) continue;
+
+                    // pokud je k dispozici komplet pár, zkus přesnou deduplikaci
+                    if (arrival.HasValue && departure.HasValue)
+                    {
+                        var dup = await repo.GetExactMatchAsync(user.Id, workDate, arrival.Value, departure.Value, worked, overtime);
+                        if (dup != null) continue;
+                    }
+
+                    var entity = new ArrivalDeparture
+                    {
+                        UserId = user.Id,
+                        WorkDate = workDate.Date,
+                        ArrivalTimestamp = arrival,     // předpoklad: nullable sloupce
+                        DepartureTimestamp = departure, // předpoklad: nullable sloupce
+                        DepartureReason = reason,
+                        HoursWorked = worked,
+                        HoursOvertime = overtime
+                    };
+
+                    await repo.CreateArrivalDepartureAsync(entity);
+                    saved++;
+                }
+
+                return saved;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Chyba při zpracování uživatele {user?.PersonalNumber}.", ex);
+            }
+        }
+
+        // === PŮVODNÍ API ponecháno kvůli kompatibilitě (jede přes všechny uživatele) ===
+        // Pokud ho už nepotřebuješ, můžeš si ho klidně odstranit až ve chvíli,
+        // kdy refaktor dokončíš i na volající straně.
         public async Task<int> DownloadArrivalsDeparturesAsync(DateTime month)
         {
             try
             {
-                DropView();
-                CreateView(month);
-
-                return await SaveToDatabaseAsync();
+                // zachováno původní chování: jede přes všechny uživatele přes SaveToDatabaseAsync
+                return await SaveToDatabaseAsync(month);
             }
             catch (Exception ex)
             {
@@ -27,95 +86,125 @@ namespace VykazyPrace.Core.PowerKey
             }
         }
 
-        private void DropView()
+        // === PONECHÁNO: metoda pro souhrn odpracovaných hodin (dočasné view) ===
+        public async Task<Dictionary<int, double>> GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month)
         {
-            string dropQuery = "DROP VIEW IF EXISTS pwk.Prenos_pracovni_doby";
+            string viewName = $"vw_Prenos_tmp_{Guid.NewGuid():N}";
+            await CreateTemporaryViewAsync(month, viewName);
 
             try
             {
-                using var connection = new SqlConnection(ConnectionString);
-                using var command = new SqlCommand(dropQuery, connection);
-                connection.Open();
-                command.ExecuteNonQuery();
+                return await GetWorkedHoursFromViewAsync(viewName);
             }
-            catch (Exception ex)
+            finally
             {
-                throw new Exception("Chyba při odstraňování view.", ex);
+                await DropTemporaryViewAsync(viewName);
             }
         }
 
-        private void CreateView(DateTime targetMonth)
+        // ====== INTERNÍ POMOCNÉ METODY ======
+
+        // Nové čtení dat pro jednoho uživatele přes SP [pwk].[Prenos_pracovni_doby_raw]
+        private async Task<DataTable?> GetUserDataFromSpAsync(int personalNumber, DateTime monthDate)
         {
-            const string dateFormatCommand = "SET DATEFORMAT DMY;";
+            try
+            {
+                using var connection = new SqlConnection(ConnectionString);
+                using var command = new SqlCommand("[pwk].[Prenos_pracovni_doby_raw]", connection)
+                {
+                    CommandType = CommandType.StoredProcedure,
+                    CommandTimeout = 120
+                };
 
-            // SQL část pro výpočet monthNumber pomocí PowerKey funkce
-            string dateToMonthNumber = $"[pwk].[DateToMonthNumber] ('{targetMonth:yyyy-MM-dd}')";
+                command.Parameters.Add("@MonthDate", SqlDbType.Date).Value = monthDate.Date;
+                command.Parameters.Add("@PersonalNum", SqlDbType.NVarChar, 50).Value = personalNumber.ToString();
 
-            string createViewCommand = $@"
-CREATE VIEW [pwk].[Prenos_pracovni_doby]
+                await connection.OpenAsync();
+                using var reader = await command.ExecuteReaderAsync();
+
+                var table = new DataTable();
+                table.Load(reader);
+                return table;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Chyba při čtení dat pro osobní číslo {personalNumber}.", ex);
+            }
+        }
+
+        // Zachováno: helper pro dočasné view na součty hodin (používá AttnMonth/AttnDay)
+        private async Task CreateTemporaryViewAsync(DateTime month, string viewName)
+        {
+            string dateToMonth = $"[pwk].[DateToMonthNumber] ('{month:yyyy-MM-dd}')";
+            string viewSql = $@"
+CREATE VIEW [pwk].[{viewName}]
 AS
 SELECT
-    PE.PersonID AS [Klíč_pracovníka (PersonID)],
-    PE.PersonalNum AS [Id_pracovníka (Os. číslo)],
-    PR.RegistrationTime AS [Příchod],
-    OD.RegistrationTime AS [Odchod],
-    pwk.GetLocalName(D2.DenoteName, 5) AS [Důvod odchodu],
-    AD.WorkedHours / 60.0 AS [Počet hodin (standard)],
-    AD.BalanceHours / 60.0 AS [Počet hodin (přesčas)],
-    pwk.DayNumberToDate(AD.DayNumber) AS [Datum směny],
-    CASE AM.ApproveState
-        WHEN 0 THEN 'Nezpracováno'
-        WHEN 1 THEN 'Zpracováno'
-        WHEN 4 THEN 'Schváleno vedoucím'
-        WHEN 7 THEN 'Schváleno HR'
-    END AS [Stav schválení měsíce]
-FROM pwk.Person PE
-JOIN pwk.AttnMonth AM ON AM.PersonID = PE.PersonID
-JOIN pwk.AttnDay AD ON AD.AttnMonthID = AM.AttnMonthID
-JOIN pwk.AttnDay_Registration PR ON PR.AttnDayID = AD.AttnDayID
-JOIN pwk.AttnDay_Registration OD ON OD.AttnDayID = AD.AttnDayID
-JOIN pwk.Denote D1 ON PR.DenoteID = D1.DenoteID
-JOIN pwk.Denote D2 ON OD.DenoteID = D2.DenoteID
-WHERE 
-    PE.DeletedID = 0
-    AND AM.MonthNumber = {dateToMonthNumber}
-    AND PR.DeletedID = 0 AND OD.DeletedID = 0
-    AND D1.InOutType = 1  -- příchod
-    AND D2.InOutType = 2  -- odchod
-    AND OD.RegistrationTime > PR.RegistrationTime
-    AND NOT EXISTS (
-        SELECT 1 
-        FROM pwk.AttnDay_Registration OTH
-        JOIN pwk.Denote DO ON OTH.DenoteID = DO.DenoteID
-        WHERE 
-            OTH.AttnDayID = AD.AttnDayID 
-            AND DO.InOutType = 2 
-            AND OTH.DeletedID = 0
-            AND OTH.RegistrationTime > PR.RegistrationTime 
-            AND OTH.RegistrationTime < OD.RegistrationTime
-    )";
+    [PE].[PersonalNum] AS [Id_pracovníka (Os. číslo)],
+    [AD].[WorkedHours]/60. AS [Počet hodin (standard)]
+FROM [pwk].[Person] [PE]
+INNER JOIN [pwk].[AttnMonth] [AM] ON [AM].[PersonID] = [PE].[PersonID]
+INNER JOIN [pwk].[AttnDay] [AD] ON [AD].[AttnMonthID] = [AM].[AttnMonthID]
+WHERE [PE].[DeletedID] = 0 
+AND [AM].[MonthNumber] = {dateToMonth}";
 
-            try
-            {
-                using var connection = new SqlConnection(ConnectionString);
-                connection.Open();
+            const string setFormat = "SET DATEFORMAT DMY;";
 
-                using (var setFormat = new SqlCommand(dateFormatCommand, connection))
-                {
-                    setFormat.ExecuteNonQuery();
-                }
+            using var connection = new SqlConnection(ConnectionString);
+            await connection.OpenAsync();
 
-                using (var createView = new SqlCommand(createViewCommand, connection))
-                {
-                    createView.ExecuteNonQuery();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Chyba při vytváření view.", ex);
-            }
+            using (var cmd1 = new SqlCommand(setFormat, connection))
+                await cmd1.ExecuteNonQueryAsync();
+
+            using (var cmd2 = new SqlCommand(viewSql, connection))
+                await cmd2.ExecuteNonQueryAsync();
         }
-        private async Task<int> SaveToDatabaseAsync()
+
+        private async Task DropTemporaryViewAsync(string viewName)
+        {
+            string sql = $"DROP VIEW IF EXISTS [pwk].[{viewName}]";
+            using var conn = new SqlConnection(ConnectionString);
+            using var cmd = new SqlCommand(sql, conn);
+            await conn.OpenAsync();
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        private async Task<Dictionary<int, double>> GetWorkedHoursFromViewAsync(string viewName)
+        {
+            string sql = $@"
+SELECT [Id_pracovníka (Os. číslo)] AS PersonalNumber,
+       SUM([Počet hodin (standard)]) AS TotalHours
+FROM [pwk].[{viewName}]
+GROUP BY [Id_pracovníka (Os. číslo)]";
+
+            var result = new Dictionary<int, double>();
+
+            using var conn = new SqlConnection(ConnectionString);
+            using var cmd = new SqlCommand(sql, conn);
+            await conn.OpenAsync();
+
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                object personalObj = reader.GetValue(0);
+                int pn;
+
+                if (personalObj is int directPn)
+                    pn = directPn;
+                else if (personalObj is string strPn && int.TryParse(strPn, out int parsedPn))
+                    pn = parsedPn;
+                else
+                    continue;
+
+                double hours = reader.IsDBNull(1) ? 0 : Convert.ToDouble(reader.GetValue(1));
+                result[pn] = hours;
+            }
+
+            return result;
+        }
+
+        // Zachováno, ale upraveno: už nevyužívá VIEW; jede přes SP a přes všechny uživatele (kvůli kompatibilitě původního API)
+        private async Task<int> SaveToDatabaseAsync(DateTime month)
         {
             try
             {
@@ -129,23 +218,31 @@ WHERE
                 {
                     if (user.PersonalNumber <= 0) continue;
 
-                    var userData = await GetUserArrivalDepartureDataAsync(user.PersonalNumber);
-                    if (userData == null) continue;
+                    var table = await GetUserDataFromSpAsync(user.PersonalNumber, month);
+                    if (table == null) continue;
 
-                    foreach (DataRow row in userData.Rows)
+                    foreach (DataRow row in table.Rows)
                     {
                         try
                         {
-                            if (!TryParseArrivalDepartureRow(row, out var arrival, out var departure, out var workDate, out var worked, out var overtime, out var reason))
+                            if (!TryParseRowFlexible(row,
+                                                     out var workDate,
+                                                     out var arrival,
+                                                     out var departure,
+                                                     out var worked,
+                                                     out var overtime,
+                                                     out var reason))
                                 continue;
 
-                            var duplicate = await arrivalRepo.GetExactMatchAsync(user.Id, workDate, arrival, departure, worked, overtime);
-                            if (duplicate != null)
-                                continue;
+                            var latest = await arrivalRepo.GetLatestWorkDateAsync(user.Id);
+                            if (latest.HasValue && workDate <= latest.Value) continue;
 
-                            var latestDate = await arrivalRepo.GetLatestWorkDateAsync(user.Id);
-                            if (latestDate.HasValue && workDate <= latestDate.Value)
-                                continue;
+                            if (arrival.HasValue && departure.HasValue)
+                            {
+                                var dup = await arrivalRepo.GetExactMatchAsync(
+                                    user.Id, workDate, arrival.Value, departure.Value, worked, overtime);
+                                if (dup != null) continue;
+                            }
 
                             var newEntry = new ArrivalDeparture
                             {
@@ -176,138 +273,81 @@ WHERE
             }
         }
 
-        private async Task<DataTable?> GetUserArrivalDepartureDataAsync(int personalNumber)
-        {
-            const string sqlQuery = @"
-                SELECT * 
-                FROM pwk.Prenos_pracovni_doby
-                WHERE [Id_pracovníka (Os. číslo)] = @OsCislo";
+        // === Parsování řádků (původní i flexibilní varianta) ===
 
-            try
-            {
-                using var connection = new SqlConnection(ConnectionString);
-                using var command = new SqlCommand(sqlQuery, connection);
-                command.Parameters.AddWithValue("@OsCislo", personalNumber);
-
-                await connection.OpenAsync();
-                using var reader = await command.ExecuteReaderAsync();
-                var table = new DataTable();
-                table.Load(reader);
-                return table;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Chyba při zpracování uživatele {personalNumber}", ex);
-            }
-        }
-
-        public async Task<Dictionary<int, double>> GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month)
-        {
-            string viewName = $"vw_Prenos_tmp_{Guid.NewGuid():N}";
-            await CreateTemporaryViewAsync(month, viewName);
-
-            try
-            {
-                return await GetWorkedHoursFromViewAsync(viewName);
-            }
-            finally
-            {
-                await DropTemporaryViewAsync(viewName);
-            }
-        }
-
-        private async Task CreateTemporaryViewAsync(DateTime month, string viewName)
-        {
-            string dateToMonth = $"[pwk].[DateToMonthNumber] ('{month:yyyy-MM-dd}')";
-            string viewSql = $@"
-CREATE VIEW [pwk].[{viewName}]
-AS
-SELECT
-    [PE].[PersonalNum] AS [Id_pracovníka (Os. číslo)],
-    [AD].[WorkedHours]/60. AS [Počet hodin (standard)]
-FROM [pwk].[Person] [PE]
-INNER JOIN [pwk].[AttnMonth] [AM] ON [AM].[PersonID] = [PE].[PersonID]
-INNER JOIN [pwk].[AttnDay] [AD] ON [AD].[AttnMonthID] = [AM].[AttnMonthID]
-WHERE [PE].[DeletedID] = 0 
-AND [AM].[MonthNumber] = {dateToMonth}";
-
-            const string setFormat = "SET DATEFORMAT DMY;";
-
-            using var connection = new SqlConnection(ConnectionString);
-            await connection.OpenAsync();
-
-            // 1. Nastavení formátu data (samostatně)
-            using (var cmd1 = new SqlCommand(setFormat, connection))
-            {
-                await cmd1.ExecuteNonQueryAsync();
-            }
-
-            // 2. Vytvoření view (musí být samostatně)
-            using (var cmd2 = new SqlCommand(viewSql, connection))
-            {
-                await cmd2.ExecuteNonQueryAsync();
-            }
-        }
-        private async Task DropTemporaryViewAsync(string viewName)
-        {
-            string sql = $"DROP VIEW IF EXISTS [pwk].[{viewName}]";
-
-            using var conn = new SqlConnection(ConnectionString);
-            using var cmd = new SqlCommand(sql, conn);
-            await conn.OpenAsync();
-            await cmd.ExecuteNonQueryAsync();
-        }
-        private async Task<Dictionary<int, double>> GetWorkedHoursFromViewAsync(string viewName)
-        {
-            string sql = $@"
-        SELECT [Id_pracovníka (Os. číslo)] AS PersonalNumber,
-               SUM([Počet hodin (standard)]) AS TotalHours
-        FROM [pwk].[{viewName}]
-        GROUP BY [Id_pracovníka (Os. číslo)]";
-
-            var result = new Dictionary<int, double>();
-
-            using var conn = new SqlConnection(ConnectionString);
-            using var cmd = new SqlCommand(sql, conn);
-            await conn.OpenAsync();
-
-            using var reader = await cmd.ExecuteReaderAsync();
-            while (await reader.ReadAsync())
-            {
-                object personalObj = reader.GetValue(0);
-                int pn;
-
-                if (personalObj is int directPn)
-                    pn = directPn;
-                else if (personalObj is string strPn && int.TryParse(strPn, out int parsedPn))
-                    pn = parsedPn;
-                else
-                    continue;
-
-                double hours = reader.IsDBNull(1) ? 0 : Convert.ToDouble(reader.GetValue(1));
-                result[pn] = hours;
-            }
-
-            return result;
-        }
-
+        // Původní signatura, kdyby ji něco volalo – ponecháno kvůli zpětné kompatibilitě:
         private bool TryParseArrivalDepartureRow(DataRow row, out DateTime arrival, out DateTime departure, out DateTime workDate, out double worked, out double overtime, out string? reason)
         {
             arrival = departure = workDate = default;
             worked = overtime = 0;
             reason = row["Důvod odchodu"]?.ToString();
 
-            string? arrivalStr = row["Příchod"]?.ToString();
-            string? departureStr = row["Odchod"]?.ToString();
-            string? dateStr = row["Datum směny"]?.ToString();
-            string? workedStr = row["Počet hodin (standard)"]?.ToString()?.Replace(',', '.');
-            string? overtimeStr = row["Počet hodin (přesčas)"]?.ToString()?.Replace(',', '.');
+            string? arrivalStr = row.Table.Columns.Contains("Příchod") ? row["Příchod"]?.ToString() : null;
+            string? departureStr = row.Table.Columns.Contains("Odchod") ? row["Odchod"]?.ToString() : null;
+            string? dateStr = row.Table.Columns.Contains("Datum směny") ? row["Datum směny"]?.ToString() : null;
+            string? workedStr = row.Table.Columns.Contains("Počet hodin (standard)") ? row["Počet hodin (standard)"]?.ToString()?.Replace(',', '.') : null;
+            string? overtimeStr = row.Table.Columns.Contains("Počet hodin (přesčas)") ? row["Počet hodin (přesčas)"]?.ToString()?.Replace(',', '.') : null;
 
             return DateTime.TryParse(arrivalStr, out arrival)
                 && DateTime.TryParse(departureStr, out departure)
                 && DateTime.TryParse(dateStr, out workDate)
                 && double.TryParse(workedStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out worked)
                 && double.TryParse(overtimeStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out overtime);
+        }
+
+        // Flexibilní varianta (pro nový „nepárový“ zdroj)
+        private static bool TryParseRowFlexible(
+            DataRow row,
+            out DateTime workDate,
+            out DateTime? arrival,
+            out DateTime? departure,
+            out double worked,
+            out double overtime,
+            out string? reason)
+        {
+            workDate = default;
+            arrival = null;
+            departure = null;
+            worked = 0;
+            overtime = 0;
+            reason = row.Table.Columns.Contains("Důvod odchodu")
+                     ? row["Důvod odchodu"]?.ToString()
+                     : null;
+
+            if (!TryGetDateTime(row, "Datum směny", out workDate))
+                return false;
+
+            if (TryGetDateTime(row, "Příchod", out var tmpArr))
+                arrival = tmpArr;
+
+            if (TryGetDateTime(row, "Odchod", out var tmpDep))
+                departure = tmpDep;
+
+            worked = TryGetDouble(row, "Počet hodin (standard)", out var w) ? w : 0;
+            overtime = TryGetDouble(row, "Počet hodin (přesčas)", out var ot) ? ot : 0;
+
+            return true;
+        }
+
+        private static bool TryGetDateTime(DataRow row, string col, out DateTime value)
+        {
+            value = default;
+            if (!row.Table.Columns.Contains(col)) return false;
+            var obj = row[col];
+            if (obj == null || obj == DBNull.Value) return false;
+            return DateTime.TryParse(obj.ToString(), out value);
+        }
+
+        private static bool TryGetDouble(DataRow row, string col, out double value)
+        {
+            value = 0;
+            if (!row.Table.Columns.Contains(col)) return false;
+            var s = row[col]?.ToString();
+            if (string.IsNullOrWhiteSpace(s)) return false;
+
+            s = s.Replace(',', '.');
+            return double.TryParse(s, System.Globalization.NumberStyles.Any,
+                                   System.Globalization.CultureInfo.InvariantCulture, out value);
         }
     }
 }

@@ -2,3 +2,24 @@
 2025-08-13 07:35:47.784 +02:00 [INF] Záznam  - : 0,5 h - Obchůzka byl úspěšně aktualizován.
 2025-08-13 07:49:00.053 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8.
 2025-08-13 14:38:20.471 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8.
+2025-08-13 14:50:52.637 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8.
+2025-08-13 14:51:12.518 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8.
+2025-08-13 14:52:20.592 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8.
+2025-08-13 14:52:36.601 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8.
+2025-08-13 14:53:42.052 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-13 15:00:33.363 +02:00 [ERR] Došlo k neočekávané chybě při načítání dat.
+System.Exception: Nepodařilo se stáhnout příchody a odchody.
+ ---> System.Exception: Chyba při globálním zpracování dat.
+ ---> System.InvalidCastException: Unable to cast object of type 'System.Decimal' to type 'System.Double'.
+   at System.Data.DataRowExtensions.UnboxT`1.NullableField[TElem](Object value)
+   at System.Data.DataRowExtensions.Field[T](DataRow row, String columnName)
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.TryReadRowLoose(DataRow row, Nullable`1& arrival, Nullable`1& departure, DateTime& workDate, Nullable`1& worked, Nullable`1& overtime, String& reason) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 128
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.SaveToDatabaseAsync(DateTime month, User user) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 36
+   --- End of inner exception stack trace ---
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.SaveToDatabaseAsync(DateTime month, User user) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 88
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.DownloadArrivalsDeparturesAsync(DateTime month, User user) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 17
+   --- End of inner exception stack trace ---
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.DownloadArrivalsDeparturesAsync(DateTime month, User user) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 21
+   at VykazyPrace.MainForm.LoadDataAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 171
+2025-08-13 15:10:18.721 +02:00 [INF] Staženo 1 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-13 15:10:52.880 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.

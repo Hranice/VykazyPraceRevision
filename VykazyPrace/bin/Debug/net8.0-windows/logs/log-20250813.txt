@@ -1,0 +1,4 @@
+2025-08-13 07:35:35.226 +02:00 [INF] Staženo 14 záznamů pro měsíc č.8.
+2025-08-13 07:35:47.784 +02:00 [INF] Záznam  - : 0,5 h - Obchůzka byl úspěšně aktualizován.
+2025-08-13 07:49:00.053 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8.
+2025-08-13 14:38:20.471 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8.

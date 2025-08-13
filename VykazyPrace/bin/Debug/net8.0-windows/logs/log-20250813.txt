@@ -23,3 +23,15 @@ System.Exception: Nepodařilo se stáhnout příchody a odchody.
    at VykazyPrace.MainForm.LoadDataAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 171
 2025-08-13 15:10:18.721 +02:00 [INF] Staženo 1 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
 2025-08-13 15:10:52.880 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-13 15:12:59.437 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-13 15:17:41.386 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-13 15:19:58.238 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-13 15:20:00.829 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-13 15:20:06.227 +02:00 [INF] Staženo 1 záznamů pro měsíc č.8 uživatele (721): Tomáš Erban - KONSTRUKCE.
+2025-08-13 15:20:12.178 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-13 15:20:20.462 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1): Vadym Dumnych - ELEKTRO.
+2025-08-13 15:20:29.030 +02:00 [INF] Staženo 1 záznamů pro měsíc č.8 uživatele (1971): Lukáš Vaníček - default.
+2025-08-13 15:20:38.243 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-13 15:20:52.577 +02:00 [INF] Záznam  - Automatizace: 1 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-08-13 15:22:14.747 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-13 15:22:17.272 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.

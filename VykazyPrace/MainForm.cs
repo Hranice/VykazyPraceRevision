@@ -334,6 +334,10 @@ namespace VykazyPrace
             var selectedName = comboBoxUsers.SelectedItem?.ToString();
             _selectedUser = users.FirstOrDefault(x => FormatHelper.FormatUserToString(x) == selectedName) ?? new User();
 
+            var powerKeyHelper = new PowerKeyHelper();
+            int totalRows = await powerKeyHelper.DownloadForUserAsync(DateTime.Now, _selectedUser);
+            AppLogger.Information($"Staženo {totalRows} záznamù pro mìsíc è.{DateTime.Now.Month} uživatele {FormatHelper.FormatUserToString(_selectedUser)}.", false);
+
             _calendar?.ChangeUser(_selectedUser);
             _monthlyCalendar.ChangeUser(_selectedUser);
         }

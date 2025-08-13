@@ -791,6 +791,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async Task AdjustIndicatorsAsync(Point scrollPosition, int userId, DateTime weekStart)
         {
+            // smazání starých indikátorů
             var oldIndicators = panelContainer.Controls
                 .OfType<Panel>()
                 .Where(p => p.Name == "indicator")
@@ -801,8 +802,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 ctrl.Dispose();
             }
 
-            var entries = await _arrivalDepartureRepo
-                .GetWeekEntriesForUserAsync(userId, weekStart);
+            var entries = await _arrivalDepartureRepo.GetWeekEntriesForUserAsync(userId, weekStart);
 
             int[] rowHeights = tableLayoutPanelCalendar.GetRowHeights();
             int[] columnWidths = tableLayoutPanelCalendar.GetColumnWidths();
@@ -812,69 +812,136 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             foreach (var e in entries)
             {
-                if (!e.ArrivalTimestamp.HasValue || !e.DepartureTimestamp.HasValue)
-                    continue;
-
-                TimeSpan rawArrival = e.ArrivalTimestamp.Value.TimeOfDay;
-                TimeSpan rawDeparture = e.DepartureTimestamp.Value.TimeOfDay;
-
-                (TimeSpan roundedArrival, TimeSpan roundedDeparture)
-                    = RoundWorkTimeToNearestHalfHour(rawArrival, rawDeparture);
-
-                // Přepočet na sloupcové indexy a pozice
-                int arrivalCol = GetColumnIndexFromTime(roundedArrival, minutesPerColumn);
-                int leaveCol = GetColumnIndexFromTime(roundedDeparture, minutesPerColumn);
+                // den v týdnu (Po=0 .. Ne=6)
                 int dayIndex = ((int)e.WorkDate.DayOfWeek - 1 + 7) % 7;
                 int rowHeight = dayIndex < rowHeights.Length ? rowHeights[dayIndex] : 69;
                 int yPos = rowHeights.Take(dayIndex).Sum() + headerRowHeights[0];
-                int arrivalX = columnWidths[0] * arrivalCol - Math.Abs(scrollPosition.X);
-                int leaveX = columnWidths[0] * leaveCol - Math.Abs(scrollPosition.X);
 
-                var arrivalIndicator = new Panel
+                // výchozí raw časy
+                TimeSpan? rawArrival = e.ArrivalTimestamp?.TimeOfDay;
+                TimeSpan? rawDeparture = e.DepartureTimestamp?.TimeOfDay;
+
+                // nic k zobrazení?
+                if (!rawArrival.HasValue && !rawDeparture.HasValue)
+                    continue;
+
+                var (roundedArrival, roundedDeparture) =
+                    RoundWorkTimeToNearestHalfHour(rawArrival, rawDeparture);
+
+                // přepočet na sloupcové indexy a X pozice
+                int? arrivalCol = roundedArrival.HasValue ? GetColumnIndexFromTime(roundedArrival.Value, minutesPerColumn) : (int?)null;
+                int? leaveCol = roundedDeparture.HasValue ? GetColumnIndexFromTime(roundedDeparture.Value, minutesPerColumn) : (int?)null;
+
+                int arrivalX = arrivalCol.HasValue ? columnWidths[0] * arrivalCol.Value - Math.Abs(scrollPosition.X) : 0;
+                int leaveX = leaveCol.HasValue ? columnWidths[0] * leaveCol.Value - Math.Abs(scrollPosition.X) : 0;
+
+                // tooltip text podle dostupnosti časů
+                string tt = (rawArrival, rawDeparture) switch
                 {
-                    Name = "indicator",
-                    Size = new Size(2, rowHeight),
-                    Location = new Point(arrivalX, yPos),
-                    BackColor = Color.Green
+                    (TimeSpan a, TimeSpan d) => $"{a:hh\\:mm} – {d:hh\\:mm}",
+                    (TimeSpan a, null) => $"Příchod {a:hh\\:mm}",
+                    (null, TimeSpan d) => $"Odchod {d:hh\\:mm}",
+                    _ => string.Empty
                 };
-                toolTip.SetToolTip(arrivalIndicator, $"{rawArrival:hh\\:mm} – {rawDeparture:hh\\:mm}");
 
-                var leaveIndicator = new Panel
+                // vykreslení příchodu (pokud je)
+                if (arrivalCol.HasValue)
                 {
-                    Name = "indicator",
-                    Size = new Size(2, rowHeight),
-                    Location = new Point(leaveX, yPos),
-                    BackColor = Color.Red
-                };
-                toolTip.SetToolTip(leaveIndicator, $"{rawArrival:hh\\:mm} – {rawDeparture:hh\\:mm}");
+                    var arrivalIndicator = new Panel
+                    {
+                        Name = "indicator",
+                        Size = new Size(2, rowHeight),
+                        Location = new Point(arrivalX, yPos),
+                        BackColor = Color.Green
+                    };
+                    toolTip.SetToolTip(arrivalIndicator, tt);
+                    panelContainer.Controls.Add(arrivalIndicator);
+                    arrivalIndicator.BringToFront();
+                }
 
-                panelContainer.Controls.Add(arrivalIndicator);
-                panelContainer.Controls.Add(leaveIndicator);
-                arrivalIndicator.BringToFront();
-                leaveIndicator.BringToFront();
+                // vykreslení odchodu (pokud je)
+                if (leaveCol.HasValue)
+                {
+                    var leaveIndicator = new Panel
+                    {
+                        Name = "indicator",
+                        Size = new Size(2, rowHeight),
+                        Location = new Point(leaveX, yPos),
+                        BackColor = Color.Red
+                    };
+                    toolTip.SetToolTip(leaveIndicator, tt);
+                    panelContainer.Controls.Add(leaveIndicator);
+                    leaveIndicator.BringToFront();
+                }
             }
         }
 
         /// <summary>
-        /// Zaokrouhlí příchod na nejbližší půlhodinu a k odpracované době přičte 5 minut, 
-        /// pak tuto dobu zaokrouhlí dolů na půlhodinu.
+        /// Pokud existují oba časy:
+        ///  - Zaokrouhlí příchod na nejbližší půlhodinu (AwayFromZero),
+        ///  - ke skutečné délce přičte 5 minut a tuto délku zaokrouhlí dolů na půlhodinu,
+        ///  - zaokrouhlený odchod = zaokrouhlený příchod + zaokrouhlená délka.
+        /// Pokud existuje jen příchod -> vrátí jen zaokrouhlený příchod.
+        /// Pokud existuje jen odchod -> vrátí jen zaokrouhlený odchod (nezávislé zaokrouhlení).
         /// </summary>
-        private (TimeSpan roundedArrival, TimeSpan roundedDeparture)
-            RoundWorkTimeToNearestHalfHour(TimeSpan rawArrival, TimeSpan rawDeparture)
+        private (TimeSpan? roundedArrival, TimeSpan? roundedDeparture)
+            RoundWorkTimeToNearestHalfHour(TimeSpan? rawArrival, TimeSpan? rawDeparture)
         {
-            var roundedArrival = TimeSpan.FromMinutes(
-                Math.Round(rawArrival.TotalMinutes / 30.0, 0, MidpointRounding.AwayFromZero)
-                * 30
-            );
+            // nic k výpočtu
+            if (!rawArrival.HasValue && !rawDeparture.HasValue)
+                return (null, null);
 
-            var realDuration = rawDeparture - rawArrival;
+            // helper: půlhodina AwayFromZero + ořez do intervalu [00:00, 24:00)
+            static TimeSpan RoundHalfHour(TimeSpan t)
+            {
+                var mins = Math.Round(t.TotalMinutes / 30.0, 0, MidpointRounding.AwayFromZero) * 30.0;
+                long ticks = TimeSpan.FromMinutes(mins).Ticks;
+                long dayTicks = TimeSpan.FromDays(1).Ticks;
 
-            double durWithOffset = realDuration.TotalMinutes + 5;
-            double roundedDurMin = Math.Floor(durWithOffset / 30.0) * 30;
+                if (ticks < 0) ticks = 0;
+                if (ticks >= dayTicks) ticks = dayTicks - 1; // vyhnout se přesahu do dalšího dne
+
+                return new TimeSpan(ticks);
+            }
+
+            // jen příchod
+            if (rawArrival.HasValue && !rawDeparture.HasValue)
+            {
+                var ra = RoundHalfHour(rawArrival.Value);
+                return (ra, null);
+            }
+
+            // jen odchod
+            if (!rawArrival.HasValue && rawDeparture.HasValue)
+            {
+                var rd = RoundHalfHour(rawDeparture.Value);
+                return (null, rd);
+            }
+
+            // oba časy -> aplikuj speciální logiku
+            var roundedArrival = RoundHalfHour(rawArrival!.Value);
+
+            var realDuration = rawDeparture!.Value - rawArrival.Value;
+            if (realDuration < TimeSpan.Zero)
+                realDuration = TimeSpan.Zero;
+
+            double durWithOffset = realDuration.TotalMinutes + 5;         // +5 min
+            double roundedDurMin = Math.Floor(durWithOffset / 30.0) * 30; // dolů na půlhodinu
+
             var roundedDeparture = roundedArrival + TimeSpan.FromMinutes(roundedDurMin);
+
+            // bezpečnostní ořez
+            long dayMaxTicks = TimeSpan.FromDays(1).Ticks - 1;
+            if (roundedDeparture.Ticks < 0) roundedDeparture = TimeSpan.Zero;
+            if (roundedDeparture.Ticks > dayMaxTicks) roundedDeparture = new TimeSpan(dayMaxTicks);
+
+            // zajisti pořadí (kdyby vzniklo == nebo menší z důvodu zaokrouhlení)
+            if (roundedDeparture < roundedArrival)
+                roundedDeparture = roundedArrival;
 
             return (roundedArrival, roundedDeparture);
         }
+
 
         private int GetColumnIndexFromTime(TimeSpan timeOfDay, int minutesPerColumn)
         {

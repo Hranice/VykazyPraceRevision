@@ -10,7 +10,6 @@ namespace VykazyPrace.Core.PowerKey
         private const string ConnectionString =
             "Server=10.130.10.100;Database=powerkey;User Id=vykazprace;Password=!Vykaz2025!;TrustServerCertificate=True;";
 
-        // === NOVÉ: stažení pro jednoho uživatele přes SP s filtrem na měsíc + PersonalNum ===
         public async Task<int> DownloadForUserAsync(DateTime month, User user)
         {
             if (user is null) throw new ArgumentNullException(nameof(user));
@@ -36,23 +35,54 @@ namespace VykazyPrace.Core.PowerKey
                                              out string? reason))
                         continue;
 
-                    // neukládej starší nebo rovné poslednímu uloženému dni
-                    var latest = await repo.GetLatestWorkDateAsync(user.Id);
-                    if (latest.HasValue && workDate <= latest.Value) continue;
+                    // 1) Merge do existujícího záznamu stejného dne (pokud existuje)
+                    var existing = await repo.GetByUserAndDateAsync(user.Id, workDate.Date);
+                    if (existing != null)
+                    {
+                        bool changed = false;
 
-                    // pokud je k dispozici komplet pár, zkus přesnou deduplikaci
+                        if (!existing.ArrivalTimestamp.HasValue && arrival.HasValue)
+                        { existing.ArrivalTimestamp = arrival; changed = true; }
+
+                        if (!existing.DepartureTimestamp.HasValue && departure.HasValue)
+                        { existing.DepartureTimestamp = departure; changed = true; }
+
+                        if (existing.HoursWorked == 0 && worked > 0)
+                        {
+                            existing.HoursWorked = worked;
+                            changed = true;
+                        }
+
+                        if (existing.HoursOvertime == 0 && overtime > 0)
+                        {
+                            existing.HoursOvertime = overtime;
+                            changed = true;
+                        }
+
+                        if (string.IsNullOrWhiteSpace(existing.DepartureReason) && !string.IsNullOrWhiteSpace(reason))
+                        { existing.DepartureReason = reason; changed = true; }
+
+                        if (changed)
+                            await repo.UpdateArrivalDepartureAsync(existing);
+
+                        continue; // hotovo pro tento řádek
+                    }
+
+                    // 2) Neexistuje záznam – kontrola duplicit jen pokud máme komplet pár
                     if (arrival.HasValue && departure.HasValue)
                     {
-                        var dup = await repo.GetExactMatchAsync(user.Id, workDate, arrival.Value, departure.Value, worked, overtime);
+                        var dup = await repo.GetExactMatchAsync(
+                            user.Id, workDate, arrival.Value, departure.Value, worked, overtime);
                         if (dup != null) continue;
                     }
 
+                    // 3) Vlož nový záznam (povoleno i s jednostranným časem)
                     var entity = new ArrivalDeparture
                     {
                         UserId = user.Id,
                         WorkDate = workDate.Date,
-                        ArrivalTimestamp = arrival,     // předpoklad: nullable sloupce
-                        DepartureTimestamp = departure, // předpoklad: nullable sloupce
+                        ArrivalTimestamp = arrival,
+                        DepartureTimestamp = departure,
                         DepartureReason = reason,
                         HoursWorked = worked,
                         HoursOvertime = overtime
@@ -69,6 +99,7 @@ namespace VykazyPrace.Core.PowerKey
                 throw new Exception($"Chyba při zpracování uživatele {user?.PersonalNumber}.", ex);
             }
         }
+
 
         // === PŮVODNÍ API ponecháno kvůli kompatibilitě (jede přes všechny uživatele) ===
         // Pokud ho už nepotřebuješ, můžeš si ho klidně odstranit až ve chvíli,
@@ -203,7 +234,6 @@ GROUP BY [Id_pracovníka (Os. číslo)]";
             return result;
         }
 
-        // Zachováno, ale upraveno: už nevyužívá VIEW; jede přes SP a přes všechny uživatele (kvůli kompatibilitě původního API)
         private async Task<int> SaveToDatabaseAsync(DateTime month)
         {
             try
@@ -219,7 +249,7 @@ GROUP BY [Id_pracovníka (Os. číslo)]";
                     if (user.PersonalNumber <= 0) continue;
 
                     var table = await GetUserDataFromSpAsync(user.PersonalNumber, month);
-                    if (table == null) continue;
+                    if (table == null || table.Rows.Count == 0) continue;
 
                     foreach (DataRow row in table.Rows)
                     {
@@ -234,9 +264,40 @@ GROUP BY [Id_pracovníka (Os. číslo)]";
                                                      out var reason))
                                 continue;
 
-                            var latest = await arrivalRepo.GetLatestWorkDateAsync(user.Id);
-                            if (latest.HasValue && workDate <= latest.Value) continue;
+                            // 1) Merge do existujícího záznamu dne
+                            var existing = await arrivalRepo.GetByUserAndDateAsync(user.Id, workDate.Date);
+                            if (existing != null)
+                            {
+                                bool changed = false;
 
+                                if (!existing.ArrivalTimestamp.HasValue && arrival.HasValue)
+                                { existing.ArrivalTimestamp = arrival; changed = true; }
+
+                                if (!existing.DepartureTimestamp.HasValue && departure.HasValue)
+                                { existing.DepartureTimestamp = departure; changed = true; }
+
+                                if (existing.HoursWorked == 0 && worked > 0)
+                                {
+                                    existing.HoursWorked = worked;
+                                    changed = true;
+                                }
+
+                                if (existing.HoursOvertime == 0 && overtime > 0)
+                                {
+                                    existing.HoursOvertime = overtime;
+                                    changed = true;
+                                }
+
+                                if (string.IsNullOrWhiteSpace(existing.DepartureReason) && !string.IsNullOrWhiteSpace(reason))
+                                { existing.DepartureReason = reason; changed = true; }
+
+                                if (changed)
+                                    await arrivalRepo.UpdateArrivalDepartureAsync(existing);
+
+                                continue;
+                            }
+
+                            // 2) Neexistuje záznam – kontrola duplicit, když máme komplet pár
                             if (arrival.HasValue && departure.HasValue)
                             {
                                 var dup = await arrivalRepo.GetExactMatchAsync(
@@ -244,6 +305,7 @@ GROUP BY [Id_pracovníka (Os. číslo)]";
                                 if (dup != null) continue;
                             }
 
+                            // 3) Vlož nový
                             var newEntry = new ArrivalDeparture
                             {
                                 UserId = user.Id,
@@ -272,6 +334,7 @@ GROUP BY [Id_pracovníka (Os. číslo)]";
                 throw new Exception("Chyba při globálním zpracování dat.", ex);
             }
         }
+
 
         // === Parsování řádků (původní i flexibilní varianta) ===
 

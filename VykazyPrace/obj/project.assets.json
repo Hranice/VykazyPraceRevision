@@ -2725,7 +2725,7 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "1.3.3",
+    "version": "1.3.4",
     "restore": {
       "projectUniqueName": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\VykazyPrace.csproj",
       "projectName": "WorkLog",
@@ -2803,5 +2803,13 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Při získávání dat o ohrožení zabezpečení balíčku došlo k chybě: Nepovedlo se načíst index služby pro zdroj https://www.emgu.com/e03cb1d2-a3aa-4be9-8e4a-546f4de31a35/v3/index.json."
+    }
+  ]
 }

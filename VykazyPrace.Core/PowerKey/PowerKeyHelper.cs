@@ -2,6 +2,7 @@
 using System.Data;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
+using VykazyPrace.Core.Logging;
 
 namespace VykazyPrace.Core.PowerKey
 {
@@ -96,28 +97,12 @@ namespace VykazyPrace.Core.PowerKey
             }
             catch (Exception ex)
             {
-                throw new Exception($"Chyba při zpracování uživatele {user?.PersonalNumber}.", ex);
+                AppLogger.Error($"Chyba při zpracování uživatele {user?.PersonalNumber}.", ex);
+                return -1;
             }
         }
 
 
-        // === PŮVODNÍ API ponecháno kvůli kompatibilitě (jede přes všechny uživatele) ===
-        // Pokud ho už nepotřebuješ, můžeš si ho klidně odstranit až ve chvíli,
-        // kdy refaktor dokončíš i na volající straně.
-        public async Task<int> DownloadArrivalsDeparturesAsync(DateTime month)
-        {
-            try
-            {
-                // zachováno původní chování: jede přes všechny uživatele přes SaveToDatabaseAsync
-                return await SaveToDatabaseAsync(month);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Nepodařilo se stáhnout příchody a odchody.", ex);
-            }
-        }
-
-        // === PONECHÁNO: metoda pro souhrn odpracovaných hodin (dočasné view) ===
         public async Task<Dictionary<int, double>> GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month)
         {
             string viewName = $"vw_Prenos_tmp_{Guid.NewGuid():N}";
@@ -133,9 +118,6 @@ namespace VykazyPrace.Core.PowerKey
             }
         }
 
-        // ====== INTERNÍ POMOCNÉ METODY ======
-
-        // Nové čtení dat pro jednoho uživatele přes SP [pwk].[Prenos_pracovni_doby_raw]
         private async Task<DataTable?> GetUserDataFromSpAsync(int personalNumber, DateTime monthDate)
         {
             try
@@ -159,7 +141,8 @@ namespace VykazyPrace.Core.PowerKey
             }
             catch (Exception ex)
             {
-                throw new Exception($"Chyba při čtení dat pro osobní číslo {personalNumber}.", ex);
+                AppLogger.Error($"Chyba při čtení dat pro osobní číslo {personalNumber}.", ex);
+                return null;
             }
         }
 
@@ -234,131 +217,6 @@ GROUP BY [Id_pracovníka (Os. číslo)]";
             return result;
         }
 
-        private async Task<int> SaveToDatabaseAsync(DateTime month)
-        {
-            try
-            {
-                var userRepo = new UserRepository();
-                var arrivalRepo = new ArrivalDepartureRepository();
-                var users = await userRepo.GetAllUsersAsync();
-
-                int totalSaved = 0;
-
-                foreach (var user in users)
-                {
-                    if (user.PersonalNumber <= 0) continue;
-
-                    var table = await GetUserDataFromSpAsync(user.PersonalNumber, month);
-                    if (table == null || table.Rows.Count == 0) continue;
-
-                    foreach (DataRow row in table.Rows)
-                    {
-                        try
-                        {
-                            if (!TryParseRowFlexible(row,
-                                                     out var workDate,
-                                                     out var arrival,
-                                                     out var departure,
-                                                     out var worked,
-                                                     out var overtime,
-                                                     out var reason))
-                                continue;
-
-                            // 1) Merge do existujícího záznamu dne
-                            var existing = await arrivalRepo.GetByUserAndDateAsync(user.Id, workDate.Date);
-                            if (existing != null)
-                            {
-                                bool changed = false;
-
-                                if (!existing.ArrivalTimestamp.HasValue && arrival.HasValue)
-                                { existing.ArrivalTimestamp = arrival; changed = true; }
-
-                                if (!existing.DepartureTimestamp.HasValue && departure.HasValue)
-                                { existing.DepartureTimestamp = departure; changed = true; }
-
-                                if (existing.HoursWorked == 0 && worked > 0)
-                                {
-                                    existing.HoursWorked = worked;
-                                    changed = true;
-                                }
-
-                                if (existing.HoursOvertime == 0 && overtime > 0)
-                                {
-                                    existing.HoursOvertime = overtime;
-                                    changed = true;
-                                }
-
-                                if (string.IsNullOrWhiteSpace(existing.DepartureReason) && !string.IsNullOrWhiteSpace(reason))
-                                { existing.DepartureReason = reason; changed = true; }
-
-                                if (changed)
-                                    await arrivalRepo.UpdateArrivalDepartureAsync(existing);
-
-                                continue;
-                            }
-
-                            // 2) Neexistuje záznam – kontrola duplicit, když máme komplet pár
-                            if (arrival.HasValue && departure.HasValue)
-                            {
-                                var dup = await arrivalRepo.GetExactMatchAsync(
-                                    user.Id, workDate, arrival.Value, departure.Value, worked, overtime);
-                                if (dup != null) continue;
-                            }
-
-                            // 3) Vlož nový
-                            var newEntry = new ArrivalDeparture
-                            {
-                                UserId = user.Id,
-                                WorkDate = workDate.Date,
-                                ArrivalTimestamp = arrival,
-                                DepartureTimestamp = departure,
-                                DepartureReason = reason,
-                                HoursWorked = worked,
-                                HoursOvertime = overtime
-                            };
-
-                            await arrivalRepo.CreateArrivalDepartureAsync(newEntry);
-                            totalSaved++;
-                        }
-                        catch (Exception exRow)
-                        {
-                            throw new Exception($"Chyba při ukládání záznamu pro uživatele {user.PersonalNumber}", exRow);
-                        }
-                    }
-                }
-
-                return totalSaved;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Chyba při globálním zpracování dat.", ex);
-            }
-        }
-
-
-        // === Parsování řádků (původní i flexibilní varianta) ===
-
-        // Původní signatura, kdyby ji něco volalo – ponecháno kvůli zpětné kompatibilitě:
-        private bool TryParseArrivalDepartureRow(DataRow row, out DateTime arrival, out DateTime departure, out DateTime workDate, out double worked, out double overtime, out string? reason)
-        {
-            arrival = departure = workDate = default;
-            worked = overtime = 0;
-            reason = row["Důvod odchodu"]?.ToString();
-
-            string? arrivalStr = row.Table.Columns.Contains("Příchod") ? row["Příchod"]?.ToString() : null;
-            string? departureStr = row.Table.Columns.Contains("Odchod") ? row["Odchod"]?.ToString() : null;
-            string? dateStr = row.Table.Columns.Contains("Datum směny") ? row["Datum směny"]?.ToString() : null;
-            string? workedStr = row.Table.Columns.Contains("Počet hodin (standard)") ? row["Počet hodin (standard)"]?.ToString()?.Replace(',', '.') : null;
-            string? overtimeStr = row.Table.Columns.Contains("Počet hodin (přesčas)") ? row["Počet hodin (přesčas)"]?.ToString()?.Replace(',', '.') : null;
-
-            return DateTime.TryParse(arrivalStr, out arrival)
-                && DateTime.TryParse(departureStr, out departure)
-                && DateTime.TryParse(dateStr, out workDate)
-                && double.TryParse(workedStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out worked)
-                && double.TryParse(overtimeStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out overtime);
-        }
-
-        // Flexibilní varianta (pro nový „nepárový“ zdroj)
         private static bool TryParseRowFlexible(
             DataRow row,
             out DateTime workDate,

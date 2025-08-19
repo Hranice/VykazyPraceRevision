@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\vykazyprace.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\vykazyprace.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace.core\\powerkey\\powerkeyhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|solutionrelative:vykazyprace.core\\powerkey\\powerkeyhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -34,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -42,7 +46,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
+              "Title": "VykazyPrace",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\VykazyPrace.csproj",
+              "RelativeDocumentMoniker": "VykazyPrace\\VykazyPrace.csproj",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\VykazyPrace.csproj",
+              "RelativeToolTip": "VykazyPrace\\VykazyPrace.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-08-19T08:54:17.855Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "ArrivalDepartureRepository.cs",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Repositories\\ArrivalDepartureRepository.cs",
               "RelativeDocumentMoniker": "VykazyPrace.Core\\Database\\Repositories\\ArrivalDepartureRepository.cs",
@@ -54,7 +70,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "CalendarV2.cs",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs",
@@ -66,7 +82,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "CustomTableLayoutPanel.cs",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\CalendarV2\\CustomTableLayoutPanel.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\UserControls\\CalendarV2\\CustomTableLayoutPanel.cs",
@@ -78,7 +94,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "ExportDialog.cs",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\ExportDialog.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\Dialogs\\ExportDialog.cs",
@@ -90,7 +106,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "MainForm.cs",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\MainForm.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\MainForm.cs",
@@ -102,7 +118,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "PowerKeyHelper.cs",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\PowerKey\\PowerKeyHelper.cs",
               "RelativeDocumentMoniker": "VykazyPrace.Core\\PowerKey\\PowerKeyHelper.cs",

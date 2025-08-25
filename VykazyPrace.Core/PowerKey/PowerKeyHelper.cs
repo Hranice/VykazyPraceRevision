@@ -15,7 +15,10 @@ namespace VykazyPrace.Core.PowerKey
         {
             if (user is null) throw new ArgumentNullException(nameof(user));
             if (user.PersonalNumber <= 0)
-                throw new ArgumentException("Uživatel nemá vyplněné osobní číslo.", nameof(user));
+            {
+                AppLogger.Debug("Uživatel nemá vyplněné osobní číslo.");
+                return 0;
+            }
 
             try
             {
@@ -98,7 +101,7 @@ namespace VykazyPrace.Core.PowerKey
             catch (Exception ex)
             {
                 AppLogger.Error($"Chyba při zpracování uživatele {user?.PersonalNumber}.", ex);
-                return -1;
+                return 0;
             }
         }
 

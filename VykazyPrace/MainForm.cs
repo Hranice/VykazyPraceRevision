@@ -467,5 +467,15 @@ namespace VykazyPrace
             var overviewDialog = new OverviewDialog(_selectedUser, DateRangeHelper.GetMonthRange(_selectedDate));
             overviewDialog.ShowDialog();
         }
+
+        private void buttonReloadNetworkDisks_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonReloadPowerKey_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

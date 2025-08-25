@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WorkLogWpf")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4ea8196e5383168d246e324d4002ed80ee545502")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+be410a051188450020b822d44091a5cc3ee8d59f")]
 [assembly: System.Reflection.AssemblyProductAttribute("WorkLogWpf")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WorkLogWpf")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

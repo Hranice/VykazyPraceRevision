@@ -18,46 +18,37 @@ namespace VykazyPrace.Dialogs
             InitializeComponent();
             DoubleBuffered = true;
 
-            LoadFilteredData();
+            LoadFilteredData(DateTime.Now, 1250);
 
             customComboBox1.SetItems(new string[] { "test1", "test2", "paprika" });
         }
 
-        private void LoadFilteredData()
+        private void LoadFilteredData(DateTime monthDate, int personalNumber)
         {
-            string connectionString = "Server=10.130.10.100;Database=powerkey;User Id=vykazprace;Password=!Vykaz2025!;TrustServerCertificate=True;";
-
-            // Filtr podle Os. čísla a datumu
-            string sqlQuery = @"
-        SELECT * 
-        FROM pwk.Prenos_pracovni_doby
-        WHERE [Id_pracovníka (Os. číslo)] = @OsCislo";
-            //AND [Datum směny] BETWEEN @StartDate AND @EndDate";
+            string cs = "Server=10.130.10.100;Database=powerkey;User Id=vykazprace;Password=!Vykaz2025!;TrustServerCertificate=True;";
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                using (SqlCommand command = new SqlCommand(sqlQuery, connection))
-                using (SqlDataAdapter adapter = new SqlDataAdapter(command))
-                {
-                    // Parametry
-                    command.Parameters.AddWithValue("@OsCislo", 1250);
-                    //command.Parameters.AddWithValue("@StartDate", new DateTime(2025, 3, 24));
-                    //command.Parameters.AddWithValue("@EndDate", new DateTime(2025, 3, 30));
+                using var connection = new SqlConnection(cs);
+                using var command = new SqlCommand("[pwk].[Prenos_pracovni_doby_raw]", connection);
+                command.CommandType = CommandType.StoredProcedure;
 
-                    DataTable table = new DataTable();
-                    adapter.Fill(table);
+                command.Parameters.Add("@MonthDate", SqlDbType.Date).Value = monthDate.Date;
+                command.Parameters.Add("@PersonalNum", SqlDbType.NVarChar, 15).Value = personalNumber.ToString();
 
-                    dataGridView1.DataSource = table;
-                    dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                    dataGridView1.AutoResizeColumns();
+                using var adapter = new SqlDataAdapter(command);
+                var table = new DataTable();
+                adapter.Fill(table);
 
-                    _loadedTable = table;
-                }
+                dataGridView1.DataSource = table;
+                dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                dataGridView1.AutoResizeColumns();
+
+                _loadedTable = table;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Chyba při načítání dat: " + ex.Message);
+                MessageBox.Show("Chyba při načítání dat: " + ex.Message, "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -166,7 +157,7 @@ AND [AM].[MonthNumber] = ([pwk].[DateToMonthNumber] (GETDATE())) - 1";
 
         private void buttonReload_Click(object sender, EventArgs e)
         {
-            LoadFilteredData();
+            LoadFilteredData(DateTime.Now, 1250);
         }
 
         private async void buttonSave_Click(object sender, EventArgs e)

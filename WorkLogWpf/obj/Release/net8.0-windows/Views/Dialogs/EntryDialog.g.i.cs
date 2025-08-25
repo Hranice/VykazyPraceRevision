@@ -52,7 +52,7 @@ namespace WorkLogWpf.Views.Dialogs {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/WorkLogWpf;V1.0.0.0;component/views/dialogs/entrydialog.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/WorkLogWpf;component/views/dialogs/entrydialog.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\..\Views\Dialogs\EntryDialog.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

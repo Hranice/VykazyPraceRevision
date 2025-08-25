@@ -1,4 +1,5 @@
-﻿using VykazyPrace.Core.Logging;
+﻿using VykazyPrace.Core.Database.Models;
+using VykazyPrace.Core.Logging;
 using VykazyPrace.Core.PowerKey;
 using VykazyPrace.Logging;
 
@@ -13,11 +14,13 @@ namespace VykazyPrace.Dialogs
 
         private async void buttonDownloadArrivalsDepartures_Click(object sender, EventArgs e)
         {
+
             try
             {
                 var powerKeyHelper = new PowerKeyHelper();
-                int totalRows = await powerKeyHelper.DownloadArrivalsDeparturesAsync(dateTimePicker1.Value);
-                AppLogger.Information($"Staženo {totalRows} záznamů pro měsíc č.{dateTimePicker1.Value.Month}.", true);
+                // TODO: zprovoznit
+                //int totalRows = await powerKeyHelper.DownloadArrivalsDeparturesAsync(dateTimePicker1.Value, );
+                //AppLogger.Information($"Staženo {totalRows} záznamů pro měsíc č.{dateTimePicker1.Value.Month}.", true);
             }
             catch (Exception ex)
             {

@@ -157,10 +157,6 @@ namespace VykazyPrace
             {
                 Invoke(() => _loadingUC.BringToFront());
 
-                var powerKeyHelper = new PowerKeyHelper();
-                int totalRows = await powerKeyHelper.DownloadArrivalsDeparturesAsync(DateTime.Now);
-                AppLogger.Information($"Staženo {totalRows} záznamù pro mìsíc è.{DateTime.Now.Month}.", false);
-
                 var users = await _userRepo.GetAllUsersAsync();
                 _selectedUser = await _userRepo.GetUserByWindowsUsernameAsync(Environment.UserName) ?? new User();
                 _currentUserLoA = _selectedUser.LevelOfAccess;
@@ -170,6 +166,10 @@ namespace VykazyPrace
                     AppLogger.Error("Nepodaøilo se naèíst aktuálního uživatele, pøístup bude omezen.");
                     return;
                 }
+
+                var powerKeyHelper = new PowerKeyHelper();
+                int totalRows = await powerKeyHelper.DownloadForUserAsync(DateTime.Now, _selectedUser);
+                AppLogger.Information($"Staženo {totalRows} záznamù pro mìsíc è.{DateTime.Now.Month} uživatele {FormatHelper.FormatUserToString(_selectedUser)}.", false);
 
                 Invoke(() =>
                 {
@@ -334,6 +334,10 @@ namespace VykazyPrace
             var selectedName = comboBoxUsers.SelectedItem?.ToString();
             _selectedUser = users.FirstOrDefault(x => FormatHelper.FormatUserToString(x) == selectedName) ?? new User();
 
+            var powerKeyHelper = new PowerKeyHelper();
+            int totalRows = await powerKeyHelper.DownloadForUserAsync(DateTime.Now, _selectedUser);
+            AppLogger.Information($"Staženo {totalRows} záznamù pro mìsíc è.{DateTime.Now.Month} uživatele {FormatHelper.FormatUserToString(_selectedUser)}.", false);
+
             _calendar?.ChangeUser(_selectedUser);
             _monthlyCalendar.ChangeUser(_selectedUser);
         }
@@ -426,7 +430,8 @@ namespace VykazyPrace
 
         private void správceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new ManagerDialog().ShowDialog();
+            var mngDialog = new ManagerDialog();
+            mngDialog.ShowDialog();
         }
 
         private void návrhProjektuToolStripMenuItem_Click(object sender, EventArgs e)

@@ -1,0 +1,5 @@
+2025-08-15 07:52:19.757 +02:00 [INF] Staženo 1 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-15 07:52:23.240 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-15 07:55:06.228 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-15 07:55:09.095 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-15 07:55:48.779 +02:00 [INF] Záznam  - : 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.

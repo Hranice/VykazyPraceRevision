@@ -1,0 +1,4 @@
+2025-08-19 08:48:15.966 +02:00 [INF] Staženo 1 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-19 08:48:18.931 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-19 08:48:44.669 +02:00 [INF] Záznam  - : 0,5 h - 3D tisk byl úspěšně aktualizován.
+2025-08-19 08:49:02.546 +02:00 [INF] Záznam  - : 0,5 h - Obchůzka byl úspěšně aktualizován.

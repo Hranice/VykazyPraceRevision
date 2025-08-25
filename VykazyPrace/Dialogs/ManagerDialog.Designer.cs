@@ -31,11 +31,14 @@
             buttonDownloadArrivalsDepartures = new Button();
             label1 = new Label();
             dateTimePicker1 = new DateTimePicker();
+            numericUpDown1 = new NumericUpDown();
+            label2 = new Label();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             SuspendLayout();
             // 
             // buttonDownloadArrivalsDepartures
             // 
-            buttonDownloadArrivalsDepartures.Location = new Point(218, 30);
+            buttonDownloadArrivalsDepartures.Location = new Point(344, 30);
             buttonDownloadArrivalsDepartures.Name = "buttonDownloadArrivalsDepartures";
             buttonDownloadArrivalsDepartures.Size = new Size(276, 23);
             buttonDownloadArrivalsDepartures.TabIndex = 0;
@@ -59,17 +62,36 @@
             dateTimePicker1.Size = new Size(200, 23);
             dateTimePicker1.TabIndex = 3;
             // 
+            // numericUpDown1
+            // 
+            numericUpDown1.Location = new Point(218, 30);
+            numericUpDown1.Name = "numericUpDown1";
+            numericUpDown1.Size = new Size(120, 23);
+            numericUpDown1.TabIndex = 4;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(218, 9);
+            label2.Name = "label2";
+            label2.Size = new Size(51, 15);
+            label2.TabIndex = 5;
+            label2.Text = "Os. číslo";
+            // 
             // ManagerDialog
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(800, 450);
+            Controls.Add(label2);
+            Controls.Add(numericUpDown1);
             Controls.Add(dateTimePicker1);
             Controls.Add(label1);
             Controls.Add(buttonDownloadArrivalsDepartures);
             Name = "ManagerDialog";
             Text = "ManagerDialog";
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -79,5 +101,7 @@
         private Button buttonDownloadArrivalsDepartures;
         private Label label1;
         private DateTimePicker dateTimePicker1;
+        private Label label2;
+        public NumericUpDown numericUpDown1;
     }
 }

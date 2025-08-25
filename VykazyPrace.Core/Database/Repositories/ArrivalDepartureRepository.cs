@@ -65,33 +65,48 @@ namespace VykazyPrace.Core.Database.Repositories
 
         /// <summary>
         /// Získání záznamu podle uživatele a data.
+        /// Kdyby existovalo víc řádků pro stejný den, vrátí nejnovější (nejvyšší Id).
         /// </summary>
         public async Task<ArrivalDeparture?> GetByUserAndDateAsync(int userId, DateTime date)
         {
+            var day = date.Date;
             return await _context.ArrivalsDepartures
-                .FirstOrDefaultAsync(a => a.UserId == userId && a.WorkDate.Date == date.Date);
+                .Where(a => a.UserId == userId && a.WorkDate == day)
+                .OrderByDescending(a => a.Id)
+                .FirstOrDefaultAsync();
         }
+
 
         /// <summary>
-        /// Aktualizace existujícího záznamu.
+        /// Uloží změny do předané entity. Pokud je entity detached, připojí ji.
+        /// Použij, když jsi už provedl merge chybějících hodnot v service vrstvě.
         /// </summary>
-        public async Task<bool> UpdateAsync(ArrivalDeparture updated)
+        public async Task UpdateArrivalDepartureAsync(ArrivalDeparture entity)
         {
-            var existing = await _context.ArrivalsDepartures.FindAsync(updated.Id);
-            if (existing == null)
-                return false;
+            var entry = _context.Entry(entity);
+            if (entry.State == EntityState.Detached)
+            {
+                // pokus o nalezení původní entity podle Id,
+                // případně attach a označení jako Modified
+                var existing = await _context.ArrivalsDepartures
+                    .FirstOrDefaultAsync(a => a.Id == entity.Id);
 
-            existing.UserId = updated.UserId;
-            existing.WorkDate = updated.WorkDate;
-            existing.ArrivalTimestamp = updated.ArrivalTimestamp;
-            existing.DepartureTimestamp = updated.DepartureTimestamp;
-            existing.DepartureReason = updated.DepartureReason;
-            existing.HoursWorked = updated.HoursWorked;
-            existing.HoursOvertime = updated.HoursOvertime;
+                if (existing != null)
+                {
+                    // přepiš hodnoty na existující tracked entitě
+                    _context.Entry(existing).CurrentValues.SetValues(entity);
+                }
+                else
+                {
+                    // neznáme původní tracked entitu – připoj a označ změny
+                    _context.ArrivalsDepartures.Attach(entity);
+                    entry.State = EntityState.Modified;
+                }
+            }
 
             await VykazyPraceContextExtensions.SafeSaveAsync(_context);
-            return true;
         }
+
 
         /// <summary>
         /// Smazání záznamu podle ID.

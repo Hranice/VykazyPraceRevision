@@ -157,9 +157,14 @@ namespace VykazyPrace
             {
                 Invoke(() => _loadingUC.BringToFront());
 
+
                 var users = await _userRepo.GetAllUsersAsync();
-                _selectedUser = await _userRepo.GetUserByWindowsUsernameAsync(Environment.UserName) ?? new User();
+                AppLogger.Debug($"Naèteno {users.Count} záznamù.");
+                string userName = Environment.UserName.ToLower();
+                _selectedUser = await _userRepo.GetUserByWindowsUsernameAsync(userName) ?? new User();
+                AppLogger.Debug($"Naètení uživatele podle windows už. jména: '{userName}'.");
                 _currentUserLoA = _selectedUser.LevelOfAccess;
+                AppLogger.Debug($"Naètení uživatelských práv: '{_currentUserLoA}'.");
 
                 if (_selectedUser.Id == 0)
                 {

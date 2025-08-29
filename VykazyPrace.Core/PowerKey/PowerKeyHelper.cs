@@ -39,55 +39,35 @@ namespace VykazyPrace.Core.PowerKey
                                              out string? reason))
                         continue;
 
-                    // 1) Merge do existujícího záznamu stejného dne (pokud existuje)
-                    var existing = await repo.GetByUserAndDateAsync(user.Id, workDate.Date);
-                    if (existing != null)
-                    {
-                        bool changed = false;
+                    // stáhni všechny existující záznamy pro daný den (žádné mergování podle dne)
+                    var existingForDay = await repo.ListByUserAndDateAsync(user.Id, workDate.Date);
 
-                        if (!existing.ArrivalTimestamp.HasValue && arrival.HasValue)
-                        { existing.ArrivalTimestamp = arrival; changed = true; }
+                    static bool SameDT(DateTime? a, DateTime? b)
+                        => (!a.HasValue && !b.HasValue) || (a.HasValue && b.HasValue && a.Value == b.Value);
 
-                        if (!existing.DepartureTimestamp.HasValue && departure.HasValue)
-                        { existing.DepartureTimestamp = departure; changed = true; }
+                    static bool SameDouble(double a, double b) => Math.Abs(a - b) < 0.01;
 
-                        if (existing.HoursWorked == 0 && worked > 0)
-                        {
-                            existing.HoursWorked = worked;
-                            changed = true;
-                        }
+                    // přesná shoda (včetně null hodnot a důvodu odchodu)
+                    var exact = existingForDay.FirstOrDefault(x =>
+                        SameDT(x.ArrivalTimestamp, arrival) &&
+                        SameDT(x.DepartureTimestamp, departure) &&
+                        SameDouble(x.HoursWorked, worked) &&
+                        SameDouble(x.HoursOvertime, overtime) &&
+                        string.Equals(x.DepartureReason ?? string.Empty,
+                                      reason ?? string.Empty,
+                                      StringComparison.OrdinalIgnoreCase));
 
-                        if (existing.HoursOvertime == 0 && overtime > 0)
-                        {
-                            existing.HoursOvertime = overtime;
-                            changed = true;
-                        }
+                    if (exact != null)
+                        continue; // už to tam je
 
-                        if (string.IsNullOrWhiteSpace(existing.DepartureReason) && !string.IsNullOrWhiteSpace(reason))
-                        { existing.DepartureReason = reason; changed = true; }
-
-                        if (changed)
-                            await repo.UpdateArrivalDepartureAsync(existing);
-
-                        continue; // hotovo pro tento řádek
-                    }
-
-                    // 2) Neexistuje záznam – kontrola duplicit jen pokud máme komplet pár
-                    if (arrival.HasValue && departure.HasValue)
-                    {
-                        var dup = await repo.GetExactMatchAsync(
-                            user.Id, workDate, arrival.Value, departure.Value, worked, overtime);
-                        if (dup != null) continue;
-                    }
-
-                    // 3) Vlož nový záznam (povoleno i s jednostranným časem)
+                    // vlož nový záznam (povoleno i jednostranně – jen příchod/jen odchod)
                     var entity = new ArrivalDeparture
                     {
                         UserId = user.Id,
                         WorkDate = workDate.Date,
                         ArrivalTimestamp = arrival,
                         DepartureTimestamp = departure,
-                        DepartureReason = reason,
+                        DepartureReason = string.IsNullOrWhiteSpace(reason) ? null : reason,
                         HoursWorked = worked,
                         HoursOvertime = overtime
                     };
@@ -104,6 +84,7 @@ namespace VykazyPrace.Core.PowerKey
                 return 0;
             }
         }
+
 
 
         public async Task<Dictionary<int, double>> GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month)

@@ -43,6 +43,9 @@
     <Compile Update="Dialogs\UserManagementDialog.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="MainForm.Connectivity.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

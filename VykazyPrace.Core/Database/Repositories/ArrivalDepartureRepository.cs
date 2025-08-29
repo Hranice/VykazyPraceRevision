@@ -28,12 +28,12 @@ namespace VykazyPrace.Core.Database.Repositories
                 .Where(a => a.UserId == userId)
                 .OrderByDescending(a => a.WorkDate)
                 .Select(a => (DateTime?)a.WorkDate)
-                .FirstOrDefaultAsync();
+                .SafeFirstOrDefaultAsync();
         }
 
         public async Task<ArrivalDeparture?> GetExactMatchAsync(int userId, DateTime workDate, DateTime arrival, DateTime departure, double worked, double overtime)
         {
-            return await _context.ArrivalsDepartures.FirstOrDefaultAsync(a =>
+            return await _context.ArrivalsDepartures.SafeFirstOrDefaultAsync(a =>
                 a.UserId == userId &&
                 a.WorkDate == workDate.Date &&
                 a.ArrivalTimestamp == arrival &&
@@ -50,7 +50,7 @@ namespace VykazyPrace.Core.Database.Repositories
             return await _context.ArrivalsDepartures
                 .Include(a => a.User)
                 .OrderBy(a => a.WorkDate)
-                .ToListAsync();
+                .SafeToListAsync();
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace VykazyPrace.Core.Database.Repositories
         {
             return await _context.ArrivalsDepartures
                 .Include(a => a.User)
-                .FirstOrDefaultAsync(a => a.Id == id);
+                .SafeFirstOrDefaultAsync(a => a.Id == id);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace VykazyPrace.Core.Database.Repositories
             return await _context.ArrivalsDepartures
                 .Where(a => a.UserId == userId && a.WorkDate == day)
                 .OrderByDescending(a => a.Id)
-                .FirstOrDefaultAsync();
+                .SafeFirstOrDefaultAsync();
         }
 
 
@@ -131,7 +131,7 @@ namespace VykazyPrace.Core.Database.Repositories
             return await _context.ArrivalsDepartures
                 .Where(a => a.UserId == userId && a.WorkDate >= weekStart && a.WorkDate < weekEnd)
                 .OrderBy(a => a.WorkDate)
-                .ToListAsync();
+                .SafeToListAsync();
         }
     }
 }

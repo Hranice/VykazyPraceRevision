@@ -8,6 +8,18 @@ namespace VykazyPrace.Core.Connectivity
         private readonly string _sqliteFilePath;
         private readonly TimeSpan _openTimeout;
 
+        /// <summary>
+        /// Nejjednodušší použití: stačí jen cesta k souboru.
+        /// readOnly = true použij, pokud chceš jen ověřovat čtení (a nechceš, aby se soubor případně vytvářel).
+        /// </summary>
+        public SqliteHealthChecker(string sqliteFilePath, bool readOnly = false, TimeSpan? openTimeout = null)
+            : this(BuildConnectionString(sqliteFilePath, readOnly), sqliteFilePath, openTimeout)
+        {
+        }
+
+        /// <summary>
+        /// Původní konstruktor — zůstává kvůli zpětné kompatibilitě.
+        /// </summary>
         public SqliteHealthChecker(string sqliteConnectionString, string sqliteFilePath, TimeSpan? openTimeout = null)
         {
             _sqliteConnectionString = sqliteConnectionString ?? throw new ArgumentNullException(nameof(sqliteConnectionString));
@@ -19,17 +31,16 @@ namespace VykazyPrace.Core.Connectivity
         {
             try
             {
-                // 1) Ověř, že soubor je dostupný na síti a dá se otevřít (rychlá IO kontrola).
+                // 1) Lehká IO kontrola – soubor existuje a jde otevřít (síť/ACL).
                 if (!File.Exists(_sqliteFilePath)) return ConnectionStatus.Unavailable;
 
-                // Lehké otevření pro čtení – chytí i dočasnou ztrátu přístupu/práv.
                 using (var fs = new FileStream(_sqliteFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 1, useAsync: true))
                 {
-                    var buffer = new byte[1];
-                    await fs.ReadAsync(buffer, 0, 0, ct).ConfigureAwait(false); // no-op read to touch
+                    var buffer = new byte[0];
+                    await fs.ReadAsync(buffer, 0, 0, ct).ConfigureAwait(false); // no-op, jen "ťuk"
                 }
 
-                // 2) Skutečné DB otevření
+                // 2) Otevření DB + drobný dotaz
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
                 cts.CancelAfter(_openTimeout);
 
@@ -38,7 +49,7 @@ namespace VykazyPrace.Core.Connectivity
 
                 using var cmd = conn.CreateCommand();
                 cmd.CommandText = "PRAGMA schema_version;";
-                var _ = await cmd.ExecuteScalarAsync(cts.Token).ConfigureAwait(false);
+                _ = await cmd.ExecuteScalarAsync(cts.Token).ConfigureAwait(false);
 
                 return ConnectionStatus.Available;
             }
@@ -46,6 +57,20 @@ namespace VykazyPrace.Core.Connectivity
             {
                 return ConnectionStatus.Unavailable;
             }
+        }
+
+        private static string BuildConnectionString(string path, bool readOnly)
+        {
+            // Builder se postará o správné escapování a uvozovky, když je v cestě mezera/; apod.
+            var builder = new SqliteConnectionStringBuilder
+            {
+                DataSource = path,
+                // ReadOnly => rychlejší fail, když nejsou práva; ReadWrite když chceš i zapisovat.
+                Mode = readOnly ? SqliteOpenMode.ReadOnly : SqliteOpenMode.ReadWrite,
+                Cache = SqliteCacheMode.Shared,
+                Pooling = false
+            };
+            return builder.ToString();
         }
     }
 }

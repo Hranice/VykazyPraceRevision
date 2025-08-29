@@ -791,6 +791,14 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async Task AdjustIndicatorsAsync(Point scrollPosition, int userId, DateTime weekStart)
         {
+            var entries = await _arrivalDepartureRepo.GetWeekEntriesForUserAsync(userId, weekStart);
+
+            if (entries is null)
+            {
+                AppLogger.Information("Nepodařilo se upravit indikátory - záznamy příchodů a odchodů jsou null.");
+                return;
+            }
+
             // smazání starých indikátorů
             var oldIndicators = panelContainer.Controls
                 .OfType<Panel>()
@@ -801,8 +809,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                 panelContainer.Controls.Remove(ctrl);
                 ctrl.Dispose();
             }
-
-            var entries = await _arrivalDepartureRepo.GetWeekEntriesForUserAsync(userId, weekStart);
 
             int[] rowHeights = tableLayoutPanelCalendar.GetRowHeights();
             int[] columnWidths = tableLayoutPanelCalendar.GetColumnWidths();

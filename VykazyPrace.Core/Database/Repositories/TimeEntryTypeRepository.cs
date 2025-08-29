@@ -54,7 +54,7 @@ namespace VykazyPrace.Core.Database.Repositories
             Func<IQueryable<TimeEntryType>, IQueryable<TimeEntryType>> applyFilter)
         {
             Log("ZÍSKÁNÍ", descriptor);
-            var list = await applyFilter(BaseQuery(noTracking: true)).ToListAsync();
+            var list = await applyFilter(BaseQuery(noTracking: true)).SafeToListAsync();
             Log("ZÍSKÁNÍ", $"HOTOVO VRÁCENO {list.Count} TYPŮ");
             return list;
         }
@@ -72,7 +72,7 @@ namespace VykazyPrace.Core.Database.Repositories
         {
             Log("PŘIDÁNÍ", $"'{timeEntryType.Title}' for project type {timeEntryType.ForProjectType}");
             var existing = await BaseQuery(noTracking: true)
-                .FirstOrDefaultAsync(t => t.Title == timeEntryType.Title
+                .SafeFirstOrDefaultAsync(t => t.Title == timeEntryType.Title
                                           && t.ForProjectType == timeEntryType.ForProjectType);
             if (existing != null)
             {
@@ -111,7 +111,7 @@ namespace VykazyPrace.Core.Database.Repositories
         public async Task<TimeEntryType?> GetTimeEntryTypeByIdAsync(int id)
         {
             Log("ZÍSKÁNÍ", $"ID {id}");
-            var item = await BaseQuery(noTracking: true).FirstOrDefaultAsync(t => t.Id == id);
+            var item = await BaseQuery(noTracking: true).SafeFirstOrDefaultAsync(t => t.Id == id);
             Log("ZÍSKÁNÍ", item != null ? $"Found '{item.Title}'" : "Not found");
             return item;
         }

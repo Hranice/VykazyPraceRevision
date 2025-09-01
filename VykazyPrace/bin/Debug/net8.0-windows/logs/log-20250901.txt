@@ -362,3 +362,6 @@
 2025-09-01 10:29:40.783 +02:00 [INF] 29.08.2025 | UserId=29 | 05:35 - 14:06 (Odchod) | Hodiny: 8, Přesčasy: 0,5
 2025-09-01 10:29:40.784 +02:00 [INF] Staženo pro 19 uživatelů, celkem 0 řádků.
 2025-09-01 11:05:35.846 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-01 11:13:48.824 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-01 11:13:48.891 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-01 11:13:53.670 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.

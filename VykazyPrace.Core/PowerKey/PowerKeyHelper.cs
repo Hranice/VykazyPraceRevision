@@ -40,15 +40,43 @@ namespace VykazyPrace.Core.PowerKey
                                              out string? reason))
                         continue;
 
-                    // stáhni všechny existující záznamy pro daný den (žádné mergování podle dne)
                     var existingForDay = await repo.ListByUserAndDateAsync(user.Id, workDate.Date);
 
-                    static bool SameDT(DateTime? a, DateTime? b)
-                        => (!a.HasValue && !b.HasValue) || (a.HasValue && b.HasValue && a.Value == b.Value);
+                    // Helpery
+                    static bool SameDT(DateTime? a, DateTime? b, TimeSpan? tol = null)
+                    {
+                        if (!a.HasValue && !b.HasValue) return true;
+                        if (a.HasValue != b.HasValue) return false;
+                        var tolerance = tol ?? TimeSpan.FromSeconds(1);
+                        return Math.Abs((a.Value - b.Value).TotalSeconds) <= tolerance.TotalSeconds;
+                    }
 
-                    static bool SameDouble(double a, double b) => Math.Abs(a - b) < 0.01;
+                    static bool SameDouble(double a, double b, double eps = 0.01)
+                        => Math.Abs(a - b) < eps;
 
-                    // přesná shoda (včetně null hodnot a důvodu odchodu)
+                    static bool IsSubset(ArrivalDeparture ex,
+                                         DateTime? arr,
+                                         DateTime? dep,
+                                         double worked,
+                                         double overtime,
+                                         string? reason)
+                    {
+                        bool arrivalOk = ex.ArrivalTimestamp == null || (arr.HasValue && SameDT(ex.ArrivalTimestamp, arr));
+                        bool departureOk = ex.DepartureTimestamp == null || (dep.HasValue && SameDT(ex.DepartureTimestamp, dep));
+                        bool workedOk = ex.HoursWorked == 0 || SameDouble(ex.HoursWorked, worked);
+                        bool overtimeOk = ex.HoursOvertime == 0 || SameDouble(ex.HoursOvertime, overtime);
+                        bool reasonOk = string.IsNullOrWhiteSpace(ex.DepartureReason) ||
+                                        string.Equals(ex.DepartureReason, reason ?? string.Empty, StringComparison.OrdinalIgnoreCase);
+
+                        return arrivalOk && departureOk && workedOk && overtimeOk && reasonOk
+                               && (
+                                      (ex.DepartureTimestamp == null && dep.HasValue) ||
+                                      (!SameDouble(ex.HoursWorked, worked) && worked > 0) ||
+                                      (!SameDouble(ex.HoursOvertime, overtime) && overtime > 0) ||
+                                      (string.IsNullOrWhiteSpace(ex.DepartureReason) && !string.IsNullOrWhiteSpace(reason))
+                                  );
+                    }
+
                     var exact = existingForDay.FirstOrDefault(x =>
                         SameDT(x.ArrivalTimestamp, arrival) &&
                         SameDT(x.DepartureTimestamp, departure) &&
@@ -58,12 +86,27 @@ namespace VykazyPrace.Core.PowerKey
                                       reason ?? string.Empty,
                                       StringComparison.OrdinalIgnoreCase));
 
-                    AppLogger.Debug(FormatHelper.FormatArrivalDepartureToString(exact));
-
                     if (exact != null)
-                        continue; // už to tam je
+                    {
+                        // už tam je identický záznam
+                        continue;
+                    }
 
-                    // vlož nový záznam (povoleno i jednostranně – jen příchod/jen odchod)
+                    var subset = existingForDay.FirstOrDefault(x => IsSubset(x, arrival, departure, worked, overtime, reason));
+                    if (subset != null)
+                    {
+                        subset.ArrivalTimestamp = subset.ArrivalTimestamp ?? arrival;
+                        subset.DepartureTimestamp = subset.DepartureTimestamp ?? departure;
+                        if (subset.HoursWorked == 0 && worked > 0) subset.HoursWorked = worked;
+                        if (subset.HoursOvertime == 0 && overtime > 0) subset.HoursOvertime = overtime;
+                        if (string.IsNullOrWhiteSpace(subset.DepartureReason) && !string.IsNullOrWhiteSpace(reason))
+                            subset.DepartureReason = reason;
+
+                        await repo.UpdateArrivalDepartureAsync(subset);
+                        saved++;
+                        continue;
+                    }
+
                     var entity = new ArrivalDeparture
                     {
                         UserId = user.Id,
@@ -87,6 +130,7 @@ namespace VykazyPrace.Core.PowerKey
                 return 0;
             }
         }
+
 
         public async Task<Dictionary<int, double>> GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month)
         {

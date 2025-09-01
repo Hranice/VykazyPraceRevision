@@ -2,6 +2,7 @@
 using System.Data;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
+using VykazyPrace.Core.Helpers;
 using VykazyPrace.Core.Logging;
 
 namespace VykazyPrace.Core.PowerKey
@@ -57,6 +58,8 @@ namespace VykazyPrace.Core.PowerKey
                                       reason ?? string.Empty,
                                       StringComparison.OrdinalIgnoreCase));
 
+                    AppLogger.Debug(FormatHelper.FormatArrivalDepartureToString(exact));
+
                     if (exact != null)
                         continue; // už to tam je
 
@@ -84,8 +87,6 @@ namespace VykazyPrace.Core.PowerKey
                 return 0;
             }
         }
-
-
 
         public async Task<Dictionary<int, double>> GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month)
         {

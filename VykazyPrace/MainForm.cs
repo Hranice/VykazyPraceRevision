@@ -176,6 +176,14 @@ namespace VykazyPrace
                 int totalRows = await powerKeyHelper.DownloadForUserAsync(DateTime.Now, _selectedUser);
                 AppLogger.Information($"Staženo {totalRows} záznamù pro mìsíc è.{DateTime.Now.Month} uživatele {FormatHelper.FormatUserToString(_selectedUser)}.", false);
 
+                // Pokud dnes stahuju mìsíc M a vèerejšek byl v mìsíci M-1, vždy dojeï i M-1
+                var previousDay = DateTime.Now.AddDays(-1);
+                if (previousDay.Month != DateTime.Today.Month || previousDay.Year != DateTime.Today.Year)
+                {
+                    await powerKeyHelper.DownloadForUserAsync(previousDay, _selectedUser);
+                    AppLogger.Information($"Staženo {totalRows} záznamù pro mìsíc è.{previousDay.Month} uživatele {FormatHelper.FormatUserToString(_selectedUser)}.", false);
+                }
+
                 Invoke(() =>
                 {
                     SetupUiForAccessLevel(_currentUserLoA);

@@ -1,0 +1,61 @@
+2025-08-27 11:14:51.508 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-27 11:14:54.879 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-27 11:15:47.709 +02:00 [INF] Záznam  - : 0,5 h -  byl úspěšně aktualizován.
+2025-08-27 16:39:55.785 +02:00 [ERR] Databáze není dostupná nebo se ji nepodařilo otevřít.
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 10: 'disk I/O error'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at VykazyPrace.Core.Database.Repositories.UserRepository.GetUserByWindowsUsernameAsync(String windowsUsername) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\Repositories\UserRepository.cs:line 60
+   at VykazyPrace.MainForm.LoadDataAsync() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 161
+2025-08-27 16:40:07.613 +02:00 [INF] Aplikace se nyní ukončí.
+2025-08-27 16:40:11.752 +02:00 [ERR] Zahřívací dotaz selhal: One or more errors occurred. (SQLite Error 14: 'unable to open database file'.)
+2025-08-27 16:40:12.199 +02:00 [ERR] Databáze je neplatná nebo ji nelze načíst.
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 14: 'unable to open database file'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteConnectionInternal..ctor(SqliteConnectionStringBuilder connectionOptions, SqliteConnectionPool pool)
+   at Microsoft.Data.Sqlite.SqliteConnectionPool.GetConnection()
+   at Microsoft.Data.Sqlite.SqliteConnectionFactory.GetConnection(SqliteConnection outerConnection)
+   at Microsoft.Data.Sqlite.SqliteConnection.Open()
+   at VykazyPrace.Core.Database.DatabaseValidator.ValidateStructure(VykazyPraceContext context) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\DatabaseValidator.cs:line 27
+   at VykazyPrace.MainForm.ValidateDatabase() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 136
+2025-08-27 16:40:16.358 +02:00 [INF] Aplikace se nyní ukončí.
+2025-08-27 16:40:27.466 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-27 16:40:30.271 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-27 16:41:26.506 +02:00 [INF] Záznam  - : 0,5 h -  byl smazán z DB.
+2025-08-27 16:41:39.183 +02:00 [INF] Záznam  - : 0,5 h -  byl smazán z DB.
+2025-08-27 16:41:59.163 +02:00 [ERR] Zahřívací dotaz selhal: One or more errors occurred. (SQLite Error 14: 'unable to open database file'.)
+2025-08-27 16:41:59.608 +02:00 [ERR] Databáze je neplatná nebo ji nelze načíst.
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 14: 'unable to open database file'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteConnectionInternal..ctor(SqliteConnectionStringBuilder connectionOptions, SqliteConnectionPool pool)
+   at Microsoft.Data.Sqlite.SqliteConnectionPool.GetConnection()
+   at Microsoft.Data.Sqlite.SqliteConnectionFactory.GetConnection(SqliteConnection outerConnection)
+   at Microsoft.Data.Sqlite.SqliteConnection.Open()
+   at VykazyPrace.Core.Database.DatabaseValidator.ValidateStructure(VykazyPraceContext context) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\DatabaseValidator.cs:line 27
+   at VykazyPrace.MainForm.ValidateDatabase() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 136
+2025-08-27 16:42:01.944 +02:00 [INF] Aplikace se nyní ukončí.
+2025-08-27 16:42:13.309 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-27 16:42:16.112 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-27 16:42:35.937 +02:00 [ERR] Zahřívací dotaz selhal: One or more errors occurred. (SQLite Error 14: 'unable to open database file'.)
+2025-08-27 16:42:36.422 +02:00 [ERR] Databáze je neplatná nebo ji nelze načíst.
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 14: 'unable to open database file'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteConnectionInternal..ctor(SqliteConnectionStringBuilder connectionOptions, SqliteConnectionPool pool)
+   at Microsoft.Data.Sqlite.SqliteConnectionPool.GetConnection()
+   at Microsoft.Data.Sqlite.SqliteConnectionFactory.GetConnection(SqliteConnection outerConnection)
+   at Microsoft.Data.Sqlite.SqliteConnection.Open()
+   at VykazyPrace.Core.Database.DatabaseValidator.ValidateStructure(VykazyPraceContext context) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\DatabaseValidator.cs:line 27
+   at VykazyPrace.MainForm.ValidateDatabase() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 136
+2025-08-27 16:43:08.345 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-27 16:43:15.857 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-27 16:47:06.948 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.
+2025-08-27 16:47:09.701 +02:00 [INF] Staženo 0 záznamů pro měsíc č.8 uživatele (1250): Jan Procházka - KAMERY.

@@ -33,6 +33,7 @@
             dateTimePicker1 = new DateTimePicker();
             numericUpDown1 = new NumericUpDown();
             label2 = new Label();
+            checkBox1 = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             SuspendLayout();
             // 
@@ -78,12 +79,23 @@
             label2.TabIndex = 5;
             label2.Text = "Os. číslo";
             // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Location = new Point(218, 59);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(113, 19);
+            checkBox1.TabIndex = 6;
+            checkBox1.Text = "Všichni uživatelé";
+            checkBox1.UseVisualStyleBackColor = true;
+            // 
             // ManagerDialog
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(800, 450);
+            Controls.Add(checkBox1);
             Controls.Add(label2);
             Controls.Add(numericUpDown1);
             Controls.Add(dateTimePicker1);
@@ -103,5 +115,6 @@
         private DateTimePicker dateTimePicker1;
         private Label label2;
         public NumericUpDown numericUpDown1;
+        private CheckBox checkBox1;
     }
 }

@@ -28,12 +28,12 @@ namespace VykazyPrace.Core.Database.Repositories
                 .Where(a => a.UserId == userId)
                 .OrderByDescending(a => a.WorkDate)
                 .Select(a => (DateTime?)a.WorkDate)
-                .FirstOrDefaultAsync();
+                .SafeFirstOrDefaultAsync();
         }
 
         public async Task<ArrivalDeparture?> GetExactMatchAsync(int userId, DateTime workDate, DateTime arrival, DateTime departure, double worked, double overtime)
         {
-            return await _context.ArrivalsDepartures.FirstOrDefaultAsync(a =>
+            return await _context.ArrivalsDepartures.SafeFirstOrDefaultAsync(a =>
                 a.UserId == userId &&
                 a.WorkDate == workDate.Date &&
                 a.ArrivalTimestamp == arrival &&
@@ -43,6 +43,45 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
+        /// Vrátí všechny záznamy uživatele pro daný den (kvůli více párům za den).
+        /// </summary>
+        public async Task<List<ArrivalDeparture>> ListByUserAndDateAsync(int userId, DateTime date)
+        {
+            var day = date.Date;
+            return await _context.ArrivalsDepartures
+                .Where(a => a.UserId == userId && a.WorkDate == day)
+                .OrderBy(a => a.Id)
+                .SafeToListAsync();
+        }
+
+        /// <summary>
+        /// Přesná shoda záznamu včetně případných NULL hodnot a důvodu odchodu.
+        /// Užitečné pro deduplikaci jak kompletních, tak jednostranných záznamů.
+        /// </summary>
+        public async Task<ArrivalDeparture?> GetExactMatchNullableAsync(
+            int userId,
+            DateTime workDate,
+            DateTime? arrival,
+            DateTime? departure,
+            double worked,
+            double overtime,
+            string? reason)
+        {
+            var day = workDate.Date;
+
+            return await _context.ArrivalsDepartures.SafeFirstOrDefaultAsync(a =>
+                a.UserId == userId &&
+                a.WorkDate == day &&
+                ((a.ArrivalTimestamp == null && arrival == null) || a.ArrivalTimestamp == arrival) &&
+                ((a.DepartureTimestamp == null && departure == null) || a.DepartureTimestamp == departure) &&
+                Math.Abs(a.HoursWorked - worked) < 0.01 &&
+                Math.Abs(a.HoursOvertime - overtime) < 0.01 &&
+                ((a.DepartureReason ?? string.Empty).ToLower() == (reason ?? string.Empty).ToLower())
+            );
+        }
+
+
+        /// <summary>
         /// Získání všech záznamů příchodů/odchodů.
         /// </summary>
         public async Task<List<ArrivalDeparture>> GetAllAsync()
@@ -50,7 +89,7 @@ namespace VykazyPrace.Core.Database.Repositories
             return await _context.ArrivalsDepartures
                 .Include(a => a.User)
                 .OrderBy(a => a.WorkDate)
-                .ToListAsync();
+                .SafeToListAsync();
         }
 
         /// <summary>
@@ -60,7 +99,7 @@ namespace VykazyPrace.Core.Database.Repositories
         {
             return await _context.ArrivalsDepartures
                 .Include(a => a.User)
-                .FirstOrDefaultAsync(a => a.Id == id);
+                .SafeFirstOrDefaultAsync(a => a.Id == id);
         }
 
         /// <summary>
@@ -73,32 +112,27 @@ namespace VykazyPrace.Core.Database.Repositories
             return await _context.ArrivalsDepartures
                 .Where(a => a.UserId == userId && a.WorkDate == day)
                 .OrderByDescending(a => a.Id)
-                .FirstOrDefaultAsync();
+                .SafeFirstOrDefaultAsync();
         }
 
 
         /// <summary>
         /// Uloží změny do předané entity. Pokud je entity detached, připojí ji.
-        /// Použij, když jsi už provedl merge chybějících hodnot v service vrstvě.
         /// </summary>
         public async Task UpdateArrivalDepartureAsync(ArrivalDeparture entity)
         {
             var entry = _context.Entry(entity);
             if (entry.State == EntityState.Detached)
             {
-                // pokus o nalezení původní entity podle Id,
-                // případně attach a označení jako Modified
                 var existing = await _context.ArrivalsDepartures
                     .FirstOrDefaultAsync(a => a.Id == entity.Id);
 
                 if (existing != null)
                 {
-                    // přepiš hodnoty na existující tracked entitě
                     _context.Entry(existing).CurrentValues.SetValues(entity);
                 }
                 else
                 {
-                    // neznáme původní tracked entitu – připoj a označ změny
                     _context.ArrivalsDepartures.Attach(entity);
                     entry.State = EntityState.Modified;
                 }
@@ -106,7 +140,6 @@ namespace VykazyPrace.Core.Database.Repositories
 
             await VykazyPraceContextExtensions.SafeSaveAsync(_context);
         }
-
 
         /// <summary>
         /// Smazání záznamu podle ID.
@@ -131,7 +164,7 @@ namespace VykazyPrace.Core.Database.Repositories
             return await _context.ArrivalsDepartures
                 .Where(a => a.UserId == userId && a.WorkDate >= weekStart && a.WorkDate < weekEnd)
                 .OrderBy(a => a.WorkDate)
-                .ToListAsync();
+                .SafeToListAsync();
         }
     }
 }

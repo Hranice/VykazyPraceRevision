@@ -791,6 +791,14 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private async Task AdjustIndicatorsAsync(Point scrollPosition, int userId, DateTime weekStart)
         {
+            var entries = await _arrivalDepartureRepo.GetWeekEntriesForUserAsync(userId, weekStart);
+
+            if (entries is null)
+            {
+                AppLogger.Information("Nepodařilo se upravit indikátory - záznamy příchodů a odchodů jsou null.");
+                return;
+            }
+
             // smazání starých indikátorů
             var oldIndicators = panelContainer.Controls
                 .OfType<Panel>()
@@ -801,8 +809,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                 panelContainer.Controls.Remove(ctrl);
                 ctrl.Dispose();
             }
-
-            var entries = await _arrivalDepartureRepo.GetWeekEntriesForUserAsync(userId, weekStart);
 
             int[] rowHeights = tableLayoutPanelCalendar.GetRowHeights();
             int[] columnWidths = tableLayoutPanelCalendar.GetColumnWidths();
@@ -881,6 +887,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         ///  - Zaokrouhlí příchod na nejbližší půlhodinu (AwayFromZero),
         ///  - ke skutečné délce přičte 5 minut a tuto délku zaokrouhlí dolů na půlhodinu,
         ///  - zaokrouhlený odchod = zaokrouhlený příchod + zaokrouhlená délka.
+        ///   (Při výpočtu délky je kompenzován případ, kdy se příchod zaokrouhlil dolů.)
         /// Pokud existuje jen příchod -> vrátí jen zaokrouhlený příchod.
         /// Pokud existuje jen odchod -> vrátí jen zaokrouhlený odchod (nezávislé zaokrouhlení).
         /// </summary>
@@ -918,29 +925,36 @@ namespace VykazyPrace.UserControls.CalendarV2
                 return (null, rd);
             }
 
-            // oba časy -> aplikuj speciální logiku
+            // oba časy -> speciální logika
             var roundedArrival = RoundHalfHour(rawArrival!.Value);
 
+            // reálná délka
             var realDuration = rawDeparture!.Value - rawArrival.Value;
             if (realDuration < TimeSpan.Zero)
                 realDuration = TimeSpan.Zero;
 
-            double durWithOffset = realDuration.TotalMinutes + 5;         // +5 min
-            double roundedDurMin = Math.Floor(durWithOffset / 30.0) * 30; // dolů na půlhodinu
+            // kompenzace, pokud se příchod zaokrouhlil DOLŮ (tj. roundedArrival < rawArrival)
+            var arrivalCompensation = rawArrival.Value - roundedArrival;
+            if (arrivalCompensation < TimeSpan.Zero)
+                arrivalCompensation = TimeSpan.Zero;
+
+            var effectiveDuration = realDuration + arrivalCompensation;
+
+            // +5 min a zaokrouhlení délky dolů na půlhodinu
+            double durWithOffset = effectiveDuration.TotalMinutes + 5;        // +5 min
+            double roundedDurMin = Math.Floor(durWithOffset / 30.0) * 30.0;   // dolů na půlhodinu
 
             var roundedDeparture = roundedArrival + TimeSpan.FromMinutes(roundedDurMin);
 
-            // bezpečnostní ořez
+            // bezpečnostní ořez a pořadí
             long dayMaxTicks = TimeSpan.FromDays(1).Ticks - 1;
             if (roundedDeparture.Ticks < 0) roundedDeparture = TimeSpan.Zero;
             if (roundedDeparture.Ticks > dayMaxTicks) roundedDeparture = new TimeSpan(dayMaxTicks);
-
-            // zajisti pořadí (kdyby vzniklo == nebo menší z důvodu zaokrouhlení)
-            if (roundedDeparture < roundedArrival)
-                roundedDeparture = roundedArrival;
+            if (roundedDeparture < roundedArrival) roundedDeparture = roundedArrival;
 
             return (roundedArrival, roundedDeparture);
         }
+
 
 
         private int GetColumnIndexFromTime(TimeSpan timeOfDay, int minutesPerColumn)

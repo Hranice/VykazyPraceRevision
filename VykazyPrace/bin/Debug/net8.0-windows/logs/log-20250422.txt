@@ -1,6 +1,0 @@
-2025-04-22 09:41:43.297 +02:00 [ERR] Databáze je neplatná nebo ji nelze načíst.
-System.InvalidOperationException: Chybí tabulka 'Users' v databázi.
-   at VykazyPrace.Core.Database.DatabaseValidator.ValidateStructure(VykazyPraceContext context) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\DatabaseValidator.cs:line 43
-   at VykazyPrace.MainForm.ValidateDatabase() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\MainForm.cs:line 82
-2025-04-22 09:42:56.644 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h -  byl úspěšně aktualizován.
-2025-04-22 09:46:00.193 +02:00 [INF] Záznam 0 - Ostatní: 0,5 h -  byl úspěšně aktualizován.

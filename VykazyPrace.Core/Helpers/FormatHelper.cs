@@ -85,6 +85,23 @@ namespace VykazyPrace.Core.Helpers
             return $"{userGroup.Title}";
         }
 
+        public static string FormatArrivalDepartureToString(ArrivalDeparture? ad)
+        {
+            if (ad == null)
+            {
+                return "<NULL>";
+            }
+
+            string arrival = ad.ArrivalTimestamp?.ToString("HH:mm") ?? "--:--";
+            string departure = ad.DepartureTimestamp?.ToString("HH:mm") ?? "--:--";
+            string reason = string.IsNullOrWhiteSpace(ad.DepartureReason) ? "" : $" ({ad.DepartureReason})";
+            string user = ad.User != null ? FormatUserToString(ad.User) : $"UserId={ad.UserId}";
+
+            return $"{ad.WorkDate:dd.MM.yyyy} | {user} | {arrival} - {departure}{reason} | " +
+                   $"Hodiny: {ad.HoursWorked:0.##}, Přesčasy: {ad.HoursOvertime:0.##}";
+        }
+
+
         public static string GetWeekNumberAndRange(DateTime date)
         {
             CultureInfo czechCulture = new CultureInfo("cs-CZ");

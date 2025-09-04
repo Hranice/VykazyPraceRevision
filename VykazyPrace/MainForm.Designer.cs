@@ -49,8 +49,14 @@
             radioButton2 = new RadioButton();
             comboBoxUsers = new ComboBox();
             panel1 = new Panel();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            tableLayoutPanel3 = new TableLayoutPanel();
+            buttonReloadPowerKey = new Button();
+            label2 = new Label();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            buttonReloadNetworkDisks = new Button();
+            label1 = new Label();
             panel2 = new Panel();
-            buttonReloadData = new Button();
             buttonNow = new Button();
             labelSelectedDate = new Label();
             buttonNext = new Button();
@@ -63,6 +69,9 @@
             ukoncitToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            tableLayoutPanel3.SuspendLayout();
+            tableLayoutPanel2.SuspendLayout();
             panel2.SuspendLayout();
             panelContainer.SuspendLayout();
             contextMenuStrip1.SuspendLayout();
@@ -183,9 +192,11 @@
             // 
             radioButton1.Appearance = Appearance.Button;
             radioButton1.Checked = true;
+            radioButton1.Dock = DockStyle.Fill;
             radioButton1.Location = new Point(10, 3);
+            radioButton1.Margin = new Padding(10, 3, 10, 3);
             radioButton1.Name = "radioButton1";
-            radioButton1.Size = new Size(106, 34);
+            radioButton1.Size = new Size(107, 32);
             radioButton1.TabIndex = 2;
             radioButton1.TabStop = true;
             radioButton1.Text = "TÝDEN";
@@ -196,9 +207,11 @@
             // radioButton2
             // 
             radioButton2.Appearance = Appearance.Button;
-            radioButton2.Location = new Point(10, 45);
+            radioButton2.Dock = DockStyle.Fill;
+            radioButton2.Location = new Point(10, 41);
+            radioButton2.Margin = new Padding(10, 3, 10, 3);
             radioButton2.Name = "radioButton2";
-            radioButton2.Size = new Size(106, 34);
+            radioButton2.Size = new Size(107, 32);
             radioButton2.TabIndex = 3;
             radioButton2.Text = "MĚSÍC";
             radioButton2.TextAlign = ContentAlignment.MiddleCenter;
@@ -219,14 +232,105 @@
             // 
             // panel1
             // 
-            panel1.Controls.Add(buttonReloadData);
-            panel1.Controls.Add(radioButton1);
-            panel1.Controls.Add(radioButton2);
+            panel1.Controls.Add(tableLayoutPanel1);
             panel1.Dock = DockStyle.Left;
             panel1.Location = new Point(0, 69);
             panel1.Name = "panel1";
             panel1.Size = new Size(127, 592);
             panel1.TabIndex = 6;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel3, 0, 4);
+            tableLayoutPanel1.Controls.Add(radioButton1, 0, 0);
+            tableLayoutPanel1.Controls.Add(radioButton2, 0, 1);
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 3);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 5;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 38F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 38F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.Size = new Size(127, 592);
+            tableLayoutPanel1.TabIndex = 8;
+            // 
+            // tableLayoutPanel3
+            // 
+            tableLayoutPanel3.ColumnCount = 1;
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel3.Controls.Add(buttonReloadPowerKey, 1, 0);
+            tableLayoutPanel3.Controls.Add(label2, 0, 0);
+            tableLayoutPanel3.Dock = DockStyle.Bottom;
+            tableLayoutPanel3.Location = new Point(3, 520);
+            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.RowCount = 2;
+            tableLayoutPanel3.RowStyles.Add(new RowStyle());
+            tableLayoutPanel3.RowStyles.Add(new RowStyle());
+            tableLayoutPanel3.Size = new Size(121, 69);
+            tableLayoutPanel3.TabIndex = 12;
+            // 
+            // buttonReloadPowerKey
+            // 
+            buttonReloadPowerKey.BackColor = Color.Tomato;
+            buttonReloadPowerKey.Dock = DockStyle.Top;
+            buttonReloadPowerKey.Location = new Point(3, 28);
+            buttonReloadPowerKey.Name = "buttonReloadPowerKey";
+            buttonReloadPowerKey.Size = new Size(115, 41);
+            buttonReloadPowerKey.TabIndex = 13;
+            buttonReloadPowerKey.Text = "⟳";
+            buttonReloadPowerKey.UseVisualStyleBackColor = false;
+            buttonReloadPowerKey.Click += buttonReloadPowerKey_Click;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(3, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(83, 25);
+            label2.TabIndex = 1;
+            label2.Text = "PowerKey";
+            // 
+            // tableLayoutPanel2
+            // 
+            tableLayoutPanel2.ColumnCount = 1;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.Controls.Add(buttonReloadNetworkDisks, 1, 0);
+            tableLayoutPanel2.Controls.Add(label1, 0, 0);
+            tableLayoutPanel2.Dock = DockStyle.Bottom;
+            tableLayoutPanel2.Location = new Point(3, 445);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 2;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.Size = new Size(121, 69);
+            tableLayoutPanel2.TabIndex = 11;
+            // 
+            // buttonReloadNetworkDisks
+            // 
+            buttonReloadNetworkDisks.BackColor = Color.Tomato;
+            buttonReloadNetworkDisks.Dock = DockStyle.Top;
+            buttonReloadNetworkDisks.Location = new Point(3, 28);
+            buttonReloadNetworkDisks.Name = "buttonReloadNetworkDisks";
+            buttonReloadNetworkDisks.Size = new Size(115, 41);
+            buttonReloadNetworkDisks.TabIndex = 13;
+            buttonReloadNetworkDisks.Text = "⟳";
+            buttonReloadNetworkDisks.UseVisualStyleBackColor = false;
+            buttonReloadNetworkDisks.Click += buttonReloadNetworkDisks_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(3, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(99, 25);
+            label1.TabIndex = 1;
+            label1.Text = "Síťové disky";
             // 
             // panel2
             // 
@@ -240,16 +344,6 @@
             panel2.Name = "panel2";
             panel2.Size = new Size(1269, 45);
             panel2.TabIndex = 6;
-            // 
-            // buttonReloadData
-            // 
-            buttonReloadData.Location = new Point(10, 556);
-            buttonReloadData.Name = "buttonReloadData";
-            buttonReloadData.Size = new Size(106, 33);
-            buttonReloadData.TabIndex = 5;
-            buttonReloadData.Text = "⟳";
-            buttonReloadData.UseVisualStyleBackColor = true;
-            buttonReloadData.Click += buttonReloadData_Click;
             // 
             // buttonNow
             // 
@@ -360,6 +454,11 @@
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             panel1.ResumeLayout(false);
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel3.ResumeLayout(false);
+            tableLayoutPanel3.PerformLayout();
+            tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel2.PerformLayout();
             panel2.ResumeLayout(false);
             panelContainer.ResumeLayout(false);
             contextMenuStrip1.ResumeLayout(false);
@@ -398,7 +497,13 @@
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem zobrazitToolStripMenuItem;
         private ToolStripMenuItem ukoncitToolStripMenuItem;
-        private Button buttonReloadData;
         private ToolStripMenuItem přehledToolStripMenuItem;
+        private TableLayoutPanel tableLayoutPanel1;
+        private TableLayoutPanel tableLayoutPanel2;
+        private Label label1;
+        private Button buttonReloadNetworkDisks;
+        private TableLayoutPanel tableLayoutPanel3;
+        private Button buttonReloadPowerKey;
+        private Label label2;
     }
 }

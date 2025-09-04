@@ -12,7 +12,7 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-	<Version>1.3.4.2</Version>
+	<Version>1.3.5.2</Version>
 	<ApplicationIcon>WorkLog.ico</ApplicationIcon>
   </PropertyGroup>
 
@@ -45,6 +45,12 @@
 <ItemGroup>
   <Compile Update="MainForm.cs" />
   <Compile Update="MainForm.Designer.cs">
+    <DependentUpon>MainForm.cs</DependentUpon>
+  </Compile>
+</ItemGroup>
+
+<ItemGroup>
+  <Compile Update="MainForm.Connectivity.cs">
     <DependentUpon>MainForm.cs</DependentUpon>
   </Compile>
 </ItemGroup>

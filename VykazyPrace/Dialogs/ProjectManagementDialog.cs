@@ -220,6 +220,10 @@ namespace VykazyPrace.Dialogs
             // ULOŽIT
             else
             {
+                if (dateTimePickerFullfilledProject.Checked)
+                {
+                    project.DateFullFilled = dateTimePickerFullfilledProject.Value;
+                }
                 project.Id = int.Parse(labelProjectId.Text);
                 await _projectRepo.UpdateProjectAsync(project);
             }

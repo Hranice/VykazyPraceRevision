@@ -19,7 +19,7 @@ public partial class Project
 
     public int IsArchived { get; set; }
 
-    public DateTime DateFullFilled { get; set; }
+    public DateTime? DateFullFilled { get; set; }
 
     public virtual User CreatedByNavigation { get; set; } = null!;
 

@@ -80,20 +80,33 @@ namespace VykazyPrace.Dialogs
                     )
                     .ToList();
 
-
-
                 var projects = timeEntries
                     .Where(e => e.Project?.ProjectType == 0)
                     .Select(e => e.Project!)
                     .DistinctBy(p => p.Id)
                     .ToList();
 
+                // --- NOVÉ: předpočítej kumulace v DB pouze pro projekty, které v exportu reálně řešíme ---
+                var projectIdsForSummary = timeEntries
+                    .Where(e => e.ProjectId.HasValue && e.Project?.DateFullFilled != null)
+                    .Select(e => e.ProjectId!.Value)
+                    .Distinct()
+                    .ToList();
+
+                var cumulativeRows = await _timeEntryRepo.GetCumulativeToFullfilledAsync(projectIdsForSummary);
+
+                // rychlý lookup (ProjectId, UserId) -> hodiny
+                var cumDict = cumulativeRows.ToDictionary(
+                    k => (k.ProjectId, k.UserId),
+                    v => v.MinutesToFullFilled / 60.0
+                );
+                // --- konec NOVÉHO ---
+
                 Worksheet baseSheet = (Worksheet)workbook.Sheets[1];
                 GenerateTimeEntriesSheet(baseSheet, timeEntries);
 
                 Worksheet summarySheet = (Worksheet)workbook.Sheets.Add(After: baseSheet);
-                await GenerateUserSummarySheet(summarySheet, timeEntries, dateTimePicker1.Value);
-
+                await GenerateUserSummarySheet(summarySheet, timeEntries, dateTimePicker1.Value, cumDict);
 
                 await GenerateProjectSheets(workbook, timeEntries, projects, summarySheet);
 
@@ -120,6 +133,7 @@ namespace VykazyPrace.Dialogs
                 Marshal.ReleaseComObject(excelApp);
             }
         }
+
         private void GenerateTimeEntriesSheet(Worksheet sheet, List<TimeEntry> timeEntries)
         {
             sheet.Name = "Časové záznamy";
@@ -201,13 +215,18 @@ namespace VykazyPrace.Dialogs
             }
         }
 
-        private async Task GenerateUserSummarySheet(Worksheet sheet, List<TimeEntry> timeEntries, DateTime exportMonth)
+        private async Task GenerateUserSummarySheet(
+     Worksheet sheet,
+     List<TimeEntry> timeEntries,
+     DateTime exportMonth,
+     IReadOnlyDictionary<(int ProjectId, int UserId), double> cumDict
+ )
         {
             sheet.Name = "Souhrn podle uživatele";
 
             string[] headers = {
         "Osobní číslo", "Jméno", "Projekt", "Popis projektu",
-        "Součet hodin", "Suma", "Docházka"
+        "Součet hodin", "Suma", "Docházka", "Suma Před zplnohodnotněním projektu"
     };
 
             for (int i = 0; i < headers.Length; i++)
@@ -221,13 +240,13 @@ namespace VykazyPrace.Dialogs
             var grouped = filteredEntries
                 .GroupBy(e => new
                 {
+                    e.User!.Id,
                     e.User!.PersonalNumber,
                     FullName = $"{e.User.FirstName} {e.User.Surname}".Trim()
                 })
                 .OrderBy(g => g.Key.PersonalNumber)
                 .ThenBy(g => g.Key.FullName)
                 .ToList();
-
 
             // načtení docházky z PowerKey do Dictionary
             var pkHelper = new PowerKeyHelper();
@@ -239,6 +258,8 @@ namespace VykazyPrace.Dialogs
             {
                 var userKey = userGroup.Key;
 
+                // skupiny projektů — ponecháme název/desc, ale potřebujeme mít k dispozici i ProjectId,
+                // proto si při výpisu vezmeme 'anyEntry' z konkrétní skupiny.
                 var projects = userGroup
                     .GroupBy(e => new
                     {
@@ -250,7 +271,7 @@ namespace VykazyPrace.Dialogs
                 double totalHours = userGroup.Sum(e => e.EntryMinutes) / 60.0;
                 double attendance = powerKeyData.TryGetValue(userKey.PersonalNumber, out double h) ? h : 0;
 
-                // souhrnný řádek
+                // souhrnný řádek (uživatel)
                 sheet.Cells[row, 1] = userKey.PersonalNumber;
                 sheet.Cells[row, 2] = userKey.FullName;
                 sheet.Cells[row, 6] = totalHours;
@@ -272,22 +293,41 @@ namespace VykazyPrace.Dialogs
                     descCell.NumberFormat = "@";
                     descCell.Value2 = $"'{proj.Key.ProjectDescription}";
 
+                    // měsíční součet (jako dřív)
                     sheet.Cells[row, 5] = proj.Sum(e => e.EntryMinutes) / 60.0;
+
+                    // --- NOVÉ: kumulativní hodiny do DateFullFilled z cumDict ---
+                    var anyEntry = proj.FirstOrDefault();
+                    if (anyEntry?.Project?.Id != null && anyEntry.Project.DateFullFilled.HasValue)
+                    {
+                        var pid = anyEntry.Project.Id;
+                        var uid = userKey.Id;
+
+                        if (cumDict.TryGetValue((pid, uid), out var cumHours))
+                            sheet.Cells[row, 8] = cumHours;
+                        else
+                            sheet.Cells[row, 8] = ""; // žádné záznamy do DateFullFilled
+                    }
+                    else
+                    {
+                        sheet.Cells[row, 8] = ""; // bez DateFullFilled
+                    }
+                    // --- konec NOVÉHO ---
 
                     row++;
                 }
 
-                // seskupení projektových řádků pod daného uživatele
+                // seskupení projektových řádků pod daného uživatele (rozsah včetně H)
                 if (projects.Any())
                 {
                     int startRow = row - projects.Count();
                     int endRow = row - 1;
-                    sheet.Range[$"A{startRow}:G{endRow}"].Rows.Group();
+                    sheet.Range[$"A{startRow}:H{endRow}"].Rows.Group();
                 }
             }
 
-            // vytvoření tabulky (pro filtry + vzhled)
-            var tableRange = sheet.Range[$"A1:G{row - 1}"];
+            // vytvoření tabulky (pro filtry + vzhled) – rozšířený rozsah do H
+            var tableRange = sheet.Range[$"A1:H{row - 1}"];
             var table = sheet.ListObjects.AddEx(
                 XlListObjectSourceType.xlSrcRange,
                 tableRange,

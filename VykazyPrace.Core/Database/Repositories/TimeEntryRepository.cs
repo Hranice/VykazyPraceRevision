@@ -378,5 +378,34 @@ namespace VykazyPrace.Core.Database.Repositories
             /// <summary>Total hours worked.</summary>
             public double TotalHours { get; set; }
         }
+
+        public sealed class ProjectUserCumulativeDto
+        {
+            public int ProjectId { get; set; }
+            public int UserId { get; set; }
+            public int MinutesToFullFilled { get; set; }
+        }
+
+        public async Task<List<ProjectUserCumulativeDto>> GetCumulativeToFullfilledAsync(IEnumerable<int> projectIds)
+        {
+            var ids = projectIds?.ToList() ?? new List<int>();
+
+            return await _context.TimeEntries
+                .Where(te => te.Timestamp.HasValue
+                             && te.ProjectId != null
+                             && te.UserId != null
+                             && te.Project!.DateFullFilled != null
+                             && (ids.Count == 0 || ids.Contains(te.ProjectId!.Value))
+                             && te.Timestamp!.Value <= te.Project!.DateFullFilled!)
+                .GroupBy(te => new { te.ProjectId, te.UserId })
+                .Select(g => new ProjectUserCumulativeDto
+                {
+                    ProjectId = g.Key.ProjectId!.Value,
+                    UserId = g.Key.UserId!.Value,
+                    MinutesToFullFilled = g.Sum(x => x.EntryMinutes)
+                })
+                .ToListAsync();
+        }
+
     }
 }

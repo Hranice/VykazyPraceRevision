@@ -158,6 +158,7 @@ namespace VykazyPrace.Core.Database.Repositories
             existingProject.ProjectDescription = project.ProjectDescription;
             existingProject.ProjectType = project.ProjectType;
             existingProject.Note = project.Note;
+            existingProject.DateFullFilled = project.DateFullFilled;
 
             await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return true;

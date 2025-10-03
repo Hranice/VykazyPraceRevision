@@ -1,0 +1,42 @@
+2025-09-25 09:24:45.722 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-25 09:24:49.286 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-25 09:25:58.308 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-25 09:26:02.578 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-25 09:30:48.767 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-25 09:30:52.096 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-25 09:50:43.556 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-25 09:50:47.003 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-25 09:51:12.565 +02:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x80020005): Nesoulad typů. (0x80020005 (DISP_E_TYPEMISMATCH))
+   at Microsoft.Office.Interop.Excel.ApplicationClass.get_Calculation()
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 74
+2025-09-25 09:53:47.948 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-25 09:53:51.215 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-25 09:53:59.450 +02:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x80020005): Nesoulad typů. (0x80020005 (DISP_E_TYPEMISMATCH))
+   at Microsoft.Office.Interop.Excel.ApplicationClass.get_Calculation()
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 74
+2025-09-25 09:57:13.866 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-25 09:57:17.151 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-25 09:57:26.718 +02:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x80020005): Nesoulad typů. (0x80020005 (DISP_E_TYPEMISMATCH))
+   at Microsoft.Office.Interop.Excel.ApplicationClass.get_Calculation()
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 74
+2025-09-25 09:58:17.756 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-25 09:58:21.390 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-25 09:58:32.418 +02:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x80020005): Nesoulad typů. (0x80020005 (DISP_E_TYPEMISMATCH))
+   at Microsoft.Office.Interop.Excel.ApplicationClass.get_Calculation()
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 74
+2025-09-25 10:00:06.350 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-25 10:00:10.057 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-25 14:59:22.818 +02:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x80020005): Nesoulad typů. (0x80020005 (DISP_E_TYPEMISMATCH))
+   at Microsoft.Office.Interop.Excel.ApplicationClass.get_Calculation()
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 74
+2025-09-25 15:00:20.419 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-25 15:00:23.794 +02:00 [INF] Staženo 0 záznamů pro měsíc č.9 uživatele (1250): Jan Procházka - KAMERY.
+2025-09-25 15:00:46.611 +02:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x80020005): Nesoulad typů. (0x80020005 (DISP_E_TYPEMISMATCH))
+   at Microsoft.Office.Interop.Excel.ApplicationClass.get_Calculation()
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 74

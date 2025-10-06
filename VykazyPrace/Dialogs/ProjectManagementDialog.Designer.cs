@@ -39,6 +39,8 @@
             textBoxOperation = new TextBox();
             tabPage2 = new TabPage();
             groupBox2 = new GroupBox();
+            label1 = new Label();
+            dateTimePickerFullfilledProject = new DateTimePicker();
             buttonDeclineAndReplace = new Button();
             labelProjectId = new Label();
             label9 = new Label();
@@ -103,7 +105,7 @@
             tabControl1.Location = new Point(12, 12);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(512, 532);
+            tabControl1.Size = new Size(512, 603);
             tabControl1.TabIndex = 31;
             tabControl1.SelectedIndexChanged += tabControl1_SelectedIndexChanged;
             // 
@@ -117,7 +119,7 @@
             tabPage1.Location = new Point(4, 34);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(504, 494);
+            tabPage1.Size = new Size(504, 565);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "PROVOZ";
             tabPage1.UseVisualStyleBackColor = true;
@@ -184,13 +186,15 @@
             tabPage2.Controls.Add(listBoxProject);
             tabPage2.Location = new Point(4, 34);
             tabPage2.Name = "tabPage2";
-            tabPage2.Size = new Size(504, 494);
+            tabPage2.Size = new Size(504, 565);
             tabPage2.TabIndex = 2;
             tabPage2.Text = "PROJEKT";
             tabPage2.UseVisualStyleBackColor = true;
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(label1);
+            groupBox2.Controls.Add(dateTimePickerFullfilledProject);
             groupBox2.Controls.Add(buttonDeclineAndReplace);
             groupBox2.Controls.Add(labelProjectId);
             groupBox2.Controls.Add(label9);
@@ -202,15 +206,36 @@
             groupBox2.Font = new Font("Reddit Sans", 9.75F);
             groupBox2.Location = new Point(14, 357);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(476, 125);
+            groupBox2.Size = new Size(476, 195);
             groupBox2.TabIndex = 59;
             groupBox2.TabStop = false;
             groupBox2.Text = "Nový projekt";
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(12, 91);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(209, 21);
+            label1.TabIndex = 60;
+            label1.Text = "Datum zplnohodnotnění projektu*";
+            // 
+            // dateTimePickerFullfilledProject
+            // 
+            dateTimePickerFullfilledProject.Checked = false;
+            dateTimePickerFullfilledProject.Font = new Font("Reddit Sans", 12F);
+            dateTimePickerFullfilledProject.Location = new Point(12, 115);
+            dateTimePickerFullfilledProject.Name = "dateTimePickerFullfilledProject";
+            dateTimePickerFullfilledProject.ShowCheckBox = true;
+            dateTimePickerFullfilledProject.Size = new Size(452, 28);
+            dateTimePickerFullfilledProject.TabIndex = 59;
+            dateTimePickerFullfilledProject.Value = new DateTime(2000, 1, 1, 0, 0, 0, 0);
+            // 
             // buttonDeclineAndReplace
             // 
             buttonDeclineAndReplace.Font = new Font("Reddit Sans", 12F);
-            buttonDeclineAndReplace.Location = new Point(153, 82);
+            buttonDeclineAndReplace.Location = new Point(153, 151);
             buttonDeclineAndReplace.Margin = new Padding(4, 5, 4, 5);
             buttonDeclineAndReplace.Name = "buttonDeclineAndReplace";
             buttonDeclineAndReplace.Size = new Size(187, 36);
@@ -253,7 +278,7 @@
             // buttonArchiveProject
             // 
             buttonArchiveProject.Font = new Font("Reddit Sans", 12F);
-            buttonArchiveProject.Location = new Point(219, 82);
+            buttonArchiveProject.Location = new Point(219, 151);
             buttonArchiveProject.Margin = new Padding(4, 5, 4, 5);
             buttonArchiveProject.Name = "buttonArchiveProject";
             buttonArchiveProject.Size = new Size(121, 36);
@@ -266,7 +291,7 @@
             // buttonAddProject
             // 
             buttonAddProject.Font = new Font("Reddit Sans", 12F);
-            buttonAddProject.Location = new Point(343, 82);
+            buttonAddProject.Location = new Point(343, 151);
             buttonAddProject.Margin = new Padding(4, 5, 4, 5);
             buttonAddProject.Name = "buttonAddProject";
             buttonAddProject.Size = new Size(121, 36);
@@ -362,7 +387,7 @@
             tabPage3.Controls.Add(textBoxAbsence);
             tabPage3.Location = new Point(4, 24);
             tabPage3.Name = "tabPage3";
-            tabPage3.Size = new Size(504, 504);
+            tabPage3.Size = new Size(504, 575);
             tabPage3.TabIndex = 3;
             tabPage3.Text = "NEPŘÍTOMNOST";
             tabPage3.UseVisualStyleBackColor = true;
@@ -429,7 +454,7 @@
             tabPage4.Controls.Add(textBoxOther);
             tabPage4.Location = new Point(4, 24);
             tabPage4.Name = "tabPage4";
-            tabPage4.Size = new Size(504, 504);
+            tabPage4.Size = new Size(504, 575);
             tabPage4.TabIndex = 4;
             tabPage4.Text = "OSTATNÍ";
             tabPage4.UseVisualStyleBackColor = true;
@@ -491,7 +516,7 @@
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(533, 551);
+            ClientSize = new Size(533, 639);
             Controls.Add(tabControl1);
             Controls.Add(label6);
             Font = new Font("Reddit Sans", 12F);
@@ -555,5 +580,7 @@
         private CheckBox checkBoxProposed;
         private Label labelProjectId;
         private Button buttonDeclineAndReplace;
+        private Label label1;
+        private DateTimePicker dateTimePickerFullfilledProject;
     }
 }

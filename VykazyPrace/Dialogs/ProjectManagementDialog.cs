@@ -220,6 +220,10 @@ namespace VykazyPrace.Dialogs
             // ULOŽIT
             else
             {
+                if (dateTimePickerFullfilledProject.Checked)
+                {
+                    project.DateFullFilled = dateTimePickerFullfilledProject.Value;
+                }
                 project.Id = int.Parse(labelProjectId.Text);
                 await _projectRepo.UpdateProjectAsync(project);
             }
@@ -493,6 +497,17 @@ namespace VykazyPrace.Dialogs
                 labelProjectId.Text = active.Id.ToString();
                 textBoxProjectTitle.Text = active.ProjectTitle;
                 textBoxProjectDescription.Text = active.ProjectDescription;
+                if (active.DateFullFilled != null)
+                {
+                    dateTimePickerFullfilledProject.Value = active.DateFullFilled.Value;
+                    dateTimePickerFullfilledProject.Checked = true;
+                }
+
+                else
+                {
+                    dateTimePickerFullfilledProject.Value = DateTime.Now;
+                    dateTimePickerFullfilledProject.Checked = false;
+                }
 
                 bool proposed = Regex.IsMatch(active.ProjectDescription ?? "", @"^000\dN\d\d$");
                 buttonAddProject.Text = proposed ? "Schválit" : "Uložit";

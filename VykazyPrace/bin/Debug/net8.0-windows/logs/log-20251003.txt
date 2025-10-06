@@ -1,0 +1,23 @@
+2025-10-03 08:08:30.448 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-03 08:08:35.408 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-03 08:08:48.484 +02:00 [INF] Staženo pro 1 uživatelů, celkem 18 řádků.
+2025-10-03 08:09:18.354 +02:00 [INF] Staženo 1 záznamů pro měsíc č.10 uživatele (978): František Nový - ELEKTRO.
+2025-10-03 08:10:11.452 +02:00 [INF] Staženo pro 19 uživatelů, celkem 69 řádků.
+2025-10-03 08:10:12.614 +02:00 [INF] Staženo pro 19 uživatelů, celkem 5 řádků.
+2025-10-03 08:10:34.457 +02:00 [INF] Staženo 2 záznamů pro měsíc č.10 uživatele (2071): Syed Tabish Karim - ELEKTRO.
+2025-10-03 08:10:57.139 +02:00 [INF] Staženo 1 záznamů pro měsíc č.10 uživatele (721): Tomáš Erban - KONSTRUKCE.
+2025-10-03 08:11:44.241 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (11): Martin Braťka - MONTÁŽ.
+2025-10-03 08:12:47.613 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-03 08:13:56.000 +02:00 [INF] Staženo 3 záznamů pro měsíc č.10 uživatele (314): Ladislav Šrámek - ELEKTRO.
+2025-10-03 08:14:52.954 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (978): František Nový - ELEKTRO.
+2025-10-03 08:16:13.313 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-03 08:16:28.493 +02:00 [INF] Záznam  - : 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2025-10-03 08:28:46.525 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-03 08:28:51.841 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-03 08:29:40.144 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-03 08:29:44.818 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-03 08:31:36.024 +02:00 [ERR] Chyba při exportu do Excelu.
+System.Runtime.InteropServices.COMException (0x800A03EC): Soubor Export_.xlsx není přístupný.
+   at Microsoft.Office.Interop.Excel.WorkbookClass.SaveAs(Object Filename, Object FileFormat, Object Password, Object WriteResPassword, Object ReadOnlyRecommended, Object CreateBackup, XlSaveAsAccessMode AccessMode, Object ConflictResolution, Object AddToMru, Object TextCodepage, Object TextVisualLayout, Object Local)
+   at VykazyPrace.Dialogs.ExportDialog.ExportToExcel(String filePath) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 114
+2025-10-03 08:40:36.038 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (978): František Nový - ELEKTRO.

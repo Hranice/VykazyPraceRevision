@@ -1,3 +1,0 @@
-2025-06-02 10:16:53.120 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
-2025-06-02 10:17:22.468 +02:00 [INF] Staženo 0 záznamů pro měsíc č.6.
-2025-06-02 10:17:35.875 +02:00 [INF] Staženo 31 záznamů pro měsíc č.5.

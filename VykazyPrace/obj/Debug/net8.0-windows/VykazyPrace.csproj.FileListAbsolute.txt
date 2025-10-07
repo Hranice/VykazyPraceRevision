@@ -64,7 +64,6 @@ C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-window
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\VykazyPrace.Core.pdb
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.csproj.AssemblyReference.cache
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.Dialogs.AboutDialog.resources
-C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.Dialogs.ExportDialog.resources
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.Dialogs.LoadProjectsFromFolderDialog.resources
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.Dialogs.ProjectManagementDialog.resources
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.Dialogs.ReplaceOrMoveDialog.resources
@@ -137,3 +136,12 @@ C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-window
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.Dialogs.ProposeProjectDialog.resources
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.Dialogs.OverviewDialog.resources
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\ClosedXML.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\ClosedXML.Parser.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.Framework.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\ExcelNumberFormat.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\RBush.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\SixLabors.Fonts.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\System.IO.Packaging.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.Dialogs.ExportDialog.resources

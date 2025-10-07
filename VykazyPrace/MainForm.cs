@@ -12,6 +12,7 @@ using VykazyPrace.Dialogs;
 using VykazyPrace.UserControls;
 using VykazyPrace.UserControls.Calendar;
 using VykazyPrace.UserControls.CalendarV2;
+using DateRangeHelper = VykazyPrace.Core.Helpers.DateRangeHelper;
 
 namespace VykazyPrace
 {

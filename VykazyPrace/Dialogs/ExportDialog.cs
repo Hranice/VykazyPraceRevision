@@ -20,7 +20,7 @@ namespace VykazyPrace.Dialogs
     /// </summary>
     public partial class ExportDialog : Form
     {
-        // Repozitáře a servisní vrstvy – injektovatelné (pro jednoduchost zde new())
+        // Repozitáře
         private readonly TimeEntryRepository _timeEntryRepo = new();
         private readonly UserGroupRepository _userGroupRepository = new();
         private readonly SpecialDayRepository _specialDayRepo = new();

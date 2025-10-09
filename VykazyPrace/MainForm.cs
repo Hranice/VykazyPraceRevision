@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -148,8 +149,31 @@ namespace VykazyPrace
         {
             if (e.KeyCode == Keys.Delete)
             {
+                Control? focused = this.ContainsFocus ? this.GetFocusedControl(this) : null;
+
+                if (focused is TextBoxBase or ComboBox)
+                {
+                    return;
+                }
+
                 await _calendar.DeleteRecord();
             }
+        }
+
+        private Control? GetFocusedControl(Control control)
+        {
+            foreach (Control child in control.Controls)
+            {
+                if (child.ContainsFocus)
+                {
+                    if (child.HasChildren)
+                        return GetFocusedControl(child);
+                    else
+                        return child;
+                }
+            }
+
+            return control.Focused ? control : null;
         }
 
         private async Task LoadDataAsync()

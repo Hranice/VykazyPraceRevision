@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using VykazyPrace.Core.Database.Models.OutlookEvents;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Core.Logging;
+using VykazyPrace.UserControls.Outlook;
 
 namespace VykazyPrace.Dialogs
 {
@@ -25,6 +26,13 @@ namespace VykazyPrace.Dialogs
         private async void OutlookEvents_Load(object sender, EventArgs e)
         {
             await InitializeEvents();
+
+            //int currentUserId = GetCurrentUserIdSomehow();
+            int currentUserId = 4;
+            DateTime fromUtc = DateTime.UtcNow.Date;
+            DateTime toUtc = DateTime.UtcNow.Date.AddDays(7);
+
+            await RenderOutlookEventsAsync(flowLayoutPanel1, currentUserId, fromUtc, toUtc);
         }
 
 
@@ -313,5 +321,87 @@ namespace VykazyPrace.Dialogs
         //        if (outlook != null) System.Runtime.InteropServices.Marshal.ReleaseComObject(outlook);
         //    }
         //}
+
+        private async Task RenderOutlookEventsAsync(FlowLayoutPanel host, int currentUserId, DateTime? fromUtc = null, DateTime? toUtc = null)
+        {
+            // ====== Pro jistotu, ať jsme na UI vlákně ======
+            if (host.InvokeRequired)
+            {
+                host.Invoke(new Func<Task>(async () => await RenderOutlookEventsAsync(host, currentUserId, fromUtc, toUtc)));
+                return;
+            }
+
+            // Vyčistit aktuální výpis
+            host.SuspendLayout();
+            host.Controls.Clear();
+
+            var repo = new CalendarRepository();
+
+            // Načíst položky pro uživatele; includeIgnored=false => skryté/tombstone se nevrací
+            var itemsWithState = await repo.GetItemsForUserAsync(currentUserId, includeIgnored: false, fromUtc, toUtc);
+
+            // Zde nechci zobrazovat "master" série bez konkrétní instance (StartUtc == null a IsRecurringSeries == true),
+            // protože pro UI je důležité vidět konkrétní výskyty.
+            var toShow = itemsWithState
+                .Where(x => x.Item != null)
+                .Where(x => x.Item.StartUtc.HasValue || !x.Item.IsRecurringSeries)
+                .OrderBy(x => x.Item.StartUtc ?? DateTime.MaxValue)
+                .ToList();
+
+            // Callback, který znovu načte seznam po kliknutí na Přidat/Smazat
+            // (předáme ho do každého UserControlu)
+            Func<Task> onChanged = async () =>
+            {
+                await RenderOutlookEventsAsync(host, currentUserId, fromUtc, toUtc);
+            };
+
+            foreach (var (item, state) in toShow)
+            {
+                // Převod času z UTC do lokálního, aby se datum a čas zobrazily správně
+                DateTime dateLocal;
+                DateTime? timeFromLocal = null;
+                DateTime? timeToLocal = null;
+
+                if (item.StartUtc.HasValue)
+                {
+                    var startLocal = item.StartUtc.Value.ToLocalTime();
+                    dateLocal = startLocal.Date;
+                    timeFromLocal = startLocal;
+                }
+                else
+                {
+                    // fallback – pokud nemáme StartUtc (např. master série), použij datum jako dnešek
+                    dateLocal = DateTime.Now.Date;
+                }
+
+                if (item.EndUtc.HasValue)
+                {
+                    timeToLocal = item.EndUtc.Value.ToLocalTime();
+                }
+
+                // Předmět
+                string subject = string.IsNullOrWhiteSpace(item.Subject) ? "(bez názvu)" : item.Subject;
+
+                // Vytvoření a přidání UserControlu
+                var card = new OutlookEvent(
+                    currentUserId: currentUserId,
+                    itemId: item.Id,
+                    dateLocal: dateLocal,
+                    timeFromLocal: timeFromLocal,
+                    timeToLocal: timeToLocal,
+                    subject: subject,
+                    stateForUser: state,
+                    onChanged: onChanged // po akci refresh
+                );
+
+                // (Volitelné) nastavení šířky karty na šířku panelu minus okraje
+                card.Width = host.ClientSize.Width - (host.Padding.Left + host.Padding.Right);
+                //card.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+
+                host.Controls.Add(card);
+            }
+
+            host.ResumeLayout();
+        }
     }
 }

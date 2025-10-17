@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using VykazyPrace.Core.Database.Models.OutlookEvents;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Core.Logging;
+using VykazyPrace.Core.Services;
 
 namespace VykazyPrace.UserControls.Outlook
 {
@@ -108,15 +109,92 @@ namespace VykazyPrace.UserControls.Outlook
         {
             try
             {
+                // 1) Založ TimeEntry pro meeting
+                var import = new CalendarImportService();
+
+                // Pozn.: nemáme tu celý CalendarItem objekt – máme jen jeho ID (_itemId) a data pro UI.
+                // Vyřešíme to tak, že si CalendarItem načteme z DB podle _itemId.
+                var itemFromDb = await new CalendarRepository().GetByKeyAsync(
+                    storeId: null, entryId: null, occurrenceStartUtc: null
+                );
+                // ↑ To byla původní helper metoda podle klíče.
+                // Máme ale pouze ItemId – tak přidej do CalendarRepository jednoduché:
+                // public Task<CalendarItem?> GetByIdAsync(int id) => _context.CalendarItems.FindAsync(id).AsTask();
+
+                // Lepší varianta – přidej do repo:
+                // public async Task<CalendarItem?> GetByIdAsync(int id) => await _context.CalendarItems.FindAsync(id);
+
+                var repo = new CalendarRepository();
+                var calItem = await repo.GetByIdAsync(_itemId); // ⬅️ přidej do repo jednoduchý getter
+
+                // Fallback (nemělo by nastat)
+                if (calItem == null)
+                {
+                    MessageBox.Show(this, "Nepodařilo se načíst kalendářovou položku z DB.", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // 2) Vytvoř TimeEntry (předáme data, která už control má)
+                //    - dateLocal, timeFromLocal, timeToLocal, subject jsme dávali v konstruktoru
+                var created = await import.CreateTimeEntryForMeetingAsync(
+                    userId: _currentUserId,
+                    item: calItem,
+                    subject: labelSubject.Text,
+                    startLocal: TryParseTimeFromLabel(labelDate.Text, labelTime.Text, fromPart: true),
+                    endLocal: TryParseTimeFromLabel(labelDate.Text, labelTime.Text, fromPart: false)
+                );
+
+                // 3) Nastav stav pro uživatele na Zapsáno
                 await _repo.SetUserStateAsync(_currentUserId, _itemId, UserItemStateEnum.Written);
-                // (volitelně) notifikace uživateli
-                // MessageBox.Show("Událost byla přidána do seznamu.", "Hotovo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // 4) Oznámení + refresh
+                // if (created != null)
+                //     MessageBox.Show(this, "Záznam přidán do časových záznamů.", "Hotovo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                 if (_onChanged != null) await _onChanged();
             }
             catch (System.Exception ex)
             {
-                AppLogger.Error("Nepodařilo se označit jako 'Přidat'.", ex);
+                AppLogger.Error("Nepodařilo se vytvořit časový záznam z meetingu.", ex);
             }
+        }
+
+        /// <summary>
+        /// Parsuje z labelů datum a čas. 
+        /// Pokud nelze jednoznačně určit (např. „Celý den“), vrací null.
+        /// </summary>
+        private static DateTime? TryParseTimeFromLabel(string dateText, string timeText, bool fromPart)
+        {
+            if (!DateTime.TryParseExact(dateText, "dd.MM.yyyy",
+                System.Globalization.CultureInfo.GetCultureInfo("cs-CZ"),
+                System.Globalization.DateTimeStyles.None, out var date))
+                return null;
+
+            if (string.Equals(timeText, "Celý den", StringComparison.OrdinalIgnoreCase))
+                return null;
+
+            // formát "HH:mm - HH:mm" nebo jen "HH:mm"
+            var parts = timeText.Split('-', StringSplitOptions.TrimEntries);
+            if (parts.Length == 2)
+            {
+                if (fromPart)
+                {
+                    if (TimeSpan.TryParse(parts[0], out var ts))
+                        return date.Date.Add(ts);
+                }
+                else
+                {
+                    if (TimeSpan.TryParse(parts[1], out var ts))
+                        return date.Date.Add(ts);
+                }
+            }
+            else if (parts.Length == 1 && fromPart)
+            {
+                if (TimeSpan.TryParse(parts[0], out var ts))
+                    return date.Date.Add(ts);
+            }
+
+            return null;
         }
 
         /// <summary>

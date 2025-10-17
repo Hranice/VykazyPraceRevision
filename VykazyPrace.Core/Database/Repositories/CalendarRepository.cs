@@ -201,5 +201,11 @@ namespace VykazyPrace.Core.Database.Repositories
                     ci.EntryId == entryId &&
                     ci.OccurrenceStartUtc == occurrenceStartUtc);
         }
+
+        public async Task<CalendarItem?> GetByIdAsync(int id)
+        {
+            return await _context.CalendarItems.FindAsync(id);
+        }
+
     }
 }

@@ -505,5 +505,11 @@ namespace VykazyPrace
             var overviewDialog = new OverviewDialog(_selectedUser, DateRangeHelper.GetMonthRange(_selectedDate));
             overviewDialog.ShowDialog();
         }
+
+        private void buttonOutlookEvents_Click(object sender, EventArgs e)
+        {
+            var outlookEventsDialog = new OutlookEvents();
+            outlookEventsDialog.ShowDialog();
+        }
     }
 }

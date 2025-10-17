@@ -55,15 +55,32 @@ namespace VykazyPrace.UserControls.Calendar
 
             var timeEntries = await _timeEntryRepo.GetAllTimeEntriesByUserAsync(_selectedUser);
 
-            foreach (var entry in timeEntries.Where(e => e.Timestamp.HasValue &&
-                                                         e.Timestamp.Value.Year == _currentYear &&
-                                                         e.Timestamp.Value.Month == _currentMonth))
+            const int SnackProjectId = 132;     // projekt "svačina"
+            const int SnackEntryTypeId = 24;    // typ záznamu "svačina"
+            const int AbsenceProjectId = 23;    // projekt "nepřítomnost"
+
+            //    - musí mít Timestamp
+            //    - spadat do aktuálního roku a měsíce
+            //    - být validní (IsValid == 1)
+            //    - NESMÍ to být svačina (kombinace projekt + typ)
+            //    - NESMÍ to být nepřítomnost (projekt)
+            var filtered = timeEntries.Where(e =>
+                e.Timestamp.HasValue &&
+                e.Timestamp.Value.Year == _currentYear &&
+                e.Timestamp.Value.Month == _currentMonth &&
+                e.IsValid == 1 &&
+                !(e.ProjectId == SnackProjectId && e.EntryTypeId == SnackEntryTypeId) &&
+                !(e.ProjectId == AbsenceProjectId)
+            );
+
+            // Seskupení podle dne v měsíci a sumace minut
+            foreach (var group in filtered.GroupBy(e => e.Timestamp!.Value.Day))
             {
-                int day = entry.Timestamp.Value.Day;
-                _minutesDict.TryGetValue(day, out int currentMinutes);
-                _minutesDict[day] = currentMinutes + entry.EntryMinutes;
+                int totalMinutesForDay = group.Sum(e => e.EntryMinutes);
+                _minutesDict[group.Key] = totalMinutesForDay;
             }
         }
+
 
         private void CalendarUC_Load(object sender, EventArgs e)
         {

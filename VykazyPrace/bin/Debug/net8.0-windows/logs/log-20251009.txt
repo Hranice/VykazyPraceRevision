@@ -1,0 +1,7 @@
+2025-10-09 10:19:59.934 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-09 10:20:04.413 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-09 10:20:11.008 +02:00 [INF] Záznam  - : 0,5 h - Inventura byl úspěšně aktualizován.
+2025-10-09 10:23:36.664 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-09 10:23:41.119 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-09 10:24:04.195 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - Inventura byl smazán z DB.
+2025-10-09 10:24:16.680 +02:00 [INF] Záznam  - Automatizace: 0,5 h - SW - Výkazy hodin byl úspěšně aktualizován.

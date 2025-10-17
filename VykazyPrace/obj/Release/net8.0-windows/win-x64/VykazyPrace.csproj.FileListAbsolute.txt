@@ -559,3 +559,10 @@ C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-wind
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\win-x64\VykazyPrace.Dialogs.ManagerDialog.resources
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\win-x64\VykazyPrace.Dialogs.ProposeProjectDialog.resources
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\win-x64\VykazyPrace.Dialogs.OverviewDialog.resources
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\win-x64\ClosedXML.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\win-x64\ClosedXML.Parser.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\win-x64\DocumentFormat.OpenXml.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\win-x64\DocumentFormat.OpenXml.Framework.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\win-x64\ExcelNumberFormat.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\win-x64\RBush.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\win-x64\SixLabors.Fonts.dll

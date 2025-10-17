@@ -28,3 +28,73 @@
 2025-10-17 09:04:49.534 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
 2025-10-17 09:06:14.211 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
 2025-10-17 09:06:18.555 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-17 11:03:59.439 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-17 11:04:03.832 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-17 12:18:08.443 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-17 12:18:12.657 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-17 12:18:47.906 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-17 12:18:52.451 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-17 12:19:31.839 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-17 12:19:36.120 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-17 12:19:36.866 +02:00 [ERR] Chyba při čtení kalendáře z Outlooku
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'no such table: ItemChangeLogs'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteCommand.PrepareAndEnumerateStatements()+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteCommand.GetStatements()+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at VykazyPrace.Core.Database.Models.VykazyPraceContextExtensions.SafeSaveAsync(DbContext context, Int32 maxRetries, Int32 delayMs) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\Models\VykazyPraceContextExtensions.cs:line 17
+   at VykazyPrace.Core.Database.Repositories.CalendarRepository.LogChangeAsync(Int32 itemId, String action, Nullable`1 userId, String detailsJson) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\Repositories\CalendarRepository.cs:line 176
+   at VykazyPrace.Dialogs.OutlookEvents.InitializeEvents() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\OutlookEvents.cs:line 203
+2025-10-17 12:20:19.260 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-17 12:20:23.401 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-17 12:20:24.214 +02:00 [ERR] Chyba při čtení kalendáře z Outlooku
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'no such table: ItemChangeLogs'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteCommand.PrepareAndEnumerateStatements()+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteCommand.GetStatements()+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at VykazyPrace.Core.Database.Models.VykazyPraceContextExtensions.SafeSaveAsync(DbContext context, Int32 maxRetries, Int32 delayMs) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\Models\VykazyPraceContextExtensions.cs:line 17
+   at VykazyPrace.Core.Database.Repositories.CalendarRepository.LogChangeAsync(Int32 itemId, String action, Nullable`1 userId, String detailsJson) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\Database\Repositories\CalendarRepository.cs:line 176
+   at VykazyPrace.Dialogs.OutlookEvents.InitializeEvents() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\OutlookEvents.cs:line 203
+2025-10-17 12:20:25.487 +02:00 [INF] SQLite Error 1: 'no such table: ItemChangeLogs'.
+2025-10-17 12:21:26.583 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-17 12:21:30.863 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-17 12:21:31.600 +02:00 [ERR] Chyba při čtení kalendáře z Outlooku
+System.InvalidCastException: Unable to cast COM object of type 'System.__ComObject' to interface type 'Microsoft.Office.Interop.Outlook.MAPIFolder'. This operation failed because the QueryInterface call on the COM component for the interface with IID '{00063006-0000-0000-C000-000000000046}' failed due to the following error: Neznámé rozhraní (0x80004002 (E_NOINTERFACE)).
+   at VykazyPrace.Dialogs.OutlookEvents.InitializeEvents() in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\OutlookEvents.cs:line 79
+2025-10-17 12:24:19.476 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-17 12:24:23.783 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.

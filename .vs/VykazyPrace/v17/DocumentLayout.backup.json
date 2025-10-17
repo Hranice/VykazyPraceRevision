@@ -3,6 +3,70 @@
   "WorkspaceRootPath": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\dialogs\\outlookevents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\dialogs\\outlookevents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace.core\\database\\models\\vykazypracecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|solutionrelative:vykazyprace.core\\database\\models\\vykazypracecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\dialogs\\outlookevents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\dialogs\\outlookevents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace.core\\database\\models\\vykazypracecontextextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|solutionrelative:vykazyprace.core\\database\\models\\vykazypracecontextextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace.core\\database\\repositories\\calendarrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|solutionrelative:vykazyprace.core\\database\\repositories\\calendarrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace.core\\database\\models\\outlookevents\\syncstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|solutionrelative:vykazyprace.core\\database\\models\\outlookevents\\syncstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace.core\\database\\models\\outlookevents\\syncsession.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|solutionrelative:vykazyprace.core\\database\\models\\outlookevents\\syncsession.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace.core\\database\\models\\outlookevents\\itemattendee.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|solutionrelative:vykazyprace.core\\database\\models\\outlookevents\\itemattendee.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace.core\\database\\models\\outlookevents\\itemchangelog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|solutionrelative:vykazyprace.core\\database\\models\\outlookevents\\itemchangelog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace.core\\database\\models\\outlookevents\\useritemstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|solutionrelative:vykazyprace.core\\database\\models\\outlookevents\\useritemstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace.core\\database\\models\\outlookevents\\calendaritem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|solutionrelative:vykazyprace.core\\database\\models\\outlookevents\\calendaritem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace.core\\database\\models\\outlookevents\\useritemstateenum.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|solutionrelative:vykazyprace.core\\database\\models\\outlookevents\\useritemstateenum.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace.core\\database\\repositories\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5D776D8F-A8C6-4598-A9EE-26E64706F437}|VykazyPrace.Core\\VykazyPrace.Core.csproj|solutionrelative:vykazyprace.core\\database\\repositories\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\usercontrols\\outlook\\outlookevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\usercontrols\\outlook\\outlookevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\usercontrols\\outlook\\outlookevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\usercontrols\\outlook\\outlookevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\dialogs\\testdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\dialogs\\testdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\dialogs\\testdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\dialogs\\testdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
@@ -11,20 +75,8 @@
       "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\dialogs\\outlookevents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\dialogs\\outlookevents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\usercontrols\\outlook\\outlookevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\usercontrols\\outlook\\outlookevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazyprace\\vykazyprace\\dialogs\\testdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\dialogs\\testdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,7 +86,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -42,15 +94,55 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "OutlookEvent.cs [N\u00E1vrh]",
-              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\Outlook\\OutlookEvent.cs",
-              "RelativeDocumentMoniker": "VykazyPrace\\UserControls\\Outlook\\OutlookEvent.cs",
-              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\Outlook\\OutlookEvent.cs [N\u00E1vrh]",
-              "RelativeToolTip": "VykazyPrace\\UserControls\\Outlook\\OutlookEvent.cs [N\u00E1vrh]",
+              "DocumentIndex": 4,
+              "Title": "CalendarRepository.cs",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Repositories\\CalendarRepository.cs",
+              "RelativeDocumentMoniker": "VykazyPrace.Core\\Database\\Repositories\\CalendarRepository.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Repositories\\CalendarRepository.cs",
+              "RelativeToolTip": "VykazyPrace.Core\\Database\\Repositories\\CalendarRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-17T06:25:43.661Z",
-              "EditorCaption": " [N\u00E1vrh]"
+              "WhenOpened": "2025-10-17T09:17:40.283Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "VykazyPraceContextExtensions.cs",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Models\\VykazyPraceContextExtensions.cs",
+              "RelativeDocumentMoniker": "VykazyPrace.Core\\Database\\Models\\VykazyPraceContextExtensions.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Models\\VykazyPraceContextExtensions.cs",
+              "RelativeToolTip": "VykazyPrace.Core\\Database\\Models\\VykazyPraceContextExtensions.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKkAAABUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-17T07:41:08.412Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "VykazyPraceContext.cs",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Models\\VykazyPraceContext.cs",
+              "RelativeDocumentMoniker": "VykazyPrace.Core\\Database\\Models\\VykazyPraceContext.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Models\\VykazyPraceContext.cs",
+              "RelativeToolTip": "VykazyPrace.Core\\Database\\Models\\VykazyPraceContext.cs",
+              "ViewState": "AgIAALgAAAAAAAAAAADwv84AAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-17T07:40:56.344Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "ItemChangeLog.cs",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Models\\OutlookEvents\\ItemChangeLog.cs",
+              "RelativeDocumentMoniker": "VykazyPrace.Core\\Database\\Models\\OutlookEvents\\ItemChangeLog.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Models\\OutlookEvents\\ItemChangeLog.cs",
+              "RelativeToolTip": "VykazyPrace.Core\\Database\\Models\\OutlookEvents\\ItemChangeLog.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAuwB4AAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-17T07:37:53.392Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -58,28 +150,157 @@
               "Title": "OutlookEvents.cs [N\u00E1vrh]",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\OutlookEvents.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\Dialogs\\OutlookEvents.cs",
-              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\OutlookEvents.cs [N\u00E1vrh]",
-              "RelativeToolTip": "VykazyPrace\\Dialogs\\OutlookEvents.cs [N\u00E1vrh]",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\OutlookEvents.cs [N\u00E1vrh]*",
+              "RelativeToolTip": "VykazyPrace\\Dialogs\\OutlookEvents.cs [N\u00E1vrh]*",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-17T06:24:57.559Z",
               "EditorCaption": " [N\u00E1vrh]"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "OutlookEvents.cs",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\OutlookEvents.cs",
+              "RelativeDocumentMoniker": "VykazyPrace\\Dialogs\\OutlookEvents.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\OutlookEvents.cs*",
+              "RelativeToolTip": "VykazyPrace\\Dialogs\\OutlookEvents.cs*",
+              "ViewState": "AgIAAMgAAAAAAAAAAADwv9kAAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-17T07:07:07.388Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ItemAttendee.cs",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Models\\OutlookEvents\\ItemAttendee.cs",
+              "RelativeDocumentMoniker": "VykazyPrace.Core\\Database\\Models\\OutlookEvents\\ItemAttendee.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Models\\OutlookEvents\\ItemAttendee.cs",
+              "RelativeToolTip": "VykazyPrace.Core\\Database\\Models\\OutlookEvents\\ItemAttendee.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAgwCAAAABaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-17T07:38:16.697Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "SyncSession.cs",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Models\\OutlookEvents\\SyncSession.cs",
+              "RelativeDocumentMoniker": "VykazyPrace.Core\\Database\\Models\\OutlookEvents\\SyncSession.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Models\\OutlookEvents\\SyncSession.cs",
+              "RelativeToolTip": "VykazyPrace.Core\\Database\\Models\\OutlookEvents\\SyncSession.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-17T07:39:35.731Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 5,
+              "Title": "SyncState.cs",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Models\\OutlookEvents\\SyncState.cs",
+              "RelativeDocumentMoniker": "VykazyPrace.Core\\Database\\Models\\OutlookEvents\\SyncState.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Models\\OutlookEvents\\SyncState.cs",
+              "RelativeToolTip": "VykazyPrace.Core\\Database\\Models\\OutlookEvents\\SyncState.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-17T07:40:00.813Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "UserItemState.cs",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Models\\OutlookEvents\\UserItemState.cs",
+              "RelativeDocumentMoniker": "VykazyPrace.Core\\Database\\Models\\OutlookEvents\\UserItemState.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Models\\OutlookEvents\\UserItemState.cs",
+              "RelativeToolTip": "VykazyPrace.Core\\Database\\Models\\OutlookEvents\\UserItemState.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAAwCAAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-17T07:37:14.004Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "CalendarItem.cs",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Models\\OutlookEvents\\CalendarItem.cs",
+              "RelativeDocumentMoniker": "VykazyPrace.Core\\Database\\Models\\OutlookEvents\\CalendarItem.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Models\\OutlookEvents\\CalendarItem.cs",
+              "RelativeToolTip": "VykazyPrace.Core\\Database\\Models\\OutlookEvents\\CalendarItem.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAkwEAAAABLAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-17T07:36:09.117Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "UserItemStateEnum.cs",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Models\\OutlookEvents\\UserItemStateEnum.cs",
+              "RelativeDocumentMoniker": "VykazyPrace.Core\\Database\\Models\\OutlookEvents\\UserItemStateEnum.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Models\\OutlookEvents\\UserItemStateEnum.cs",
+              "RelativeToolTip": "VykazyPrace.Core\\Database\\Models\\OutlookEvents\\UserItemStateEnum.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-17T07:35:19.972Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "UserRepository.cs",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Repositories\\UserRepository.cs",
+              "RelativeDocumentMoniker": "VykazyPrace.Core\\Database\\Repositories\\UserRepository.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\Database\\Repositories\\UserRepository.cs",
+              "RelativeToolTip": "VykazyPrace.Core\\Database\\Repositories\\UserRepository.cs",
+              "ViewState": "AgIAAEUAAAAAAAAAAAAmwFEAAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-17T07:32:23.213Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "OutlookEvent.cs",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\Outlook\\OutlookEvent.cs",
+              "RelativeDocumentMoniker": "VykazyPrace\\UserControls\\Outlook\\OutlookEvent.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\Outlook\\OutlookEvent.cs*",
+              "RelativeToolTip": "VykazyPrace\\UserControls\\Outlook\\OutlookEvent.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-17T07:07:32.453Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "OutlookEvent.cs [N\u00E1vrh]",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\Outlook\\OutlookEvent.cs",
+              "RelativeDocumentMoniker": "VykazyPrace\\UserControls\\Outlook\\OutlookEvent.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\UserControls\\Outlook\\OutlookEvent.cs [N\u00E1vrh]*",
+              "RelativeToolTip": "VykazyPrace\\UserControls\\Outlook\\OutlookEvent.cs [N\u00E1vrh]*",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-17T06:25:43.661Z",
+              "EditorCaption": " [N\u00E1vrh]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
               "Title": "TestDialog.cs",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\TestDialog.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\Dialogs\\TestDialog.cs",
               "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\TestDialog.cs",
               "RelativeToolTip": "VykazyPrace\\Dialogs\\TestDialog.cs",
-              "ViewState": "AgIAAP4AAAAAAAAAAAAYwBoBAAAzAAAAAAAAAA==",
+              "ViewState": "AgIAAM8AAAAAAAAAAAAAwCgBAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-17T06:18:00.63Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 16,
               "Title": "TestDialog.cs [N\u00E1vrh]",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\TestDialog.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\Dialogs\\TestDialog.cs",
@@ -91,7 +312,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 17,
               "Title": "MainForm.cs [N\u00E1vrh]",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\MainForm.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\MainForm.cs",
@@ -103,7 +324,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 18,
               "Title": "MainForm.cs",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\MainForm.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\MainForm.cs",

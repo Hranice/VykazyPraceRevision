@@ -117,6 +117,7 @@
             Controls.Add(tableLayoutPanel1);
             Name = "OutlookEvents";
             Text = "Události v Outlooku";
+            Load += OutlookEvents_Load;
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             ResumeLayout(false);

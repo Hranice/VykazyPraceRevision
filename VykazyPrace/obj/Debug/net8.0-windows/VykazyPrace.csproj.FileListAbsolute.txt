@@ -145,3 +145,4 @@ C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-window
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\SixLabors.Fonts.dll
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\System.IO.Packaging.dll
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.Dialogs.ExportDialog.resources
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Debug\net8.0-windows\Microsoft.Office.Interop.Outlook.dll

@@ -21,12 +21,8 @@ namespace VykazyPrace.Core.Database.Repositories
             _context = new VykazyPraceContext();
         }
 
-        // ------------------------------------------------------------
-        // UPSERT položky podle (StoreId, EntryId, OccurrenceStartUtc)
-        // ------------------------------------------------------------
         /// <summary>
         /// Vloží/aktualizuje CalendarItem dle unikátního klíče.
-        /// Používej při každém syncu ze zdroje (Outlook Interop).
         /// </summary>
         public async Task<CalendarItem> UpsertCalendarItemAsync(CalendarItem input)
         {
@@ -43,7 +39,7 @@ namespace VykazyPrace.Core.Database.Repositories
             }
             else
             {
-                // Přepíšeme „otisk“ a metadata – ponecháme Id
+                // Přepíše "otisk" a metadata – ponecháme Id
                 existing.LastSeenAtUtc = input.LastSeenAtUtc;
                 existing.LastModifiedUtc = input.LastModifiedUtc;
                 existing.LastFolderEntryId = input.LastFolderEntryId;
@@ -66,12 +62,8 @@ namespace VykazyPrace.Core.Database.Repositories
             return existing ?? input;
         }
 
-        // ------------------------------------------------------------
-        // Účastníci – jednoduchá strategie „replace“
-        // ------------------------------------------------------------
         /// <summary>
         /// Nahraď účastníky položky (smaž a vlož).
-        /// Volat po každém updatu položky, ať je seznam konzistentní.
         /// </summary>
         public async Task UpsertAttendeesAsync(int itemId, IEnumerable<ItemAttendee> attendees)
         {
@@ -87,9 +79,6 @@ namespace VykazyPrace.Core.Database.Repositories
             await VykazyPraceContextExtensions.SafeSaveAsync(_context);
         }
 
-        // ------------------------------------------------------------
-        // Stav uživatele (tombstone, skrytí, zapsáno…)
-        // ------------------------------------------------------------
         /// <summary>
         /// Nastaví stav položky z pohledu uživatele (UPSERT).
         /// Např. State = IgnoreTombstone = 3.
@@ -122,9 +111,6 @@ namespace VykazyPrace.Core.Database.Repositories
             return existing;
         }
 
-        // ------------------------------------------------------------
-        // Výpis pro uživatele (s ignorací tombstonů)
-        // ------------------------------------------------------------
         /// <summary>
         /// Vrátí položky pro uživatele. 
         /// Ve výchozím stavu skrývá IGNORE_TOMBSTONE (State=3).
@@ -159,9 +145,6 @@ namespace VykazyPrace.Core.Database.Repositories
             return data.Select(x => (x.ci, x.state)).ToList();
         }
 
-        // ------------------------------------------------------------
-        // Logování změn
-        // ------------------------------------------------------------
         public async Task LogChangeAsync(int itemId, string action, int? userId = null, string? detailsJson = null)
         {
             _context.ItemChangeLogs.Add(new ItemChangeLog
@@ -176,12 +159,8 @@ namespace VykazyPrace.Core.Database.Repositories
             await VykazyPraceContextExtensions.SafeSaveAsync(_context);
         }
 
-        // ------------------------------------------------------------
-        // „Stárnutí“ – označení/čištění záznamů, které jsme dlouho neviděli
-        // ------------------------------------------------------------
         /// <summary>
-        /// Vrátí seznam položek, které nebyly „viděny“ od zadaného času (pro případný housekeeping).
-        /// Nic nemaže – mazání nech na UI/politice.
+        /// Vrátí seznam položek, které nebyly viděny od zadaného času (pro případný housekeeping).
         /// </summary>
         public async Task<List<CalendarItem>> GetStaleItemsAsync(DateTime notSeenSinceUtc)
         {
@@ -190,9 +169,6 @@ namespace VykazyPrace.Core.Database.Repositories
                 .ToListAsync();
         }
 
-        // ------------------------------------------------------------
-        // Vyhledání konkrétní položky dle Outlook klíče
-        // ------------------------------------------------------------
         public async Task<CalendarItem?> GetByKeyAsync(string storeId, string entryId, DateTime? occurrenceStartUtc)
         {
             return await _context.CalendarItems
@@ -207,5 +183,55 @@ namespace VykazyPrace.Core.Database.Repositories
             return await _context.CalendarItems.FindAsync(id);
         }
 
+        public async Task<List<(CalendarItem Item, UserItemStateEnum? State)>> GetVisibleItemsForUserAsync(
+    int userId,
+    DateTime? fromUtc = null,
+    DateTime? toUtc = null)
+        {
+            // Stav, které NEMÁME zobrazovat
+            var hiddenStates = new[] { UserItemStateEnum.IgnoreTombstone, UserItemStateEnum.Written };
+
+            var q = from ci in _context.CalendarItems
+                    join uis in _context.UserItemStates.Where(x => x.UserId == userId)
+                        on ci.Id equals uis.ItemId into gj
+                    from uis in gj.DefaultIfEmpty()
+                    where uis == null || !hiddenStates.Contains(uis.State)
+                    select new { ci, state = (UserItemStateEnum?)uis.State };
+
+            if (fromUtc.HasValue)
+                q = q.Where(x => x.ci.StartUtc == null || x.ci.StartUtc >= fromUtc.Value);
+
+            if (toUtc.HasValue)
+                q = q.Where(x => x.ci.StartUtc == null || x.ci.StartUtc <= toUtc.Value);
+
+            var data = await q
+                .OrderBy(x => x.ci.StartUtc)
+                .ToListAsync();
+
+            return data.Select(x => (x.ci, x.state)).ToList();
+        }
+
+        public sealed class CalendarItemKeyInfo
+        {
+            public int Id { get; set; }
+            public string LastHash { get; set; }
+        }
+
+        public async Task<CalendarItemKeyInfo?> TryGetItemKeyInfoAsync(string storeId, string entryId, DateTime? occurrenceStartUtc)
+        {
+            return await _context.CalendarItems
+                .Where(ci => ci.StoreId == storeId
+                          && ci.EntryId == entryId
+                          && ((ci.OccurrenceStartUtc == null && occurrenceStartUtc == null)
+                               || (ci.OccurrenceStartUtc != null && occurrenceStartUtc != null
+                                   && ci.OccurrenceStartUtc == occurrenceStartUtc)))
+                .Select(ci => new CalendarItemKeyInfo
+                {
+                    Id = ci.Id,
+                    LastHash = ci.LastHash
+                })
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+        }
     }
 }

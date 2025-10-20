@@ -30,16 +30,29 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OutlookEvents));
             flowLayoutPanel1 = new FlowLayoutPanel();
+            buttonAddAllEvents = new Button();
             SuspendLayout();
             // 
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.AutoScroll = true;
             flowLayoutPanel1.Dock = DockStyle.Fill;
-            flowLayoutPanel1.Location = new Point(0, 0);
+            flowLayoutPanel1.Location = new Point(0, 48);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(284, 416);
+            flowLayoutPanel1.Size = new Size(284, 368);
             flowLayoutPanel1.TabIndex = 0;
+            // 
+            // buttonAddAllEvents
+            // 
+            buttonAddAllEvents.Dock = DockStyle.Top;
+            buttonAddAllEvents.Font = new Font("Reddit Sans", 12F);
+            buttonAddAllEvents.Location = new Point(0, 0);
+            buttonAddAllEvents.Name = "buttonAddAllEvents";
+            buttonAddAllEvents.Size = new Size(284, 48);
+            buttonAddAllEvents.TabIndex = 1;
+            buttonAddAllEvents.Text = "Přidat všechny události";
+            buttonAddAllEvents.UseVisualStyleBackColor = true;
+            buttonAddAllEvents.Click += buttonAddAllEvents_Click;
             // 
             // OutlookEvents
             // 
@@ -48,6 +61,7 @@
             BackColor = Color.White;
             ClientSize = new Size(284, 416);
             Controls.Add(flowLayoutPanel1);
+            Controls.Add(buttonAddAllEvents);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "OutlookEvents";
@@ -59,5 +73,6 @@
         #endregion
 
         private FlowLayoutPanel flowLayoutPanel1;
+        private Button buttonAddAllEvents;
     }
 }

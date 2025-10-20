@@ -100,6 +100,9 @@ public partial class VykazyPraceContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("ID");
 
+            entity.Property(e => e.Email).HasColumnType("TEXT");
+            entity.HasIndex(e => e.Email).HasDatabaseName("IX_Users_Email");
+
             entity.HasOne(d => d.UserGroup).WithMany(p => p.Users).HasForeignKey(d => d.UserGroupId);
         });
 

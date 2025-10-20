@@ -506,10 +506,12 @@ namespace VykazyPrace
             overviewDialog.ShowDialog();
         }
 
-        private void buttonOutlookEvents_Click(object sender, EventArgs e)
+        private async void buttonOutlookEvents_Click(object sender, EventArgs e)
         {
-            var outlookEventsDialog = new OutlookEvents();
+            var outlookEventsDialog = new OutlookEvents(_selectedUser);
             outlookEventsDialog.ShowDialog();
+
+            await _calendar.ChangeToTodaysWeek();
         }
     }
 }

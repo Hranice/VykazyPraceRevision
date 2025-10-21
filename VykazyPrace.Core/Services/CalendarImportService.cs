@@ -101,10 +101,10 @@ namespace VykazyPrace.Core.Services
                 ProjectId = _opt.ProjectIdForMeetings,
                 EntryTypeId = _opt.EntryTypeIdForMeetings,
                 Timestamp = start,
-                Description = string.IsNullOrWhiteSpace(subject) ? "(bez názvu)" : subject!.Trim(),
+                Description = "Outlook událost",
                 EntryMinutes = minutes,
                 AfterCare = 0,
-                Note = $"Outlook meeting (ItemId={itemId})",
+                Note = string.IsNullOrWhiteSpace(subject) ? "(bez názvu)" : subject!.Trim(),
                 IsLocked = 0,
                 IsValid = 1
             });
@@ -173,7 +173,7 @@ namespace VykazyPrace.Core.Services
                     Description = "Outlook událost",
                     EntryMinutes = c.Minutes,
                     AfterCare = 0,
-                    Note = c.Subject,
+                    Note = string.IsNullOrWhiteSpace(c.Subject) ? "(bez názvu)" : c.Subject!.Trim(),
                     IsLocked = 0,
                     IsValid = 1
                 });
@@ -185,7 +185,6 @@ namespace VykazyPrace.Core.Services
 
             return (added, conflicts, duplicates);
         }
-
 
         private sealed class Candidate
         {

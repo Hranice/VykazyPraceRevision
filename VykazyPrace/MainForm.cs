@@ -376,6 +376,8 @@ namespace VykazyPrace
             int totalRows = await powerKeyHelper.DownloadForUserAsync(DateTime.Now, _selectedUser);
             AppLogger.Information($"Staženo {totalRows} záznamù pro mìsíc è.{DateTime.Now.Month} uživatele {FormatHelper.FormatUserToString(_selectedUser)}.", false);
 
+            buttonOutlookEvents.Visible = _selectedUser.WindowsUsername == Environment.UserName;
+
             _calendar?.ChangeUser(_selectedUser);
             _monthlyCalendar.ChangeUser(_selectedUser);
         }

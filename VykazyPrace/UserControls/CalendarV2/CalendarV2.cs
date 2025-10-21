@@ -704,7 +704,8 @@ namespace VykazyPrace.UserControls.CalendarV2
                         entry.Timestamp.Value.Date == day.Date &&
                         entry.IsValid == 1 &&
                         !(entry.ProjectId == 132 && entry.EntryTypeId == 24) && // není svačina
-                        !(entry.ProjectId == 23)) // není nepřítomnost
+                        !(entry.ProjectId == 23) && // není nepřítomnost
+                        !(entry.EntryTypeId == 25)) // není outlook událost
                     .Sum(entry => entry.EntryMinutes);
 
                 double vykazanoHodin = totalMinutes / 60.0;

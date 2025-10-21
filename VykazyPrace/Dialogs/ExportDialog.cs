@@ -145,6 +145,11 @@ namespace VykazyPrace.Dialogs
         /// Projekt reprezentující nepřítomnost – nezapočítává se do souhrnů podle uživatele.
         /// </summary>
         public const int AbsenceProjectId = 23;
+
+        /// <summary>
+        /// Typ záznamu reprezentující outlook událost (nevalidní záznam) – nezapočítává se do souhrnů podle uživatele.
+        /// </summary>
+        public const int OutlookEventEntryTypeId = 25;
     }
     #endregion
 
@@ -506,6 +511,7 @@ namespace VykazyPrace.Dialogs
                 var filtered = allEntries
                     .Where(e => e.User?.UserGroup != null && selectedUserGroupIds.Contains(e.User.UserGroup.Id))
                     .Where(e => !(e.ProjectId == ExportConstants.ExcludedProjectId && e.EntryTypeId == ExportConstants.ExcludedEntryTypeId))
+                    .Where(e => !(e.EntryTypeId == ExportConstants.OutlookEventEntryTypeId))
                     .ToList();
 
                 // 3) Projekty pro jednotlivé listy (jen reálné projekty typu 0)

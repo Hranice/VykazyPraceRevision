@@ -1389,3 +1389,22 @@ Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving 
 2025-10-24 12:52:54.635 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
 2025-10-24 12:52:58.688 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
 2025-10-24 12:53:06.452 +02:00 [INF] Hromadná úprava dokončena (3 záznamů aktualizováno).
+2025-10-24 12:54:34.769 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-24 12:54:38.756 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-24 13:00:48.029 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-24 13:00:52.108 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-24 13:03:25.320 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-24 13:03:29.150 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-24 13:03:41.830 +02:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 3 h - SW - HD2 byl smazán z DB.
+2025-10-24 13:03:53.469 +02:00 [INF] Hromadná úprava dokončena (3 záznamů aktualizováno).
+2025-10-24 13:04:46.094 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-24 13:04:49.853 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-24 13:04:54.564 +02:00 [INF] Záznam  - Automatizace: 1 h - SW - Výkazy hodin byl smazán z DB.
+2025-10-24 13:04:58.297 +02:00 [INF] Záznam 0 - Provoz HP (Horká ražba): 4 h - SW - HD2 byl smazán z DB.
+2025-10-24 13:05:01.929 +02:00 [INF] Hromadná úprava dokončena (3 záznamů aktualizováno).
+2025-10-24 13:05:09.971 +02:00 [INF] Hromadná úprava dokončena (2 záznamů aktualizováno).
+2025-10-24 13:06:26.774 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-24 13:06:30.821 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-24 13:07:08.921 +02:00 [INF] Záznam 0 - Ostatní: 0,5 h - Outlook událost byl smazán z DB.
+2025-10-24 13:07:09.710 +02:00 [INF] Záznam 0363I25 - Agilox pro závod 2: 0,5 h - Agilox byl smazán z DB.
+2025-10-24 13:08:00.646 +02:00 [INF] Hromadná úprava dokončena (3 záznamů aktualizováno).

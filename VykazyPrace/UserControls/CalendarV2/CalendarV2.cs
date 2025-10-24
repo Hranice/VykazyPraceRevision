@@ -121,6 +121,8 @@ namespace VykazyPrace.UserControls.CalendarV2
             _specialDayRepo = specialDayRepo;
 
             _config = ConfigService.Load();
+
+            InitializeContextMenus();
         }
 
         private readonly HashSet<int> _selectedEntryIds = new();
@@ -128,6 +130,16 @@ namespace VykazyPrace.UserControls.CalendarV2
         private DayPanel? GetPanelByEntryId(int entryId)
             => _activePanels.FirstOrDefault(p => p.EntryId == entryId);
 
+
+        private void InitializeContextMenus()
+        {
+            dayPanelMenu = new ContextMenuStrip();
+            dayPanelMenu.Items.Add("Kopírovat", null, (_, _) => CopySelectedPanel());
+            dayPanelMenu.Items.Add("Odstranit", null, async (_, _) => await DeleteRecord());
+
+            tableLayoutMenu = new ContextMenuStrip();
+            tableLayoutMenu.Items.Add("Vložit", null, (_, _) => PasteCopiedPanel());
+        }
 
         private void ClearSelection()
         {
@@ -1397,9 +1409,10 @@ namespace VykazyPrace.UserControls.CalendarV2
             var tag = panel.Tag as string;
 
             if (tag is "snack" or "locked")
-                return;
+                panel.Selected = false;
 
-            panel.Selected = selected;
+            else
+                panel.Selected = selected;
         }
 
 

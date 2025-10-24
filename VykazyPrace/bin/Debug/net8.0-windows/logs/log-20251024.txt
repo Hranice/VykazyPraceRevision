@@ -1408,3 +1408,5 @@ Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving 
 2025-10-24 13:07:08.921 +02:00 [INF] Záznam 0 - Ostatní: 0,5 h - Outlook událost byl smazán z DB.
 2025-10-24 13:07:09.710 +02:00 [INF] Záznam 0363I25 - Agilox pro závod 2: 0,5 h - Agilox byl smazán z DB.
 2025-10-24 13:08:00.646 +02:00 [INF] Hromadná úprava dokončena (3 záznamů aktualizováno).
+2025-10-24 13:12:59.060 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-24 13:13:02.875 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.

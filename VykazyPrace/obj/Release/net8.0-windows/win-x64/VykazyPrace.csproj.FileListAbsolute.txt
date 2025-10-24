@@ -566,3 +566,6 @@ C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-wind
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\win-x64\ExcelNumberFormat.dll
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\win-x64\RBush.dll
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\win-x64\SixLabors.Fonts.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\win-x64\Microsoft.Office.Interop.Outlook.dll
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\win-x64\VykazyPrace.Dialogs.OutlookEvents.resources
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\win-x64\VykazyPrace.UserControls.Outlook.OutlookEvent.resources

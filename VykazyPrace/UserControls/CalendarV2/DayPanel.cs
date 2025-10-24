@@ -10,6 +10,18 @@ namespace VykazyPrace.UserControls.CalendarV2
         public int EntryId { get; set; }
         public int OwnerId { get; set; }
 
+        // Flag označení (pro multiselect)
+        private bool _selected;
+        public bool Selected
+        {
+            get => _selected;
+            set
+            {
+                _selected = value;
+                Invalidate();
+            }
+        }
+
         private List<string> _titleLines = new();
         private List<string> _subtitleLines = new();
         private Color _assignedColor;
@@ -55,13 +67,13 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         public void Activate()
         {
-            this.BackColor = ControlPaint.Light(_assignedColor, 0.4f);
+            this.BackColor = Selected ? ControlPaint.Light(_assignedColor, 1f) : ControlPaint.Light(_assignedColor, 0.7f);
             this.Refresh();
         }
 
         public void Deactivate()
         {
-            this.BackColor = _assignedColor;
+            this.BackColor = Selected ? ControlPaint.Light(_assignedColor, 1f) : _assignedColor;
             this.Refresh();
         }
 
@@ -91,6 +103,14 @@ namespace VykazyPrace.UserControls.CalendarV2
             {
                 g.DrawString(line, this.Font, b, new RectangleF(padding, ySub, availW, lineH));
                 ySub += lineH;
+            }
+
+
+            if (Selected)
+            {
+                var rect = ClientRectangle;
+                using var pen = new Pen(ControlPaint.Dark(_assignedColor, 0.4f), 2);
+                e.Graphics.DrawRectangle(pen, rect);
             }
         }
         private List<string> WrapTextIntoLines(string text, Font font, int maxWidth, int maxLines)

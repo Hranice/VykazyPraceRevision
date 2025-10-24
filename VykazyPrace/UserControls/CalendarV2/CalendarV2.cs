@@ -1363,11 +1363,10 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
             else
             {
-                // Single-klik => zruš předchozí výběr a vyber právě tento
-                ClearSelection();                 // UI: starým panelům dá Selected=false
-                DeactivateAllPanels();            // tvůj existující vizuální focus
-                AddToSelection(panel.EntryId);    // <<< TADY nově nastavíme Selected=true
-                panel.Activate();                 // sidebar atd.
+                ClearSelection();
+                DeactivateAllPanels();
+                AddToSelection(panel.EntryId);
+                panel.Activate();
                 _selectedTimeEntryId = panel.EntryId;
             }
 
@@ -1412,6 +1411,18 @@ namespace VykazyPrace.UserControls.CalendarV2
                 if (ctrl is DayPanel pan)
                 {
                     pan.Deactivate();
+                    //SetSelectedUi(pan.EntryId, false);
+                }
+            }
+        }
+
+        private void DeselectAllPanels()
+        {
+            foreach (var ctrl in tableLayoutPanelCalendar.Controls)
+            {
+                if (ctrl is DayPanel pan)
+                {
+                    SetSelectedUi(pan.EntryId, false);
                 }
             }
         }
@@ -2205,8 +2216,11 @@ namespace VykazyPrace.UserControls.CalendarV2
 
                 // Reset výběru
                 _selectedEntryIds.Clear();
+                DeselectAllPanels();
+                _selectedTimeEntryId = -1;
                 DeactivateAllPanels();
                 UpdateBulkEditIndicator();
+                await LoadSidebar();
 
                 return;
             }

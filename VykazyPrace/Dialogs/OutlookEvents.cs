@@ -109,42 +109,60 @@ namespace VykazyPrace.Dialogs
                 calendarFolder = session.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
 
                 items = calendarFolder.Items;
+                items.Sort("[Start]", Type.Missing);
                 items.IncludeRecurrences = true;
 
-                // Outlook Restrict očekává EN-US lokální čas ve formátu "g"
                 var en = CultureInfo.GetCultureInfo("en-US");
-                var startLocal = _fromUtc.ToLocalTime();
-                var endLocal = _toUtc.ToLocalTime();
+                var baseFromLocal = DateTime.Now.Date.AddDays(-30);
+                var baseToLocal = DateTime.Now.Date.AddDays(30);
 
                 string filter =
-                    $"[Start] >= '{startLocal.ToString("g", en)}' AND " +
-                    $"[Start] <= '{endLocal.ToString("g", en)}'";
+                    "[Start] <= '" + baseToLocal.ToString("g", en) + "' AND " +
+                    "[End] >= '" + baseFromLocal.ToString("g", en) + "'";
 
                 var restricted = items.Restrict(filter);
+
+                var appts = new List<AppointmentItem>();
+                foreach (object raw in restricted)
+                {
+                    if (raw is AppointmentItem a)
+                        appts.Add(a);
+                }
+
+                var fromUtc = _fromUtc;
+                var toUtc = _toUtc;
+
+                var scopedAppts = appts.Where(a =>
+                {
+                    var su = a.Start.ToUniversalTime();
+                    var eu = a.End.ToUniversalTime();
+                    return su <= toUtc && eu >= fromUtc;
+                }).ToList();
+
+                AppLogger.Information(
+                    $"Outlook sync: OutlookReturned={appts.Count}, InMyRange={scopedAppts.Count}, RangeUTC={fromUtc:o}..{toUtc:o}",
+                    false
+                );
 
                 var userRepo = new UserRepository();
                 var userCache = new Dictionary<string, int?>(StringComparer.OrdinalIgnoreCase);
 
-                // Rychlejší získání SMTP adresy z recipienta
                 const string PR_SMTP_ADDRESS = "http://schemas.microsoft.com/mapi/proptag/0x39FE001E";
 
-                foreach (object obj in restricted)
+                foreach (var appt in scopedAppts)
                 {
-                    if (obj is not AppointmentItem appt)
-                        continue;
-
                     string storeId = calendarFolder.StoreID;
                     string folderEntryId = calendarFolder.EntryID;
                     string entryId = appt.EntryID;
 
-                    bool isRecurringSeries =
-                        appt.RecurrenceState == OlRecurrenceState.olApptMaster;
-                    bool isException =
-                        appt.RecurrenceState == OlRecurrenceState.olApptException;
+                    bool isRecurringSeries = appt.RecurrenceState == OlRecurrenceState.olApptMaster;
+                    bool isException = appt.RecurrenceState == OlRecurrenceState.olApptException;
 
                     DateTime? startUtc = appt.Start == DateTime.MinValue ? null : appt.Start.ToUniversalTime();
                     DateTime? endUtc = appt.End == DateTime.MinValue ? null : appt.End.ToUniversalTime();
-                    DateTime? occurrenceStartUtc = isRecurringSeries ? (DateTime?)null : startUtc;
+
+                    // tahle konkrétní instance
+                    DateTime? occurrenceStartUtc = startUtc;
 
                     string subject = string.IsNullOrWhiteSpace(appt.Subject) ? "(bez názvu)" : appt.Subject;
                     string location = string.IsNullOrWhiteSpace(appt.Location) ? null : appt.Location;
@@ -153,7 +171,6 @@ namespace VykazyPrace.Dialogs
                     bool isAllDay = appt.AllDayEvent;
                     DateTime lastModifiedUtc = appt.LastModificationTime.ToUniversalTime();
 
-                    // porovnání hashů, ať víme, zda číst Recipients
                     var keyInfo = await _calendarRepo.TryGetItemKeyInfoAsync(storeId, entryId, occurrenceStartUtc);
                     string prevHash = keyInfo?.LastHash;
 
@@ -195,7 +212,6 @@ namespace VykazyPrace.Dialogs
 
                     var ci = await _calendarRepo.UpsertCalendarItemAsync(ciInput).ConfigureAwait(false);
 
-                    // Recipients čteme jen když je položka změněná
                     if (changed)
                     {
                         Microsoft.Office.Interop.Outlook.Recipients recipients = null;
@@ -257,7 +273,7 @@ namespace VykazyPrace.Dialogs
                                 System.Runtime.InteropServices.Marshal.ReleaseComObject(r);
                             }
                         }
-                        catch { /* best-effort */ }
+                        catch { }
                         finally
                         {
                             if (recipients != null)
@@ -269,6 +285,8 @@ namespace VykazyPrace.Dialogs
 
                         await _calendarRepo.LogChangeAsync(ci.Id, "SYNC_UPSERT", userId: null, detailsJson: null).ConfigureAwait(false);
                     }
+
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(appt);
                 }
             }
             catch (Exception ex)
@@ -300,7 +318,10 @@ namespace VykazyPrace.Dialogs
             host.AutoScroll = false;
             host.Controls.Clear();
 
-            var itemsWithState = await _calendarRepo.GetVisibleItemsForUserAsync(_currentUserId, _fromUtc, _toUtc);
+            var itemsWithState = await _calendarRepo
+                .GetVisibleItemsForUserByAttendanceAsync(_currentUserId, _fromUtc, _toUtc);
+
+
 
             var toShow = itemsWithState
                 .Where(x => x.Item != null)

@@ -122,7 +122,8 @@ namespace VykazyPrace.Core.Services
             DateTime? fromUtc = null,
             DateTime? toUtc = null)
         {
-            var items = await _calRepo.GetVisibleItemsForUserAsync(userId, fromUtc, toUtc);
+            var items = await _calRepo.GetVisibleItemsForUserByAttendanceAsync(userId, fromUtc, toUtc);
+
             if (items.Count == 0) return (0, 0, 0);
 
             var candidates = items.Select(x => x.Item)

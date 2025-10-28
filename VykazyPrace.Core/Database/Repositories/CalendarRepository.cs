@@ -116,34 +116,48 @@ namespace VykazyPrace.Core.Database.Repositories
         /// Ve výchozím stavu skrývá IGNORE_TOMBSTONE (State=3).
         /// </summary>
         public async Task<List<(CalendarItem Item, UserItemStateEnum? State)>> GetItemsForUserAsync(
-            int userId,
-            bool includeIgnored = false,
-            DateTime? fromUtc = null,
-            DateTime? toUtc = null)
+      int userId,
+      bool includeIgnored = false,
+      DateTime? fromUtc = null,
+      DateTime? toUtc = null)
         {
             var q = from ci in _context.CalendarItems
                     join uis in _context.UserItemStates.Where(x => x.UserId == userId)
                         on ci.Id equals uis.ItemId into gj
                     from uis in gj.DefaultIfEmpty()
-                    select new { ci, state = (UserItemStateEnum?)uis.State };
+                    select new
+                    {
+                        ci,
+                        state = (UserItemStateEnum?)uis.State
+                    };
 
             if (!includeIgnored)
             {
                 q = q.Where(x => x.state == null || x.state != UserItemStateEnum.IgnoreTombstone);
             }
 
-            if (fromUtc.HasValue)
-                q = q.Where(x => x.ci.StartUtc == null || x.ci.StartUtc >= fromUtc.Value);
+            // test překryvu intervalů [StartUtc, EndUtc] a [fromUtc, toUtc]
+            if (fromUtc.HasValue || toUtc.HasValue)
+            {
+                var f = fromUtc ?? DateTime.MinValue;
+                var t = toUtc ?? DateTime.MaxValue;
 
-            if (toUtc.HasValue)
-                q = q.Where(x => x.ci.StartUtc == null || x.ci.StartUtc <= toUtc.Value);
+                q = q.Where(x =>
+                    (x.ci.StartUtc == null || x.ci.EndUtc == null) ||
+                    (x.ci.StartUtc <= t && x.ci.EndUtc >= f)
+                );
+            }
 
             var data = await q
                 .OrderBy(x => x.ci.StartUtc)
                 .ToListAsync();
 
-            return data.Select(x => (x.ci, x.state)).ToList();
+            return data
+                .Select(x => (x.ci, x.state))
+                .ToList();
         }
+
+
 
         public async Task LogChangeAsync(int itemId, string action, int? userId = null, string? detailsJson = null)
         {
@@ -209,6 +223,79 @@ namespace VykazyPrace.Core.Database.Repositories
                 .ToListAsync();
 
             return data.Select(x => (x.ci, x.state)).ToList();
+        }
+
+        public async Task<List<(CalendarItem Item, UserItemStateEnum? State)>> GetVisibleItemsForUserByAttendanceAsync(
+     int userId,
+     DateTime? fromUtc = null,
+     DateTime? toUtc = null)
+        {
+            var hiddenStates = new[] { UserItemStateEnum.IgnoreTombstone, UserItemStateEnum.Written };
+
+            var q =
+                from ci in _context.CalendarItems
+
+                    // stav pro daného usera (LEFT JOIN)
+                join uisTmp in _context.UserItemStates.Where(x => x.UserId == userId)
+                    on ci.Id equals uisTmp.ItemId into gj
+                from uis in gj.DefaultIfEmpty()
+
+                    // attendees (INNER JOIN) - jen eventy kde je tenhle user účastník
+                join ia in _context.ItemAttendees
+                    on ci.Id equals ia.ItemId
+
+                where ia.UserId == userId
+                   && (uis == null || !hiddenStates.Contains(uis.State))
+
+                select new
+                {
+                    ci,
+                    state = (UserItemStateEnum?)uis.State
+                };
+
+            if (fromUtc.HasValue)
+                q = q.Where(x => x.ci.StartUtc == null || x.ci.StartUtc >= fromUtc.Value);
+
+            if (toUtc.HasValue)
+                q = q.Where(x => x.ci.StartUtc == null || x.ci.StartUtc <= toUtc.Value);
+
+            var rawData = await q
+                .OrderBy(x => x.ci.StartUtc)
+                .ToListAsync();
+
+            // DEDUP
+            var grouped = rawData
+                .GroupBy(x =>
+                {
+                    var ci = x.ci;
+
+                    string startKey = ci.StartUtc?.ToString("yyyy-MM-ddTHH:mm") ?? "nostart";
+                    string endKey = ci.EndUtc?.ToString("yyyy-MM-ddTHH:mm") ?? "noend";
+
+                    if (!string.IsNullOrEmpty(ci.GlobalAppointmentId))
+                    {
+                        return "GA:" + ci.GlobalAppointmentId + "|" + (ci.OccurrenceStartUtc?.ToString("o") ?? "noocc");
+                    }
+                    else
+                    {
+                        // fallback klíč
+                        var subj = (ci.Subject ?? "").Trim();
+                        return "FB:" + subj + "|" + startKey + "|" + endKey;
+                    }
+                })
+                .Select(g =>
+                {
+                    // logika: vezmi ten, který má nejnovější LastModifiedUtc (pokud je null, ber min)
+                    var best = g
+                        .OrderByDescending(x => x.ci.LastModifiedUtc ?? DateTime.MinValue)
+                        .First();
+
+                    return (best.ci, best.state);
+                })
+                .OrderBy(x => x.ci.StartUtc ?? DateTime.MaxValue)
+                .ToList();
+
+            return grouped;
         }
 
         public sealed class CalendarItemKeyInfo

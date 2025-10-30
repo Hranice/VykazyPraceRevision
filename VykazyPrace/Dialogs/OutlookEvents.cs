@@ -161,7 +161,6 @@ namespace VykazyPrace.Dialogs
                     DateTime? startUtc = appt.Start == DateTime.MinValue ? null : appt.Start.ToUniversalTime();
                     DateTime? endUtc = appt.End == DateTime.MinValue ? null : appt.End.ToUniversalTime();
 
-                    // tahle konkrétní instance
                     DateTime? occurrenceStartUtc = startUtc;
 
                     string subject = string.IsNullOrWhiteSpace(appt.Subject) ? "(bez názvu)" : appt.Subject;
@@ -170,6 +169,14 @@ namespace VykazyPrace.Dialogs
 
                     bool isAllDay = appt.AllDayEvent;
                     DateTime lastModifiedUtc = appt.LastModificationTime.ToUniversalTime();
+
+                    // ⬇⬇⬇ NOVÉ: Outlook říká, že meeting byl zrušen
+                    bool isCanceled = false;
+                    try
+                    {
+                        isCanceled = (appt.MeetingStatus == OlMeetingStatus.olMeetingCanceled);
+                    }
+                    catch { /* defensivně, některé položky nemusí být "Meeting" */ }
 
                     var keyInfo = await _calendarRepo.TryGetItemKeyInfoAsync(storeId, entryId, occurrenceStartUtc);
                     string prevHash = keyInfo?.LastHash;
@@ -210,8 +217,10 @@ namespace VykazyPrace.Dialogs
                         IsException = isException
                     };
 
+                    // uložíme/updatneme položku a získáme její DB Id
                     var ci = await _calendarRepo.UpsertCalendarItemAsync(ciInput).ConfigureAwait(false);
 
+                    // teď řešíme účastníky
                     if (changed)
                     {
                         Microsoft.Office.Interop.Outlook.Recipients recipients = null;
@@ -219,6 +228,7 @@ namespace VykazyPrace.Dialogs
                         try
                         {
                             recipients = appt.Recipients;
+
                             foreach (Microsoft.Office.Interop.Outlook.Recipient r in recipients)
                             {
                                 string display = SafeGet(() => r.Name);
@@ -244,6 +254,7 @@ namespace VykazyPrace.Dialogs
 
                                 string resp = SafeGet(() => r.MeetingResponseStatus.ToString());
 
+                                // resolvedUserId = náš interní User.Id pokud ho známe
                                 int? resolvedUserId = null;
                                 if (!string.IsNullOrWhiteSpace(email))
                                 {
@@ -269,6 +280,18 @@ namespace VykazyPrace.Dialogs
                                     Role = role,
                                     ResponseStatus = resp
                                 });
+
+                                // ⬇⬇⬇ NOVÉ:
+                                // pokud meeting je zrušený, rovnou ho tomu uživateli schováme
+                                if (isCanceled && resolvedUserId.HasValue)
+                                {
+                                    await _calendarRepo.SetUserStateAsync(
+                                        resolvedUserId.Value,
+                                        ci.Id,
+                                        UserItemStateEnum.IgnoreTombstone,
+                                        note: "Canceled in Outlook"
+                                    ).ConfigureAwait(false);
+                                }
 
                                 System.Runtime.InteropServices.Marshal.ReleaseComObject(r);
                             }

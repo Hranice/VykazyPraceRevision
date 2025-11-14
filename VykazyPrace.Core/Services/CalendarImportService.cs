@@ -95,7 +95,7 @@ namespace VykazyPrace.Core.Services
             }
 
             // vytvoření time entry
-            var te = await _timeRepo.CreateTimeEntryAsync(new TimeEntry
+            var te = await _timeRepo.CreateTimeEntryAsync(new VykazyPrace.Core.Database.Models.TimeEntry
             {
                 UserId = userId,
                 ProjectId = _opt.ProjectIdForMeetings,
@@ -136,7 +136,7 @@ namespace VykazyPrace.Core.Services
 
             int added = 0, conflicts = 0, duplicates = 0;
 
-            var existingByDay = new Dictionary<DateTime, List<TimeEntry>>(); // lokální den -> záznamy z DB
+            var existingByDay = new Dictionary<DateTime, List<VykazyPrace.Core.Database.Models.TimeEntry>>(); // lokální den -> záznamy z DB
             var stagedByDay = new Dictionary<DateTime, List<(DateTime s, DateTime e)>>(); // co jsme právě přidali
 
             foreach (var c in candidates)
@@ -165,7 +165,7 @@ namespace VykazyPrace.Core.Services
                     continue;
                 }
 
-                await _timeRepo.CreateTimeEntryAsync(new TimeEntry
+                await _timeRepo.CreateTimeEntryAsync(new VykazyPrace.Core.Database.Models.TimeEntry
                 {
                     UserId = userId,
                     ProjectId = _opt.ProjectIdForMeetings,
@@ -286,7 +286,7 @@ namespace VykazyPrace.Core.Services
         private static bool Overlaps(DateTime a1, DateTime a2, DateTime b1, DateTime b2)
             => a1 < b2 && a2 > b1;
 
-        private static bool HasOverlap(IEnumerable<TimeEntry> dayEntries, DateTime start, DateTime end)
+        private static bool HasOverlap(IEnumerable<VykazyPrace.Core.Database.Models.TimeEntry> dayEntries, DateTime start, DateTime end)
         {
             return dayEntries
                 .Where(e => e.Timestamp.HasValue && e.EntryMinutes > 0)
@@ -298,7 +298,7 @@ namespace VykazyPrace.Core.Services
                 });
         }
 
-        private static bool LooksLikeSameMeeting(IEnumerable<TimeEntry> dayEntries, DateTime start,
+        private static bool LooksLikeSameMeeting(IEnumerable<VykazyPrace.Core.Database.Models.TimeEntry> dayEntries, DateTime start,
                                                  int projectId, int entryTypeId, string? subject)
         {
             var subj = (subject ?? "").Trim();

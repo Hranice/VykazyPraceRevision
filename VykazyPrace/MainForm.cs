@@ -515,7 +515,7 @@ namespace VykazyPrace
             var outlookEventsDialog = new OutlookEvents(_selectedUser);
             outlookEventsDialog.ShowDialog();
 
-            await _calendar.ChangeToTodaysWeek();
+            await _calendar.ForceReloadAsync();
         }
     }
 }

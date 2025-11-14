@@ -1,0 +1,51 @@
+2025-10-31 08:09:48.658 +01:00 [INF] Staženo 2 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 08:09:52.533 +01:00 [INF] Staženo 1 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 08:09:55.039 +01:00 [INF] Outlook sync: OutlookReturned=255, InMyRange=8, RangeUTC=2025-10-31T00:00:00.0000000Z..2025-11-07T00:00:00.0000000Z
+2025-10-31 08:10:32.542 +01:00 [INF] Záznam 0 - Ostatní: 0,5 h - Agilox byl úspěšně aktualizován.
+2025-10-31 08:10:41.596 +01:00 [INF] Záznam  - : 0,5 h - Obchůzka byl úspěšně aktualizován.
+2025-10-31 09:31:12.605 +01:00 [INF] Záznam  - : 0,5 h -  byl smazán z DB.
+2025-10-31 09:31:49.848 +01:00 [INF] Outlook sync: OutlookReturned=255, InMyRange=8, RangeUTC=2025-10-31T00:00:00.0000000Z..2025-11-07T00:00:00.0000000Z
+2025-10-31 09:32:08.204 +01:00 [INF] Outlook sync: OutlookReturned=255, InMyRange=8, RangeUTC=2025-10-31T00:00:00.0000000Z..2025-11-07T00:00:00.0000000Z
+2025-10-31 09:32:26.608 +01:00 [INF] Záznam 0 - Ostatní: 0,5 h - Outlook událost byl smazán z DB.
+2025-10-31 09:32:27.408 +01:00 [INF] Záznam 0 - Ostatní: 1 h - Outlook událost byl smazán z DB.
+2025-10-31 09:32:28.072 +01:00 [INF] Záznam 0 - Ostatní: 0,5 h - Outlook událost byl smazán z DB.
+2025-10-31 09:32:28.675 +01:00 [INF] Záznam 0 - Ostatní: 1,5 h - Outlook událost byl smazán z DB.
+2025-10-31 09:32:29.682 +01:00 [INF] Záznam 0 - Ostatní: 0,5 h - Outlook událost byl smazán z DB.
+2025-10-31 09:32:31.163 +01:00 [INF] Outlook sync: OutlookReturned=255, InMyRange=8, RangeUTC=2025-10-31T00:00:00.0000000Z..2025-11-07T00:00:00.0000000Z
+2025-10-31 09:32:49.858 +01:00 [INF] Outlook sync: OutlookReturned=255, InMyRange=8, RangeUTC=2025-10-31T00:00:00.0000000Z..2025-11-07T00:00:00.0000000Z
+2025-10-31 09:34:43.669 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:34:47.132 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:34:50.878 +01:00 [INF] Záznam 0 - Ostatní: 0,5 h - Outlook událost byl smazán z DB.
+2025-10-31 09:34:51.353 +01:00 [INF] Záznam 0 - Ostatní: 1 h - Outlook událost byl smazán z DB.
+2025-10-31 09:34:51.997 +01:00 [INF] Záznam 0 - Ostatní: 1,5 h - Outlook událost byl smazán z DB.
+2025-10-31 09:34:52.834 +01:00 [INF] Záznam 0 - Ostatní: 0,5 h - Outlook událost byl smazán z DB.
+2025-10-31 09:34:54.098 +01:00 [INF] Outlook sync: OutlookReturned=255, InMyRange=8, RangeUTC=2025-10-31T00:00:00.0000000Z..2025-11-07T00:00:00.0000000Z
+2025-10-31 09:36:40.149 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:36:43.650 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:36:46.615 +01:00 [INF] Outlook sync: OutlookReturned=255, InMyRange=8, RangeUTC=2025-10-31T00:00:00.0000000Z..2025-11-07T00:00:00.0000000Z
+2025-10-31 09:36:58.191 +01:00 [INF] Outlook sync: OutlookReturned=255, InMyRange=8, RangeUTC=2025-10-31T00:00:00.0000000Z..2025-11-07T00:00:00.0000000Z
+2025-10-31 09:37:05.604 +01:00 [INF] Outlook sync: OutlookReturned=255, InMyRange=8, RangeUTC=2025-10-31T00:00:00.0000000Z..2025-11-07T00:00:00.0000000Z
+2025-10-31 09:38:07.033 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:38:10.533 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:38:12.451 +01:00 [INF] Outlook sync: OutlookReturned=255, InMyRange=8, RangeUTC=2025-10-31T00:00:00.0000000Z..2025-11-07T00:00:00.0000000Z
+2025-10-31 09:39:07.458 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:39:11.027 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:39:13.021 +01:00 [INF] Outlook sync: OutlookReturned=255, InMyRange=8, RangeUTC=2025-10-31T00:00:00.0000000Z..2025-11-07T00:00:00.0000000Z
+2025-10-31 09:41:14.518 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:41:18.342 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:41:19.891 +01:00 [INF] Outlook sync: OutlookReturned=255, InMyRange=8, RangeUTC=2025-10-31T00:00:00.0000000Z..2025-11-07T00:00:00.0000000Z
+2025-10-31 09:41:57.339 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:42:00.752 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:42:02.298 +01:00 [INF] Outlook sync: OutlookReturned=255, InMyRange=8, RangeUTC=2025-10-31T00:00:00.0000000Z..2025-11-07T00:00:00.0000000Z
+2025-10-31 09:43:20.626 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:43:24.081 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:43:25.464 +01:00 [INF] Outlook sync: OutlookReturned=255, InMyRange=8, RangeUTC=2025-10-31T00:00:00.0000000Z..2025-11-07T00:00:00.0000000Z
+2025-10-31 09:43:59.701 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:44:03.248 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:44:04.819 +01:00 [INF] Outlook sync: OutlookReturned=255, InMyRange=8, RangeUTC=2025-10-31T00:00:00.0000000Z..2025-11-07T00:00:00.0000000Z
+2025-10-31 09:44:51.479 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:44:55.223 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:44:57.133 +01:00 [INF] Outlook sync: OutlookReturned=255, InMyRange=8, RangeUTC=2025-10-31T00:00:00.0000000Z..2025-11-07T00:00:00.0000000Z
+2025-10-31 09:46:30.404 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:46:34.248 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-31 09:46:38.216 +01:00 [INF] Outlook sync: OutlookReturned=255, InMyRange=8, RangeUTC=2025-10-31T00:00:00.0000000Z..2025-11-07T00:00:00.0000000Z

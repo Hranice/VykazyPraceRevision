@@ -1,0 +1,23 @@
+2025-11-06 08:53:44.967 +01:00 [INF] Staženo 0 záznamů pro měsíc č.11 uživatele (1250): Jan Procházka - KAMERY.
+2025-11-06 08:53:49.992 +01:00 [INF] Staženo 0 záznamů pro měsíc č.11 uživatele (1250): Jan Procházka - KAMERY.
+2025-11-06 08:54:37.154 +01:00 [INF] Staženo 0 záznamů pro měsíc č.11 uživatele (1250): Jan Procházka - KAMERY.
+2025-11-06 08:54:42.282 +01:00 [INF] Staženo 0 záznamů pro měsíc č.11 uživatele (1250): Jan Procházka - KAMERY.
+2025-11-06 08:54:57.161 +01:00 [INF] Outlook sync: OutlookReturned=0, InMyRange=0, RangeUTC=2025-11-06T00:00:00.0000000Z..2025-11-13T00:00:00.0000000Z
+2025-11-06 08:57:57.916 +01:00 [INF] Staženo 0 záznamů pro měsíc č.11 uživatele (1250): Jan Procházka - KAMERY.
+2025-11-06 08:58:03.109 +01:00 [INF] Outlook profile: 'Jan Procházka' <Jan.Prochazka@heinz-glas.com>; FolderPath='\\Jan.Prochazka@heinz-glas.com\Kalendář'
+2025-11-06 08:58:03.125 +01:00 [INF] ItemsTotal≈2147483647, AfterRestrict≈2147483647
+2025-11-06 08:58:03.132 +01:00 [INF] Outlook sync: OutlookReturned=0, InMyRange=0, RangeUTC=2025-11-06T00:00:00.0000000Z..2025-11-13T00:00:00.0000000Z
+2025-11-06 08:58:03.640 +01:00 [INF] Staženo 0 záznamů pro měsíc č.11 uživatele (1250): Jan Procházka - KAMERY.
+2025-11-06 08:58:35.058 +01:00 [INF] Outlook profile: 'Jan Procházka' <Jan.Prochazka@heinz-glas.com>; FolderPath='\\Jan.Prochazka@heinz-glas.com\Kalendář'
+2025-11-06 08:58:35.064 +01:00 [INF] ItemsTotal≈2147483647, AfterRestrict≈2147483647
+2025-11-06 08:58:35.068 +01:00 [INF] Outlook sync: OutlookReturned=0, InMyRange=0, RangeUTC=2025-11-06T00:00:00.0000000Z..2025-11-13T00:00:00.0000000Z
+2025-11-06 09:00:14.683 +01:00 [INF] Staženo 0 záznamů pro měsíc č.11 uživatele (1250): Jan Procházka - KAMERY.
+2025-11-06 09:00:19.406 +01:00 [INF] Outlook profile: 'Jan Procházka' <Jan.Prochazka@heinz-glas.com>; FolderPath='\\Jan.Prochazka@heinz-glas.com\Kalendář'
+2025-11-06 09:00:19.419 +01:00 [INF] ItemsTotal≈2147483647, AfterRestrict≈2147483647
+2025-11-06 09:00:19.428 +01:00 [INF] Outlook sync: OutlookReturned=0, InMyRange=0, RangeUTC=2025-11-06T00:00:00.0000000Z..2025-11-13T00:00:00.0000000Z
+2025-11-06 09:00:20.244 +01:00 [INF] Staženo 0 záznamů pro měsíc č.11 uživatele (1250): Jan Procházka - KAMERY.
+2025-11-06 09:00:21.948 +01:00 [INF] Outlook profile: 'Jan Procházka' <Jan.Prochazka@heinz-glas.com>; FolderPath='\\Jan.Prochazka@heinz-glas.com\Kalendář'
+2025-11-06 09:00:21.954 +01:00 [INF] ItemsTotal≈2147483647, AfterRestrict≈2147483647
+2025-11-06 09:00:21.957 +01:00 [INF] Outlook sync: OutlookReturned=0, InMyRange=0, RangeUTC=2025-11-06T00:00:00.0000000Z..2025-11-13T00:00:00.0000000Z
+2025-11-06 09:27:16.049 +01:00 [INF] Staženo 0 záznamů pro měsíc č.11 uživatele (1250): Jan Procházka - KAMERY.
+2025-11-06 09:27:21.004 +01:00 [INF] Staženo 0 záznamů pro měsíc č.11 uživatele (1250): Jan Procházka - KAMERY.

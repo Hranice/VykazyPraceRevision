@@ -33,8 +33,8 @@
             labelDate = new Label();
             labelSubject = new Label();
             panel2 = new Panel();
-            buttonDelete = new Button();
             buttonAdd = new Button();
+            buttonDelete = new Button();
             panel3 = new Panel();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -48,7 +48,7 @@
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(285, 34);
+            panel1.Size = new Size(621, 34);
             panel1.TabIndex = 3;
             // 
             // labelTime
@@ -56,7 +56,7 @@
             labelTime.AutoSize = true;
             labelTime.Dock = DockStyle.Right;
             labelTime.ForeColor = Color.White;
-            labelTime.Location = new Point(186, 0);
+            labelTime.Location = new Point(522, 0);
             labelTime.Margin = new Padding(4, 0, 4, 0);
             labelTime.Name = "labelTime";
             labelTime.Padding = new Padding(0, 3, 0, 0);
@@ -80,6 +80,7 @@
             // 
             // labelSubject
             // 
+            labelSubject.AutoSize = true;
             labelSubject.Dock = DockStyle.Top;
             labelSubject.Location = new Point(0, 34);
             labelSubject.MaximumSize = new Size(300, 1000);
@@ -92,21 +93,32 @@
             // panel2
             // 
             panel2.BackColor = Color.FromArgb(234, 246, 251);
-            panel2.Controls.Add(buttonDelete);
             panel2.Controls.Add(buttonAdd);
+            panel2.Controls.Add(buttonDelete);
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 90);
             panel2.Name = "panel2";
             panel2.Padding = new Padding(3);
-            panel2.Size = new Size(285, 43);
+            panel2.Size = new Size(621, 43);
             panel2.TabIndex = 7;
+            // 
+            // buttonAdd
+            // 
+            buttonAdd.Dock = DockStyle.Fill;
+            buttonAdd.Location = new Point(3, 3);
+            buttonAdd.Name = "buttonAdd";
+            buttonAdd.Size = new Size(463, 37);
+            buttonAdd.TabIndex = 7;
+            buttonAdd.Text = "Přidat";
+            buttonAdd.UseVisualStyleBackColor = true;
+            buttonAdd.Click += buttonAdd_Click;
             // 
             // buttonDelete
             // 
             buttonDelete.AutoSize = true;
-            buttonDelete.Dock = DockStyle.Fill;
+            buttonDelete.Dock = DockStyle.Right;
             buttonDelete.ForeColor = Color.DarkRed;
-            buttonDelete.Location = new Point(130, 3);
+            buttonDelete.Location = new Point(466, 3);
             buttonDelete.Name = "buttonDelete";
             buttonDelete.Size = new Size(152, 37);
             buttonDelete.TabIndex = 6;
@@ -114,31 +126,19 @@
             buttonDelete.UseVisualStyleBackColor = true;
             buttonDelete.Click += buttonDelete_Click;
             // 
-            // buttonAdd
-            // 
-            buttonAdd.Dock = DockStyle.Left;
-            buttonAdd.Location = new Point(3, 3);
-            buttonAdd.Name = "buttonAdd";
-            buttonAdd.Size = new Size(127, 37);
-            buttonAdd.TabIndex = 5;
-            buttonAdd.Text = "Přidat";
-            buttonAdd.UseVisualStyleBackColor = true;
-            buttonAdd.Click += buttonAdd_Click;
-            // 
             // panel3
             // 
             panel3.BackColor = Color.White;
             panel3.Dock = DockStyle.Top;
             panel3.Location = new Point(0, 133);
             panel3.Name = "panel3";
-            panel3.Size = new Size(285, 3);
+            panel3.Size = new Size(621, 3);
             panel3.TabIndex = 8;
             // 
             // OutlookEvent
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            AutoSize = true;
             BackColor = Color.FromArgb(234, 246, 251);
             Controls.Add(panel3);
             Controls.Add(panel2);
@@ -148,12 +148,13 @@
             Margin = new Padding(0);
             MinimumSize = new Size(267, 111);
             Name = "OutlookEvent";
-            Size = new Size(285, 136);
+            Size = new Size(621, 136);
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -163,7 +164,7 @@
         private Label labelSubject;
         private Panel panel2;
         private Button buttonDelete;
-        private Button buttonAdd;
         private Panel panel3;
+        private Button buttonAdd;
     }
 }

@@ -39,7 +39,7 @@
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.Location = new Point(0, 48);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(284, 368);
+            flowLayoutPanel1.Size = new Size(389, 368);
             flowLayoutPanel1.TabIndex = 0;
             // 
             // buttonAddAllEvents
@@ -48,7 +48,7 @@
             buttonAddAllEvents.Font = new Font("Reddit Sans", 12F);
             buttonAddAllEvents.Location = new Point(0, 0);
             buttonAddAllEvents.Name = "buttonAddAllEvents";
-            buttonAddAllEvents.Size = new Size(284, 48);
+            buttonAddAllEvents.Size = new Size(389, 48);
             buttonAddAllEvents.TabIndex = 1;
             buttonAddAllEvents.Text = "Přidat všechny události";
             buttonAddAllEvents.UseVisualStyleBackColor = true;
@@ -59,7 +59,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(284, 416);
+            ClientSize = new Size(389, 416);
             Controls.Add(flowLayoutPanel1);
             Controls.Add(buttonAddAllEvents);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;

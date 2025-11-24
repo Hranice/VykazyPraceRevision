@@ -707,8 +707,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             await LoadSidebar();
         }
 
-
-
         private int GetColumnBasedOnTimeEntry(DateTime? timeStamp)
         {
             var minutes = timeStamp.Value.Hour * 60 + timeStamp.Value.Minute;
@@ -723,25 +721,6 @@ namespace VykazyPrace.UserControls.CalendarV2
         private int GetRowBasedOnTimeEntry(DateTime? timeStamp)
         {
             return ((int)timeStamp.Value.DayOfWeek + 6) % 7;
-        }
-
-        private void UpdateDateLabels()
-        {
-            Color special = Color.FromArgb(255, 98, 92);
-            Color regular = Color.FromArgb(0, 0, 0);
-
-            Label[] dateLabels = { labelDate01, labelDate02, labelDate03, labelDate04, labelDate05, labelDate06, labelDate07 };
-            Label[] dayLabels = { labelDay01, labelDay02, labelDay03, labelDay04, labelDay05, labelDay06, labelDay07 };
-
-            for (int i = 0; i < 7; i++)
-            {
-                DateTime date = _selectedDate.AddDays(i);
-                bool isSpecial = _specialDays.Any(x => x.Date.Date == date);
-
-                dateLabels[i].Text = date.ToString("d.M.yyyy");
-                dateLabels[i].ForeColor = isSpecial ? special : regular;
-                dayLabels[i].ForeColor = isSpecial ? special : regular;
-            }
         }
 
         private async Task AdjustIndicatorsAsync(Point scrollPosition, int userId, DateTime weekStart)
@@ -1306,7 +1285,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             //customHeader.Invalidate();
         }
 
-        private async void dayPanel_MouseClick(object? sender, MouseEventArgs e)
+        private void dayPanel_MouseClick(object? sender, MouseEventArgs e)
         {
             if (sender is not DayPanel panel) return;
 
@@ -1753,7 +1732,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             return control.Focused ? control : null;
         }
 
-        private async void CopySelectedPanel()
+        private void CopySelectedPanel()
         {
             if (_selectedTimeEntryId <= 0) return;
 
@@ -1792,37 +1771,31 @@ namespace VykazyPrace.UserControls.CalendarV2
         /// </summary>
         private DayPanel CreateOrUpdatePanel(TimeEntry entry)
         {
-            // 1) vezmi panel z poolu nebo vytvoř nový
             var panel = GetPooledPanel();
             panel.EntryId = entry.Id;
             panel.OwnerId = _selectedUser.Id;
             panel.Tag = null;
 
             if (entry.ProjectId == 132 && entry.EntryTypeId == 24)
-            {
                 panel.Tag = "snack";
-            }
-
             else if (entry.IsLocked == 1)
-            {
                 panel.Tag = "locked";
-            }
 
-            // 2) barva podle typu a validity
+            // barva podle typu a validity
             if (!_colorCache.TryGetValue((int)entry.EntryTypeId, out var baseColor))
                 baseColor = ColorTranslator.FromHtml("#ADD8E6");
+
             var finalColor = entry.IsValid == 1
                 ? baseColor
                 : ColorTranslator.FromHtml("#FF6957");
             panel.SetAssignedColor(finalColor);
 
-            // 3) společný tooltip
             _sharedTooltip.SetToolTip(
                 panel,
                 $"{entry.Project?.ProjectTitle ?? "Projekt neznámý"}\n{entry.Note ?? "Bez poznámky"}"
             );
 
-            // 4) pozice ve TableLayoutPanel
+            // pozice v TableLayoutPanel
             int col = GetColumnBasedOnTimeEntry(entry.Timestamp);
             int row = GetRowBasedOnTimeEntry(entry.Timestamp);
             int span = GetColumnSpanBasedOnTimeEntry(entry.EntryMinutes);
@@ -1830,7 +1803,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             tableLayoutPanelCalendar.SetColumnSpan(panel, span);
             _activePanels.Add(panel);
 
-            // 5) odložené naplnění textů (čeká na správné rozměry)
+            // odložené naplnění textů (čeká na správné rozměry)
             if (entry.IsValid == 1)
             {
                 var timer = new Timer { Interval = 10 };
@@ -1888,19 +1861,18 @@ namespace VykazyPrace.UserControls.CalendarV2
         /// </summary>
         private async Task OnNewEntryCreated(TimeEntry newEntry)
         {
-            // 1) Ujisti se, že Id je 0, aby EF vložil nový záznam
+            // Id na 0, aby EF vložil nový záznam
             newEntry.Id = 0;
 
-            // 2) Vlož do DB a detachni ji
+            // vlož do DB a detachni
             var created = await _timeEntryRepo.CreateTimeEntryAsync(newEntry);
             if (created == null) return;
             _currentEntries.Add(created);
 
-            // 3) Ujisti se, že mám barvy/projekty před prvním vykreslením
             if (_colorCache == null || _colorCache.Count == 0)
                 await LoadCachesAsync();
 
-            // 4) Ulož si scroll, přidej panel a obnov scroll + hodiny
+            // ulož scroll pozici
             int scrollX = panelContainer.HorizontalScroll.Value;
             BeginInvoke((Action)(() =>
             {
@@ -1910,11 +1882,10 @@ namespace VykazyPrace.UserControls.CalendarV2
                 panelContainer.HorizontalScroll.Value =
                     Math.Max(0, Math.Min(scrollX, panelContainer.HorizontalScroll.Maximum));
 
-                // teď přepočítej a vykresli nové součty hodin
                 UpdateHourLabels();
             }));
 
-            // 5) Označ nově vybraný a doplň sidebar
+            // označ nově vybraný a doplň sidebar
             _selectedTimeEntryId = created.Id;
             _ = LoadSidebar();
         }
@@ -1952,6 +1923,29 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             UpdateHourLabels();
             ConfigService.Save(_config);
+        }
+
+        /// <summary>
+        /// Aktualizuje datumové a denní popisky (labelDateXX a labelDayXX).
+        /// Pokud je den uveden v kolekci _specialDays (svátky), použije se zvýrazněná barva.
+        /// </summary>
+        private void UpdateDateLabels()
+        {
+            Color special = Color.FromArgb(255, 98, 92);
+            Color regular = Color.FromArgb(0, 0, 0);
+
+            Label[] dateLabels = { labelDate01, labelDate02, labelDate03, labelDate04, labelDate05, labelDate06, labelDate07 };
+            Label[] dayLabels = { labelDay01, labelDay02, labelDay03, labelDay04, labelDay05, labelDay06, labelDay07 };
+
+            for (int i = 0; i < 7; i++)
+            {
+                DateTime date = _selectedDate.AddDays(i);
+                bool isSpecial = _specialDays.Any(x => x.Date.Date == date);
+
+                dateLabels[i].Text = date.ToString("d.M.yyyy");
+                dateLabels[i].ForeColor = isSpecial ? special : regular;
+                dayLabels[i].ForeColor = isSpecial ? special : regular;
+            }
         }
 
         /// <summary>

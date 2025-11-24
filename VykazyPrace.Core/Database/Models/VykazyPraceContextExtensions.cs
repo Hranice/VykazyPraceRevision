@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Linq;
+using VykazyPrace.Core.Logging;
 
 namespace VykazyPrace.Core.Database.Models
 {
@@ -27,13 +28,19 @@ namespace VykazyPrace.Core.Database.Models
                     ex.InnerException?.Message.Contains("I/O error") == true
                  || ex.InnerException?.Message.Contains("unable to open database file") == true)
                 {
-                    // nelze otevřít soubor (např. odpojená Wi-Fi) → okamžitě false
+                    // nelze otevřít soubor (např. odpojená Wi-Fi) => okamžitě false
                     return false;
                 }
-                catch (IOException)
+                catch (IOException ex)
                 {
                     // obecná IO výjimka
+                    AppLogger.Error("Nastala chyba IO operace do databáze.", ex);
                     return false;
+                }
+
+                catch(Exception ex)
+                {
+                    AppLogger.Error("Nastala chyba zápisu do databáze.", ex);
                 }
             }
 

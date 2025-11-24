@@ -67,6 +67,7 @@
             contextMenuStrip1 = new ContextMenuStrip(components);
             zobrazitToolStripMenuItem = new ToolStripMenuItem();
             ukoncitToolStripMenuItem = new ToolStripMenuItem();
+            buttonOutlookEvents = new Button();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -247,6 +248,7 @@
             tableLayoutPanel1.Controls.Add(radioButton1, 0, 0);
             tableLayoutPanel1.Controls.Add(radioButton2, 0, 1);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 3);
+            tableLayoutPanel1.Controls.Add(buttonOutlookEvents, 0, 2);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -430,6 +432,17 @@
             ukoncitToolStripMenuItem.Size = new Size(117, 22);
             ukoncitToolStripMenuItem.Text = "Ukončit";
             // 
+            // buttonOutlookEvents
+            // 
+            buttonOutlookEvents.Dock = DockStyle.Bottom;
+            buttonOutlookEvents.Location = new Point(3, 367);
+            buttonOutlookEvents.Name = "buttonOutlookEvents";
+            buttonOutlookEvents.Size = new Size(121, 72);
+            buttonOutlookEvents.TabIndex = 13;
+            buttonOutlookEvents.Text = "Outlook události";
+            buttonOutlookEvents.UseVisualStyleBackColor = true;
+            buttonOutlookEvents.Click += buttonOutlookEvents_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
@@ -505,5 +518,6 @@
         private TableLayoutPanel tableLayoutPanel3;
         private Button buttonReloadPowerKey;
         private Label label2;
+        private Button buttonOutlookEvents;
     }
 }

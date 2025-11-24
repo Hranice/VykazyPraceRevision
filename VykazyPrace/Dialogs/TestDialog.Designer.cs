@@ -34,6 +34,8 @@
             buttonReload = new Button();
             customComboBox1 = new VykazyPrace.UserControls.CustomComboBox();
             buttonSave = new Button();
+            button1 = new Button();
+            listBoxEvents = new ListBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -42,7 +44,7 @@
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Location = new Point(0, 0);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(1045, 641);
+            dataGridView1.Size = new Size(384, 641);
             dataGridView1.TabIndex = 0;
             // 
             // buttonDrop
@@ -79,6 +81,7 @@
             // 
             customComboBox1.Location = new Point(939, 151);
             customComboBox1.Name = "customComboBox1";
+            customComboBox1.SelectedIndex = -1;
             customComboBox1.Size = new Size(150, 23);
             customComboBox1.TabIndex = 4;
             // 
@@ -92,11 +95,32 @@
             buttonSave.UseVisualStyleBackColor = true;
             buttonSave.Click += buttonSave_Click;
             // 
+            // button1
+            // 
+            button1.Location = new Point(963, 267);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 23);
+            button1.TabIndex = 6;
+            button1.Text = "Kalendář";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
+            // listBoxEvents
+            // 
+            listBoxEvents.FormattingEnabled = true;
+            listBoxEvents.ItemHeight = 15;
+            listBoxEvents.Location = new Point(594, 330);
+            listBoxEvents.Name = "listBoxEvents";
+            listBoxEvents.Size = new Size(459, 94);
+            listBoxEvents.TabIndex = 7;
+            // 
             // TestDialog
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1124, 641);
+            Controls.Add(listBoxEvents);
+            Controls.Add(button1);
             Controls.Add(buttonSave);
             Controls.Add(customComboBox1);
             Controls.Add(buttonReload);
@@ -119,5 +143,7 @@
         private Button buttonReload;
         private UserControls.CustomComboBox customComboBox1;
         private Button buttonSave;
+        private Button button1;
+        private ListBox listBoxEvents;
     }
 }

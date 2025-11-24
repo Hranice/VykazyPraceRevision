@@ -1,0 +1,32 @@
+2025-11-13 10:29:49.004 +01:00 [INF] Staženo 0 záznamů pro měsíc č.11 uživatele (1250): Jan Procházka - KAMERY.
+2025-11-13 10:29:53.932 +01:00 [INF] Staženo 0 záznamů pro měsíc č.11 uživatele (1250): Jan Procházka - KAMERY.
+2025-11-13 10:29:55.370 +01:00 [INF] Profile: 'Jan Procházka' <Jan.Prochazka@heinz-glas.com>; FolderPath='\\Jan.Prochazka@heinz-glas.com\Kalendář', Store='00000000...'
+2025-11-13 10:29:55.415 +01:00 [INF] Find preview: 2025-11-11 08:00 | AMV:ID2025 rezervace auta
+2025-11-13 10:29:55.420 +01:00 [INF] Find preview: 2025-11-12 08:30 | AMV:ID 2025, Brno
+2025-11-13 10:29:55.424 +01:00 [INF] Find preview: 2025-11-12 08:30 | AMV:ID 2025, Brno
+2025-11-13 10:29:55.457 +01:00 [INF] Outlook sync: Collected=10, InMyRange=10, RangeUTC=2025-11-13T00:00:00.0000000Z..2025-11-20T00:00:00.0000000Z
+2025-11-13 10:31:01.679 +01:00 [INF] Staženo 0 záznamů pro měsíc č.11 uživatele (1250): Jan Procházka - KAMERY.
+2025-11-13 10:31:07.048 +01:00 [INF] Staženo 0 záznamů pro měsíc č.11 uživatele (1250): Jan Procházka - KAMERY.
+2025-11-13 10:31:07.224 +01:00 [INF] Profile: 'Jan Procházka' <Jan.Prochazka@heinz-glas.com>; FolderPath='\\Jan.Prochazka@heinz-glas.com\Kalendář', Store='00000000...'
+2025-11-13 10:31:07.245 +01:00 [INF] Find preview: 2025-11-11 08:00 | AMV:ID2025 rezervace auta
+2025-11-13 10:31:07.247 +01:00 [INF] Find preview: 2025-11-12 08:30 | AMV:ID 2025, Brno
+2025-11-13 10:31:07.249 +01:00 [INF] Find preview: 2025-11-12 08:30 | AMV:ID 2025, Brno
+2025-11-13 10:31:07.268 +01:00 [INF] Outlook sync: Collected=10, InMyRange=10, RangeUTC=2025-11-13T00:00:00.0000000Z..2025-11-20T00:00:00.0000000Z
+2025-11-13 10:31:14.395 +01:00 [INF] Profile: 'Jan Procházka' <Jan.Prochazka@heinz-glas.com>; FolderPath='\\Jan.Prochazka@heinz-glas.com\Kalendář', Store='00000000...'
+2025-11-13 10:31:14.410 +01:00 [INF] Find preview: 2025-11-11 08:00 | AMV:ID2025 rezervace auta
+2025-11-13 10:31:14.412 +01:00 [INF] Find preview: 2025-11-12 08:30 | AMV:ID 2025, Brno
+2025-11-13 10:31:14.414 +01:00 [INF] Find preview: 2025-11-12 08:30 | AMV:ID 2025, Brno
+2025-11-13 10:31:14.430 +01:00 [INF] Outlook sync: Collected=10, InMyRange=10, RangeUTC=2025-11-13T00:00:00.0000000Z..2025-11-20T00:00:00.0000000Z
+2025-11-13 13:47:57.832 +01:00 [INF] Staženo 0 záznamů pro měsíc č.11 uživatele (1250): Jan Procházka - KAMERY.
+2025-11-13 13:48:02.930 +01:00 [INF] Staženo 0 záznamů pro měsíc č.11 uživatele (1250): Jan Procházka - KAMERY.
+2025-11-13 13:48:04.104 +01:00 [INF] Profile: 'Jan Procházka' <Jan.Prochazka@heinz-glas.com>; FolderPath='\\Jan.Prochazka@heinz-glas.com\Kalendář', Store='00000000...'
+2025-11-13 13:48:04.144 +01:00 [INF] Find preview: 2025-11-11 08:00 | AMV:ID2025 rezervace auta
+2025-11-13 13:48:04.150 +01:00 [INF] Find preview: 2025-11-12 08:30 | AMV:ID 2025, Brno
+2025-11-13 13:48:04.154 +01:00 [INF] Find preview: 2025-11-12 08:30 | AMV:ID 2025, Brno
+2025-11-13 13:48:04.185 +01:00 [INF] Outlook sync: Collected=10, InMyRange=10, RangeUTC=2025-11-13T00:00:00.0000000Z..2025-11-20T00:00:00.0000000Z
+2025-11-13 13:48:13.981 +01:00 [INF] Záznam 0 - Ostatní: 0,5 h - Outlook událost byl smazán z DB.
+2025-11-13 13:48:16.332 +01:00 [INF] Profile: 'Jan Procházka' <Jan.Prochazka@heinz-glas.com>; FolderPath='\\Jan.Prochazka@heinz-glas.com\Kalendář', Store='00000000...'
+2025-11-13 13:48:16.348 +01:00 [INF] Find preview: 2025-11-11 08:00 | AMV:ID2025 rezervace auta
+2025-11-13 13:48:16.350 +01:00 [INF] Find preview: 2025-11-12 08:30 | AMV:ID 2025, Brno
+2025-11-13 13:48:16.353 +01:00 [INF] Find preview: 2025-11-12 08:30 | AMV:ID 2025, Brno
+2025-11-13 13:48:16.368 +01:00 [INF] Outlook sync: Collected=10, InMyRange=10, RangeUTC=2025-11-13T00:00:00.0000000Z..2025-11-20T00:00:00.0000000Z

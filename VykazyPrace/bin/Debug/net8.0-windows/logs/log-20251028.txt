@@ -1,0 +1,74 @@
+2025-10-28 10:12:32.474 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 10:12:36.739 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 10:17:51.117 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 10:17:54.937 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 10:19:51.519 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 10:19:55.624 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 10:21:16.863 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 10:21:20.584 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 10:23:27.675 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 10:23:31.761 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:25:53.713 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:25:57.379 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:25:59.419 +01:00 [INF] Outlook sync: 0 položek po filtru 2025-10-28T00:00:00.0000000Z - 2025-11-04T00:00:00.0000000Z
+2025-10-28 11:26:59.100 +01:00 [INF] Záznam  - : 0,5 h - Seřízení kontrolního systému byl úspěšně aktualizován.
+2025-10-28 11:29:51.267 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:29:55.110 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:30:07.710 +01:00 [INF] Outlook sync: total from outlook=22, in requested range=5
+2025-10-28 11:31:21.870 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:31:25.736 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:31:30.836 +01:00 [INF] Outlook sync: OutlookReturned=45, InMyRange=5, RangeUTC=2025-10-28T00:00:00.0000000Z..2025-11-04T00:00:00.0000000Z
+2025-10-28 11:31:40.182 +01:00 [INF] Outlook sync: OutlookReturned=45, InMyRange=5, RangeUTC=2025-10-28T00:00:00.0000000Z..2025-11-04T00:00:00.0000000Z
+2025-10-28 11:33:06.259 +01:00 [INF] Outlook sync: OutlookReturned=45, InMyRange=5, RangeUTC=2025-10-28T00:00:00.0000000Z..2025-11-04T00:00:00.0000000Z
+2025-10-28 11:33:19.885 +01:00 [INF] Záznam 0 - Ostatní: 0,5 h - Kroužek byl úspěšně aktualizován.
+2025-10-28 11:39:26.881 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:39:30.730 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:39:32.369 +01:00 [INF] Outlook sync (filter 2025-10-28T00:00:00.0000000Z..2025-11-04T00:00:00.0000000Z UTC): 0 položek z Outlooku
+2025-10-28 11:40:26.230 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:40:30.004 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:40:38.133 +01:00 [INF] Outlook sync (filter 2025-10-28T00:00:00.0000000Z..2025-11-04T00:00:00.0000000Z UTC): 0 položek z Outlooku
+2025-10-28 11:40:40.952 +01:00 [INF] Outlook sync (filter 2025-10-28T00:00:00.0000000Z..2025-11-04T00:00:00.0000000Z UTC): 0 položek z Outlooku
+2025-10-28 11:42:30.715 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:42:34.712 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:42:36.118 +01:00 [INF] Outlook sync interval 2025-10-28T00:00:00.0000000Z..2025-11-04T00:00:00.0000000Z => 0 položek
+2025-10-28 11:43:10.006 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:43:13.756 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:44:04.262 +01:00 [INF] Outlook sync: OutlookReturned=45, InMyRange=5, RangeUTC=2025-10-28T00:00:00.0000000Z..2025-11-04T00:00:00.0000000Z
+2025-10-28 11:50:30.898 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:50:35.241 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:50:36.854 +01:00 [INF] Outlook sync: 0 položek pro interval 2025-10-28T00:00:00.0000000Z .. 2025-11-04T00:00:00.0000000Z
+2025-10-28 11:51:33.975 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:51:38.389 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:51:39.827 +01:00 [INF] Outlook sync: 0 položek pro interval 2025-10-28T00:00:00.0000000Z .. 2025-11-04T00:00:00.0000000Z
+2025-10-28 11:51:45.698 +01:00 [INF] Outlook sync: 0 položek pro interval 2025-10-28T00:00:00.0000000Z .. 2025-11-04T00:00:00.0000000Z
+2025-10-28 11:52:30.890 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:52:35.114 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:52:40.360 +01:00 [INF] Outlook sync: 0 položek pro interval 2025-10-28T00:00:00.0000000Z .. 2025-11-04T00:00:00.0000000Z
+2025-10-28 11:52:44.701 +01:00 [INF] Outlook sync: 0 položek pro interval 2025-10-28T00:00:00.0000000Z .. 2025-11-04T00:00:00.0000000Z
+2025-10-28 11:53:03.810 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:53:08.024 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:53:09.222 +01:00 [INF] Outlook sync: OutlookReturned=46, InMyRange=6, RangeUTC=2025-10-28T00:00:00.0000000Z..2025-11-04T00:00:00.0000000Z
+2025-10-28 11:53:35.364 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:53:39.419 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:53:44.596 +01:00 [INF] Outlook sync: OutlookReturned=46, InMyRange=6, RangeUTC=2025-10-28T00:00:00.0000000Z..2025-11-04T00:00:00.0000000Z
+2025-10-28 11:53:53.377 +01:00 [INF] Outlook sync: OutlookReturned=46, InMyRange=6, RangeUTC=2025-10-28T00:00:00.0000000Z..2025-11-04T00:00:00.0000000Z
+2025-10-28 11:54:04.592 +01:00 [INF] Outlook sync: OutlookReturned=46, InMyRange=6, RangeUTC=2025-10-28T00:00:00.0000000Z..2025-11-04T00:00:00.0000000Z
+2025-10-28 11:54:09.379 +01:00 [INF] Záznam 0 - Ostatní: 0,5 h - Outlook událost byl smazán z DB.
+2025-10-28 11:55:24.649 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:55:28.785 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:55:45.256 +01:00 [INF] Outlook sync: OutlookReturned=47, InMyRange=7, RangeUTC=2025-10-28T00:00:00.0000000Z..2025-11-04T00:00:00.0000000Z
+2025-10-28 11:56:37.774 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:56:42.048 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 11:56:43.687 +01:00 [INF] Outlook sync: OutlookReturned=47, InMyRange=7, RangeUTC=2025-10-28T00:00:00.0000000Z..2025-11-04T00:00:00.0000000Z
+2025-10-28 12:29:38.575 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 12:29:42.299 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 12:29:49.401 +01:00 [INF] Outlook sync: OutlookReturned=46, InMyRange=6, RangeUTC=2025-10-28T00:00:00.0000000Z..2025-11-04T00:00:00.0000000Z
+2025-10-28 12:30:31.200 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 12:30:35.062 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 12:30:36.139 +01:00 [INF] Outlook sync: OutlookReturned=46, InMyRange=6, RangeUTC=2025-10-28T00:00:00.0000000Z..2025-11-04T00:00:00.0000000Z
+2025-10-28 13:32:09.460 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 13:32:13.389 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 13:32:16.609 +01:00 [INF] Outlook sync: OutlookReturned=47, InMyRange=7, RangeUTC=2025-10-28T00:00:00.0000000Z..2025-11-04T00:00:00.0000000Z
+2025-10-28 13:33:21.679 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 13:33:25.629 +01:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-28 13:33:26.836 +01:00 [INF] Outlook sync: OutlookReturned=47, InMyRange=7, RangeUTC=2025-10-28T00:00:00.0000000Z..2025-11-04T00:00:00.0000000Z

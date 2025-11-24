@@ -96,5 +96,56 @@ namespace VykazyPrace.Core.Database.Repositories
             await VykazyPraceContextExtensions.SafeSaveAsync(_context);
             return true;
         }
+
+        /// <summary>
+        /// Najde uživatele podle e-mailu
+        /// </summary>
+        public async Task<User?> ResolveByEmailOrWindowsAsync(string? email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return null;
+
+            var e = email.Trim();
+            var eLower = e.ToLowerInvariant();
+
+            var byEmail = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Email != null && u.Email.ToLower() == eLower);
+            if (byEmail != null) return byEmail;
+
+            // rozpad emailu
+            var atIdx = e.IndexOf('@');
+            var local = atIdx > 0 ? e.Substring(0, atIdx) : e;
+            var domain = atIdx > 0 ? e.Substring(atIdx + 1) : null;
+            var domainUpper = domain?.ToUpperInvariant();
+            var domainLower = domain?.ToLowerInvariant();
+
+            var byUpn = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.WindowsUsername.ToLower() == eLower);
+            if (byUpn != null) return byUpn;
+
+            var byLocal = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.WindowsUsername.ToLower() == local.ToLowerInvariant());
+            if (byLocal != null) return byLocal;
+
+            if (!string.IsNullOrEmpty(local) && !string.IsNullOrEmpty(domain))
+            {
+                var domLocalUpper = $"{domainUpper}\\{local}";
+                var byDomLocalUpper = await _context.Users
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.WindowsUsername.ToUpper() == domLocalUpper);
+                if (byDomLocalUpper != null) return byDomLocalUpper;
+
+                var domLocalLower = $"{domainLower}\\{local}";
+                var byDomLocalLower = await _context.Users
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.WindowsUsername.ToLower() == domLocalLower);
+                if (byDomLocalLower != null) return byDomLocalLower;
+            }
+
+            return null;
+        }
     }
 }

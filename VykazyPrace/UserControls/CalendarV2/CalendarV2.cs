@@ -1,9 +1,11 @@
-﻿using System.Diagnostics;
+﻿using DocumentFormat.OpenXml.Vml.Office;
+using System.DirectoryServices.ActiveDirectory;
 using VykazyPrace.Core.Configuration;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Core.Helpers;
 using VykazyPrace.Core.Logging;
+using VykazyPrace.Core.Services.TimeEntry;
 using VykazyPrace.Dialogs;
 using Timer = System.Windows.Forms.Timer;
 
@@ -30,6 +32,9 @@ namespace VykazyPrace.UserControls.CalendarV2
         private readonly ProjectRepository _projectRepo;
         private readonly SpecialDayRepository _specialDayRepo;
         private readonly ArrivalDepartureRepository _arrivalDepartureRepo;
+
+        // Services
+        private readonly TimeEntryUpdateService _timeEntryUpdateService;
 
         // Data cache
         private static List<TimeEntryType>? _cacheTypes;
@@ -106,6 +111,8 @@ namespace VykazyPrace.UserControls.CalendarV2
             _specialDayRepo = specialDayRepo;
             _arrivalDepartureRepo = arrivalDepartureRepo;
 
+            _timeEntryUpdateService = new TimeEntryUpdateService(_timeEntryRepo, _timeEntrySubTypeRepo);
+
             _resizeTimer.Tick += async (_, _) =>
             {
                 _resizeTimer.Stop();
@@ -119,10 +126,21 @@ namespace VykazyPrace.UserControls.CalendarV2
                 await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
             };
 
+            this.Resize += (_, __) => SyncColumns();
+            this.Load += (_, __) => SyncColumns();
+
             _specialDayRepo = specialDayRepo;
 
             _config = ConfigService.Load();
+
+            InitializeContextMenus();
         }
+
+        private readonly HashSet<int> _selectedEntryIds = new();
+
+        private DayPanel? GetPanelByEntryId(int entryId)
+            => _activePanels.FirstOrDefault(p => p.EntryId == entryId);
+
 
         private void InitializeContextMenus()
         {
@@ -132,6 +150,14 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             tableLayoutMenu = new ContextMenuStrip();
             tableLayoutMenu.Items.Add("Vložit", null, (_, _) => PasteCopiedPanel());
+        }
+
+        private void ClearSelection()
+        {
+            foreach (var id in _selectedEntryIds.ToList())
+                SetSelectedUi(id, false);
+
+            _selectedEntryIds.Clear();
         }
 
 
@@ -195,8 +221,6 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void CalendarV2_Load(object sender, EventArgs e)
         {
-            InitializeContextMenus();
-
             panelContainer.Scroll += PanelContainer_Scroll;
             _ = LoadInitialDataAsync();
         }
@@ -422,7 +446,8 @@ namespace VykazyPrace.UserControls.CalendarV2
                 Appearance = Appearance.Button,
                 Dock = DockStyle.Fill,
                 AutoSize = true,
-                Font = new Font(this.Font.FontFamily, 9.0f)
+                Font = new Font(this.Font.FontFamily, 9.0f),
+                BackColor = Color.White
             };
         }
 
@@ -542,21 +567,15 @@ namespace VykazyPrace.UserControls.CalendarV2
                 return;
             }
 
-            // ---- tady už je validní záznam ----
-
-            // 1) Dotáhni projekt, pokud ještě nemáš navigaci
             Project proj = timeEntry.Project
                            ?? await _projectRepo.GetProjectByIdAsync(timeEntry.ProjectId ?? 0);
             if (proj == null) return;
-            timeEntry.Project = proj;  // ulož si to, ať to můžeš dál používat
+            timeEntry.Project = proj;
 
-            // 2) Checkbox archivace
             checkBoxArchivedProjects.Checked = proj.IsArchived == 1;
 
-            // 3) Načti typy podle projectType
             await LoadTimeEntryTypesAsync(proj.ProjectType);
 
-            // 4) Speciální projekty – vyber radio button
             switch (proj.Id)
             {
                 case 25: SelectRadioButtonByText("OSTATNÍ"); break;
@@ -570,7 +589,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                     break;
             }
 
-            // 5) Naplň Comboboxy / poznámku / čas začátku a konce
             BeginInvoke((Action)(() =>
             {
                 comboBoxStart.SelectedIndex = minutesStart / 30;
@@ -580,7 +598,6 @@ namespace VykazyPrace.UserControls.CalendarV2
                 customComboBoxProjects.SetText(FormatHelper.FormatProjectToString(proj));
                 textBoxNote.Text = timeEntry.Note;
 
-                // výběr EntryType: radio vs combobox
                 if (proj.ProjectType is 0 or 1 or 2)
                 {
                     int baseId = proj.ProjectType switch
@@ -690,70 +707,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             await LoadSidebar();
         }
 
-        private void UpdateHourLabels()
-        {
-            Label[] hourLabels = { labelHours01, labelHours02, labelHours03, labelHours04, labelHours05, labelHours06, labelHours07 };
-
-            for (int row = 0; row < 7; row++)
-            {
-                DateTime day = _selectedDate.AddDays(row);
-
-                int totalMinutes = _currentEntries
-                    .Where(entry =>
-                        entry.Timestamp.HasValue &&
-                        entry.Timestamp.Value.Date == day.Date &&
-                        entry.IsValid == 1 &&
-                        !(entry.ProjectId == 132 && entry.EntryTypeId == 24) && // není svačina
-                        !(entry.ProjectId == 23)) // není nepřítomnost
-                    .Sum(entry => entry.EntryMinutes);
-
-                double vykazanoHodin = totalMinutes / 60.0;
-
-                var dochazka = _arrivalDepartures.FirstOrDefault(a => a.WorkDate.Date == day.Date);
-                double hoursWorked = 0;
-
-                if (dochazka != null)
-                {
-                    hoursWorked = dochazka.HoursWorked;
-                }
-
-                switch (_config.PanelDayView)
-                {
-                    case PanelDayView.Default:
-                        hourLabels[row].Text = $"{vykazanoHodin:F1}";
-                        hourLabels[row].ForeColor = Color.Black;
-                        break;
-                    case PanelDayView.Range:
-                        hourLabels[row].Text = $"{vykazanoHodin:F1} / {hoursWorked:F1} h";
-                        hourLabels[row].ForeColor = Color.Black;
-                        break;
-                    case PanelDayView.ColorWithinRange:
-                        hourLabels[row].Text = $"{vykazanoHodin:F1}";
-
-                        if (Math.Abs(vykazanoHodin - hoursWorked) < 0.01)
-                            hourLabels[row].ForeColor = Color.Green;
-                        else
-                            hourLabels[row].ForeColor = Color.Red;
-                        break;
-                    case PanelDayView.ColorOvertime:
-                        hourLabels[row].Text = $"{vykazanoHodin:F1}";
-
-                        if (vykazanoHodin == 7.5)
-                            hourLabels[row].ForeColor = Color.Green;
-                        else if (vykazanoHodin > 7.5)
-                            hourLabels[row].ForeColor = Color.Blue;
-                        else
-                            hourLabels[row].ForeColor = Color.Red;
-                        break;
-                }
-
-                if (dochazka == null)
-                {
-                    hourLabels[row].ForeColor = Color.Black;
-                }
-            }
-        }
-
         private int GetColumnBasedOnTimeEntry(DateTime? timeStamp)
         {
             var minutes = timeStamp.Value.Hour * 60 + timeStamp.Value.Minute;
@@ -768,25 +721,6 @@ namespace VykazyPrace.UserControls.CalendarV2
         private int GetRowBasedOnTimeEntry(DateTime? timeStamp)
         {
             return ((int)timeStamp.Value.DayOfWeek + 6) % 7;
-        }
-
-        private void UpdateDateLabels()
-        {
-            Color special = Color.FromArgb(255, 98, 92);
-            Color regular = Color.FromArgb(0, 0, 0);
-
-            Label[] dateLabels = { labelDate01, labelDate02, labelDate03, labelDate04, labelDate05, labelDate06, labelDate07 };
-            Label[] dayLabels = { labelDay01, labelDay02, labelDay03, labelDay04, labelDay05, labelDay06, labelDay07 };
-
-            for (int i = 0; i < 7; i++)
-            {
-                DateTime date = _selectedDate.AddDays(i);
-                bool isSpecial = _specialDays.Any(x => x.Date.Date == date);
-
-                dateLabels[i].Text = date.ToString("d.M.yyyy");
-                dateLabels[i].ForeColor = isSpecial ? special : regular;
-                dayLabels[i].ForeColor = isSpecial ? special : regular;
-            }
         }
 
         private async Task AdjustIndicatorsAsync(Point scrollPosition, int userId, DateTime weekStart)
@@ -968,10 +902,14 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             var cell = GetCellAt(tableLayoutPanelCalendar, e.Location);
             pasteTargetCell = cell;
+
+            ClearSelection();
+
             DeactivateAllPanels();
             _selectedTimeEntryId = -1;
             _ = LoadSidebar();
         }
+
 
         private void tableLayoutPanel1_MouseUp(object sender, MouseEventArgs e)
         {
@@ -1306,6 +1244,10 @@ namespace VykazyPrace.UserControls.CalendarV2
             foreach (var entry in _currentEntries)
                 CreateOrUpdatePanel(entry);
 
+
+            foreach (var p in _activePanels)
+                p.Selected = _selectedEntryIds.Contains(p.EntryId);
+
             BeginInvoke((Action)(() =>
             {
                 UpdateDateLabels();
@@ -1334,23 +1276,73 @@ namespace VykazyPrace.UserControls.CalendarV2
             }));
         }
 
+        private void SyncColumns()
+        {
+            var widths = customTableLayoutPanel1.GetStableColumnWidths();
+
+            tableLayoutPanelCalendar.ApplyColumnPixelWidths(widths);
+
+            //customHeader.Invalidate();
+        }
 
         private void dayPanel_MouseClick(object? sender, MouseEventArgs e)
         {
-            if (mouseMoved) return;
-
             if (sender is not DayPanel panel) return;
 
-            DeactivateAllPanels();
-            panel.Activate();
+            // Ctrl-klik => toggle ve výběru
+            if ((ModifierKeys & Keys.Control) == Keys.Control)
+            {
+                if (_selectedEntryIds.Contains(panel.EntryId))
+                    RemoveFromSelection(panel.EntryId);
+                else
+                    AddToSelection(panel.EntryId);
 
-            pasteTargetCell = new TableLayoutPanelCellPosition(
-                tableLayoutPanelCalendar.GetColumn(panel),
-                tableLayoutPanelCalendar.GetRow(panel)
-            );
+                // volitelně: ponech aktivní panel pro sidebar posledně kliknutý
+                panel.Activate();
+            }
+            else
+            {
+                ClearSelection();
+                DeactivateAllPanels();
+                AddToSelection(panel.EntryId);
+                panel.Activate();
+                _selectedTimeEntryId = panel.EntryId;
+            }
 
-            tableLayoutPanelCalendar.ClearSelection();
+            UpdateBulkEditIndicator();
         }
+
+        private void AddToSelection(int entryId)
+        {
+            if (_selectedEntryIds.Add(entryId))
+                SetSelectedUi(entryId, true);
+        }
+
+        private void RemoveFromSelection(int entryId)
+        {
+            if (_selectedEntryIds.Remove(entryId))
+                SetSelectedUi(entryId, false);
+        }
+
+        /// <summary>
+        /// Nastaví stav "selected" pro daný panel, pokud není typu "snack" nebo "locked".
+        /// </summary>
+        private void SetSelectedUi(int entryId, bool selected)
+        {
+            var panel = GetPanelByEntryId(entryId);
+            if (panel == null)
+                return;
+
+            var tag = panel.Tag as string;
+
+            if (tag is "snack" or "locked")
+                panel.Selected = false;
+
+            else
+                panel.Selected = selected;
+        }
+
+
 
         private void DeactivateAllPanels()
         {
@@ -1359,6 +1351,18 @@ namespace VykazyPrace.UserControls.CalendarV2
                 if (ctrl is DayPanel pan)
                 {
                     pan.Deactivate();
+                    //SetSelectedUi(pan.EntryId, false);
+                }
+            }
+        }
+
+        private void DeselectAllPanels()
+        {
+            foreach (var ctrl in tableLayoutPanelCalendar.Controls)
+            {
+                if (ctrl is DayPanel pan)
+                {
+                    SetSelectedUi(pan.EntryId, false);
                 }
             }
         }
@@ -1584,10 +1588,12 @@ namespace VykazyPrace.UserControls.CalendarV2
             comboBoxStart.SelectedIndex = minutesStart / 30;
             comboBoxEnd.SelectedIndex = Math.Min(minutesEnd / 30, comboBoxEnd.Items.Count - 1);
 
-            if (_selectedTimeEntryId != previousTimeEntryId)
-            {
-                await LoadSidebar();
-            }
+            //if (_selectedTimeEntryId != previousTimeEntryId)
+            //{
+            //    await LoadSidebar();
+            //}
+
+            await LoadSidebar();
         }
 
         private bool IsOverlapping(int column, int span, int row, DayPanel currentPanel)
@@ -1726,7 +1732,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             return control.Focused ? control : null;
         }
 
-        private async void CopySelectedPanel()
+        private void CopySelectedPanel()
         {
             if (_selectedTimeEntryId <= 0) return;
 
@@ -1765,37 +1771,31 @@ namespace VykazyPrace.UserControls.CalendarV2
         /// </summary>
         private DayPanel CreateOrUpdatePanel(TimeEntry entry)
         {
-            // 1) vezmi panel z poolu nebo vytvoř nový
             var panel = GetPooledPanel();
             panel.EntryId = entry.Id;
             panel.OwnerId = _selectedUser.Id;
             panel.Tag = null;
 
             if (entry.ProjectId == 132 && entry.EntryTypeId == 24)
-            {
                 panel.Tag = "snack";
-            }
-
             else if (entry.IsLocked == 1)
-            {
                 panel.Tag = "locked";
-            }
 
-            // 2) barva podle typu a validity
+            // barva podle typu a validity
             if (!_colorCache.TryGetValue((int)entry.EntryTypeId, out var baseColor))
                 baseColor = ColorTranslator.FromHtml("#ADD8E6");
+
             var finalColor = entry.IsValid == 1
                 ? baseColor
                 : ColorTranslator.FromHtml("#FF6957");
             panel.SetAssignedColor(finalColor);
 
-            // 3) společný tooltip
             _sharedTooltip.SetToolTip(
                 panel,
                 $"{entry.Project?.ProjectTitle ?? "Projekt neznámý"}\n{entry.Note ?? "Bez poznámky"}"
             );
 
-            // 4) pozice ve TableLayoutPanel
+            // pozice v TableLayoutPanel
             int col = GetColumnBasedOnTimeEntry(entry.Timestamp);
             int row = GetRowBasedOnTimeEntry(entry.Timestamp);
             int span = GetColumnSpanBasedOnTimeEntry(entry.EntryMinutes);
@@ -1803,7 +1803,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             tableLayoutPanelCalendar.SetColumnSpan(panel, span);
             _activePanels.Add(panel);
 
-            // 5) odložené naplnění textů (čeká na správné rozměry)
+            // odložené naplnění textů (čeká na správné rozměry)
             if (entry.IsValid == 1)
             {
                 var timer = new Timer { Interval = 10 };
@@ -1861,19 +1861,18 @@ namespace VykazyPrace.UserControls.CalendarV2
         /// </summary>
         private async Task OnNewEntryCreated(TimeEntry newEntry)
         {
-            // 1) Ujisti se, že Id je 0, aby EF vložil nový záznam
+            // Id na 0, aby EF vložil nový záznam
             newEntry.Id = 0;
 
-            // 2) Vlož do DB a detachni ji
+            // vlož do DB a detachni
             var created = await _timeEntryRepo.CreateTimeEntryAsync(newEntry);
             if (created == null) return;
             _currentEntries.Add(created);
 
-            // 3) Ujisti se, že mám barvy/projekty před prvním vykreslením
             if (_colorCache == null || _colorCache.Count == 0)
                 await LoadCachesAsync();
 
-            // 4) Ulož si scroll, přidej panel a obnov scroll + hodiny
+            // ulož scroll pozici
             int scrollX = panelContainer.HorizontalScroll.Value;
             BeginInvoke((Action)(() =>
             {
@@ -1883,63 +1882,37 @@ namespace VykazyPrace.UserControls.CalendarV2
                 panelContainer.HorizontalScroll.Value =
                     Math.Max(0, Math.Min(scrollX, panelContainer.HorizontalScroll.Maximum));
 
-                // teď přepočítej a vykresli nové součty hodin
                 UpdateHourLabels();
             }));
 
-            // 5) Označ nově vybraný a doplň sidebar
+            // označ nově vybraný a doplň sidebar
             _selectedTimeEntryId = created.Id;
             _ = LoadSidebar();
         }
         #endregion
 
         /// <summary>
-        /// Načte nebo obnoví cache projektů a typů záznamů (pro CreateOrUpdatePanel mimo RenderCalendar).
+        /// Načte nebo obnoví cache projektů, entrytypes a barev.
         /// </summary>
         private async Task LoadCachesAsync()
         {
-            // projekty
             var allProjects = await _projectRepo.GetAllProjectsAsync();
-            _projects = allProjects; // nebo do samostatné proměnné cache
+            _projects = allProjects;
 
-            // typy záznamů
             var allEntryTypes = await _timeEntryTypeRepo.GetAllTimeEntryTypesAsync();
             _timeEntryTypes = allEntryTypes;
 
-            // připrav barvy
             _colorCache = allEntryTypes.ToDictionary(
                 t => t.Id,
                 t => ColorTranslator.FromHtml(t.Color ?? "#ADD8E6")
             );
         }
 
-        private void flowLayoutPanel2_SizeChanged(object sender, EventArgs e)
-        {
-            int newWidth = flowLayoutPanel2.ClientSize.Width - 10;
-            tableLayoutPanelProject.Width = newWidth;
-            tableLayoutPanelEntryType.Width = newWidth;
-            tableLayoutPanelEntrySubType.Width = newWidth;
-            tableLayoutPanel6.Width = newWidth;
-
-            ClearComboBoxSelections(flowLayoutPanel2);
-        }
-
-        private void ClearComboBoxSelections(Control parent)
-        {
-            foreach (Control control in parent.Controls)
-            {
-                if (control is ComboBox cb)
-                {
-                    cb.SelectionStart = cb.Text.Length;
-                    cb.SelectionLength = 0;
-                }
-                else
-                {
-                    ClearComboBoxSelections(control);
-                }
-            }
-        }
-
+        #region Left Sidebar
+        /// <summary>
+        /// Událost překliknutí vyobrazení levého sidebaru
+        /// (počet odpracovaných hodin vůči reálným apod.).
+        /// </summary>
         private void panelDay_Click(object sender, EventArgs e)
         {
             var current = _config.PanelDayView;
@@ -1952,29 +1925,119 @@ namespace VykazyPrace.UserControls.CalendarV2
             ConfigService.Save(_config);
         }
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        /// <summary>
+        /// Aktualizuje datumové a denní popisky (labelDateXX a labelDayXX).
+        /// Pokud je den uveden v kolekci _specialDays (svátky), použije se zvýrazněná barva.
+        /// </summary>
+        private void UpdateDateLabels()
         {
-            // Zjisti aktuálně fokusovaný prvek uvnitř tohoto UserControl
-            Control? focused = this.ContainsFocus ? this.GetFocusedControl(this) : null;
+            Color special = Color.FromArgb(255, 98, 92);
+            Color regular = Color.FromArgb(0, 0, 0);
 
-            if (focused is TextBoxBase or ComboBox)
-                return base.ProcessCmdKey(ref msg, keyData);
+            Label[] dateLabels = { labelDate01, labelDate02, labelDate03, labelDate04, labelDate05, labelDate06, labelDate07 };
+            Label[] dayLabels = { labelDay01, labelDay02, labelDay03, labelDay04, labelDay05, labelDay06, labelDay07 };
 
-            if (keyData == (Keys.Control | Keys.C))
+            for (int i = 0; i < 7; i++)
             {
-                CopySelectedPanel();
-                return true;
-            }
+                DateTime date = _selectedDate.AddDays(i);
+                bool isSpecial = _specialDays.Any(x => x.Date.Date == date);
 
-            if (keyData == (Keys.Control | Keys.V))
-            {
-                PasteCopiedPanel();
-                return true;
+                dateLabels[i].Text = date.ToString("d.M.yyyy");
+                dateLabels[i].ForeColor = isSpecial ? special : regular;
+                dayLabels[i].ForeColor = isSpecial ? special : regular;
             }
-
-            return base.ProcessCmdKey(ref msg, keyData);
         }
 
+        /// <summary>
+        /// Aktualizuje hodinové součty pro každý den v týdnu a zobrazuje je
+        /// v příslušných labelech (labelHours01–labelHours07).
+        /// </summary>
+        private void UpdateHourLabels()
+        {
+            // Pole labelů pro 7 dní (Po–Ne)
+            Label[] hourLabels =
+            {
+        labelHours01, labelHours02, labelHours03,
+        labelHours04, labelHours05, labelHours06, labelHours07
+    };
+
+            // Pro každý den daného týdne
+            for (int row = 0; row < 7; row++)
+            {
+                // Vypočítaný datum pro daný řádek v týdnu
+                DateTime day = _selectedDate.AddDays(row);
+
+                // Spočítání vykázaného času v minutách
+                int totalMinutes = _currentEntries
+                    .Where(entry =>
+                        entry.Timestamp.HasValue &&
+                        entry.Timestamp.Value.Date == day.Date &&
+                        entry.IsValid == 1 &&                   // jen validní záznamy
+                        !(entry.ProjectId == 132 && entry.EntryTypeId == 24) && // vynechává svačiny
+                        !(entry.ProjectId == 23) &&            // vynechává nepřítomnosti
+                        !(entry.EntryTypeId == 25))            // vynechává outlook události
+                    .Sum(entry => entry.EntryMinutes);
+
+                double reportedHours = totalMinutes / 60.0;
+
+                // Získání docházkových dat (pokud existují)
+                var dochazka = _arrivalDepartures
+                    .FirstOrDefault(a => a.WorkDate.Date == day.Date);
+
+                double hoursWorked = dochazka?.HoursWorked ?? 0;
+
+                // Určení formátování textu podle nastavení PanelDayView
+                switch (_config.PanelDayView)
+                {
+                    case PanelDayView.Default:
+                        // Pouze vykázané hodiny (černá)
+                        hourLabels[row].Text = $"{reportedHours:F1}";
+                        hourLabels[row].ForeColor = Color.Black;
+                        break;
+
+                    case PanelDayView.Range:
+                        // Vykázané / skutečně odpracované z docházky
+                        hourLabels[row].Text = $"{reportedHours:F1} / {hoursWorked:F1} h";
+                        hourLabels[row].ForeColor = Color.Black;
+                        break;
+
+                    case PanelDayView.ColorWithinRange:
+                        // Barva podle shody s docházkou
+                        hourLabels[row].Text = $"{reportedHours:F1}";
+
+                        if (Math.Abs(reportedHours - hoursWorked) < 0.01)
+                            hourLabels[row].ForeColor = Color.Green;   // shoduje se
+                        else
+                            hourLabels[row].ForeColor = Color.Red;     // nesouhlasí
+                        break;
+
+                    case PanelDayView.ColorOvertime:
+                        // Barevné zvýraznění podle odpracovaného času
+                        hourLabels[row].Text = $"{reportedHours:F1}";
+
+                        if (reportedHours == 7.5)
+                            hourLabels[row].ForeColor = Color.Green;   // přesně 7.5 h
+                        else if (reportedHours > 7.5)
+                            hourLabels[row].ForeColor = Color.Blue;    // přesčas
+                        else
+                            hourLabels[row].ForeColor = Color.Red;     // méně než norma
+                        break;
+                }
+
+                if (dochazka == null)
+                {
+                    // bez docházkových dat se nepoužívá barevné zvýraznění
+                    hourLabels[row].ForeColor = Color.Black;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Right Sidebar
+        /// <summary>
+        /// Událost přepnutí kategorie pro aktualizaci UI Sidebaru.
+        /// </summary>
         private async void radioButton_CheckedChanged(object sender, EventArgs e)
         {
             if (sender is RadioButton rb && rb.Checked)
@@ -2046,20 +2109,26 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
 
+        /// <summary>
+        /// Událost přepnutí zobrazení archivovaných / klasických projektů.
+        /// </summary>
         private async void checkBoxArchivedProjects_CheckedChanged(object sender, EventArgs e)
         {
             await LoadProjectsAsync(1);
             await LoadTimeEntryTypesAsync(1);
         }
 
+        /// <summary>
+        /// Událost kliknutí potvrzení změn v Sidebaru.
+        /// </summary>
         private async void buttonConfirm_Click(object sender, EventArgs e)
         {
-            // 1) Zachytíme, že uživatel scrolloval, a uložíme pozici
+            // Uložení pozice scrollu (kvůli přerenderování)
             userHasScrolled = true;
             int scrollX = panelContainer.HorizontalScroll.Value;
             int scrollY = panelContainer.VerticalScroll.Value;
 
-            // 2) Validace vstupů
+            // Validace vstupů
             var (valid, reason) = CheckForEmptyOrIncorrectFields();
             if (!valid)
             {
@@ -2067,7 +2136,87 @@ namespace VykazyPrace.UserControls.CalendarV2
                 return;
             }
 
-            // 3) Určení EntryTypeId z radio/comboboxu
+            int selectedEntryTypeId = GetSelectedEntryTypeId();
+            if (selectedEntryTypeId == 0)
+            {
+                AppLogger.Error("[EntryUpdate]: Nepodařilo se zjistit SelectedEntryTypeId.");
+                return;
+            }
+
+            // Zjištění ProjectId pro PROVOZ/PROJEKT/PŘEDPROJEKT (0/1/2)
+            int? selectedProjectId = null;
+            if (_currentProjectType is 0 or 1 or 2)
+            {
+                Project? selectedProject = _projects.FirstOrDefault(p =>
+                    FormatHelper.FormatProjectToString(p)
+                        .Equals(customComboBoxProjects.SelectedItem,
+                                StringComparison.InvariantCultureIgnoreCase));
+
+                if (selectedProject == null)
+                {
+                    AppLogger.Error("[EntryUpdate]: Vybraný projekt neodpovídá žádné možnosti v seznamu.");
+                    return;
+                }
+
+                selectedProjectId = selectedProject.Id;
+            }
+
+            // Sestavení requestu pro service
+            var request = new TimeEntryUpdateRequest
+            {
+                CurrentProjectType = _currentProjectType,
+                SelectedEntryTypeId = selectedEntryTypeId,
+                SelectedUserId = _selectedUser.Id,
+                Note = textBoxNote.Text,
+                SubTypeTitle = customComboBoxSubTypes.GetText(),
+                SelectedProjectId = selectedProjectId,
+                SelectedEntryIds = _selectedEntryIds.ToList(),
+                SelectedTimeEntryId = _selectedTimeEntryId,
+                CurrentEntries = _currentEntries,
+                Projects = _projects
+            };
+
+            var result = await _timeEntryUpdateService.UpdateEntriesAsync(request);
+
+            if (!result.HasAnyUpdate)
+            {
+                AppLogger.Information("[EntryUpdate]: Nebyl aktualizován žádný záznam.");
+            }
+
+            // Reset a render
+            _selectedEntryIds.Clear();
+            DeselectAllPanels();
+            _selectedTimeEntryId = -1;
+            DeactivateAllPanels();
+            UpdateBulkEditIndicator();
+            await LoadTimeEntrySubTypesAsync();
+            await RenderCalendar();
+            UpdateHourLabels();
+            await LoadSidebar();
+
+            // Návrat na původní scroll pozici
+            BeginInvoke((Action)(() =>
+            {
+                panelContainer.HorizontalScroll.Value =
+                    Math.Max(0, Math.Min(scrollX, panelContainer.HorizontalScroll.Maximum));
+                panelContainer.VerticalScroll.Value =
+                    Math.Max(0, Math.Min(scrollY, panelContainer.VerticalScroll.Maximum));
+            }));
+        }
+
+        private async void buttonRemove_Click(object sender, EventArgs e) => await DeleteRecord();
+
+        /// <summary>
+        /// Zjistí EntryType podle zvoleného RadioButtonu (provoz, projekt, ...)
+        /// Vrátí korespondující číslo.
+        /// </summary>
+        private int GetSelectedEntryTypeId()
+        {
+            // Školení
+            if (_currentProjectType == 3)
+                return 16;
+
+            // Určení EntryTypeId podle zvolené kategorie
             int selectedEntryTypeId = 0;
             if (_currentProjectType is 0 or 1 or 2)
             {
@@ -2075,6 +2224,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                     .OfType<TableLayoutPanel>()
                     .SelectMany(panel => panel.Controls.OfType<RadioButton>())
                     .ToList();
+
                 for (int i = 0; i < radioButtons.Count; i++)
                 {
                     if (radioButtons[i].Checked)
@@ -2095,76 +2245,32 @@ namespace VykazyPrace.UserControls.CalendarV2
                 selectedEntryTypeId = _timeEntryTypes[comboBoxEntryType.SelectedIndex].Id;
             }
 
-            // 4) Vytvoření (a případné vložení) nového SubType
-            var newSubType = new TimeEntrySubType
-            {
-                Title = customComboBoxSubTypes.GetText(),
-                UserId = _selectedUser.Id
-            };
-            var addedTimeEntrySubType = await _timeEntrySubTypeRepo
-                .CreateTimeEntrySubTypeAsync(newSubType);
-
-            // 5) Najdi aktuálně editovaný TimeEntry
-            var timeEntry = _currentEntries
-                .FirstOrDefault(e => e.Id == _selectedTimeEntryId);
-            if (timeEntry == null) return;
-
-            // 6) Aplikuj změny do entity
-            timeEntry.Description = addedTimeEntrySubType.Title;
-            timeEntry.EntryTypeId = selectedEntryTypeId;
-            timeEntry.Note = textBoxNote.Text;
-
-            var selectedProject = _projects.FirstOrDefault(p =>
-                FormatHelper.FormatProjectToString(p)
-                    .Equals(customComboBoxProjects.SelectedItem,
-                            StringComparison.InvariantCultureIgnoreCase));
-            if (selectedProject != null)
-                timeEntry.ProjectId = selectedProject.Id;
-
-            if (radioButton5.Checked) timeEntry.ProjectId = 25;
-            else if (radioButton4.Checked) timeEntry.ProjectId = 23;
-            else if (radioButton3.Checked)
-            {
-                timeEntry.ProjectId = 26;
-                timeEntry.EntryTypeId = 16;
-            }
-
-            timeEntry.AfterCare = _projects
-                .FirstOrDefault(x => x.Id == timeEntry.ProjectId)?
-                .IsArchived ?? 0;
-            timeEntry.IsValid = 1;
-
-            // 7) Ulož do DB
-            bool success = await _timeEntryRepo.UpdateTimeEntryAsync(timeEntry);
-            if (success)
-            {
-                AppLogger.Information(
-                    $"Záznam {FormatHelper.FormatTimeEntryToString(timeEntry)} byl úspěšně aktualizován.");
-
-                // 8) Obnovení subtypů, kompletní překreslení i sidebar
-                await LoadTimeEntrySubTypesAsync();
-                await RenderCalendar();
-                UpdateHourLabels();
-                await LoadSidebar();
-
-                // 9) Vrácení scrollu do původní pozice
-                BeginInvoke((Action)(() =>
-                {
-                    panelContainer.HorizontalScroll.Value =
-                        Math.Max(0, Math.Min(scrollX, panelContainer.HorizontalScroll.Maximum));
-                    panelContainer.VerticalScroll.Value =
-                        Math.Max(0, Math.Min(scrollY, panelContainer.VerticalScroll.Maximum));
-                }));
-            }
+            return selectedEntryTypeId;
         }
 
-
-        private async void buttonRemove_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Událost při změně velikosti - Layoutová úprava prvků v Sidebaru
+        /// </summary>
+        private void flowLayoutPanel2_SizeChanged(object sender, EventArgs e)
         {
-            await DeleteRecord();
+            int newWidth = flowLayoutPanel2.ClientSize.Width - 10;
+            tableLayoutPanelProject.Width = newWidth;
+            tableLayoutPanelEntryType.Width = newWidth;
+            tableLayoutPanelEntrySubType.Width = newWidth;
+            tableLayoutPanel6.Width = newWidth;
+
+            ClearComboBoxSelections(flowLayoutPanel2);
         }
 
+        /// <summary>
+        /// Aktualizuje pozadí Sidebaru - modrá značí více než jednu vybranou položku.
+        /// </summary>
+        private void UpdateBulkEditIndicator() => flowLayoutPanel2.BackColor = _selectedEntryIds.Count > 1 ? Color.FromArgb(227, 255, 250) : Color.White;
 
+        /// <summary>
+        /// Provede validační kontrolu vstupních polí v Sidebaru
+        /// podle toho, jaký typ záznamu je aktuálně zvolen.
+        /// </summary>
         private (bool valid, string reason) CheckForEmptyOrIncorrectFields()
         {
             var rb = flowLayoutPanel2.Controls
@@ -2204,6 +2310,53 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
 
             return (true, "");
+        }
+
+        /// <summary>
+        /// Rekurzivně projde všechny potomky a u ComboBoxů zruší označený text
+        /// (nastaví caret na konec a výběr na 0).
+        /// </summary>
+        private void ClearComboBoxSelections(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is ComboBox cb)
+                {
+                    cb.SelectionStart = cb.Text.Length;
+                    cb.SelectionLength = 0;
+                }
+                else
+                    ClearComboBoxSelections(control);
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// Override zpracování klávesových zkratek. Umožňuje globální klávesové zkratky
+        /// (např. Ctrl+C a Ctrl+V pro kopírování panelů), ale zároveň zachovává standardní
+        /// chování pro prvky, které samy zachytávají textové vstupy (TextBoxy a ComboBoxy).
+        /// </summary>
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            // Zjisti aktuálně fokusovaný prvek uvnitř tohoto UserControl
+            Control? focused = this.ContainsFocus ? this.GetFocusedControl(this) : null;
+
+            if (focused is TextBoxBase or ComboBox)
+                return base.ProcessCmdKey(ref msg, keyData);
+
+            if (keyData == (Keys.Control | Keys.C))
+            {
+                CopySelectedPanel();
+                return true;
+            }
+
+            if (keyData == (Keys.Control | Keys.V))
+            {
+                PasteCopiedPanel();
+                return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
         }
     }
 }

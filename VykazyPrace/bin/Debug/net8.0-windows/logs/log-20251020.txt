@@ -1,0 +1,76 @@
+2025-10-20 09:33:15.701 +02:00 [INF] Staženo 2 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 09:33:19.761 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 09:33:21.714 +02:00 [INF] Záznam 0 - Školení: 1 h - Project meeting - pravidelný meeting [Osobně] byl smazán z DB.
+2025-10-20 09:33:28.349 +02:00 [INF] Záznam  - : 0,5 h - test byl úspěšně aktualizován.
+2025-10-20 09:36:40.345 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 09:36:44.212 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 09:36:46.422 +02:00 [INF] Záznam Outlook meeting - Outlook meeting: 1 h - Project meeting - pravidelný meeting [Osobně] byl smazán z DB.
+2025-10-20 09:37:19.671 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 09:37:23.601 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 09:37:54.886 +02:00 [INF] Záznam Outlook meeting - Outlook meeting: 1 h - Outlook meeting byl úspěšně aktualizován.
+2025-10-20 09:38:03.689 +02:00 [INF] Záznam  - Automatizace: 1 h - Outlook meeting byl úspěšně aktualizován.
+2025-10-20 09:39:06.673 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 09:39:11.607 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 09:40:17.786 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 09:40:22.171 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 09:41:28.056 +02:00 [INF] Záznam Outlook meeting - Outlook meeting: 0,5 h - Outlook meeting byl smazán z DB.
+2025-10-20 09:44:28.030 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 09:44:32.336 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 09:46:29.113 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 09:46:32.980 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 09:47:10.446 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 09:47:14.576 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 09:47:36.130 +02:00 [INF] Záznam 0 - Ostatní: 1,5 h - Outlook meeting byl úspěšně aktualizován.
+2025-10-20 10:10:15.409 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 10:10:19.416 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 10:10:30.575 +02:00 [INF] Záznam Outlook meeting - Outlook meeting: 0,5 h - Outlook meeting byl smazán z DB.
+2025-10-20 10:10:31.479 +02:00 [INF] Záznam  - Automatizace: 1 h - Outlook meeting byl smazán z DB.
+2025-10-20 10:10:32.363 +02:00 [INF] Záznam 0 - Provoz Metalizace: 0,5 h - test byl smazán z DB.
+2025-10-20 10:10:32.860 +02:00 [INF] Záznam 0 - Ostatní: 1,5 h - Outlook meeting byl smazán z DB.
+2025-10-20 10:10:35.475 +02:00 [INF] Záznam Outlook meeting - Outlook meeting: 8 h - Outlook meeting byl smazán z DB.
+2025-10-20 10:10:50.570 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 10:10:54.479 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 10:11:35.468 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 10:11:39.272 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 10:12:55.025 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 10:12:58.864 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 10:13:21.804 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 10:13:25.735 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 10:14:34.313 +02:00 [INF] Záznam 0 - Ostatní: 0,5 h - Outlook meeting byl smazán z DB.
+2025-10-20 10:14:35.027 +02:00 [INF] Záznam 0 - Ostatní: 1 h - Outlook meeting byl smazán z DB.
+2025-10-20 10:14:36.384 +02:00 [INF] Záznam 0 - Ostatní: 0,5 h - Outlook meeting byl smazán z DB.
+2025-10-20 10:14:37.126 +02:00 [INF] Záznam 0 - Ostatní: 1,5 h - Outlook meeting byl smazán z DB.
+2025-10-20 10:15:17.307 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 10:15:21.436 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 10:17:56.074 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 10:18:00.094 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 10:18:08.991 +02:00 [INF] Záznam 0 - Ostatní: 0,5 h - Outlook meeting byl smazán z DB.
+2025-10-20 10:18:10.056 +02:00 [INF] Záznam 0 - Ostatní: 1 h - Outlook meeting byl smazán z DB.
+2025-10-20 10:18:10.572 +02:00 [INF] Záznam 0 - Ostatní: 1,5 h - Outlook meeting byl smazán z DB.
+2025-10-20 10:18:11.560 +02:00 [INF] Záznam 0 - Ostatní: 0,5 h - Outlook meeting byl smazán z DB.
+2025-10-20 13:25:51.505 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 13:25:55.605 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 13:34:53.139 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 13:34:57.337 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 13:35:50.019 +02:00 [INF] Záznam 0 - Ostatní: 1 h - Project meeting - pravidelný meeting [Osobně] byl smazán z DB.
+2025-10-20 13:35:50.827 +02:00 [INF] Záznam 0 - Ostatní: 1,5 h - Kroužek - mladý technik byl smazán z DB.
+2025-10-20 13:35:51.508 +02:00 [INF] Záznam 0 - Ostatní: 0,5 h - Kroužek MT byl smazán z DB.
+2025-10-20 13:37:02.972 +02:00 [INF] Záznam 0 - Ostatní: 0,5 h - Automatizace - kompletace byl smazán z DB.
+2025-10-20 14:50:38.511 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 14:50:42.675 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 14:51:19.637 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 14:51:23.550 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 14:51:52.396 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 14:51:56.598 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 14:52:32.163 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 14:52:36.335 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 14:53:04.521 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 14:54:46.959 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 14:54:50.971 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 14:56:02.748 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 14:56:06.973 +02:00 [INF] Staženo 0 záznamů pro měsíc č.10 uživatele (1250): Jan Procházka - KAMERY.
+2025-10-20 14:56:25.817 +02:00 [INF] Záznam 0 - Ostatní: 0,5 h - Automatizace - kompletace byl smazán z DB.
+2025-10-20 14:56:26.917 +02:00 [INF] Záznam 0 - Ostatní: 1 h - Project meeting - pravidelný meeting [Osobně] byl smazán z DB.
+2025-10-20 14:56:28.031 +02:00 [INF] Záznam 0 - Ostatní: 1,5 h - Kroužek - mladý technik byl smazán z DB.
+2025-10-20 14:56:28.856 +02:00 [INF] Záznam 0 - Ostatní: 0,5 h - Kroužek MT byl smazán z DB.
+2025-10-20 14:58:11.223 +02:00 [INF] Záznam 0 - Ostatní: 7,5 h - Outlook meeting byl smazán z DB.

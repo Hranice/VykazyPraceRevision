@@ -1,0 +1,78 @@
+﻿namespace VykazyPrace.Dialogs
+{
+    partial class OutlookEvents
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OutlookEvents));
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            buttonAddAllEvents = new Button();
+            SuspendLayout();
+            // 
+            // flowLayoutPanel1
+            // 
+            flowLayoutPanel1.AutoScroll = true;
+            flowLayoutPanel1.Dock = DockStyle.Fill;
+            flowLayoutPanel1.Location = new Point(0, 48);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(389, 368);
+            flowLayoutPanel1.TabIndex = 0;
+            // 
+            // buttonAddAllEvents
+            // 
+            buttonAddAllEvents.Dock = DockStyle.Top;
+            buttonAddAllEvents.Font = new Font("Reddit Sans", 12F);
+            buttonAddAllEvents.Location = new Point(0, 0);
+            buttonAddAllEvents.Name = "buttonAddAllEvents";
+            buttonAddAllEvents.Size = new Size(389, 48);
+            buttonAddAllEvents.TabIndex = 1;
+            buttonAddAllEvents.Text = "Přidat všechny události";
+            buttonAddAllEvents.UseVisualStyleBackColor = true;
+            buttonAddAllEvents.Click += buttonAddAllEvents_Click;
+            // 
+            // OutlookEvents
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.White;
+            ClientSize = new Size(389, 416);
+            Controls.Add(flowLayoutPanel1);
+            Controls.Add(buttonAddAllEvents);
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Name = "OutlookEvents";
+            Text = "Události v Outlooku";
+            Load += OutlookEvents_Load;
+            ResumeLayout(false);
+        }
+
+        #endregion
+
+        private FlowLayoutPanel flowLayoutPanel1;
+        private Button buttonAddAllEvents;
+    }
+}

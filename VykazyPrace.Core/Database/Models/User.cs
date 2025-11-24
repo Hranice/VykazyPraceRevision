@@ -18,6 +18,7 @@ public partial class User
     public int LevelOfAccess { get; set; }
 
     public int? UserGroupId { get; set; }
+    public string? Email { get; set; }
 
     public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
 

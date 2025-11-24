@@ -202,4 +202,50 @@ public class CustomTableLayoutPanel : TableLayoutPanel
         return dateToCheck >= startOfWeek && dateToCheck <= endOfWeek;
     }
 
+    // cache naposledy známých šířek kvůli porovnání
+    private int[] _lastColWidths;
+
+    /// <summary>
+    /// Aplikuje přesné pixelové šířky sloupců (Absolute),
+    /// aby se jiné panely zarovnaly na stejné svislé hranice.
+    /// </summary>
+    public void ApplyColumnPixelWidths(int[] widths)
+    {
+        if (widths == null || widths.Length == 0) return;
+        if (ColumnCount != widths.Length) ColumnCount = widths.Length;
+
+        SuspendLayout();
+        // zajistíme, že ColumnStyles má správný počet položek
+        while (ColumnStyles.Count < widths.Length)
+            ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 0));
+
+        for (int i = 0; i < widths.Length; i++)
+        {
+            // nastavíme Absolute šířky přesně v pixelech
+            ColumnStyles[i].SizeType = SizeType.Absolute;
+            ColumnStyles[i].Width = widths[i];
+        }
+        ResumeLayout();
+        Invalidate();
+    }
+
+    /// <summary>
+    /// Vrátí aktuální pixelové šířky sloupců. Oproti GetColumnWidths()
+    /// ohlídáme vyvolání jen při reálné změně (pro master-panel).
+    /// </summary>
+    public int[] GetStableColumnWidths()
+    {
+        var w = GetColumnWidths(); // systémové pixely (už zaokrouhlené)
+        return w;
+    }
+
+    protected override void OnSizeChanged(EventArgs e)
+    {
+        base.OnSizeChanged(e);
+        // Při změně velikosti si ukládáme šířky – master je pak může rozposlat.
+        var w = GetColumnWidths();
+        if (_lastColWidths == null || !_lastColWidths.SequenceEqual(w))
+            _lastColWidths = w;
+    }
+
 }

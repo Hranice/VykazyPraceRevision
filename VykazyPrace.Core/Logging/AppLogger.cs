@@ -63,7 +63,7 @@ namespace VykazyPrace.Core.Logging
 
         public static void Error(string message, Exception ex)
         {
-            Logger.Error(ex, message);
+            Logger.Error(ex, $"{message}\n\nInner exception: {ex.InnerException}");
             _popupService?.ShowError(message, ex);
         }
 

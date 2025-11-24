@@ -376,6 +376,10 @@ namespace VykazyPrace
             int totalRows = await powerKeyHelper.DownloadForUserAsync(DateTime.Now, _selectedUser);
             AppLogger.Information($"Staženo {totalRows} záznamù pro mìsíc è.{DateTime.Now.Month} uživatele {FormatHelper.FormatUserToString(_selectedUser)}.", false);
 
+#if NOTDEBUG
+            buttonOutlookEvents.Visible = _selectedUser.WindowsUsername == Environment.UserName;
+#endif
+
             _calendar?.ChangeUser(_selectedUser);
             _monthlyCalendar.ChangeUser(_selectedUser);
         }
@@ -504,6 +508,14 @@ namespace VykazyPrace
         {
             var overviewDialog = new OverviewDialog(_selectedUser, DateRangeHelper.GetMonthRange(_selectedDate));
             overviewDialog.ShowDialog();
+        }
+
+        private async void buttonOutlookEvents_Click(object sender, EventArgs e)
+        {
+            var outlookEventsDialog = new OutlookEvents(_selectedUser);
+            outlookEventsDialog.ShowDialog();
+
+            await _calendar.ForceReloadAsync();
         }
     }
 }

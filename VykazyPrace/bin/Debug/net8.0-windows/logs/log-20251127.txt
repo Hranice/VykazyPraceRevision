@@ -6,3 +6,8 @@
 2025-11-27 11:35:21.589 +01:00 [INF] Profile: 'Jan Procházka' <Jan.Prochazka@heinz-glas.com>; FolderPath='\\Jan.Prochazka@heinz-glas.com\Kalendář', Store='00000000...'
 2025-11-27 11:35:22.004 +01:00 [INF] Find fallback en-US ±180d -> Found=197
 2025-11-27 11:35:22.226 +01:00 [INF] Outlook sync: Collected=197, InMyRange=10, RangeUTC=2025-11-27T00:00:00.0000000Z..2025-12-04T00:00:00.0000000Z
+2025-11-27 11:43:25.698 +01:00 [INF] Staženo 0 záznamů pro měsíc č.11 uživatele (1250): Jan Procházka - KAMERY.
+2025-11-27 11:43:29.308 +01:00 [INF] Staženo 0 záznamů pro měsíc č.11 uživatele (1250): Jan Procházka - KAMERY.
+2025-11-27 11:43:30.141 +01:00 [INF] Profile: 'Jan Procházka' <Jan.Prochazka@heinz-glas.com>; FolderPath='\\Jan.Prochazka@heinz-glas.com\Kalendář', Store='00000000...'
+2025-11-27 11:43:30.544 +01:00 [INF] Find fallback en-US ±180d -> Found=196
+2025-11-27 11:43:30.760 +01:00 [INF] Outlook sync: Collected=196, InMyRange=9, RangeUTC=2025-11-27T00:00:00.0000000Z..2025-12-04T00:00:00.0000000Z

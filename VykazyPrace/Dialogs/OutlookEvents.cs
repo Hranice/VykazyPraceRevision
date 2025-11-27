@@ -61,7 +61,8 @@ namespace VykazyPrace.Dialogs
 
             try
             {
-                await RunStaAsync(async () => { await InitializeEvents(); });
+                await InitializeEvents();
+
                 await RenderOutlookEventsAsync(flowLayoutPanel1);
             }
             catch (Exception ex)
@@ -75,21 +76,6 @@ namespace VykazyPrace.Dialogs
                 _syncCts?.Dispose();
                 _syncCts = null;
             }
-        }
-
-        /// <summary>Spustí async akci na novém STA vlákně a počká na dokončení.</summary>
-        private static Task RunStaAsync(Func<Task> action)
-        {
-            var tcs = new TaskCompletionSource<object?>();
-            var th = new Thread(() =>
-            {
-                try { action().GetAwaiter().GetResult(); tcs.SetResult(null); }
-                catch (Exception ex) { tcs.SetException(ex); }
-            });
-            th.IsBackground = true;
-            th.SetApartmentState(ApartmentState.STA);
-            th.Start();
-            return tcs.Task;
         }
 
         /// <summary>
@@ -360,7 +346,7 @@ namespace VykazyPrace.Dialogs
                     CalendarItem ci;
                     try
                     {
-                        ci = await calendarRepo.UpsertCalendarItemAsync(ciInput).ConfigureAwait(false);
+                        ci = await calendarRepo.UpsertCalendarItemAsync(ciInput);
                     }
                     catch (Exception e)
                     {

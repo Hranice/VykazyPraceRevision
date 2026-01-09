@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v8.0": {
-      "WorkLog/1.4.0.2": {
+      "WorkLog/1.4.0.3": {
         "dependencies": {
           "ClosedXML": "0.105.0",
           "Microsoft.Office.Interop.Outlook": "15.0.4797.1004",
@@ -897,7 +897,7 @@
         "runtime": {
           "Microsoft.Office.Interop.Excel.dll": {
             "assemblyVersion": "16.0.0.0",
-            "fileVersion": "16.0.18925.20022"
+            "fileVersion": "16.0.19328.20010"
           }
         }
       },
@@ -905,7 +905,7 @@
         "runtime": {
           "office.dll": {
             "assemblyVersion": "16.0.0.0",
-            "fileVersion": "16.0.16626.20000"
+            "fileVersion": "16.0.19328.20010"
           }
         }
       },
@@ -913,7 +913,7 @@
         "runtime": {
           "Microsoft.Vbe.Interop.dll": {
             "assemblyVersion": "16.0.0.0",
-            "fileVersion": "16.0.16626.20000"
+            "fileVersion": "16.0.19328.20010"
           }
         }
       },
@@ -928,7 +928,7 @@
     }
   },
   "libraries": {
-    "WorkLog/1.4.0.2": {
+    "WorkLog/1.4.0.3": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

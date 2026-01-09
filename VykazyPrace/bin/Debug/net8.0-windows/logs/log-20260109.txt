@@ -228,3 +228,11 @@ Login failed for user 'vykazprace'.
    at VykazyPrace.Dialogs.DataTableFactory.BuildUserSummary(IEnumerable`1 timeEntries, DateTime exportMonth, IReadOnlyDictionary`2 cumToFullfilledDict) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 265
 ClientConnectionId:bf3ed47f-1fdb-4bfc-8150-ceb4478f8343
 Číslo chyby: 17142, stav: 0, třída: 14
+2026-01-09 11:10:15.014 +01:00 [INF] Chyba při čtení dat pro osobní číslo 1250.
+2026-01-09 11:10:15.044 +01:00 [INF] Staženo 0 záznamů pro měsíc č.1 uživatele (1250): Jan Procházka - KAMERY.
+2026-01-09 11:10:20.894 +01:00 [INF] Chyba při čtení dat pro osobní číslo 1250.
+2026-01-09 11:10:20.894 +01:00 [INF] Staženo 0 záznamů pro měsíc č.1 uživatele (1250): Jan Procházka - KAMERY.
+2026-01-09 11:13:24.577 +01:00 [INF] Chyba při čtení dat pro osobní číslo 1250.
+2026-01-09 11:13:24.605 +01:00 [INF] Staženo 0 záznamů pro měsíc č.1 uživatele (1250): Jan Procházka - KAMERY.
+2026-01-09 11:13:29.432 +01:00 [INF] Chyba při čtení dat pro osobní číslo 1250.
+2026-01-09 11:13:29.432 +01:00 [INF] Staženo 0 záznamů pro měsíc č.1 uživatele (1250): Jan Procházka - KAMERY.

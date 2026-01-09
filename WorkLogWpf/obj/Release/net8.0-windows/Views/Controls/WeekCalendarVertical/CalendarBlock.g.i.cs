@@ -108,8 +108,7 @@ namespace WorkLogWpf.Views.Controls.WeekCalendarVertical {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/WorkLogWpf;V1.0.0.0;component/views/controls/weekcalendarvertical/calendarblock." +
-                    "xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/WorkLogWpf;component/views/controls/weekcalendarvertical/calendarblock.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\..\..\Views\Controls\WeekCalendarVertical\CalendarBlock.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

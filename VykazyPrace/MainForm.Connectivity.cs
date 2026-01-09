@@ -23,7 +23,7 @@ namespace VykazyPrace
         {
             base.OnLoad(e);
 
-            var sqlChecker = new SqlServerHealthChecker("Server=10.130.10.100;Database=powerkey;User Id=vykazprace;Password=!Vykaz2025!;TrustServerCertificate=True;");
+            var sqlChecker = new SqlServerHealthChecker("Server=cze-svd02;Database=powerkey;User Id=vykazprace;Password=UtNPs66ZZk56qSt;TrustServerCertificate=True;");
 
             var config = ConfigService.Load();
             var sqliteChecker = new SqliteHealthChecker(config.DatabasePath);

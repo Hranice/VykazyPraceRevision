@@ -27,7 +27,7 @@ namespace VykazyPrace.Dialogs
 
         private void LoadFilteredData(DateTime monthDate, int personalNumber)
         {
-            string cs = "Server=10.130.10.100;Database=powerkey;User Id=vykazprace;Password=!Vykaz2025!;TrustServerCertificate=True;";
+            string cs = "Server=cze-svd02;Database=powerkey;User Id=vykazprace;Password=UtNPs66ZZk56qSt;TrustServerCertificate=True;";
 
             try
             {
@@ -57,7 +57,7 @@ namespace VykazyPrace.Dialogs
 
         private void DropView()
         {
-            string connectionString = "Server=10.130.10.100;Database=powerkey;User Id=vykazprace;Password=!Vykaz2025!;TrustServerCertificate=True;";
+            string connectionString = "Server=cze-svd02;Database=powerkey;User Id=vykazprace;Password=UtNPs66ZZk56qSt;TrustServerCertificate=True;";
             string dropQuery = "DROP VIEW IF EXISTS pwk.Prenos_pracovni_doby";
 
             try
@@ -78,7 +78,7 @@ namespace VykazyPrace.Dialogs
 
         private void CreateView()
         {
-            string connectionString = "Server=10.130.10.100;Database=powerkey;User Id=vykazprace;Password=!Vykaz2025!;TrustServerCertificate=True;";
+            string connectionString = "Server=cze-svd02;Database=powerkey;User Id=vykazprace;Password=UtNPs66ZZk56qSt;TrustServerCertificate=True;";
 
             string dateFormatCommand = "SET DATEFORMAT DMY;"; // spustíme zvlášť
 

@@ -236,3 +236,57 @@ ClientConnectionId:bf3ed47f-1fdb-4bfc-8150-ceb4478f8343
 2026-01-09 11:13:24.605 +01:00 [INF] Staženo 0 záznamů pro měsíc č.1 uživatele (1250): Jan Procházka - KAMERY.
 2026-01-09 11:13:29.432 +01:00 [INF] Chyba při čtení dat pro osobní číslo 1250.
 2026-01-09 11:13:29.432 +01:00 [INF] Staženo 0 záznamů pro měsíc č.1 uživatele (1250): Jan Procházka - KAMERY.
+2026-01-09 13:26:37.166 +01:00 [INF] Chyba při čtení dat pro osobní číslo 1250.
+2026-01-09 13:26:37.217 +01:00 [INF] Staženo 0 záznamů pro měsíc č.1 uživatele (1250): Jan Procházka - KAMERY.
+2026-01-09 13:26:42.234 +01:00 [INF] Chyba při čtení dat pro osobní číslo 1250.
+2026-01-09 13:26:42.235 +01:00 [INF] Staženo 0 záznamů pro měsíc č.1 uživatele (1250): Jan Procházka - KAMERY.
+2026-01-09 13:27:36.861 +01:00 [INF] Staženo 6 záznamů pro měsíc č.1 uživatele (1250): Jan Procházka - KAMERY.
+2026-01-09 13:27:43.867 +01:00 [INF] Staženo 0 záznamů pro měsíc č.1 uživatele (1250): Jan Procházka - KAMERY.
+2026-01-09 13:28:42.732 +01:00 [INF] [EntryUpdate(18619)]: Záznam  - Automatizace: 1 h - SW - Výkazy hodin byl úspěšně aktualizován.
+2026-01-09 13:30:54.515 +01:00 [INF] Staženo 0 záznamů pro měsíc č.1 uživatele (1250): Jan Procházka - KAMERY.
+2026-01-09 13:31:01.188 +01:00 [INF] Staženo 0 záznamů pro měsíc č.1 uživatele (1250): Jan Procházka - KAMERY.
+2026-01-09 13:31:46.954 +01:00 [INF] Staženo pro 19 uživatelů, celkem 138 řádků.
+2026-01-09 13:32:38.465 +01:00 [INF] Záznam 0389I25 - Nový KS pro stroj 18: 0,5 h - SW byl smazán z DB.
+2026-01-09 13:33:13.018 +01:00 [ERR] PowerKey nedostupný – docházka bude nastavena na 0 a export pokračuje.
+
+Inner exception: 
+Microsoft.Data.SqlClient.SqlException (0x80131904): Oprávnění pro příkaz CREATE VIEW bylo v databázi Powerkey odepřeno.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteNonQueryAsync>b__193_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.CreateTemporaryViewAsync(DateTime month, String viewName) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 203
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 138
+   at VykazyPrace.Dialogs.DataTableFactory.BuildUserSummary(IEnumerable`1 timeEntries, DateTime exportMonth, IReadOnlyDictionary`2 cumToFullfilledDict) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 265
+ClientConnectionId:9af87bd6-16dd-4921-8f41-ce919782a44b
+Číslo chyby: 262, stav: 18, třída: 14
+2026-01-09 13:40:29.353 +01:00 [INF] Staženo 0 záznamů pro měsíc č.1 uživatele (1250): Jan Procházka - KAMERY.
+2026-01-09 13:40:35.711 +01:00 [INF] Staženo 0 záznamů pro měsíc č.1 uživatele (1250): Jan Procházka - KAMERY.
+2026-01-09 13:40:43.281 +01:00 [ERR] PowerKey nedostupný – docházka bude nastavena na 0 a export pokračuje.
+
+Inner exception: 
+Microsoft.Data.SqlClient.SqlException (0x80131904): Oprávnění EXECUTE bylo pro objekt DateToMonthNumber databáze Powerkey schématu pwk odepřeno.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at Microsoft.Data.SqlClient.SqlDataReader.get_MetaData()
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteReader(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteReaderInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteReaderAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteReaderAsync>b__201_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 173
+   at VykazyPrace.Dialogs.DataTableFactory.BuildUserSummary(IEnumerable`1 timeEntries, DateTime exportMonth, IReadOnlyDictionary`2 cumToFullfilledDict) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 265
+ClientConnectionId:16b2c850-aa4d-423f-9f13-592febb2e4fa
+Číslo chyby: 229, stav: 5, třída: 14

@@ -170,7 +170,9 @@ namespace VykazyPrace.Core.PowerKey
             }
             catch (Exception ex)
             {
-                AppLogger.Error($"Chyba při čtení dat pro osobní číslo {personalNumber}.", ex);
+                // TODO: Vrátit na .Error
+                //AppLogger.Error($"Chyba při čtení dat pro osobní číslo {personalNumber}.", ex);
+                AppLogger.Information($"Chyba při čtení dat pro osobní číslo {personalNumber}.", false);
                 return null;
             }
         }

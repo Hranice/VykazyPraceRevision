@@ -257,8 +257,25 @@ namespace VykazyPrace.Dialogs
             dt.Columns.Add("Suma (před zplnohodnotněním projektu)", typeof(double));
 
             // Docházka z PowerKey
-            var pkHelper = new PowerKeyHelper();
-            var powerKeyData = await pkHelper.GetWorkedHoursByPersonalNumberForMonthAsync(exportMonth).ConfigureAwait(false);
+            Dictionary<int, double> powerKeyData;
+
+            try
+            {
+                var pkHelper = new PowerKeyHelper();
+                powerKeyData = await pkHelper
+                    .GetWorkedHoursByPersonalNumberForMonthAsync(exportMonth)
+                    .ConfigureAwait(false);
+
+                powerKeyData ??= new Dictionary<int, double>();
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error(
+                    "PowerKey nedostupný – docházka bude nastavena na 0 a export pokračuje.",
+                    ex);
+
+                powerKeyData = new Dictionary<int, double>();
+            }
 
             // Ignorujeme nepřítomnost v souhrnu
             var filteredEntries = timeEntries.Where(e => e.ProjectId != ExportConstants.AbsenceProjectId).ToList();

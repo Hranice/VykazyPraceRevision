@@ -56,6 +56,7 @@
             tableLayoutPanel2 = new TableLayoutPanel();
             buttonReloadNetworkDisks = new Button();
             label1 = new Label();
+            buttonOutlookEvents = new Button();
             panel2 = new Panel();
             buttonNow = new Button();
             labelSelectedDate = new Label();
@@ -67,7 +68,6 @@
             contextMenuStrip1 = new ContextMenuStrip(components);
             zobrazitToolStripMenuItem = new ToolStripMenuItem();
             ukoncitToolStripMenuItem = new ToolStripMenuItem();
-            buttonOutlookEvents = new Button();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -334,6 +334,17 @@
             label1.TabIndex = 1;
             label1.Text = "Síťové disky";
             // 
+            // buttonOutlookEvents
+            // 
+            buttonOutlookEvents.Dock = DockStyle.Bottom;
+            buttonOutlookEvents.Location = new Point(3, 367);
+            buttonOutlookEvents.Name = "buttonOutlookEvents";
+            buttonOutlookEvents.Size = new Size(121, 72);
+            buttonOutlookEvents.TabIndex = 13;
+            buttonOutlookEvents.Text = "Outlook události";
+            buttonOutlookEvents.UseVisualStyleBackColor = true;
+            buttonOutlookEvents.Click += buttonOutlookEvents_Click;
+            // 
             // panel2
             // 
             panel2.Controls.Add(buttonNow);
@@ -431,17 +442,6 @@
             ukoncitToolStripMenuItem.Name = "ukoncitToolStripMenuItem";
             ukoncitToolStripMenuItem.Size = new Size(117, 22);
             ukoncitToolStripMenuItem.Text = "Ukončit";
-            // 
-            // buttonOutlookEvents
-            // 
-            buttonOutlookEvents.Dock = DockStyle.Bottom;
-            buttonOutlookEvents.Location = new Point(3, 367);
-            buttonOutlookEvents.Name = "buttonOutlookEvents";
-            buttonOutlookEvents.Size = new Size(121, 72);
-            buttonOutlookEvents.TabIndex = 13;
-            buttonOutlookEvents.Text = "Outlook události";
-            buttonOutlookEvents.UseVisualStyleBackColor = true;
-            buttonOutlookEvents.Click += buttonOutlookEvents_Click;
             // 
             // MainForm
             // 

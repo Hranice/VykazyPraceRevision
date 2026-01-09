@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v8.0": {
-      "WorkLog/1.4.0.3": {
+      "WorkLog/1.4.0.5": {
         "dependencies": {
           "ClosedXML": "0.105.0",
           "Microsoft.Office.Interop.Outlook": "15.0.4797.1004",
@@ -928,7 +928,7 @@
     }
   },
   "libraries": {
-    "WorkLog/1.4.0.3": {
+    "WorkLog/1.4.0.5": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

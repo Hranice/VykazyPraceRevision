@@ -397,7 +397,6 @@ namespace VykazyPrace
         buttonOutlookEvents.Visible = _selectedUser.WindowsUsername == Environment.UserName;
 #endif
 
-                // pokud ChangeUser/Reload dìlá async uvnitø, ideálnì to pøepiš na async metody a awaituj
                 _calendar?.ChangeUser(_selectedUser);
                 _monthlyCalendar.ChangeUser(_selectedUser);
             }

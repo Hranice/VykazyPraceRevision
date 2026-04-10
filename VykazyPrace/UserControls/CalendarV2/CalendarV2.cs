@@ -303,21 +303,17 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             _selectedUser = newUser;
 
-            // 1) paralelně spusť načtení docházky a vykreslení kalendáře
             var arrivalTask = LoadArrivalDeparturesAsync();
             var renderTask = RenderCalendar();
 
-            // 2) počkej, až oba dokončí (docházku i vykreslení)
             await Task.WhenAll(arrivalTask, renderTask);
 
-            // 3) až po dokončení načtení docházky i vykreslení kalendáře spusť indikátory
             await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
 
-            // 4) úklid UI
+            // úklid UI
             DeactivateAllPanels();
             _selectedTimeEntryId = -1;
 
-            // 5) sidebar může jít asynchronně na pozadí
             _ = LoadSidebar();
         }
 
@@ -541,7 +537,10 @@ namespace VykazyPrace.UserControls.CalendarV2
             DateTime timeStamp = timeEntry.Timestamp ?? _selectedDate;
             int minutesStart = timeStamp.Hour * 60 + timeStamp.Minute;
             int minutesEnd = minutesStart + timeEntry.EntryMinutes;
-            flowLayoutPanel2.Enabled = timeEntry.IsLocked == 0 && timeEntry.UserId == _loggedUser.Id;
+
+            bool canEdit = timeEntry.IsLocked == 0 && CanEditSelectedUser();
+            flowLayoutPanel2.Enabled = canEdit;
+
 
             if (timeEntry.IsValid != 1)
             {
@@ -650,7 +649,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         /// </summary>
         private async void TableLayoutPanel1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (_selectedUser.Id != _loggedUser.Id) return;
+            if (_selectedUser.Id != _loggedUser.Id && _selectedUser.MasterUserId != _loggedUser.Id) return;
 
             var cell = GetCellAt(tableLayoutPanelCalendar, e.Location);
             if (_projects.Count == 0 || _timeEntryTypes.Count == 0) return;
@@ -1105,7 +1104,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         private async void PasteCopiedPanel()
         {
             if (copiedEntry == null || pasteTargetCell == null) return;
-            if (_selectedUser.Id != _loggedUser.Id) return;
+            if (_selectedUser.Id != _loggedUser.Id && _selectedUser.MasterUserId != _loggedUser.Id) return;
 
             var targetDate = _selectedDate.AddDays(pasteTargetCell.Value.Row);
             if (_specialDays.Any(d => d.Date.Date == targetDate.Date && d.Locked)) return;
@@ -1371,7 +1370,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             if (sender is not DayPanel panel) return;
 
-            if (panel.OwnerId != _loggedUser.Id) return;
+            if (!CanEditOwner(panel.OwnerId)) return;
 
             if (panel.Tag as string == "locked") return;
 
@@ -1401,7 +1400,8 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             if (sender is not DayPanel panel) return;
 
-            if (panel.OwnerId != _loggedUser.Id) return;
+            if (!CanEditOwner(panel.OwnerId)) return;
+
 
             mouseMoved = false;
             DeactivateAllPanels();
@@ -1432,7 +1432,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             if (panel.Tag as string == "locked") return;
 
-            if (panel.OwnerId != _loggedUser.Id) return;
+            if (!CanEditOwner(panel.OwnerId)) return;
 
             if (isResizingLeft)
             {
@@ -1464,9 +1464,9 @@ namespace VykazyPrace.UserControls.CalendarV2
 
         private void HandleMove(DayPanel panel, int deltaX, int columnWidth)
         {
-            if (panel.OwnerId != _loggedUser.Id) return;
-
             if (panel.Tag as string == "locked") return;
+
+            if (!CanEditOwner(panel.OwnerId)) return;
 
             // 1) náš původní řádek
             int originalRow = tableLayoutPanelCalendar.GetRow(panel);
@@ -1736,7 +1736,7 @@ namespace VykazyPrace.UserControls.CalendarV2
         {
             if (_selectedTimeEntryId <= 0) return;
 
-            if (_selectedUser.Id != _loggedUser.Id) return;
+            if (_selectedUser.Id != _loggedUser.Id && _selectedUser.MasterUserId != _loggedUser.Id) return;
 
             var entry = _currentEntries.FirstOrDefault(e => e.Id == _selectedTimeEntryId);
 
@@ -2123,6 +2123,8 @@ namespace VykazyPrace.UserControls.CalendarV2
         /// </summary>
         private async void buttonConfirm_Click(object sender, EventArgs e)
         {
+            if (!CanEditSelectedUser()) return;
+
             // Uložení pozice scrollu (kvůli přerenderování)
             userHasScrolled = true;
             int scrollX = panelContainer.HorizontalScroll.Value;
@@ -2330,6 +2332,22 @@ namespace VykazyPrace.UserControls.CalendarV2
             }
         }
         #endregion
+
+        private bool CanEditSelectedUser()
+        {
+            return _selectedUser.Id == _loggedUser.Id
+                || _selectedUser.MasterUserId == _loggedUser.Id;
+        }
+
+        private bool CanEditOwner(int ownerId)
+        {
+            if (ownerId == _loggedUser.Id) return true;
+
+            if (ownerId == _selectedUser.Id)
+                return _selectedUser.MasterUserId == _loggedUser.Id;
+
+            return false;
+        }
 
         /// <summary>
         /// Override zpracování klávesových zkratek. Umožňuje globální klávesové zkratky

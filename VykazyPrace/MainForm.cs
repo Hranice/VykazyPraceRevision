@@ -30,10 +30,15 @@ namespace VykazyPrace
         private readonly ArrivalDepartureRepository _arrivalDepartureRepo = new ArrivalDepartureRepository();
         private readonly LoadingUC _loadingUC = new LoadingUC();
         private User _selectedUser = new();
+        private User _loggedUser = new();
         private int _currentUserLoA = 0;
         private DateTime _selectedDate;
         private CalendarV2 _calendar;
         private CalendarUC _monthlyCalendar;
+
+        private List<User> _users = new();
+        private bool _isSwitchingUser = false;
+
 
         // Notifications
         private System.Windows.Forms.Timer _notificationTimer;
@@ -64,7 +69,7 @@ namespace VykazyPrace
         {
             InitFormUI();
 
-            await HandleUpdatesAsync();
+            _ = Task.Run(HandleUpdatesAsync);
 
             if (!ValidateDatabase())
             {
@@ -182,11 +187,11 @@ namespace VykazyPrace
             {
                 Invoke(() => _loadingUC.BringToFront());
 
-
-                var users = await _userRepo.GetAllUsersAsync();
-                AppLogger.Debug($"Naèteno {users.Count} záznamù.");
+                _users = await _userRepo.GetAllUsersAsync();
+                AppLogger.Debug($"Naèteno {_users.Count} záznamù.");
                 string userName = Environment.UserName.ToLower();
-                _selectedUser = await _userRepo.GetUserByWindowsUsernameAsync(userName) ?? new User();
+                _loggedUser = await _userRepo.GetUserByWindowsUsernameAsync(userName) ?? new User();
+                _selectedUser = _loggedUser;
                 AppLogger.Debug($"Naètení uživatele podle windows už. jména: '{userName}'.");
                 _currentUserLoA = _selectedUser.LevelOfAccess;
                 AppLogger.Debug($"Naètení uživatelských práv: '{_currentUserLoA}'.");
@@ -201,8 +206,8 @@ namespace VykazyPrace
                 int totalRows = await powerKeyHelper.DownloadForUserAsync(DateTime.Now, _selectedUser);
                 AppLogger.Information($"Staženo {totalRows} záznamù pro mìsíc è.{DateTime.Now.Month} uživatele {FormatHelper.FormatUserToString(_selectedUser)}.", false);
 
-                // Pokud dnes stahuju mìsíc M a vèerejšek byl v mìsíci M-1, vždy dojeï i M-1
-                var previousDay = DateTime.Now.AddDays(-1);
+                // Pokud dnes stahuju mìsíc M a vèerejšek byl v mìsíci M-3, vždy dojeï i M-3
+                var previousDay = DateTime.Now.AddDays(-3);
                 if (previousDay.Month != DateTime.Today.Month || previousDay.Year != DateTime.Today.Year)
                 {
                     await powerKeyHelper.DownloadForUserAsync(previousDay, _selectedUser);
@@ -212,7 +217,7 @@ namespace VykazyPrace
                 Invoke(() =>
                 {
                     SetupUiForAccessLevel(_currentUserLoA);
-                    InitializeCalendar(users);
+                    InitializeCalendar(_users);
                 });
             }
             catch (Microsoft.Data.Sqlite.SqliteException ex)
@@ -300,7 +305,7 @@ namespace VykazyPrace
 
             panelCalendarContainer.Visible = false;
             _calendar.BringToFront();
-            _loadingUC.Visible = false;
+            HideLoading();
         }
 
         private void správaUživatelùToolStripMenuItem_Click(object sender, EventArgs e)
@@ -367,22 +372,48 @@ namespace VykazyPrace
 
         private async void comboBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var users = await _userRepo.GetAllUsersAsync();
+            if (_isSwitchingUser) return;
 
             var selectedName = comboBoxUsers.SelectedItem?.ToString();
-            _selectedUser = users.FirstOrDefault(x => FormatHelper.FormatUserToString(x) == selectedName) ?? new User();
+            if (string.IsNullOrWhiteSpace(selectedName)) return;
 
-            var powerKeyHelper = new PowerKeyHelper();
-            int totalRows = await powerKeyHelper.DownloadForUserAsync(DateTime.Now, _selectedUser);
-            AppLogger.Information($"Staženo {totalRows} záznamù pro mìsíc è.{DateTime.Now.Month} uživatele {FormatHelper.FormatUserToString(_selectedUser)}.", false);
+            var newUser = _users.FirstOrDefault(x => FormatHelper.FormatUserToString(x) == selectedName);
+            if (newUser == null || newUser.Id == 0) return;
+
+            if (newUser.Id == _selectedUser.Id) return;
+
+            _isSwitchingUser = true;
+            try
+            {
+                ShowLoading();
+
+                _selectedUser = newUser;
+
+                var powerKeyHelper = new PowerKeyHelper();
+                int totalRows = await powerKeyHelper.DownloadForUserAsync(DateTime.Now, _selectedUser);
+                AppLogger.Information(
+                    $"Staženo {totalRows} záznamù pro mìsíc è.{DateTime.Now.Month} uživatele {FormatHelper.FormatUserToString(_selectedUser)}.",
+                    false);
 
 #if NOTDEBUG
-            buttonOutlookEvents.Visible = _selectedUser.WindowsUsername == Environment.UserName;
+        buttonOutlookEvents.Visible = _selectedUser.WindowsUsername == Environment.UserName;
 #endif
 
-            _calendar?.ChangeUser(_selectedUser);
-            _monthlyCalendar.ChangeUser(_selectedUser);
+                _calendar?.ChangeUser(_selectedUser);
+                _monthlyCalendar.ChangeUser(_selectedUser);
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("Chyba pøi pøepínání uživatele.", ex);
+            }
+            finally
+            {
+                HideLoading();
+                _isSwitchingUser = false;
+            }
         }
+
+
 
         private async void buttonPrevious_Click(object sender, EventArgs e)
         {
@@ -445,9 +476,13 @@ namespace VykazyPrace
 
         private async void správaIndexùToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (_selectedUser.Id != _loggedUser.Id && _selectedUser.MasterUserId != _loggedUser.Id)
+                return;
+
             new TimeEntrySubTypeManagement(_selectedUser, _timeEntrySubTypeRepo, _timeEntryRepo).ShowDialog();
             await _calendar.ForceReloadAsync();
         }
+
 
         private void oProgramuToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -499,9 +534,9 @@ namespace VykazyPrace
 
         private async void buttonReloadData_Click(object sender, EventArgs e)
         {
-            _loadingUC.BringToFront();
+            ShowLoading(); ;
             await _calendar.ForceReloadAsync();
-            _loadingUC.Visible = false;
+            HideLoading();
         }
 
         private void pøehledToolStripMenuItem_Click(object sender, EventArgs e)
@@ -512,10 +547,41 @@ namespace VykazyPrace
 
         private async void buttonOutlookEvents_Click(object sender, EventArgs e)
         {
+            var outlookType = Type.GetTypeFromProgID("Outlook.Application");
+            if (outlookType == null)
+            {
+                // Starý Outlook není k dispozici
+                MessageBox.Show(
+                    "Nebyl nalezen klasický Outlook pro Windows. " +
+                    "Nový Outlook 2023+ nepodporuje pøímé propojení s kalendáøem pøes COM.\n\n" +
+                    "Pro tuto funkci prosím použijte klasický Outlook pro Windows.",
+                    "Outlook integrace",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+                return;
+            }
+
             var outlookEventsDialog = new OutlookEvents(_selectedUser);
             outlookEventsDialog.ShowDialog();
 
             await _calendar.ForceReloadAsync();
         }
+
+
+        private void ShowLoading()
+        {
+            _loadingUC.Visible = true;
+            _loadingUC.BringToFront();
+            UseWaitCursor = true;
+            Application.DoEvents();
+        }
+
+        private void HideLoading()
+        {
+            UseWaitCursor = false;
+            _loadingUC.Visible = false;
+        }
+
     }
 }

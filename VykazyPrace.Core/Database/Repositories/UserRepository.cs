@@ -29,15 +29,25 @@ namespace VykazyPrace.Core.Database.Repositories
         /// <summary>
         /// Získání všech uživatelů.
         /// </summary>
-        public async Task<List<User>> GetAllUsersAsync()
+        //public async Task<List<User>> GetAllUsersAsync()
+        //{
+        //    return await _context.Users
+        //        .Include(u => u.Projects)
+        //        .Include(u => u.TimeEntries)
+        //        .Include(u => u.UserGroup)
+        //        .OrderBy(u => u.UserGroupId)
+        //        .ToListAsync();
+        //}
+
+        public Task<List<User>> GetAllUsersAsync()
         {
-            return await _context.Users
-                .Include(u => u.Projects)
-                .Include(u => u.TimeEntries)
-                .Include(u => u.UserGroup)
+            return _context.Users
+                .AsNoTracking()
+                .Include(u => u.UserGroup)          // jen pokud nutné
                 .OrderBy(u => u.UserGroupId)
                 .ToListAsync();
         }
+
 
 
         /// <summary>
@@ -55,14 +65,22 @@ namespace VykazyPrace.Core.Database.Repositories
         /// <summary>
         /// Získání uživatele podle přihlašovacího jména do Windows.
         /// </summary>
-        public async Task<User?> GetUserByWindowsUsernameAsync(string windowsUsername)
+        //public async Task<User?> GetUserByWindowsUsernameAsync(string windowsUsername)
+        //{
+        //    return await _context.Users
+        //        .Include(u => u.Projects)
+        //        .Include(u => u.TimeEntries)
+        //        .Include(u => u.UserGroup)
+        //        .FirstOrDefaultAsync(u => u.WindowsUsername == windowsUsername);
+        //}
+        public Task<User?> GetUserByWindowsUsernameAsync(string windowsUsername)
         {
-            return await _context.Users
-                .Include(u => u.Projects)
-                .Include(u => u.TimeEntries)
-                .Include(u => u.UserGroup)
+            return _context.Users
+                .AsNoTracking()
+                .Include(u => u.UserGroup) // jen pokud level of access bereš z group
                 .FirstOrDefaultAsync(u => u.WindowsUsername == windowsUsername);
         }
+
 
         /// <summary>
         /// Aktualizace uživatele.

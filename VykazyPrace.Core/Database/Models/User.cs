@@ -19,6 +19,11 @@ public partial class User
 
     public int? UserGroupId { get; set; }
     public string? Email { get; set; }
+    public int? MasterUserId { get; set; }
+
+    public virtual User? MasterUser { get; set; }
+
+    public virtual ICollection<User> ChildUsers { get; set; } = new List<User>();
 
     public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
 

@@ -10,7 +10,7 @@ namespace VykazyPrace.Core.PowerKey
     public class PowerKeyHelper
     {
         private const string ConnectionString =
-            "Server=10.130.10.100;Database=powerkey;User Id=vykazprace;Password=!Vykaz2025!;TrustServerCertificate=True;";
+            "Server=cze-svd02;Database=powerkey;User Id=vykazprace;Password=UtNPs66ZZk56qSt;TrustServerCertificate=True;";
 
         public async Task<int> DownloadForUserAsync(DateTime month, User user)
         {
@@ -132,20 +132,57 @@ namespace VykazyPrace.Core.PowerKey
         }
 
 
+        //public async Task<Dictionary<int, double>> GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month)
+        //{
+        //    string viewName = $"vw_Prenos_tmp_{Guid.NewGuid():N}";
+        //    await CreateTemporaryViewAsync(month, viewName);
+
+        //    try
+        //    {
+        //        return await GetWorkedHoursFromViewAsync(viewName);
+        //    }
+        //    finally
+        //    {
+        //        await DropTemporaryViewAsync(viewName);
+        //    }
+        //}
+
         public async Task<Dictionary<int, double>> GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month)
         {
-            string viewName = $"vw_Prenos_tmp_{Guid.NewGuid():N}";
-            await CreateTemporaryViewAsync(month, viewName);
+            int monthNumber = month.Year * 100 + month.Month; // YYYYMM
 
-            try
+            const string sql = @"
+SELECT
+    TRY_CONVERT(int, PE.PersonalNum) AS PersonalNumber,
+    SUM(AD.WorkedHours) / 60.0 AS TotalHours
+FROM pwk.Person PE
+JOIN pwk.AttnMonth AM ON AM.PersonID = PE.PersonID
+JOIN pwk.AttnDay   AD ON AD.AttnMonthID = AM.AttnMonthID
+WHERE PE.DeletedID = 0
+  AND AM.MonthNumber = @MonthNumber
+GROUP BY TRY_CONVERT(int, PE.PersonalNum)
+HAVING TRY_CONVERT(int, PE.PersonalNum) IS NOT NULL;";
+
+            var result = new Dictionary<int, double>();
+
+            await using var conn = new SqlConnection(ConnectionString);
+            await using var cmd = new SqlCommand(sql, conn);
+            cmd.Parameters.Add("@MonthNumber", SqlDbType.Int).Value = monthNumber;
+
+            await conn.OpenAsync();
+
+            await using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
             {
-                return await GetWorkedHoursFromViewAsync(viewName);
+                int pn = reader.GetInt32(0);
+                double hours = reader.IsDBNull(1) ? 0 : reader.GetDouble(1);
+                result[pn] = hours;
             }
-            finally
-            {
-                await DropTemporaryViewAsync(viewName);
-            }
+
+            return result;
         }
+
+
 
         private async Task<DataTable?> GetUserDataFromSpAsync(int personalNumber, DateTime monthDate)
         {

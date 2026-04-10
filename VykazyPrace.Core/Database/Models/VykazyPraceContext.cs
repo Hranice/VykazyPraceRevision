@@ -248,6 +248,13 @@ public partial class VykazyPraceContext : DbContext
             e.HasIndex(x => new { x.UserId, x.MachineName, x.Key }).IsUnique();
         });
 
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.MasterUser)
+            .WithMany(u => u.ChildUsers)
+            .HasForeignKey(u => u.MasterUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
         OnModelCreatingPartial(modelBuilder);
     }
 

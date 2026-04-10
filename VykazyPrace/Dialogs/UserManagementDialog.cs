@@ -39,12 +39,15 @@ namespace VykazyPrace.Dialogs
             try
             {
                 _users = await _userRepo.GetAllUsersAsync();
+                var formattedUsers = _users.Select(FormatHelper.FormatUserToString).ToArray();
                 _userGroups = await _userGroupRepo.GetAllUserGroupsAsync();
 
                 Invoke(() =>
                 {
                     listBoxUsers.Items.Clear();
-                    listBoxUsers.Items.AddRange(_users.Select(FormatHelper.FormatUserToString).ToArray());
+                    listBoxUsers.Items.AddRange(formattedUsers);
+
+                    comboBoxUsers.Items.AddRange(formattedUsers);
 
                     comboBoxGroup.Items.Clear();
                     comboBoxGroup.Items.AddRange(_userGroups.Select(FormatHelper.FormatUserGroupToString).ToArray());
@@ -93,6 +96,8 @@ namespace VykazyPrace.Dialogs
 
                 if (dataCheck.Item1)
                 {
+                    User? masterUser = null;
+
                     UserGroup? selectedGroup = comboBoxGroup.SelectedIndex >= 0 && comboBoxGroup.SelectedIndex < _userGroups.Count
                         ? _userGroups[comboBoxGroup.SelectedIndex]
                         : null;
@@ -103,6 +108,19 @@ namespace VykazyPrace.Dialogs
                         return;
                     }
 
+                    if (checkBoxMasterAccount.Checked)
+                    {
+                        masterUser = comboBoxUsers.SelectedIndex >= 0 && comboBoxUsers.SelectedIndex < _users.Count
+                        ? _users[comboBoxUsers.SelectedIndex]
+                        : null;
+
+                        if (masterUser == null)
+                        {
+                            AppLogger.Error("Není vybrán žádný sekundární vlastník.");
+                            return;
+                        }
+                    }
+                    
                     var newUser = new User
                     {
                         FirstName = textBoxFirstName.Text,
@@ -110,7 +128,8 @@ namespace VykazyPrace.Dialogs
                         PersonalNumber = int.Parse(maskedTextBoxPersonalNumber.Text),
                         WindowsUsername = textBoxWindowsUsername.Text,
                         LevelOfAccess = (int)numericUpDownLevelOfAccess.Value,
-                        UserGroupId = selectedGroup.Id
+                        UserGroupId = selectedGroup.Id,
+                        MasterUserId = masterUser?.Id
                     };
 
 
@@ -248,6 +267,11 @@ namespace VykazyPrace.Dialogs
             numericUpDownLevelOfAccess.Value = 0;
             comboBoxGroup.Text = "";
             comboBoxGroup.SelectedIndex = 0;
+        }
+
+        private void checkBoxMasterAccount_CheckedChanged(object sender, EventArgs e)
+        {
+            comboBoxUsers.Enabled = checkBoxMasterAccount.Checked;
         }
     }
 }

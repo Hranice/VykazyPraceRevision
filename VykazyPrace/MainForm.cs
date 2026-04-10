@@ -30,6 +30,7 @@ namespace VykazyPrace
         private readonly ArrivalDepartureRepository _arrivalDepartureRepo = new ArrivalDepartureRepository();
         private readonly LoadingUC _loadingUC = new LoadingUC();
         private User _selectedUser = new();
+        private User _loggedUser = new();
         private int _currentUserLoA = 0;
         private DateTime _selectedDate;
         private CalendarV2 _calendar;
@@ -189,7 +190,8 @@ namespace VykazyPrace
                 _users = await _userRepo.GetAllUsersAsync();
                 AppLogger.Debug($"Naèteno {_users.Count} záznamù.");
                 string userName = Environment.UserName.ToLower();
-                _selectedUser = await _userRepo.GetUserByWindowsUsernameAsync(userName) ?? new User();
+                _loggedUser = await _userRepo.GetUserByWindowsUsernameAsync(userName) ?? new User();
+                _selectedUser = _loggedUser;
                 AppLogger.Debug($"Naètení uživatele podle windows už. jména: '{userName}'.");
                 _currentUserLoA = _selectedUser.LevelOfAccess;
                 AppLogger.Debug($"Naètení uživatelských práv: '{_currentUserLoA}'.");
@@ -474,9 +476,13 @@ namespace VykazyPrace
 
         private async void správaIndexùToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (_selectedUser.Id != _loggedUser.Id && _selectedUser.MasterUserId != _loggedUser.Id)
+                return;
+
             new TimeEntrySubTypeManagement(_selectedUser, _timeEntrySubTypeRepo, _timeEntryRepo).ShowDialog();
             await _calendar.ForceReloadAsync();
         }
+
 
         private void oProgramuToolStripMenuItem_Click(object sender, EventArgs e)
         {

@@ -149,28 +149,29 @@ namespace VykazyPrace.Core.PowerKey
 
         public async Task<Dictionary<int, double>> GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month)
         {
-            string dateToMonth = $"[pwk].[DateToMonthNumber] ('{month:yyyy-MM-dd}')";
+            int monthNumber = month.Year * 100 + month.Month; // YYYYMM
 
-            string sql = $@"
+            const string sql = @"
 SELECT
     TRY_CONVERT(int, PE.PersonalNum) AS PersonalNumber,
     SUM(AD.WorkedHours) / 60.0 AS TotalHours
-FROM [pwk].[Person] PE
-JOIN [pwk].[AttnMonth] AM ON AM.PersonID = PE.PersonID
-JOIN [pwk].[AttnDay]   AD ON AD.AttnMonthID = AM.AttnMonthID
-WHERE
-    PE.DeletedID = 0
-    AND AM.MonthNumber = {dateToMonth}
+FROM pwk.Person PE
+JOIN pwk.AttnMonth AM ON AM.PersonID = PE.PersonID
+JOIN pwk.AttnDay   AD ON AD.AttnMonthID = AM.AttnMonthID
+WHERE PE.DeletedID = 0
+  AND AM.MonthNumber = @MonthNumber
 GROUP BY TRY_CONVERT(int, PE.PersonalNum)
 HAVING TRY_CONVERT(int, PE.PersonalNum) IS NOT NULL;";
 
             var result = new Dictionary<int, double>();
 
-            using var conn = new SqlConnection(ConnectionString);
-            using var cmd = new SqlCommand(sql, conn);
+            await using var conn = new SqlConnection(ConnectionString);
+            await using var cmd = new SqlCommand(sql, conn);
+            cmd.Parameters.Add("@MonthNumber", SqlDbType.Int).Value = monthNumber;
+
             await conn.OpenAsync();
 
-            using var reader = await cmd.ExecuteReaderAsync();
+            await using var reader = await cmd.ExecuteReaderAsync();
             while (await reader.ReadAsync())
             {
                 int pn = reader.GetInt32(0);
@@ -180,6 +181,7 @@ HAVING TRY_CONVERT(int, PE.PersonalNum) IS NOT NULL;";
 
             return result;
         }
+
 
 
         private async Task<DataTable?> GetUserDataFromSpAsync(int personalNumber, DateTime monthDate)

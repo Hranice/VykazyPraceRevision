@@ -39,7 +39,7 @@ namespace VykazyPrace.Dialogs
         private async void ExportDialog_Load(object sender, EventArgs e)
         {
             InitializeDatePickers();
-            await LoadUserGroupsToCheckedListAsync();
+            await LoadUserGroupsToTreeViewAsync();
         }
         #endregion
 
@@ -69,18 +69,47 @@ namespace VykazyPrace.Dialogs
         }
 
         /// <summary>
-        /// Načte skupiny uživatelů, naplní a celé předvybere v CheckedListBoxu.
+        /// Načte skupiny a jejich uživatele do TreeView.
+        /// Tag na group node = UserGroup
+        /// Tag na user node = User
         /// </summary>
-        private async Task LoadUserGroupsToCheckedListAsync()
+        private async Task LoadUserGroupsToTreeViewAsync()
         {
-            var userGroups = await _userGroupRepository.GetAllUserGroupsAsync().ConfigureAwait(false);
+            var userGroups = await _userGroupRepository.GetAllUserGroupsAsync().ConfigureAwait(true);
 
-            clbUserGroups.Items.Clear();
-            clbUserGroups.Items.AddRange(userGroups.ToArray());
-            clbUserGroups.DisplayMember = nameof(UserGroup.Title);
+            tVUserGroupsUsers.BeginUpdate();
+            tVUserGroupsUsers.Nodes.Clear();
+            tVUserGroupsUsers.CheckBoxes = true;
 
-            for (int i = 0; i < clbUserGroups.Items.Count; i++)
-                clbUserGroups.SetItemChecked(i, true);
+            foreach (var group in userGroups.OrderBy(g => g.Title))
+            {
+                var groupNode = new TreeNode(group.Title)
+                {
+                    Tag = group,
+                    Checked = true
+                };
+
+                var users = group.Users?
+                    .OrderBy(u => u.Surname)
+                    .ThenBy(u => u.FirstName)
+                    .ToList() ?? new List<User>();
+
+                foreach (var user in users)
+                {
+                    var userNode = new TreeNode($"{user.FirstName} {user.Surname}".Trim())
+                    {
+                        Tag = user,
+                        Checked = true
+                    };
+
+                    groupNode.Nodes.Add(userNode);
+                }
+
+                tVUserGroupsUsers.Nodes.Add(groupNode);
+            }
+
+            tVUserGroupsUsers.ExpandAll();
+            tVUserGroupsUsers.EndUpdate();
         }
         #endregion
 
@@ -90,17 +119,25 @@ namespace VykazyPrace.Dialogs
             using var sfd = new SaveFileDialog { Filter = "Excel Files|*.xlsx", FileName = "Export.xlsx" };
             if (sfd.ShowDialog() != DialogResult.OK) return;
 
-            var selectedGroupIds = clbUserGroups.CheckedItems
-                .Cast<UserGroup>()
-                .Select(g => g.Id)
-                .ToList();
+            var selection = GetSelectedUsersAndGroupsFromTreeView();
+
+            if (selection.SelectedGroupIds.Count == 0 && selection.SelectedUserIds.Count == 0)
+            {
+                MessageBox.Show("Není vybraná žádná skupina ani uživatel.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
             var exportService = new TimeEntryExportService(_timeEntryRepo, _specialDayRepo, _tableFactory, _styling);
 
             try
             {
                 var (from, to) = GetSelectedExportRange();
-                await exportService.ExportAsync(sfd.FileName, from, to, selectedGroupIds);
+                await exportService.ExportAsync(
+                    sfd.FileName,
+                    from,
+                    to,
+                    selection.SelectedGroupIds,
+                    selection.SelectedUserIds);
             }
             catch (Exception ex)
             {
@@ -172,9 +209,34 @@ namespace VykazyPrace.Dialogs
         {
             nUDYear.Value = DateTime.Now.Year;
         }
+
+        private bool _isTreeViewChecking;
+        private void tVUserGroupsUsers_AfterCheck(object sender, TreeViewEventArgs e)
+        {
+            if (_isTreeViewChecking) return;
+
+            try
+            {
+                _isTreeViewChecking = true;
+
+                foreach (TreeNode child in e.Node.Nodes)
+                    child.Checked = e.Node.Checked;
+
+                // rodič checked = aspoň jedno dítě checked
+                if (e.Node.Parent != null)
+                {
+                    var parent = e.Node.Parent;
+                    parent.Checked = parent.Nodes.Cast<TreeNode>().Any(n => n.Checked);
+                }
+            }
+            finally
+            {
+                _isTreeViewChecking = false;
+            }
+        }
         #endregion
 
-        #region - Pomocné funkce -
+        #region - Helpery -
         private (DateTime From, DateTime To) GetSelectedExportRange()
         {
             if (rBSpecificTimePeriod.Checked)
@@ -217,6 +279,46 @@ namespace VykazyPrace.Dialogs
             }
 
             throw new InvalidOperationException("Není vybraná možnost časového rozsahu exportu.");
+        }
+
+        private sealed class UserSelection
+        {
+            public HashSet<int> SelectedGroupIds { get; } = new();
+            public HashSet<int> SelectedUserIds { get; } = new();
+        }
+
+        private UserSelection GetSelectedUsersAndGroupsFromTreeView()
+        {
+            var result = new UserSelection();
+
+            foreach (TreeNode groupNode in tVUserGroupsUsers.Nodes)
+            {
+                if (groupNode.Tag is not UserGroup group)
+                    continue;
+
+                var checkedUserNodes = groupNode.Nodes
+                    .Cast<TreeNode>()
+                    .Where(n => n.Checked && n.Tag is User)
+                    .ToList();
+
+                // skupina checked a zároveň všichni uživatelé checked => celá skupina
+                bool allUsersChecked = groupNode.Nodes.Count > 0 && checkedUserNodes.Count == groupNode.Nodes.Count;
+
+                if (groupNode.Checked && (groupNode.Nodes.Count == 0 || allUsersChecked))
+                {
+                    result.SelectedGroupIds.Add(group.Id);
+                    continue;
+                }
+
+                // jinak jen konkrétní uživatele
+                foreach (var userNode in checkedUserNodes)
+                {
+                    if (userNode.Tag is User user)
+                        result.SelectedUserIds.Add(user.Id);
+                }
+            }
+
+            return result;
         }
         #endregion
     }
@@ -612,24 +714,31 @@ namespace VykazyPrace.Dialogs
         /// Načte data, vytvoří listy a uloží XLSX.
         /// </summary>
         public async Task ExportAsync(
-            string filePath,
-            DateTime from,
-            DateTime to,
-            IEnumerable<int> selectedUserGroupIds)
+      string filePath,
+      DateTime from,
+      DateTime to,
+      IEnumerable<int> selectedUserGroupIds,
+      IEnumerable<int> selectedUserIds)
         {
             try
             {
-                // 1) Načtení záznamů v rozsahu
+                var selectedGroupIdSet = selectedUserGroupIds?.ToHashSet() ?? new HashSet<int>();
+                var selectedUserIdSet = selectedUserIds?.ToHashSet() ?? new HashSet<int>();
+
                 var allEntries = await _timeEntryRepo.GetAllTimeEntriesBetweenDatesAsync(from, to).ConfigureAwait(false);
 
-                // 2) Filtrování dle skupin a vyloučené kombinace (projekt+typ)
                 var filtered = allEntries
-                    .Where(e => e.User?.UserGroup != null && selectedUserGroupIds.Contains(e.User.UserGroup.Id))
+                    .Where(e =>
+                        e.User != null &&
+                        (
+                            (e.User.UserGroup != null && selectedGroupIdSet.Contains(e.User.UserGroup.Id))
+                            || selectedUserIdSet.Contains(e.User.Id)
+                        ))
                     .Where(e => !(e.ProjectId == ExportConstants.ExcludedProjectId && e.EntryTypeId == ExportConstants.ExcludedEntryTypeId))
-                    .Where(e => !(e.EntryTypeId == ExportConstants.OutlookEventEntryTypeId))
+                    .Where(e => e.EntryTypeId != ExportConstants.OutlookEventEntryTypeId)
                     .ToList();
 
-                // 3) Projekty pro jednotlivé listy (jen reálné projekty typu 0)
+                // Projekty pro jednotlivé listy (jen reálné projekty typu 0)
                 var projects = filtered
                     .Where(e => e.Project?.ProjectType == 0 && e.ProjectId != null)
                     .Select(e => e.Project!)
@@ -637,7 +746,7 @@ namespace VykazyPrace.Dialogs
                     .Select(g => g.First())
                     .ToList();
 
-                // 4) Podklady pro cumulativní hodiny do zplnohodnocení
+                // Podklady pro cumulativní hodiny do zplnohodnocení
                 var projectIdsForSummary = filtered
                     .Where(e => e.ProjectId.HasValue && e.Project?.DateFullFilled != null)
                     .Select(e => e.ProjectId!.Value)
@@ -652,7 +761,7 @@ namespace VykazyPrace.Dialogs
 
                 using var wb = new XLWorkbook();
 
-                // A) „Časové záznamy“
+                // „Časové záznamy“
                 var wsBase = wb.AddWorksheet("Časové záznamy");
                 var dtBase = _tableFactory.BuildTimeEntries(filtered);
                 var tableBase = wsBase.Cell(1, 1).InsertTable(dtBase, "CasoveZaznamy", true);
@@ -660,7 +769,7 @@ namespace VykazyPrace.Dialogs
                 _styling.BeautifyDetailTable(wsBase, tableBase);
                 wsBase.Columns().AdjustToContents();
 
-                // B) „Souhrn podle uživatele“
+                // „Souhrn podle uživatele“
                 var wsSummary = wb.AddWorksheet("Souhrn podle uživatele");
                 var dtSummary = await _tableFactory.BuildUserSummary(filtered, from, cumDict).ConfigureAwait(false);
                 var tableSummary = wsSummary.Cell(1, 1).InsertTable(dtSummary, "SouhrnUzivatel", true);
@@ -668,7 +777,7 @@ namespace VykazyPrace.Dialogs
                 _styling.BeautifyUserSummarySheet(wsSummary, tableSummary);
                 wsSummary.Columns().AdjustToContents();
 
-                // C) Listy podle projektů
+                // Listy podle projektů
                 foreach (var proj in projects)
                 {
                     var rows = filtered.Where(e => e.Project?.Id == proj.Id).ToList();

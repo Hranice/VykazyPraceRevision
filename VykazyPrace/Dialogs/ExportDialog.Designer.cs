@@ -33,11 +33,11 @@
             label2 = new Label();
             bClose = new Button();
             cBMonth = new ComboBox();
-            clbUserGroups = new CheckedListBox();
             bLockEntries = new Button();
             gBLock = new GroupBox();
             label1 = new Label();
             gBExport = new GroupBox();
+            tVUserGroupsUsers = new TreeView();
             panelSpecificYear = new Panel();
             bSetCurrentYear = new Button();
             rBSpecificYear = new RadioButton();
@@ -94,7 +94,7 @@
             // bClose
             // 
             bClose.DialogResult = DialogResult.Cancel;
-            bClose.Location = new Point(555, 326);
+            bClose.Location = new Point(567, 324);
             bClose.Name = "bClose";
             bClose.Size = new Size(109, 40);
             bClose.TabIndex = 8;
@@ -111,14 +111,6 @@
             cBMonth.TabIndex = 11;
             cBMonth.Text = "Březen";
             cBMonth.SelectionChangeCommitted += cboMonth_SelectionChangeCommitted;
-            // 
-            // clbUserGroups
-            // 
-            clbUserGroups.FormattingEnabled = true;
-            clbUserGroups.Location = new Point(578, 37);
-            clbUserGroups.Name = "clbUserGroups";
-            clbUserGroups.Size = new Size(261, 165);
-            clbUserGroups.TabIndex = 12;
             // 
             // bLockEntries
             // 
@@ -155,17 +147,26 @@
             // 
             // gBExport
             // 
+            gBExport.Controls.Add(tVUserGroupsUsers);
             gBExport.Controls.Add(panelSpecificYear);
             gBExport.Controls.Add(panelSpecificWeek);
             gBExport.Controls.Add(panelSpecificMonth);
             gBExport.Controls.Add(panelSpecificTimePeriod);
-            gBExport.Controls.Add(clbUserGroups);
             gBExport.Location = new Point(12, 12);
             gBExport.Name = "gBExport";
-            gBExport.Size = new Size(857, 214);
+            gBExport.Size = new Size(865, 214);
             gBExport.TabIndex = 15;
             gBExport.TabStop = false;
             gBExport.Text = "Export dat";
+            // 
+            // tVUserGroupsUsers
+            // 
+            tVUserGroupsUsers.CheckBoxes = true;
+            tVUserGroupsUsers.Location = new Point(578, 32);
+            tVUserGroupsUsers.Name = "tVUserGroupsUsers";
+            tVUserGroupsUsers.Size = new Size(273, 170);
+            tVUserGroupsUsers.TabIndex = 27;
+            tVUserGroupsUsers.AfterCheck += tVUserGroupsUsers_AfterCheck;
             // 
             // panelSpecificYear
             // 
@@ -306,9 +307,9 @@
             panelSpecificTimePeriod.Controls.Add(label2);
             panelSpecificTimePeriod.Controls.Add(dtpTo);
             panelSpecificTimePeriod.Controls.Add(dtpFrom);
-            panelSpecificTimePeriod.Location = new Point(15, 37);
+            panelSpecificTimePeriod.Location = new Point(15, 32);
             panelSpecificTimePeriod.Name = "panelSpecificTimePeriod";
-            panelSpecificTimePeriod.Size = new Size(557, 81);
+            panelSpecificTimePeriod.Size = new Size(557, 86);
             panelSpecificTimePeriod.TabIndex = 23;
             panelSpecificTimePeriod.Click += panelTimePeriod_Click;
             // 
@@ -329,7 +330,7 @@
             // 
             bSaveAs.Image = Properties.Resources.logo;
             bSaveAs.ImageAlign = ContentAlignment.MiddleLeft;
-            bSaveAs.Location = new Point(670, 326);
+            bSaveAs.Location = new Point(682, 324);
             bSaveAs.Name = "bSaveAs";
             bSaveAs.Padding = new Padding(25, 0, 0, 0);
             bSaveAs.Size = new Size(181, 40);
@@ -342,7 +343,7 @@
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(881, 376);
+            ClientSize = new Size(886, 376);
             Controls.Add(bSaveAs);
             Controls.Add(gBExport);
             Controls.Add(gBLock);
@@ -376,7 +377,6 @@
         private Label label2;
         private Button bClose;
         private ComboBox cBMonth;
-        private CheckedListBox clbUserGroups;
         private Button bLockEntries;
         private GroupBox gBLock;
         private Label label1;
@@ -396,5 +396,6 @@
         private Button bSetCurrentYear;
         private RadioButton rBSpecificYear;
         private NumericUpDown nUDYear;
+        private TreeView tVUserGroupsUsers;
     }
 }

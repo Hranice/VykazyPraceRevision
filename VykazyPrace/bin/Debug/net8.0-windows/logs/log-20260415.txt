@@ -185,3 +185,72 @@
 2026-04-15 10:38:00.936 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 16 TYPŮ
 2026-04-15 10:38:01.010 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY BEZ SVAČIN' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY'
 2026-04-15 10:38:01.074 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 1510 ZÁZNAMŮ
+2026-04-15 10:42:52.678 +02:00 [DBG] Zahřívací dotaz na databázi...
+2026-04-15 10:42:54.169 +02:00 [DBG] Databáze zahřáta.
+2026-04-15 10:42:54.169 +02:00 [DBG] Aplikace spuštěna.
+2026-04-15 10:42:54.964 +02:00 [DBG] Načteno 22 záznamů.
+2026-04-15 10:42:54.993 +02:00 [DBG] Načtení uživatele podle windows už. jména: 'jprochazka'.
+2026-04-15 10:42:54.993 +02:00 [DBG] Načtení uživatelských práv: '3'.
+2026-04-15 10:42:56.414 +02:00 [INF] Staženo 0 záznamů pro měsíc č.4 uživatele (1250): Jan Procházka - KAMERY.
+2026-04-15 10:42:56.997 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: PRO TYP PROJEKTU 0
+2026-04-15 10:42:57.007 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 3 TYPŮ
+2026-04-15 10:42:57.009 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: User 4 non-archived unique subtypes.
+2026-04-15 10:42:57.079 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: Returned 35 items.
+2026-04-15 10:42:57.155 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY', TÝDEN '2026-04-13 - 2026-04-19'
+2026-04-15 10:42:57.357 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 22 ZÁZNAMŮ
+2026-04-15 10:42:57.375 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: VŠECHNY
+2026-04-15 10:42:57.378 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 16 TYPŮ
+2026-04-15 10:42:57.457 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY BEZ SVAČIN' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY'
+2026-04-15 10:42:57.516 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 1510 ZÁZNAMŮ
+2026-04-15 10:43:07.136 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' OBDOBÍ '2026-04-13 - 2026-04-19'
+2026-04-15 10:43:07.191 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 237 ZÁZNAMŮ
+2026-04-15 10:43:10.819 +02:00 [ERR] PowerKey nedostupný – docházka bude nastavena na 0 a export pokračuje.
+
+Inner exception: 
+Microsoft.Data.SqlClient.SqlException (0x80131904): Oprávnění SELECT bylo pro objekt AttnDay databáze Powerkey schématu pwk odepřeno.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at Microsoft.Data.SqlClient.SqlDataReader.get_MetaData()
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteReader(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteReaderInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteReaderAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteReaderAsync>b__201_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 174
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 182
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 182
+   at VykazyPrace.Dialogs.DataTableFactory.BuildUserSummary(IEnumerable`1 timeEntries, DateTime exportMonth, IReadOnlyDictionary`2 cumToFullfilledDict) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 363
+ClientConnectionId:c25e220b-72db-466c-930b-175c1fef6d09
+Číslo chyby: 229, stav: 5, třída: 14
+2026-04-15 10:43:42.191 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' OBDOBÍ '2026-01-01 - 2026-12-31'
+2026-04-15 10:43:42.346 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 6409 ZÁZNAMŮ
+2026-04-15 10:43:42.507 +02:00 [ERR] PowerKey nedostupný – docházka bude nastavena na 0 a export pokračuje.
+
+Inner exception: 
+Microsoft.Data.SqlClient.SqlException (0x80131904): Oprávnění SELECT bylo pro objekt AttnDay databáze Powerkey schématu pwk odepřeno.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at Microsoft.Data.SqlClient.SqlDataReader.get_MetaData()
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteReader(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteReaderInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteReaderAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteReaderAsync>b__201_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 174
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 182
+   at VykazyPrace.Core.PowerKey.PowerKeyHelper.GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace.Core\PowerKey\PowerKeyHelper.cs:line 182
+   at VykazyPrace.Dialogs.DataTableFactory.BuildUserSummary(IEnumerable`1 timeEntries, DateTime exportMonth, IReadOnlyDictionary`2 cumToFullfilledDict) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 363
+ClientConnectionId:c25e220b-72db-466c-930b-175c1fef6d09
+Číslo chyby: 229, stav: 5, třída: 14

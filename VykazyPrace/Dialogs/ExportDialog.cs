@@ -99,7 +99,8 @@ namespace VykazyPrace.Dialogs
 
             try
             {
-                await exportService.ExportAsync(sfd.FileName, dtpFrom.Value, dtpTo.Value, selectedGroupIds);
+                var (from, to) = GetSelectedExportRange();
+                await exportService.ExportAsync(sfd.FileName, from, to, selectedGroupIds);
             }
             catch (Exception ex)
             {
@@ -154,6 +155,12 @@ namespace VykazyPrace.Dialogs
             if (sender == panelSpecificTimePeriod) SelectOption(rBSpecificTimePeriod);
             else if (sender == panelSpecificMonth) SelectOption(rBSpecificMonth);
             else if (sender == panelSpecificWeek) SelectOption(rBSpecificWeek);
+            else if (sender == panelSpecificYear) SelectOption(rBSpecificYear);
+        }
+
+        private void bSetCurrentWeek_Click(object sender, EventArgs e)
+        {
+            nUDWeek.Value = ISOWeek.GetWeekOfYear(DateTime.Now);
         }
 
         private void bSetCurrentMonth_Click(object sender, EventArgs e)
@@ -161,16 +168,57 @@ namespace VykazyPrace.Dialogs
             cBMonth2.SelectedIndex = DateTime.Now.Month - 1; // 0..11
         }
 
-        private void bSetCurrentWeek_Click(object sender, EventArgs e)
-        {
-            nUDWeek.Value = ISOWeek.GetWeekOfYear(DateTime.Now);
-        }
-        #endregion
-
         private void bSetCurrentYear_Click(object sender, EventArgs e)
         {
             nUDYear.Value = DateTime.Now.Year;
         }
+        #endregion
+
+        #region - Pomocné funkce -
+        private (DateTime From, DateTime To) GetSelectedExportRange()
+        {
+            if (rBSpecificTimePeriod.Checked)
+            {
+                return (dtpFrom.Value.Date, dtpTo.Value.Date);
+            }
+
+            if (rBSpecificWeek.Checked)
+            {
+                int year = (int)nUDYear.Value;
+                int week = (int)nUDWeek.Value;
+
+                var from = ISOWeek.ToDateTime(year, week, DayOfWeek.Monday);
+                var to = from.AddDays(6);
+
+                return (from.Date, to.Date);
+            }
+
+            if (rBSpecificMonth.Checked)
+            {
+                int year = (int)nUDYear.Value;
+                int month = cBMonth2.SelectedIndex + 1;
+
+                if (month < 1 || month > 12)
+                    throw new InvalidOperationException("Není vybraný měsíc pro export.");
+
+                var from = new DateTime(year, month, 1);
+                var to = new DateTime(year, month, DateTime.DaysInMonth(year, month));
+
+                return (from.Date, to.Date);
+            }
+
+            if (rBSpecificYear.Checked)
+            {
+                int year = (int)nUDYear.Value;
+                var from = new DateTime(year, 1, 1);
+                var to = new DateTime(year, 12, 31);
+
+                return (from.Date, to.Date);
+            }
+
+            throw new InvalidOperationException("Není vybraná možnost časového rozsahu exportu.");
+        }
+        #endregion
     }
     #endregion
 

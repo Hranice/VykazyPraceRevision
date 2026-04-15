@@ -31,18 +31,35 @@
             dtpFrom = new DateTimePicker();
             dtpTo = new DateTimePicker();
             label2 = new Label();
-            btnSaveAs = new Button();
-            dataGridView1 = new DataGridView();
-            btnClose = new Button();
-            cboMonth = new ComboBox();
+            bClose = new Button();
+            cBMonth = new ComboBox();
             clbUserGroups = new CheckedListBox();
-            btnLockEntries = new Button();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            bLockEntries = new Button();
+            gBLock = new GroupBox();
+            label1 = new Label();
+            gBExport = new GroupBox();
+            panelSpecificWeek = new Panel();
+            bSetCurrentWeek = new Button();
+            rBSpecificWeek = new RadioButton();
+            nUDWeek = new NumericUpDown();
+            panelSpecificMonth = new Panel();
+            bSetCurrentMonth = new Button();
+            rBSpecificMonth = new RadioButton();
+            cBMonth2 = new ComboBox();
+            panelSpecificTimePeriod = new Panel();
+            rBSpecificTimePeriod = new RadioButton();
+            bSaveAs = new Button();
+            gBLock.SuspendLayout();
+            gBExport.SuspendLayout();
+            panelSpecificWeek.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)nUDWeek).BeginInit();
+            panelSpecificMonth.SuspendLayout();
+            panelSpecificTimePeriod.SuspendLayout();
             SuspendLayout();
             // 
             // dtpFrom
             // 
-            dtpFrom.Location = new Point(10, 51);
+            dtpFrom.Location = new Point(12, 40);
             dtpFrom.Margin = new Padding(4, 5, 4, 5);
             dtpFrom.Name = "dtpFrom";
             dtpFrom.Size = new Size(256, 28);
@@ -51,7 +68,7 @@
             // 
             // dtpTo
             // 
-            dtpTo.Location = new Point(284, 51);
+            dtpTo.Location = new Point(286, 40);
             dtpTo.Margin = new Padding(4, 5, 4, 5);
             dtpTo.Name = "dtpTo";
             dtpTo.Size = new Size(256, 28);
@@ -61,91 +78,224 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(266, 49);
+            label2.Location = new Point(268, 38);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
             label2.Size = new Size(18, 25);
             label2.TabIndex = 5;
             label2.Text = "-";
             // 
-            // btnSaveAs
+            // bClose
             // 
-            btnSaveAs.Location = new Point(196, 453);
-            btnSaveAs.Name = "btnSaveAs";
-            btnSaveAs.Size = new Size(344, 40);
-            btnSaveAs.TabIndex = 6;
-            btnSaveAs.Text = "Uložit jako..";
-            btnSaveAs.UseVisualStyleBackColor = true;
-            btnSaveAs.Click += btnSaveAs_Click;
+            bClose.DialogResult = DialogResult.Cancel;
+            bClose.Location = new Point(555, 326);
+            bClose.Name = "bClose";
+            bClose.Size = new Size(109, 40);
+            bClose.TabIndex = 8;
+            bClose.Text = "Zavřít";
+            bClose.UseVisualStyleBackColor = true;
             // 
-            // dataGridView1
+            // cBMonth
             // 
-            dataGridView1.AllowUserToAddRows = false;
-            dataGridView1.AllowUserToDeleteRows = false;
-            dataGridView1.AllowUserToResizeRows = false;
-            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.EditMode = DataGridViewEditMode.EditProgrammatically;
-            dataGridView1.Location = new Point(10, 90);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.ReadOnly = true;
-            dataGridView1.RowHeadersVisible = false;
-            dataGridView1.Size = new Size(530, 349);
-            dataGridView1.TabIndex = 7;
-            // 
-            // btnClose
-            // 
-            btnClose.DialogResult = DialogResult.Cancel;
-            btnClose.Location = new Point(10, 453);
-            btnClose.Name = "btnClose";
-            btnClose.Size = new Size(180, 40);
-            btnClose.TabIndex = 8;
-            btnClose.Text = "Zavřít";
-            btnClose.UseVisualStyleBackColor = true;
-            // 
-            // cboMonth
-            // 
-            cboMonth.FormattingEnabled = true;
-            cboMonth.Items.AddRange(new object[] { "Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec" });
-            cboMonth.Location = new Point(10, 10);
-            cboMonth.Name = "cboMonth";
-            cboMonth.Size = new Size(121, 33);
-            cboMonth.TabIndex = 11;
-            cboMonth.Text = "Březen";
-            cboMonth.SelectionChangeCommitted += cboMonth_SelectionChangeCommitted;
+            cBMonth.FormattingEnabled = true;
+            cBMonth.Items.AddRange(new object[] { "Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec" });
+            cBMonth.Location = new Point(15, 61);
+            cBMonth.Name = "cBMonth";
+            cBMonth.Size = new Size(121, 33);
+            cBMonth.TabIndex = 11;
+            cBMonth.Text = "Březen";
+            cBMonth.SelectionChangeCommitted += cboMonth_SelectionChangeCommitted;
             // 
             // clbUserGroups
             // 
             clbUserGroups.FormattingEnabled = true;
-            clbUserGroups.Location = new Point(557, 90);
+            clbUserGroups.Location = new Point(578, 37);
             clbUserGroups.Name = "clbUserGroups";
-            clbUserGroups.Size = new Size(309, 349);
+            clbUserGroups.Size = new Size(261, 165);
             clbUserGroups.TabIndex = 12;
             // 
-            // btnLockEntries
+            // bLockEntries
             // 
-            btnLockEntries.Location = new Point(137, 9);
-            btnLockEntries.Name = "btnLockEntries";
-            btnLockEntries.Size = new Size(192, 33);
-            btnLockEntries.TabIndex = 13;
-            btnLockEntries.Text = "ZAMKNOUT DATA";
-            btnLockEntries.UseVisualStyleBackColor = true;
-            btnLockEntries.Click += btnLockEntries_Click;
+            bLockEntries.Location = new Point(142, 61);
+            bLockEntries.Name = "bLockEntries";
+            bLockEntries.Size = new Size(219, 33);
+            bLockEntries.TabIndex = 13;
+            bLockEntries.Text = "ZAMKNOUT DATA";
+            bLockEntries.UseVisualStyleBackColor = true;
+            bLockEntries.Click += bLockEntries_Click;
+            // 
+            // gBLock
+            // 
+            gBLock.Controls.Add(label1);
+            gBLock.Controls.Add(bLockEntries);
+            gBLock.Controls.Add(cBMonth);
+            gBLock.Location = new Point(12, 259);
+            gBLock.Name = "gBLock";
+            gBLock.Size = new Size(385, 107);
+            gBLock.TabIndex = 14;
+            gBLock.TabStop = false;
+            gBLock.Text = "Zámek dat";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Reddit Sans", 10F);
+            label1.Location = new Point(15, 36);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(346, 22);
+            label1.TabIndex = 15;
+            label1.Text = "Pro tento měsíc již nebude možné upravovat záznamy";
+            // 
+            // gBExport
+            // 
+            gBExport.Controls.Add(panelSpecificWeek);
+            gBExport.Controls.Add(panelSpecificMonth);
+            gBExport.Controls.Add(panelSpecificTimePeriod);
+            gBExport.Controls.Add(clbUserGroups);
+            gBExport.Location = new Point(12, 12);
+            gBExport.Name = "gBExport";
+            gBExport.Size = new Size(857, 214);
+            gBExport.TabIndex = 15;
+            gBExport.TabStop = false;
+            gBExport.Text = "Export dat";
+            // 
+            // panelSpecificWeek
+            // 
+            panelSpecificWeek.BorderStyle = BorderStyle.FixedSingle;
+            panelSpecificWeek.Controls.Add(bSetCurrentWeek);
+            panelSpecificWeek.Controls.Add(rBSpecificWeek);
+            panelSpecificWeek.Controls.Add(nUDWeek);
+            panelSpecificWeek.Location = new Point(297, 124);
+            panelSpecificWeek.Name = "panelSpecificWeek";
+            panelSpecificWeek.Size = new Size(275, 78);
+            panelSpecificWeek.TabIndex = 25;
+            panelSpecificWeek.Click += panelTimePeriod_Click;
+            // 
+            // bSetCurrentWeek
+            // 
+            bSetCurrentWeek.Location = new Point(66, 36);
+            bSetCurrentWeek.Name = "bSetCurrentWeek";
+            bSetCurrentWeek.Size = new Size(92, 35);
+            bSetCurrentWeek.TabIndex = 24;
+            bSetCurrentWeek.Text = "Dnešní";
+            bSetCurrentWeek.UseVisualStyleBackColor = true;
+            bSetCurrentWeek.Click += bSetCurrentWeek_Click;
+            // 
+            // rBSpecificWeek
+            // 
+            rBSpecificWeek.AutoSize = true;
+            rBSpecificWeek.Location = new Point(12, 3);
+            rBSpecificWeek.Name = "rBSpecificWeek";
+            rBSpecificWeek.Size = new Size(75, 29);
+            rBSpecificWeek.TabIndex = 22;
+            rBSpecificWeek.Text = "Týden";
+            rBSpecificWeek.UseVisualStyleBackColor = true;
+            rBSpecificWeek.Click += radioButtonTimePeriod_CheckedChanged;
+            // 
+            // nUDWeek
+            // 
+            nUDWeek.Font = new Font("Reddit Sans", 14F);
+            nUDWeek.Location = new Point(12, 39);
+            nUDWeek.Maximum = new decimal(new int[] { 53, 0, 0, 0 });
+            nUDWeek.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            nUDWeek.Name = "nUDWeek";
+            nUDWeek.Size = new Size(48, 32);
+            nUDWeek.TabIndex = 20;
+            nUDWeek.Value = new decimal(new int[] { 52, 0, 0, 0 });
+            // 
+            // panelSpecificMonth
+            // 
+            panelSpecificMonth.BorderStyle = BorderStyle.FixedSingle;
+            panelSpecificMonth.Controls.Add(bSetCurrentMonth);
+            panelSpecificMonth.Controls.Add(rBSpecificMonth);
+            panelSpecificMonth.Controls.Add(cBMonth2);
+            panelSpecificMonth.Location = new Point(15, 124);
+            panelSpecificMonth.Name = "panelSpecificMonth";
+            panelSpecificMonth.Size = new Size(275, 78);
+            panelSpecificMonth.TabIndex = 24;
+            panelSpecificMonth.Click += panelTimePeriod_Click;
+            // 
+            // bSetCurrentMonth
+            // 
+            bSetCurrentMonth.Location = new Point(139, 36);
+            bSetCurrentMonth.Name = "bSetCurrentMonth";
+            bSetCurrentMonth.Size = new Size(92, 35);
+            bSetCurrentMonth.TabIndex = 23;
+            bSetCurrentMonth.Text = "Dnešní";
+            bSetCurrentMonth.UseVisualStyleBackColor = true;
+            bSetCurrentMonth.Click += bSetCurrentMonth_Click;
+            // 
+            // rBSpecificMonth
+            // 
+            rBSpecificMonth.AutoSize = true;
+            rBSpecificMonth.Location = new Point(12, 3);
+            rBSpecificMonth.Name = "rBSpecificMonth";
+            rBSpecificMonth.Size = new Size(71, 29);
+            rBSpecificMonth.TabIndex = 22;
+            rBSpecificMonth.Text = "Měsíc";
+            rBSpecificMonth.UseVisualStyleBackColor = true;
+            rBSpecificMonth.Click += radioButtonTimePeriod_CheckedChanged;
+            // 
+            // cBMonth2
+            // 
+            cBMonth2.FormattingEnabled = true;
+            cBMonth2.Items.AddRange(new object[] { "Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec" });
+            cBMonth2.Location = new Point(12, 38);
+            cBMonth2.Name = "cBMonth2";
+            cBMonth2.Size = new Size(121, 33);
+            cBMonth2.TabIndex = 19;
+            cBMonth2.Text = "Březen";
+            // 
+            // panelSpecificTimePeriod
+            // 
+            panelSpecificTimePeriod.BackColor = SystemColors.ButtonHighlight;
+            panelSpecificTimePeriod.BorderStyle = BorderStyle.FixedSingle;
+            panelSpecificTimePeriod.Controls.Add(rBSpecificTimePeriod);
+            panelSpecificTimePeriod.Controls.Add(label2);
+            panelSpecificTimePeriod.Controls.Add(dtpTo);
+            panelSpecificTimePeriod.Controls.Add(dtpFrom);
+            panelSpecificTimePeriod.Location = new Point(15, 37);
+            panelSpecificTimePeriod.Name = "panelSpecificTimePeriod";
+            panelSpecificTimePeriod.Size = new Size(557, 81);
+            panelSpecificTimePeriod.TabIndex = 23;
+            panelSpecificTimePeriod.Click += panelTimePeriod_Click;
+            // 
+            // rBSpecificTimePeriod
+            // 
+            rBSpecificTimePeriod.AutoSize = true;
+            rBSpecificTimePeriod.Checked = true;
+            rBSpecificTimePeriod.Location = new Point(12, 3);
+            rBSpecificTimePeriod.Name = "rBSpecificTimePeriod";
+            rBSpecificTimePeriod.Size = new Size(188, 29);
+            rBSpecificTimePeriod.TabIndex = 22;
+            rBSpecificTimePeriod.TabStop = true;
+            rBSpecificTimePeriod.Text = "Konkrétní časový úsek";
+            rBSpecificTimePeriod.UseVisualStyleBackColor = true;
+            rBSpecificTimePeriod.Click += radioButtonTimePeriod_CheckedChanged;
+            // 
+            // bSaveAs
+            // 
+            bSaveAs.Image = Properties.Resources.logo;
+            bSaveAs.ImageAlign = ContentAlignment.MiddleLeft;
+            bSaveAs.Location = new Point(670, 326);
+            bSaveAs.Name = "bSaveAs";
+            bSaveAs.Padding = new Padding(25, 0, 0, 0);
+            bSaveAs.Size = new Size(181, 40);
+            bSaveAs.TabIndex = 21;
+            bSaveAs.Text = "Exportovat";
+            bSaveAs.UseVisualStyleBackColor = true;
+            bSaveAs.Click += bSaveAs_Click;
             // 
             // ExportDialog
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(881, 505);
-            Controls.Add(btnLockEntries);
-            Controls.Add(clbUserGroups);
-            Controls.Add(cboMonth);
-            Controls.Add(btnClose);
-            Controls.Add(dataGridView1);
-            Controls.Add(btnSaveAs);
-            Controls.Add(label2);
-            Controls.Add(dtpTo);
-            Controls.Add(dtpFrom);
+            ClientSize = new Size(881, 376);
+            Controls.Add(bSaveAs);
+            Controls.Add(gBExport);
+            Controls.Add(gBLock);
+            Controls.Add(bClose);
             Font = new Font("Reddit Sans", 12F);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Margin = new Padding(4, 5, 4, 5);
@@ -153,20 +303,40 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Exportovat data";
             Load += ExportDialog_Load;
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            gBLock.ResumeLayout(false);
+            gBLock.PerformLayout();
+            gBExport.ResumeLayout(false);
+            panelSpecificWeek.ResumeLayout(false);
+            panelSpecificWeek.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)nUDWeek).EndInit();
+            panelSpecificMonth.ResumeLayout(false);
+            panelSpecificMonth.PerformLayout();
+            panelSpecificTimePeriod.ResumeLayout(false);
+            panelSpecificTimePeriod.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
         private DateTimePicker dtpFrom;
         private DateTimePicker dtpTo;
         private Label label2;
-        private Button btnSaveAs;
-        private DataGridView dataGridView1;
-        private Button btnClose;
-        private ComboBox cboMonth;
+        private Button bClose;
+        private ComboBox cBMonth;
         private CheckedListBox clbUserGroups;
-        private Button btnLockEntries;
+        private Button bLockEntries;
+        private GroupBox gBLock;
+        private Label label1;
+        private GroupBox gBExport;
+        private NumericUpDown nUDWeek;
+        private ComboBox cBMonth2;
+        private Button bSaveAs;
+        private Panel panelSpecificWeek;
+        private RadioButton rBSpecificWeek;
+        private Panel panelSpecificMonth;
+        private RadioButton rBSpecificMonth;
+        private Panel panelSpecificTimePeriod;
+        private RadioButton rBSpecificTimePeriod;
+        private Button bSetCurrentWeek;
+        private Button bSetCurrentMonth;
     }
 }

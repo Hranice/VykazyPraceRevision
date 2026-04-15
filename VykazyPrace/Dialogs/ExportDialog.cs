@@ -7,6 +7,7 @@ using VykazyPrace.Core.Logging;
 using VykazyPrace.Core.Helpers;
 using ClosedXML.Excel;
 using DataTable = System.Data.DataTable;
+using System.Globalization;
 
 /// <summary>
 /// ChatGPT 5 credits:
@@ -43,6 +44,8 @@ namespace VykazyPrace.Dialogs
         #endregion
 
         #region — Inicializace UI —
+        private List<(RadioButton radioButton, Panel panel)> options;
+
         /// <summary>
         /// Nastaví výchozí rozmezí (předchozí měsíc) a předvybere měsíc v ComboBoxu.
         /// </summary>
@@ -54,7 +57,14 @@ namespace VykazyPrace.Dialogs
 
             dtpFrom.Value = range.From;
             dtpTo.Value = range.To;
-            cboMonth.SelectedIndex = previousMonth.Month - 1; // 0..11
+            cBMonth.SelectedIndex = previousMonth.Month - 1; // 0..11
+
+            options = new List<(RadioButton, Panel)>
+            {
+                (rBSpecificTimePeriod, panelSpecificTimePeriod),
+                (rBSpecificMonth, panelSpecificMonth),
+                (rBSpecificWeek, panelSpecificWeek)
+            };
         }
 
         /// <summary>
@@ -74,7 +84,7 @@ namespace VykazyPrace.Dialogs
         #endregion
 
         #region — Handlery —
-        private async void btnSaveAs_Click(object sender, EventArgs e)
+        private async void bSaveAs_Click(object sender, EventArgs e)
         {
             using var sfd = new SaveFileDialog { Filter = "Excel Files|*.xlsx", FileName = "Export.xlsx" };
             if (sfd.ShowDialog() != DialogResult.OK) return;
@@ -98,27 +108,61 @@ namespace VykazyPrace.Dialogs
 
         private void cboMonth_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            var (from, to) = DateRangeHelper.GetMonthRangeByIndex(cboMonth.SelectedIndex, dtpFrom.Value.Year);
+            var (from, to) = DateRangeHelper.GetMonthRangeByIndex(cBMonth.SelectedIndex, dtpFrom.Value.Year);
             dtpFrom.Value = from;
             dtpTo.Value = to;
         }
 
-        private async void btnLockEntries_Click(object sender, EventArgs e)
+        private async void bLockEntries_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(cboMonth.Text)) return;
+            if (string.IsNullOrWhiteSpace(cBMonth.Text)) return;
 
-            var result = MessageBox.Show($"Zamknout záznamy za měsíc {cboMonth.Text}?", "Zamknout data?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+            var result = MessageBox.Show($"Zamknout záznamy za měsíc {cBMonth.Text}?", "Zamknout data?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
             if (result != DialogResult.Yes) return;
 
             var exportService = new TimeEntryExportService(_timeEntryRepo, _specialDayRepo, _tableFactory, _styling);
             try
             {
-                await exportService.LockMonthAsync(cboMonth.Text, dtpFrom.Value.Year);
+                await exportService.LockMonthAsync(cBMonth.Text, dtpFrom.Value.Year);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Zámek selhal. Podrobnosti v logu.\n{ex.Message}", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void SelectOption(RadioButton selectedRadioButton)
+        {
+            foreach (var option in options)
+            {
+                bool isSelected = option.radioButton == selectedRadioButton;
+                option.radioButton.Checked = isSelected;
+                option.panel.BackColor = isSelected ? Color.White : SystemColors.Control;
+            }
+        }
+
+        private void radioButtonTimePeriod_CheckedChanged(object sender, EventArgs e)
+        {
+            var rb = (RadioButton)sender;
+            if (rb.Checked)
+                SelectOption(rb);
+        }
+
+        private void panelTimePeriod_Click(object sender, EventArgs e)
+        {
+            if (sender == panelSpecificTimePeriod) SelectOption(rBSpecificTimePeriod);
+            else if (sender == panelSpecificMonth) SelectOption(rBSpecificMonth);
+            else if (sender == panelSpecificWeek) SelectOption(rBSpecificWeek);
+        }
+
+        private void bSetCurrentMonth_Click(object sender, EventArgs e)
+        {
+            cBMonth2.SelectedIndex = DateTime.Now.Month - 1; // 0..11
+        }
+
+        private void bSetCurrentWeek_Click(object sender, EventArgs e)
+        {
+            nUDWeek.Value = ISOWeek.GetWeekOfYear(DateTime.Now);
         }
         #endregion
     }

@@ -350,7 +350,7 @@ namespace VykazyPrace.Dialogs
             dt.Columns.Add("Projekt", typeof(string));
             dt.Columns.Add("Popis projektu", typeof(string));
             dt.Columns.Add("Součet hodin", typeof(double));
-            dt.Columns.Add("Suma (měsíc)", typeof(double));
+            dt.Columns.Add("Suma (čas. úsek)", typeof(double));
             dt.Columns.Add("Docházka", typeof(double));
             dt.Columns.Add("Suma (před zplnohodnotněním projektu)", typeof(double));
 

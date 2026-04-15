@@ -38,6 +38,10 @@
             gBLock = new GroupBox();
             label1 = new Label();
             gBExport = new GroupBox();
+            panelSpecificYear = new Panel();
+            bSetCurrentYear = new Button();
+            rBSpecificYear = new RadioButton();
+            nUDYear = new NumericUpDown();
             panelSpecificWeek = new Panel();
             bSetCurrentWeek = new Button();
             rBSpecificWeek = new RadioButton();
@@ -51,6 +55,8 @@
             bSaveAs = new Button();
             gBLock.SuspendLayout();
             gBExport.SuspendLayout();
+            panelSpecificYear.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)nUDYear).BeginInit();
             panelSpecificWeek.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)nUDWeek).BeginInit();
             panelSpecificMonth.SuspendLayout();
@@ -101,7 +107,7 @@
             cBMonth.Items.AddRange(new object[] { "Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec" });
             cBMonth.Location = new Point(15, 61);
             cBMonth.Name = "cBMonth";
-            cBMonth.Size = new Size(121, 33);
+            cBMonth.Size = new Size(81, 33);
             cBMonth.TabIndex = 11;
             cBMonth.Text = "Březen";
             cBMonth.SelectionChangeCommitted += cboMonth_SelectionChangeCommitted;
@@ -116,7 +122,7 @@
             // 
             // bLockEntries
             // 
-            bLockEntries.Location = new Point(142, 61);
+            bLockEntries.Location = new Point(102, 61);
             bLockEntries.Name = "bLockEntries";
             bLockEntries.Size = new Size(219, 33);
             bLockEntries.TabIndex = 13;
@@ -131,7 +137,7 @@
             gBLock.Controls.Add(cBMonth);
             gBLock.Location = new Point(12, 259);
             gBLock.Name = "gBLock";
-            gBLock.Size = new Size(385, 107);
+            gBLock.Size = new Size(378, 107);
             gBLock.TabIndex = 14;
             gBLock.TabStop = false;
             gBLock.Text = "Zámek dat";
@@ -149,6 +155,7 @@
             // 
             // gBExport
             // 
+            gBExport.Controls.Add(panelSpecificYear);
             gBExport.Controls.Add(panelSpecificWeek);
             gBExport.Controls.Add(panelSpecificMonth);
             gBExport.Controls.Add(panelSpecificTimePeriod);
@@ -160,15 +167,59 @@
             gBExport.TabStop = false;
             gBExport.Text = "Export dat";
             // 
+            // panelSpecificYear
+            // 
+            panelSpecificYear.BorderStyle = BorderStyle.FixedSingle;
+            panelSpecificYear.Controls.Add(bSetCurrentYear);
+            panelSpecificYear.Controls.Add(rBSpecificYear);
+            panelSpecificYear.Controls.Add(nUDYear);
+            panelSpecificYear.Location = new Point(373, 124);
+            panelSpecificYear.Name = "panelSpecificYear";
+            panelSpecificYear.Size = new Size(199, 78);
+            panelSpecificYear.TabIndex = 26;
+            panelSpecificYear.Click += panelTimePeriod_Click;
+            // 
+            // bSetCurrentYear
+            // 
+            bSetCurrentYear.Location = new Point(95, 38);
+            bSetCurrentYear.Name = "bSetCurrentYear";
+            bSetCurrentYear.Size = new Size(78, 35);
+            bSetCurrentYear.TabIndex = 24;
+            bSetCurrentYear.Text = "Dnešní";
+            bSetCurrentYear.UseVisualStyleBackColor = true;
+            bSetCurrentYear.Click += bSetCurrentYear_Click;
+            // 
+            // rBSpecificYear
+            // 
+            rBSpecificYear.AutoSize = true;
+            rBSpecificYear.Location = new Point(12, 3);
+            rBSpecificYear.Name = "rBSpecificYear";
+            rBSpecificYear.Size = new Size(56, 29);
+            rBSpecificYear.TabIndex = 22;
+            rBSpecificYear.Text = "Rok";
+            rBSpecificYear.UseVisualStyleBackColor = true;
+            rBSpecificYear.Click += radioButtonTimePeriod_CheckedChanged;
+            // 
+            // nUDYear
+            // 
+            nUDYear.Font = new Font("Reddit Sans", 14F);
+            nUDYear.Location = new Point(12, 39);
+            nUDYear.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
+            nUDYear.Minimum = new decimal(new int[] { 2000, 0, 0, 0 });
+            nUDYear.Name = "nUDYear";
+            nUDYear.Size = new Size(77, 32);
+            nUDYear.TabIndex = 20;
+            nUDYear.Value = new decimal(new int[] { 2026, 0, 0, 0 });
+            // 
             // panelSpecificWeek
             // 
             panelSpecificWeek.BorderStyle = BorderStyle.FixedSingle;
             panelSpecificWeek.Controls.Add(bSetCurrentWeek);
             panelSpecificWeek.Controls.Add(rBSpecificWeek);
             panelSpecificWeek.Controls.Add(nUDWeek);
-            panelSpecificWeek.Location = new Point(297, 124);
+            panelSpecificWeek.Location = new Point(15, 124);
             panelSpecificWeek.Name = "panelSpecificWeek";
-            panelSpecificWeek.Size = new Size(275, 78);
+            panelSpecificWeek.Size = new Size(156, 78);
             panelSpecificWeek.TabIndex = 25;
             panelSpecificWeek.Click += panelTimePeriod_Click;
             // 
@@ -176,7 +227,7 @@
             // 
             bSetCurrentWeek.Location = new Point(66, 36);
             bSetCurrentWeek.Name = "bSetCurrentWeek";
-            bSetCurrentWeek.Size = new Size(92, 35);
+            bSetCurrentWeek.Size = new Size(78, 35);
             bSetCurrentWeek.TabIndex = 24;
             bSetCurrentWeek.Text = "Dnešní";
             bSetCurrentWeek.UseVisualStyleBackColor = true;
@@ -210,17 +261,17 @@
             panelSpecificMonth.Controls.Add(bSetCurrentMonth);
             panelSpecificMonth.Controls.Add(rBSpecificMonth);
             panelSpecificMonth.Controls.Add(cBMonth2);
-            panelSpecificMonth.Location = new Point(15, 124);
+            panelSpecificMonth.Location = new Point(177, 124);
             panelSpecificMonth.Name = "panelSpecificMonth";
-            panelSpecificMonth.Size = new Size(275, 78);
+            panelSpecificMonth.Size = new Size(190, 78);
             panelSpecificMonth.TabIndex = 24;
             panelSpecificMonth.Click += panelTimePeriod_Click;
             // 
             // bSetCurrentMonth
             // 
-            bSetCurrentMonth.Location = new Point(139, 36);
+            bSetCurrentMonth.Location = new Point(99, 38);
             bSetCurrentMonth.Name = "bSetCurrentMonth";
-            bSetCurrentMonth.Size = new Size(92, 35);
+            bSetCurrentMonth.Size = new Size(78, 35);
             bSetCurrentMonth.TabIndex = 23;
             bSetCurrentMonth.Text = "Dnešní";
             bSetCurrentMonth.UseVisualStyleBackColor = true;
@@ -243,7 +294,7 @@
             cBMonth2.Items.AddRange(new object[] { "Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec" });
             cBMonth2.Location = new Point(12, 38);
             cBMonth2.Name = "cBMonth2";
-            cBMonth2.Size = new Size(121, 33);
+            cBMonth2.Size = new Size(81, 33);
             cBMonth2.TabIndex = 19;
             cBMonth2.Text = "Březen";
             // 
@@ -306,6 +357,9 @@
             gBLock.ResumeLayout(false);
             gBLock.PerformLayout();
             gBExport.ResumeLayout(false);
+            panelSpecificYear.ResumeLayout(false);
+            panelSpecificYear.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)nUDYear).EndInit();
             panelSpecificWeek.ResumeLayout(false);
             panelSpecificWeek.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)nUDWeek).EndInit();
@@ -338,5 +392,9 @@
         private RadioButton rBSpecificTimePeriod;
         private Button bSetCurrentWeek;
         private Button bSetCurrentMonth;
+        private Panel panelSpecificYear;
+        private Button bSetCurrentYear;
+        private RadioButton rBSpecificYear;
+        private NumericUpDown nUDYear;
     }
 }

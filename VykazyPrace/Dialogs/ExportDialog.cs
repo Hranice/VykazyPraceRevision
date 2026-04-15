@@ -62,8 +62,9 @@ namespace VykazyPrace.Dialogs
             options = new List<(RadioButton, Panel)>
             {
                 (rBSpecificTimePeriod, panelSpecificTimePeriod),
+                (rBSpecificWeek, panelSpecificWeek),
                 (rBSpecificMonth, panelSpecificMonth),
-                (rBSpecificWeek, panelSpecificWeek)
+                (rBSpecificYear, panelSpecificYear)
             };
         }
 
@@ -165,6 +166,11 @@ namespace VykazyPrace.Dialogs
             nUDWeek.Value = ISOWeek.GetWeekOfYear(DateTime.Now);
         }
         #endregion
+
+        private void bSetCurrentYear_Click(object sender, EventArgs e)
+        {
+            nUDYear.Value = DateTime.Now.Year;
+        }
     }
     #endregion
 

@@ -26,13 +26,17 @@ namespace VykazyPrace.Dialogs
         private readonly UserGroupRepository _userGroupRepository = new();
         private readonly SpecialDayRepository _specialDayRepo = new();
 
+        private readonly User _currentUser;
+
         // Služby
         private readonly DataTableFactory _tableFactory = new();
         private readonly ExcelStylingService _styling = new();
 
-        public ExportDialog()
+
+        public ExportDialog(User currentUser)
         {
             InitializeComponent();
+            _currentUser = currentUser;
         }
 
         #region — Životní cyklus dialogu —
@@ -81,20 +85,31 @@ namespace VykazyPrace.Dialogs
             tVUserGroupsUsers.Nodes.Clear();
             tVUserGroupsUsers.CheckBoxes = true;
 
+            if (_currentUser.LevelOfAccess == 1)
+            {
+                var node = new TreeNode($"{_currentUser.FirstName} {_currentUser.Surname}".Trim())
+                {
+                    Tag = _currentUser,
+                    Checked = true
+                };
+
+                tVUserGroupsUsers.Nodes.Add(node);
+
+                tVUserGroupsUsers.Enabled = false;
+
+                tVUserGroupsUsers.EndUpdate();
+                return;
+            }
+
             foreach (var group in userGroups.OrderBy(g => g.Title))
             {
-                var groupNode = new TreeNode(group.Title)
+                var groupNode = new TreeNode(group.Title ?? "(bez názvu)")
                 {
                     Tag = group,
                     Checked = true
                 };
 
-                var users = group.Users?
-                    .OrderBy(u => u.Surname)
-                    .ThenBy(u => u.FirstName)
-                    .ToList() ?? new List<User>();
-
-                foreach (var user in users)
+                foreach (var user in group.Users.OrderBy(u => u.Surname).ThenBy(u => u.FirstName))
                 {
                     var userNode = new TreeNode($"{user.FirstName} {user.Surname}".Trim())
                     {
@@ -137,7 +152,8 @@ namespace VykazyPrace.Dialogs
                     from,
                     to,
                     selection.SelectedGroupIds,
-                    selection.SelectedUserIds);
+                    selection.SelectedUserIds,
+                    _currentUser);
             }
             catch (Exception ex)
             {
@@ -291,6 +307,12 @@ namespace VykazyPrace.Dialogs
         {
             var result = new UserSelection();
 
+            if (_currentUser.LevelOfAccess == 1)
+            {
+                result.SelectedUserIds.Add(_currentUser.Id);
+                return result;
+            }
+
             foreach (TreeNode groupNode in tVUserGroupsUsers.Nodes)
             {
                 if (groupNode.Tag is not UserGroup group)
@@ -301,7 +323,6 @@ namespace VykazyPrace.Dialogs
                     .Where(n => n.Checked && n.Tag is User)
                     .ToList();
 
-                // skupina checked a zároveň všichni uživatelé checked => celá skupina
                 bool allUsersChecked = groupNode.Nodes.Count > 0 && checkedUserNodes.Count == groupNode.Nodes.Count;
 
                 if (groupNode.Checked && (groupNode.Nodes.Count == 0 || allUsersChecked))
@@ -310,7 +331,6 @@ namespace VykazyPrace.Dialogs
                     continue;
                 }
 
-                // jinak jen konkrétní uživatele
                 foreach (var userNode in checkedUserNodes)
                 {
                     if (userNode.Tag is User user)
@@ -714,16 +734,24 @@ namespace VykazyPrace.Dialogs
         /// Načte data, vytvoří listy a uloží XLSX.
         /// </summary>
         public async Task ExportAsync(
-      string filePath,
-      DateTime from,
-      DateTime to,
-      IEnumerable<int> selectedUserGroupIds,
-      IEnumerable<int> selectedUserIds)
+     string filePath,
+     DateTime from,
+     DateTime to,
+     IEnumerable<int> selectedUserGroupIds,
+     IEnumerable<int> selectedUserIds,
+     User currentUser)
         {
             try
             {
                 var selectedGroupIdSet = selectedUserGroupIds?.ToHashSet() ?? new HashSet<int>();
                 var selectedUserIdSet = selectedUserIds?.ToHashSet() ?? new HashSet<int>();
+
+                if (currentUser.LevelOfAccess == 1)
+                {
+                    selectedGroupIdSet.Clear();
+                    selectedUserIdSet.Clear();
+                    selectedUserIdSet.Add(currentUser.Id);
+                }
 
                 var allEntries = await _timeEntryRepo.GetAllTimeEntriesBetweenDatesAsync(from, to).ConfigureAwait(false);
 

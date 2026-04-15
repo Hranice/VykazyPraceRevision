@@ -236,7 +236,6 @@ namespace VykazyPrace
         {
             if (levelOfAccess == 3)
             {
-                dataToolStripMenuItem.Visible = true;
                 uživateléToolStripMenuItem.Visible = true;
                 správaProjektùToolStripMenuItem.Visible = true;
                 comboBoxUsers.Visible = true;
@@ -244,7 +243,6 @@ namespace VykazyPrace
             }
             else if (levelOfAccess == 2)
             {
-                dataToolStripMenuItem.Visible = true;
                 správaProjektùToolStripMenuItem.Visible = true;
                 comboBoxUsers.Visible = true;
             }
@@ -336,12 +334,12 @@ namespace VykazyPrace
 
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new Dialogs.ExportDialog().ShowDialog();
+            new Dialogs.ExportDialog(_loggedUser).ShowDialog();
         }
 
         private void nastaveníToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new Dialogs.SettingsDialog(_selectedUser).ShowDialog();
+            new Dialogs.SettingsDialog(_loggedUser).ShowDialog();
         }
 
         private async void radioButton1_CheckedChanged(object sender, EventArgs e)

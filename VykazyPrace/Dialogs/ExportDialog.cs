@@ -44,6 +44,11 @@ namespace VykazyPrace.Dialogs
         {
             InitializeDatePickers();
             await LoadUserGroupsToTreeViewAsync();
+
+            if(_currentUser.LevelOfAccess > 2)
+            {
+                gBLock.Visible = true;
+            }
         }
         #endregion
 
@@ -70,6 +75,10 @@ namespace VykazyPrace.Dialogs
                 (rBSpecificMonth, panelSpecificMonth),
                 (rBSpecificYear, panelSpecificYear)
             };
+
+            nUDWeek.Value = ISOWeek.GetWeekOfYear(DateTime.Now);
+            cBMonth2.SelectedIndex = DateTime.Now.Month - 1; // 0..11
+            nUDYear.Value = DateTime.Now.Year;
         }
 
         /// <summary>

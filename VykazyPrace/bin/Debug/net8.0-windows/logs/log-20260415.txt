@@ -567,3 +567,54 @@ System.IO.IOException: The process cannot access the file 'C:\Users\jprochazka\D
 2026-04-15 14:14:28.891 +02:00 [DBG] Zahřívací dotaz na databázi...
 2026-04-15 14:14:30.224 +02:00 [DBG] Databáze zahřáta.
 2026-04-15 14:14:30.224 +02:00 [DBG] Aplikace spuštěna.
+2026-04-15 14:15:33.364 +02:00 [DBG] Zahřívací dotaz na databázi...
+2026-04-15 14:15:34.756 +02:00 [DBG] Databáze zahřáta.
+2026-04-15 14:15:34.756 +02:00 [DBG] Aplikace spuštěna.
+2026-04-15 14:15:35.466 +02:00 [DBG] Načteno 22 záznamů.
+2026-04-15 14:15:35.495 +02:00 [DBG] Načtení uživatele podle windows už. jména: 'jprochazka'.
+2026-04-15 14:15:35.495 +02:00 [DBG] Načtení uživatelských práv: '1'.
+2026-04-15 14:15:36.950 +02:00 [INF] Staženo 0 záznamů pro měsíc č.4 uživatele (1250): Jan Procházka - KAMERY.
+2026-04-15 14:15:37.479 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: PRO TYP PROJEKTU 0
+2026-04-15 14:15:37.489 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 3 TYPŮ
+2026-04-15 14:15:37.490 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: User 4 non-archived unique subtypes.
+2026-04-15 14:15:37.559 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: Returned 35 items.
+2026-04-15 14:15:37.632 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY', TÝDEN '2026-04-13 - 2026-04-19'
+2026-04-15 14:15:37.849 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 24 ZÁZNAMŮ
+2026-04-15 14:15:37.871 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: VŠECHNY
+2026-04-15 14:15:37.875 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 16 TYPŮ
+2026-04-15 14:15:37.931 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY BEZ SVAČIN' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY'
+2026-04-15 14:15:37.990 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 1512 ZÁZNAMŮ
+2026-04-15 14:15:47.633 +02:00 [DBG] Zahřívací dotaz na databázi...
+2026-04-15 14:15:48.954 +02:00 [DBG] Databáze zahřáta.
+2026-04-15 14:15:48.955 +02:00 [DBG] Aplikace spuštěna.
+2026-04-15 14:15:49.779 +02:00 [DBG] Načteno 22 záznamů.
+2026-04-15 14:15:49.807 +02:00 [DBG] Načtení uživatele podle windows už. jména: 'jprochazka'.
+2026-04-15 14:15:49.808 +02:00 [DBG] Načtení uživatelských práv: '1'.
+2026-04-15 14:15:51.159 +02:00 [INF] Staženo 0 záznamů pro měsíc č.4 uživatele (1250): Jan Procházka - KAMERY.
+2026-04-15 14:15:51.801 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: PRO TYP PROJEKTU 0
+2026-04-15 14:15:51.812 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 3 TYPŮ
+2026-04-15 14:15:51.813 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: User 4 non-archived unique subtypes.
+2026-04-15 14:15:51.872 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: Returned 35 items.
+2026-04-15 14:15:51.947 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY', TÝDEN '2026-04-13 - 2026-04-19'
+2026-04-15 14:15:51.973 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 24 ZÁZNAMŮ
+2026-04-15 14:15:51.989 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: VŠECHNY
+2026-04-15 14:15:51.992 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 16 TYPŮ
+2026-04-15 14:15:52.052 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY BEZ SVAČIN' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY'
+2026-04-15 14:15:52.121 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 1512 ZÁZNAMŮ
+2026-04-15 14:16:57.358 +02:00 [DBG] Zahřívací dotaz na databázi...
+2026-04-15 14:16:58.649 +02:00 [DBG] Databáze zahřáta.
+2026-04-15 14:16:58.649 +02:00 [DBG] Aplikace spuštěna.
+2026-04-15 14:16:59.463 +02:00 [DBG] Načteno 22 záznamů.
+2026-04-15 14:16:59.498 +02:00 [DBG] Načtení uživatele podle windows už. jména: 'jprochazka'.
+2026-04-15 14:16:59.498 +02:00 [DBG] Načtení uživatelských práv: '1'.
+2026-04-15 14:17:00.956 +02:00 [INF] Staženo 0 záznamů pro měsíc č.4 uživatele (1250): Jan Procházka - KAMERY.
+2026-04-15 14:17:01.467 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: PRO TYP PROJEKTU 0
+2026-04-15 14:17:01.479 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 3 TYPŮ
+2026-04-15 14:17:01.480 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: User 4 non-archived unique subtypes.
+2026-04-15 14:17:01.552 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: Returned 35 items.
+2026-04-15 14:17:01.625 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY', TÝDEN '2026-04-13 - 2026-04-19'
+2026-04-15 14:17:01.818 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 24 ZÁZNAMŮ
+2026-04-15 14:17:01.840 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: VŠECHNY
+2026-04-15 14:17:01.843 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 16 TYPŮ
+2026-04-15 14:17:01.899 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY BEZ SVAČIN' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY'
+2026-04-15 14:17:01.958 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 1512 ZÁZNAMŮ

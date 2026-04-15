@@ -133,6 +133,7 @@
             gBLock.TabIndex = 14;
             gBLock.TabStop = false;
             gBLock.Text = "Zámek dat";
+            gBLock.Visible = false;
             // 
             // label1
             // 

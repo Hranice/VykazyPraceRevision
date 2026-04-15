@@ -480,7 +480,7 @@ namespace VykazyPrace.Dialogs
 
             int colProjekt = tableSummary.Field("Projekt").Column.ColumnNumber();
             int colSoucet = tableSummary.Field("Součet hodin").Column.ColumnNumber();
-            int colSuma = tableSummary.Field("Suma (měsíc)").Column.ColumnNumber();
+            int colSuma = tableSummary.Field("Suma (čas. úsek)").Column.ColumnNumber();
             int colDoch = tableSummary.Field("Docházka").Column.ColumnNumber();
 
             // Vodorovné čáry mezi řádky (uvnitř tabulky)

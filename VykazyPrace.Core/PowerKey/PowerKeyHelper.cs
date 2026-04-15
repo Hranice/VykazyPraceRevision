@@ -149,8 +149,6 @@ namespace VykazyPrace.Core.PowerKey
 
         public async Task<Dictionary<int, double>> GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month)
         {
-            int monthNumber = month.Year * 100 + month.Month; // YYYYMM
-
             const string sql = @"
 SELECT
     TRY_CONVERT(int, PE.PersonalNum) AS PersonalNumber,
@@ -159,7 +157,7 @@ FROM pwk.Person PE
 JOIN pwk.AttnMonth AM ON AM.PersonID = PE.PersonID
 JOIN pwk.AttnDay   AD ON AD.AttnMonthID = AM.AttnMonthID
 WHERE PE.DeletedID = 0
-  AND AM.MonthNumber = @MonthNumber
+  AND AM.MonthNumber = pwk.DateToMonthNumber(@MonthDate)
 GROUP BY TRY_CONVERT(int, PE.PersonalNum)
 HAVING TRY_CONVERT(int, PE.PersonalNum) IS NOT NULL;";
 
@@ -167,7 +165,8 @@ HAVING TRY_CONVERT(int, PE.PersonalNum) IS NOT NULL;";
 
             await using var conn = new SqlConnection(ConnectionString);
             await using var cmd = new SqlCommand(sql, conn);
-            cmd.Parameters.Add("@MonthNumber", SqlDbType.Int).Value = monthNumber;
+
+            cmd.Parameters.Add("@MonthDate", SqlDbType.Date).Value = month.Date;
 
             await conn.OpenAsync();
 
@@ -175,14 +174,12 @@ HAVING TRY_CONVERT(int, PE.PersonalNum) IS NOT NULL;";
             while (await reader.ReadAsync())
             {
                 int pn = reader.GetInt32(0);
-                double hours = reader.IsDBNull(1) ? 0 : reader.GetDouble(1);
+                double hours = reader.IsDBNull(1) ? 0 : Convert.ToDouble(reader.GetValue(1));
                 result[pn] = hours;
             }
 
             return result;
         }
-
-
 
         private async Task<DataTable?> GetUserDataFromSpAsync(int personalNumber, DateTime monthDate)
         {

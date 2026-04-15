@@ -254,3 +254,181 @@ Microsoft.Data.SqlClient.SqlException (0x80131904): Oprávnění SELECT bylo pro
    at VykazyPrace.Dialogs.DataTableFactory.BuildUserSummary(IEnumerable`1 timeEntries, DateTime exportMonth, IReadOnlyDictionary`2 cumToFullfilledDict) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 363
 ClientConnectionId:c25e220b-72db-466c-930b-175c1fef6d09
 Číslo chyby: 229, stav: 5, třída: 14
+2026-04-15 13:06:54.148 +02:00 [DBG] Zahřívací dotaz na databázi...
+2026-04-15 13:06:55.910 +02:00 [DBG] Databáze zahřáta.
+2026-04-15 13:06:55.911 +02:00 [DBG] Aplikace spuštěna.
+2026-04-15 13:06:57.516 +02:00 [DBG] Načteno 22 záznamů.
+2026-04-15 13:06:57.570 +02:00 [DBG] Načtení uživatele podle windows už. jména: 'jprochazka'.
+2026-04-15 13:06:57.570 +02:00 [DBG] Načtení uživatelských práv: '3'.
+2026-04-15 13:06:59.174 +02:00 [INF] Staženo 0 záznamů pro měsíc č.4 uživatele (1250): Jan Procházka - KAMERY.
+2026-04-15 13:06:59.677 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: PRO TYP PROJEKTU 0
+2026-04-15 13:06:59.699 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 3 TYPŮ
+2026-04-15 13:06:59.701 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: User 4 non-archived unique subtypes.
+2026-04-15 13:06:59.823 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: Returned 35 items.
+2026-04-15 13:06:59.962 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY', TÝDEN '2026-04-13 - 2026-04-19'
+2026-04-15 13:07:00.487 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 22 ZÁZNAMŮ
+2026-04-15 13:07:00.516 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: VŠECHNY
+2026-04-15 13:07:00.526 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 16 TYPŮ
+2026-04-15 13:07:00.723 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY BEZ SVAČIN' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY'
+2026-04-15 13:07:01.267 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 1510 ZÁZNAMŮ
+2026-04-15 13:07:06.530 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: VŠECHNY
+2026-04-15 13:07:06.541 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 16 TYPŮ
+2026-04-15 13:07:06.582 +02:00 [DBG] [ČAS.ZÁZNAM_AKTUALIZACE]: ' - : 0,5 h - ' NA ' - Svačina: 0,5 h - '
+2026-04-15 13:07:06.714 +02:00 [DBG] [ČAS.ZÁZNAM_AKTUALIZACE]: HOTOVO
+2026-04-15 13:07:07.347 +02:00 [DBG] [ČAS.ZÁZNAM_PŘIDÁNÍ]: ' - : 0,5 h - '.
+2026-04-15 13:07:07.447 +02:00 [DBG] [ČAS.ZÁZNAM_PŘIDÁNÍ]: HOTOVO.
+2026-04-15 13:07:08.940 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: VŠECHNY
+2026-04-15 13:07:08.949 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 16 TYPŮ
+2026-04-15 13:07:08.958 +02:00 [DBG] [ČAS.ZÁZNAM_AKTUALIZACE]: ' - : 0,5 h - ' NA ' - : 1,5 h - '
+2026-04-15 13:07:09.003 +02:00 [DBG] [ČAS.ZÁZNAM_AKTUALIZACE]: HOTOVO
+2026-04-15 13:07:09.516 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: PRO TYP PROJEKTU 0
+2026-04-15 13:07:09.524 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 3 TYPŮ
+2026-04-15 13:08:05.790 +02:00 [DBG] [PODTYPZÁZNAMU_PŘIDÁNÍ]: 'IT' for user 4.
+2026-04-15 13:08:05.833 +02:00 [DBG] [PODTYPZÁZNAMU_PŘIDÁNÍ]: Exists non-archived with ID 45.
+2026-04-15 13:08:05.836 +02:00 [DBG] [ČAS.ZÁZNAM_AKTUALIZACE]: ' - : 1,5 h - ' NA ' - : 1,5 h - IT'
+2026-04-15 13:08:05.910 +02:00 [DBG] [ČAS.ZÁZNAM_AKTUALIZACE]: HOTOVO
+2026-04-15 13:08:05.910 +02:00 [INF] [EntryUpdate(24720)]: Záznam  - : 1,5 h - IT byl úspěšně aktualizován.
+2026-04-15 13:08:05.915 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: User 4 non-archived unique subtypes.
+2026-04-15 13:08:05.961 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: Returned 35 items.
+2026-04-15 13:08:05.976 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY', TÝDEN '2026-04-13 - 2026-04-19'
+2026-04-15 13:08:05.993 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 23 ZÁZNAMŮ
+2026-04-15 13:08:06.018 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: VŠECHNY
+2026-04-15 13:08:06.026 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 16 TYPŮ
+2026-04-15 13:08:07.168 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: VŠECHNY
+2026-04-15 13:08:07.177 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 16 TYPŮ
+2026-04-15 13:08:07.185 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: PRO TYP PROJEKTU 0
+2026-04-15 13:08:07.194 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 3 TYPŮ
+2026-04-15 13:08:08.666 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: VŠECHNY
+2026-04-15 13:08:08.675 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 16 TYPŮ
+2026-04-15 13:08:08.676 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: PRO TYP PROJEKTU 0
+2026-04-15 13:08:08.684 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 3 TYPŮ
+2026-04-15 13:08:10.565 +02:00 [DBG] [ČAS.ZÁZNAM_AKTUALIZACE]: ' - : 0,5 h - ' NA ' - Svačina: 0,5 h - '
+2026-04-15 13:08:10.617 +02:00 [DBG] [ČAS.ZÁZNAM_AKTUALIZACE]: HOTOVO
+2026-04-15 13:08:10.618 +02:00 [DBG] [ČAS.ZÁZNAM_PŘIDÁNÍ]: ' - : 1,5 h - SW - Výkazy hodin'.
+2026-04-15 13:08:10.673 +02:00 [DBG] [ČAS.ZÁZNAM_PŘIDÁNÍ]: HOTOVO.
+2026-04-15 13:08:10.898 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: PRO TYP PROJEKTU 0
+2026-04-15 13:08:10.907 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 3 TYPŮ
+2026-04-15 13:08:10.913 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: PRO TYP PROJEKTU 0
+2026-04-15 13:08:10.921 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 3 TYPŮ
+2026-04-15 13:08:11.578 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: VŠECHNY
+2026-04-15 13:08:11.586 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 16 TYPŮ
+2026-04-15 13:08:11.594 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: PRO TYP PROJEKTU 0
+2026-04-15 13:08:11.602 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 3 TYPŮ
+2026-04-15 13:10:35.453 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' OBDOBÍ '2026-03-01 - 2026-03-31'
+2026-04-15 13:10:36.034 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 1862 ZÁZNAMŮ
+2026-04-15 13:10:39.305 +02:00 [ERR] Chyba při exportu ClosedXML.
+
+Inner exception: 
+System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values. (Parameter 'The header row doesn't contain field name 'Suma (měsíc)'.')
+   at ClosedXML.Excel.XLTable.GetFieldIndex(String name)
+   at ClosedXML.Excel.XLTable.Field(String fieldName)
+   at VykazyPrace.Dialogs.ExcelStylingService.BeautifyUserSummarySheet(IXLWorksheet wsSummary, IXLTable tableSummary) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 483
+   at VykazyPrace.Dialogs.TimeEntryExportService.ExportAsync(String filePath, DateTime from, DateTime to, IEnumerable`1 selectedUserGroupIds) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 668
+2026-04-15 13:11:19.531 +02:00 [DBG] Zahřívací dotaz na databázi...
+2026-04-15 13:11:20.930 +02:00 [DBG] Databáze zahřáta.
+2026-04-15 13:11:20.931 +02:00 [DBG] Aplikace spuštěna.
+2026-04-15 13:11:21.761 +02:00 [DBG] Načteno 22 záznamů.
+2026-04-15 13:11:21.805 +02:00 [DBG] Načtení uživatele podle windows už. jména: 'jprochazka'.
+2026-04-15 13:11:21.805 +02:00 [DBG] Načtení uživatelských práv: '3'.
+2026-04-15 13:11:23.612 +02:00 [INF] Staženo 0 záznamů pro měsíc č.4 uživatele (1250): Jan Procházka - KAMERY.
+2026-04-15 13:11:24.084 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: PRO TYP PROJEKTU 0
+2026-04-15 13:11:24.102 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 3 TYPŮ
+2026-04-15 13:11:24.104 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: User 4 non-archived unique subtypes.
+2026-04-15 13:11:24.214 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: Returned 35 items.
+2026-04-15 13:11:24.343 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY', TÝDEN '2026-04-13 - 2026-04-19'
+2026-04-15 13:11:24.867 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 24 ZÁZNAMŮ
+2026-04-15 13:11:24.899 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: VŠECHNY
+2026-04-15 13:11:24.911 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 16 TYPŮ
+2026-04-15 13:11:25.132 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY BEZ SVAČIN' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY'
+2026-04-15 13:11:25.720 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 1512 ZÁZNAMŮ
+2026-04-15 13:12:08.330 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' OBDOBÍ '2026-03-01 - 2026-03-31'
+2026-04-15 13:12:08.933 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 1862 ZÁZNAMŮ
+2026-04-15 13:12:40.171 +02:00 [DBG] Zahřívací dotaz na databázi...
+2026-04-15 13:12:41.758 +02:00 [DBG] Databáze zahřáta.
+2026-04-15 13:12:41.758 +02:00 [DBG] Aplikace spuštěna.
+2026-04-15 13:12:42.586 +02:00 [DBG] Načteno 22 záznamů.
+2026-04-15 13:12:42.634 +02:00 [DBG] Načtení uživatele podle windows už. jména: 'jprochazka'.
+2026-04-15 13:12:42.635 +02:00 [DBG] Načtení uživatelských práv: '3'.
+2026-04-15 13:12:44.181 +02:00 [INF] Staženo 0 záznamů pro měsíc č.4 uživatele (1250): Jan Procházka - KAMERY.
+2026-04-15 13:12:44.675 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: PRO TYP PROJEKTU 0
+2026-04-15 13:12:44.694 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 3 TYPŮ
+2026-04-15 13:12:44.695 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: User 4 non-archived unique subtypes.
+2026-04-15 13:12:44.801 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: Returned 35 items.
+2026-04-15 13:12:44.926 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY', TÝDEN '2026-04-13 - 2026-04-19'
+2026-04-15 13:12:45.446 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 24 ZÁZNAMŮ
+2026-04-15 13:12:45.480 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: VŠECHNY
+2026-04-15 13:12:45.490 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 16 TYPŮ
+2026-04-15 13:12:45.695 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY BEZ SVAČIN' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY'
+2026-04-15 13:12:46.252 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 1512 ZÁZNAMŮ
+2026-04-15 13:12:59.904 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' OBDOBÍ '2026-04-13 - 2026-04-19'
+2026-04-15 13:12:59.961 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 259 ZÁZNAMŮ
+2026-04-15 13:14:40.643 +02:00 [DBG] Zahřívací dotaz na databázi...
+2026-04-15 13:14:42.022 +02:00 [DBG] Databáze zahřáta.
+2026-04-15 13:14:42.022 +02:00 [DBG] Aplikace spuštěna.
+2026-04-15 13:14:42.781 +02:00 [DBG] Načteno 22 záznamů.
+2026-04-15 13:14:42.815 +02:00 [DBG] Načtení uživatele podle windows už. jména: 'jprochazka'.
+2026-04-15 13:14:42.815 +02:00 [DBG] Načtení uživatelských práv: '3'.
+2026-04-15 13:14:44.354 +02:00 [INF] Staženo 0 záznamů pro měsíc č.4 uživatele (1250): Jan Procházka - KAMERY.
+2026-04-15 13:14:44.833 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: PRO TYP PROJEKTU 0
+2026-04-15 13:14:44.854 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 3 TYPŮ
+2026-04-15 13:14:44.855 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: User 4 non-archived unique subtypes.
+2026-04-15 13:14:44.963 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: Returned 35 items.
+2026-04-15 13:14:45.089 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY', TÝDEN '2026-04-13 - 2026-04-19'
+2026-04-15 13:14:45.604 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 24 ZÁZNAMŮ
+2026-04-15 13:14:45.638 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: VŠECHNY
+2026-04-15 13:14:45.649 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 16 TYPŮ
+2026-04-15 13:14:45.853 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY BEZ SVAČIN' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY'
+2026-04-15 13:14:46.434 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 1512 ZÁZNAMŮ
+2026-04-15 13:14:51.643 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' OBDOBÍ '2026-03-01 - 2026-03-31'
+2026-04-15 13:14:51.739 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 1862 ZÁZNAMŮ
+2026-04-15 13:15:11.053 +02:00 [DBG] Zahřívací dotaz na databázi...
+2026-04-15 13:15:12.494 +02:00 [DBG] Databáze zahřáta.
+2026-04-15 13:15:12.495 +02:00 [DBG] Aplikace spuštěna.
+2026-04-15 13:15:13.294 +02:00 [DBG] Načteno 22 záznamů.
+2026-04-15 13:15:13.334 +02:00 [DBG] Načtení uživatele podle windows už. jména: 'jprochazka'.
+2026-04-15 13:15:13.334 +02:00 [DBG] Načtení uživatelských práv: '3'.
+2026-04-15 13:15:14.910 +02:00 [INF] Staženo 0 záznamů pro měsíc č.4 uživatele (1250): Jan Procházka - KAMERY.
+2026-04-15 13:15:15.450 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: PRO TYP PROJEKTU 0
+2026-04-15 13:15:15.468 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 3 TYPŮ
+2026-04-15 13:15:15.470 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: User 4 non-archived unique subtypes.
+2026-04-15 13:15:15.581 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: Returned 35 items.
+2026-04-15 13:15:15.720 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY', TÝDEN '2026-04-13 - 2026-04-19'
+2026-04-15 13:15:16.245 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 24 ZÁZNAMŮ
+2026-04-15 13:15:16.278 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: VŠECHNY
+2026-04-15 13:15:16.288 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 16 TYPŮ
+2026-04-15 13:15:16.491 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY BEZ SVAČIN' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY'
+2026-04-15 13:15:17.048 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 1512 ZÁZNAMŮ
+2026-04-15 13:15:21.630 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' OBDOBÍ '2026-03-01 - 2026-03-31'
+2026-04-15 13:15:21.741 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 1862 ZÁZNAMŮ
+2026-04-15 13:25:38.013 +02:00 [DBG] Zahřívací dotaz na databázi...
+2026-04-15 13:25:39.610 +02:00 [DBG] Databáze zahřáta.
+2026-04-15 13:25:39.611 +02:00 [DBG] Aplikace spuštěna.
+2026-04-15 13:25:40.406 +02:00 [DBG] Načteno 22 záznamů.
+2026-04-15 13:25:40.446 +02:00 [DBG] Načtení uživatele podle windows už. jména: 'jprochazka'.
+2026-04-15 13:25:40.446 +02:00 [DBG] Načtení uživatelských práv: '3'.
+2026-04-15 13:25:42.003 +02:00 [INF] Staženo 0 záznamů pro měsíc č.4 uživatele (1250): Jan Procházka - KAMERY.
+2026-04-15 13:25:42.529 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: PRO TYP PROJEKTU 0
+2026-04-15 13:25:42.548 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 3 TYPŮ
+2026-04-15 13:25:42.550 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: User 4 non-archived unique subtypes.
+2026-04-15 13:25:42.661 +02:00 [DBG] [PODTYPZÁZNAMU_ZÍSKÁNÍ]: Returned 35 items.
+2026-04-15 13:25:42.792 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY', TÝDEN '2026-04-13 - 2026-04-19'
+2026-04-15 13:25:43.312 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 24 ZÁZNAMŮ
+2026-04-15 13:25:43.341 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: VŠECHNY
+2026-04-15 13:25:43.351 +02:00 [DBG] [TYPZÁZNAMU_ZÍSKÁNÍ]: HOTOVO VRÁCENO 16 TYPŮ
+2026-04-15 13:25:43.566 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY BEZ SVAČIN' PRO UŽIVATELE '(1250): Jan Procházka - KAMERY'
+2026-04-15 13:25:44.133 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 1512 ZÁZNAMŮ
+2026-04-15 13:25:48.938 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' OBDOBÍ '2026-03-01 - 2026-03-31'
+2026-04-15 13:25:49.022 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 1862 ZÁZNAMŮ
+2026-04-15 13:25:50.448 +02:00 [ERR] Chyba při exportu ClosedXML.
+
+Inner exception: 
+System.IO.IOException: The process cannot access the file 'C:\Users\jprochazka\Desktop\Export.xlsx' because it is being used by another process.
+   at System.IO.FileSystem.DeleteFile(String fullPath)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, SaveOptions options)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file, Boolean validate, Boolean evaluateFormulae)
+   at ClosedXML.Excel.XLWorkbook.SaveAs(String file)
+   at VykazyPrace.Dialogs.TimeEntryExportService.ExportAsync(String filePath, DateTime from, DateTime to, IEnumerable`1 selectedUserGroupIds) in C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\Dialogs\ExportDialog.cs:line 692
+2026-04-15 13:31:30.638 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' OBDOBÍ '2026-03-01 - 2026-03-31'
+2026-04-15 13:31:31.257 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 1862 ZÁZNAMŮ
+2026-04-15 13:32:04.142 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: 'VŠECHNY' OBDOBÍ '2026-04-01 - 2026-04-30'
+2026-04-15 13:32:04.195 +02:00 [DBG] [ČAS.ZÁZNAM_ZÍSKÁNÍ]: HOTOVO VRÁCENO 901 ZÁZNAMŮ

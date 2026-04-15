@@ -8,6 +8,7 @@ using VykazyPrace.Core.Helpers;
 using ClosedXML.Excel;
 using DataTable = System.Data.DataTable;
 using System.Globalization;
+using VykazyPrace.Core.Configuration;
 
 /// <summary>
 /// ChatGPT 5 credits:
@@ -27,6 +28,7 @@ namespace VykazyPrace.Dialogs
         private readonly SpecialDayRepository _specialDayRepo = new();
 
         private readonly User _currentUser;
+        private readonly AppConfig _config;
 
         // Služby
         private readonly DataTableFactory _tableFactory = new();
@@ -37,12 +39,14 @@ namespace VykazyPrace.Dialogs
         {
             InitializeComponent();
             _currentUser = currentUser;
+            _config = ConfigService.Load();
         }
 
         #region — Životní cyklus dialogu —
         private async void ExportDialog_Load(object sender, EventArgs e)
         {
             InitializeDatePickers();
+            RestoreExportRangeSelectionFromConfig();
             await LoadUserGroupsToTreeViewAsync();
 
             if(_currentUser.LevelOfAccess > 2)
@@ -134,6 +138,114 @@ namespace VykazyPrace.Dialogs
 
             tVUserGroupsUsers.ExpandAll();
             tVUserGroupsUsers.EndUpdate();
+
+            ApplySavedSelectionToTreeView();
+        }
+
+        private void ApplySavedSelectionToTreeView()
+        {
+            var savedGroupIds = _config.ExportSelection?.SelectedUserGroupIds?.ToHashSet() ?? new HashSet<int>();
+            var savedUserIds = _config.ExportSelection?.SelectedUserIds?.ToHashSet() ?? new HashSet<int>();
+
+            bool anythingSaved = savedGroupIds.Count > 0 || savedUserIds.Count > 0;
+
+            // když nic uložené není, defaultně vše vybrané
+            if (!anythingSaved)
+            {
+                CheckAllTreeNodes();
+                return;
+            }
+
+            _isTreeViewChecking = true;
+            try
+            {
+                foreach (TreeNode groupNode in tVUserGroupsUsers.Nodes)
+                {
+                    if (groupNode.Tag is not UserGroup group)
+                        continue;
+
+                    bool groupChecked = savedGroupIds.Contains(group.Id);
+                    groupNode.Checked = groupChecked;
+
+                    foreach (TreeNode userNode in groupNode.Nodes)
+                    {
+                        if (userNode.Tag is not User user)
+                            continue;
+
+                        userNode.Checked = groupChecked || savedUserIds.Contains(user.Id);
+                    }
+
+                    // rodič checked pokud je checked skupina nebo aspoň jedno dítě
+                    if (!groupChecked)
+                        groupNode.Checked = groupNode.Nodes.Cast<TreeNode>().Any(n => n.Checked);
+                }
+            }
+            finally
+            {
+                _isTreeViewChecking = false;
+            }
+        }
+
+        private void RestoreExportRangeSelectionFromConfig()
+        {
+            var exportConfig = _config.ExportSelection;
+            if (exportConfig == null)
+                return;
+
+            // Nejdřív vše odškrtnout, protože radio buttony mohou být v různých containerech
+            rBSpecificTimePeriod.Checked = false;
+            rBSpecificWeek.Checked = false;
+            rBSpecificMonth.Checked = false;
+            rBSpecificYear.Checked = false;
+
+            RadioButton targetRadioButton = rBSpecificTimePeriod;
+
+            // nejdřív rok, protože ho používá víc režimů
+            if (exportConfig.Year.HasValue)
+            {
+                int year = exportConfig.Year.Value;
+                nUDYear.Value = Math.Min(nUDYear.Maximum, Math.Max(nUDYear.Minimum, year));
+            }
+
+            switch (exportConfig.SelectedRangeType)
+            {
+                case ExportRangeType.TimePeriod:
+                    targetRadioButton = rBSpecificTimePeriod;
+
+                    if (exportConfig.From.HasValue)
+                        dtpFrom.Value = exportConfig.From.Value;
+
+                    if (exportConfig.To.HasValue)
+                        dtpTo.Value = exportConfig.To.Value;
+
+                    break;
+
+                case ExportRangeType.Week:
+                    targetRadioButton = rBSpecificWeek;
+
+                    if (exportConfig.Week.HasValue)
+                    {
+                        int week = exportConfig.Week.Value;
+                        nUDWeek.Value = Math.Min(nUDWeek.Maximum, Math.Max(nUDWeek.Minimum, week));
+                    }
+
+                    break;
+
+                case ExportRangeType.Month:
+                    targetRadioButton = rBSpecificMonth;
+
+                    if (exportConfig.Month.HasValue && exportConfig.Month.Value >= 1 && exportConfig.Month.Value <= 12)
+                        cBMonth2.SelectedIndex = exportConfig.Month.Value - 1;
+
+                    break;
+
+                case ExportRangeType.Year:
+                    targetRadioButton = rBSpecificYear;
+                    break;
+            }
+
+            targetRadioButton.Checked = true;
+            SelectOption(targetRadioButton);
         }
         #endregion
 
@@ -156,6 +268,7 @@ namespace VykazyPrace.Dialogs
             try
             {
                 var (from, to) = GetSelectedExportRange();
+
                 await exportService.ExportAsync(
                     sfd.FileName,
                     from,
@@ -163,6 +276,8 @@ namespace VykazyPrace.Dialogs
                     selection.SelectedGroupIds,
                     selection.SelectedUserIds,
                     _currentUser);
+
+                SaveExportSelection(selection);
             }
             catch (Exception ex)
             {
@@ -262,6 +377,25 @@ namespace VykazyPrace.Dialogs
         #endregion
 
         #region - Helpery -
+        private void CheckAllTreeNodes()
+        {
+            _isTreeViewChecking = true;
+            try
+            {
+                foreach (TreeNode groupNode in tVUserGroupsUsers.Nodes)
+                {
+                    groupNode.Checked = true;
+
+                    foreach (TreeNode userNode in groupNode.Nodes)
+                        userNode.Checked = true;
+                }
+            }
+            finally
+            {
+                _isTreeViewChecking = false;
+            }
+        }
+
         private (DateTime From, DateTime To) GetSelectedExportRange()
         {
             if (rBSpecificTimePeriod.Checked)
@@ -304,6 +438,46 @@ namespace VykazyPrace.Dialogs
             }
 
             throw new InvalidOperationException("Není vybraná možnost časového rozsahu exportu.");
+        }
+
+        private void SaveExportSelection(UserSelection selection)
+        {
+            _config.ExportSelection ??= new ExportSelectionConfig();
+
+            _config.ExportSelection.SelectedUserGroupIds = selection.SelectedGroupIds.ToList();
+            _config.ExportSelection.SelectedUserIds = selection.SelectedUserIds.ToList();
+
+            _config.ExportSelection.From = null;
+            _config.ExportSelection.To = null;
+            _config.ExportSelection.Week = null;
+            _config.ExportSelection.Month = null;
+            _config.ExportSelection.Year = null;
+
+            if (rBSpecificTimePeriod.Checked)
+            {
+                _config.ExportSelection.SelectedRangeType = ExportRangeType.TimePeriod;
+                _config.ExportSelection.From = dtpFrom.Value.Date;
+                _config.ExportSelection.To = dtpTo.Value.Date;
+            }
+            else if (rBSpecificWeek.Checked)
+            {
+                _config.ExportSelection.SelectedRangeType = ExportRangeType.Week;
+                _config.ExportSelection.Week = (int)nUDWeek.Value;
+                _config.ExportSelection.Year = (int)nUDYear.Value;
+            }
+            else if (rBSpecificMonth.Checked)
+            {
+                _config.ExportSelection.SelectedRangeType = ExportRangeType.Month;
+                _config.ExportSelection.Month = cBMonth2.SelectedIndex + 1;
+                _config.ExportSelection.Year = (int)nUDYear.Value;
+            }
+            else if (rBSpecificYear.Checked)
+            {
+                _config.ExportSelection.SelectedRangeType = ExportRangeType.Year;
+                _config.ExportSelection.Year = (int)nUDYear.Value;
+            }
+
+            ConfigService.Save(_config);
         }
 
         private sealed class UserSelection

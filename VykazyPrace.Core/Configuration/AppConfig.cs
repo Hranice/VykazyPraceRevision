@@ -17,7 +17,24 @@ namespace VykazyPrace.Core.Configuration
         public string NotificationTitle { get; set; } = "Už je čas!";
         public string NotificationText { get; set; } = "Čas vykázat hodiny!";
         public string LogLevel { get; set; } = "Information";
+        public ExportSelectionConfig ExportSelection { get; set; } = new();
     }
+
+    public class ExportSelectionConfig
+    {
+        public List<int> SelectedUserGroupIds { get; set; } = new();
+        public List<int> SelectedUserIds { get; set; } = new();
+
+        public ExportRangeType SelectedRangeType { get; set; } = ExportRangeType.TimePeriod;
+
+        public DateTime? From { get; set; }
+        public DateTime? To { get; set; }
+
+        public int? Week { get; set; }
+        public int? Month { get; set; }
+        public int? Year { get; set; }
+    }
+
 
     public enum PanelDayView
     {
@@ -27,4 +44,11 @@ namespace VykazyPrace.Core.Configuration
         ColorOvertime
     }
 
+    public enum ExportRangeType
+    {
+        TimePeriod,
+        Week,
+        Month,
+        Year
+    }
 }

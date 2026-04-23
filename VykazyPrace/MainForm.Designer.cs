@@ -50,6 +50,7 @@
             comboBoxUsers = new ComboBox();
             panel1 = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
+            buttonUpdate = new Button();
             tableLayoutPanel3 = new TableLayoutPanel();
             buttonReloadPowerKey = new Button();
             label2 = new Label();
@@ -97,7 +98,7 @@
             // exportToolStripMenuItem
             // 
             exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            exportToolStripMenuItem.Size = new Size(180, 22);
+            exportToolStripMenuItem.Size = new Size(108, 22);
             exportToolStripMenuItem.Text = "Export";
             exportToolStripMenuItem.Click += exportToolStripMenuItem_Click;
             // 
@@ -243,6 +244,7 @@
             // 
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(buttonUpdate, 0, 5);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel3, 0, 4);
             tableLayoutPanel1.Controls.Add(radioButton1, 0, 0);
             tableLayoutPanel1.Controls.Add(radioButton2, 0, 1);
@@ -251,15 +253,26 @@
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 5;
+            tableLayoutPanel1.RowCount = 6;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 38F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 38F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 45F));
             tableLayoutPanel1.Size = new Size(127, 592);
             tableLayoutPanel1.TabIndex = 8;
+            // 
+            // buttonUpdate
+            // 
+            buttonUpdate.Dock = DockStyle.Fill;
+            buttonUpdate.Location = new Point(3, 550);
+            buttonUpdate.Name = "buttonUpdate";
+            buttonUpdate.Size = new Size(121, 39);
+            buttonUpdate.TabIndex = 14;
+            buttonUpdate.Text = "Aktualizace";
+            buttonUpdate.UseVisualStyleBackColor = true;
+            buttonUpdate.Click += buttonUpdate_Click;
             // 
             // tableLayoutPanel3
             // 
@@ -268,7 +281,7 @@
             tableLayoutPanel3.Controls.Add(buttonReloadPowerKey, 1, 0);
             tableLayoutPanel3.Controls.Add(label2, 0, 0);
             tableLayoutPanel3.Dock = DockStyle.Bottom;
-            tableLayoutPanel3.Location = new Point(3, 520);
+            tableLayoutPanel3.Location = new Point(3, 475);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 2;
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
@@ -304,7 +317,7 @@
             tableLayoutPanel2.Controls.Add(buttonReloadNetworkDisks, 1, 0);
             tableLayoutPanel2.Controls.Add(label1, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Bottom;
-            tableLayoutPanel2.Location = new Point(3, 445);
+            tableLayoutPanel2.Location = new Point(3, 400);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 2;
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
@@ -336,7 +349,7 @@
             // buttonOutlookEvents
             // 
             buttonOutlookEvents.Dock = DockStyle.Bottom;
-            buttonOutlookEvents.Location = new Point(3, 367);
+            buttonOutlookEvents.Location = new Point(3, 322);
             buttonOutlookEvents.Name = "buttonOutlookEvents";
             buttonOutlookEvents.Size = new Size(121, 72);
             buttonOutlookEvents.TabIndex = 13;
@@ -518,5 +531,6 @@
         private Button buttonReloadPowerKey;
         private Label label2;
         private Button buttonOutlookEvents;
+        private Button buttonUpdate;
     }
 }

@@ -3,6 +3,7 @@ $publishDir = ".\$projectName\bin\Release\net8.0-windows\win-x64\publish"
 $networkUpdatePath = "Z:\TS\jprochazka-sw\WorkLog\Updates"
 $issPath = ".\WorkLog.iss"
 $innoSetupCompiler = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+$changelogPath = ".\Changelog.docx"
 
 # Read version from csproj
 $csprojPath = ".\$projectName\$projectName.csproj"
@@ -40,17 +41,23 @@ if ((Test-Path $innoSetupCompiler) -and (Test-Path $issPath)) {
     exit 1
 }
 
-# Skip renaming installer — keep default name
 $installerBaseName = "WorkLog_Installer"
 $installerBuiltPath = ".\Output\$installerBaseName.exe"
-
-# Copy installer and latest.txt to network path
 $installerDest = Join-Path $networkUpdatePath "$installerBaseName.exe"
+$networkChangelogPath = Join-Path $networkUpdatePath "Changelog.docx"
+
 Write-Host ""
 Write-Host "Copying files to: $networkUpdatePath"
 
 Copy-Item $latestTxtPath "$networkUpdatePath\latest.txt" -Force
 Copy-Item $installerBuiltPath $installerDest -Force
+
+if (Test-Path $changelogPath) {
+    Copy-Item $changelogPath $networkChangelogPath -Force
+    Write-Host "Changelog uploaded."
+} else {
+    Write-Host "WARNING: Changelog.docx not found, skipping upload."
+}
 
 Write-Host ""
 Write-Host "Installer uploaded as: $installerBaseName.exe"

@@ -10,6 +10,7 @@ using VykazyPrace.Core.Helpers;
 using VykazyPrace.Core.Logging;
 using VykazyPrace.Core.PowerKey;
 using VykazyPrace.Dialogs;
+using VykazyPrace.Updater;
 using VykazyPrace.UserControls;
 using VykazyPrace.UserControls.Calendar;
 using VykazyPrace.UserControls.CalendarV2;
@@ -43,6 +44,9 @@ namespace VykazyPrace
         // Notifications
         private System.Windows.Forms.Timer _notificationTimer;
         private DateTime? _lastNotificationDate = null;
+
+        // Update
+        private UpdateInfo? _cachedUpdateInfo;
 
         public MainForm()
         {
@@ -131,8 +135,12 @@ namespace VykazyPrace
 
         private async Task HandleUpdatesAsync()
         {
-            UpdateService.CheckForUpdateMessage();
-            await UpdateService.CheckForUpdateAsync();
+            _cachedUpdateInfo = await UpdateService.GetUpdateInfoAsync();
+
+            if (_cachedUpdateInfo.UpdateAvailable)
+            {
+                buttonUpdate.BackColor = Color.FromKnownColor(KnownColor.LightGoldenrodYellow);
+            }
         }
 
         private bool ValidateDatabase()
@@ -581,5 +589,9 @@ namespace VykazyPrace
             _loadingUC.Visible = false;
         }
 
+        private void buttonUpdate_Click(object sender, EventArgs e)
+        {
+            new UpdateDialog().ShowDialog();
+        }
     }
 }

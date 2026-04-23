@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using Serilog;
 using Serilog.Events;
 using VykazyPrace.Core.Configuration;
+using VykazyPrace.Core.Helpers;
 
 namespace VykazyPrace.Core.Logging
 {
@@ -23,13 +21,18 @@ namespace VykazyPrace.Core.Logging
         static AppLogger()
         {
             var config = ConfigService.Load();
-
             var level = ParseLogLevel(config.LogLevel);
+
+            var logDirectory = AppPaths.LogsDirectory;
+
+            Directory.CreateDirectory(logDirectory);
+
+            var logFilePath = Path.Combine(logDirectory, "log-.txt");
 
             Logger = new LoggerConfiguration()
                 .MinimumLevel.Is(level)
                 .WriteTo.Console()
-                .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+                .WriteTo.File(logFilePath, rollingInterval: RollingInterval.Day)
                 .CreateLogger();
         }
 

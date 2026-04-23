@@ -1,35 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
+using VykazyPrace.Core.Helpers;
 
 namespace VykazyPrace.Core.Configuration
 {
     public static class ConfigService
     {
-        private static string ConfigDir => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WorkLog");
-        private static string ConfigFile => Path.Combine(ConfigDir, "config.json");
-
         public static AppConfig Load()
         {
-            if (!File.Exists(ConfigFile))
+            if (!File.Exists(AppPaths.ConfigFile))
             {
-                Directory.CreateDirectory(ConfigDir);
+                Directory.CreateDirectory(AppPaths.RoamingDirectory);
                 var defaultConfig = new AppConfig();
                 Save(defaultConfig);
                 return defaultConfig;
             }
 
-            return JsonSerializer.Deserialize<AppConfig>(File.ReadAllText(ConfigFile))!;
+            return JsonSerializer.Deserialize<AppConfig>(File.ReadAllText(AppPaths.ConfigFile))!;
         }
 
         public static void Save(AppConfig config)
         {
-            Directory.CreateDirectory(ConfigDir);
-            File.WriteAllText(ConfigFile, JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true }));
+            Directory.CreateDirectory(AppPaths.RoamingDirectory);
+            File.WriteAllText(
+                AppPaths.ConfigFile,
+                JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true }));
         }
     }
-
 }

@@ -148,3 +148,4 @@ C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-wind
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\bin\Release\net8.0-windows\Microsoft.Office.Interop.Outlook.dll
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\VykazyPrace.Dialogs.OutlookEvents.resources
 C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\VykazyPrace.UserControls.Outlook.OutlookEvent.resources
+C:\Users\jprochazka\source\repos\VykazyPrace\VykazyPrace\obj\Release\net8.0-windows\VykazyPrace.Dialogs.UpdateDialog.resources

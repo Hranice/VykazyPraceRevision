@@ -1035,17 +1035,12 @@ namespace VykazyPrace.Dialogs
             };
         }
 
-        public void AddEvaluationPieChartWithExcelInterop(string filePath)
+        public void AddEvaluationChartsWithExcelInterop(string filePath)
         {
             Excel.Application? excel = null;
             Excel.Workbook? workbook = null;
             Excel.Worksheet? ws = null;
             Excel.ChartObjects? chartObjects = null;
-            Excel.ChartObject? chartObject = null;
-            Excel.Chart? chart = null;
-            Excel.SeriesCollection? seriesCollection = null;
-            Excel.Series? series = null;
-            Excel.DataLabels? dataLabels = null;
 
             try
             {
@@ -1057,12 +1052,49 @@ namespace VykazyPrace.Dialogs
 
                 workbook = excel.Workbooks.Open(filePath);
                 ws = (Excel.Worksheet)workbook.Worksheets["VYHODNOCENÍ"];
-
                 chartObjects = (Excel.ChartObjects)ws.ChartObjects(Type.Missing);
 
-                // Umístění grafu přesně do oblasti G3:M17
-                var topLeft = (Excel.Range)ws.Range["G3"];
-                var chartArea = (Excel.Range)ws.Range["G3:M17"];
+                AddEvaluationPieChart(chartObjects, ws);
+                AddEvaluationColumnChart(chartObjects, ws);
+
+                workbook.Save();
+            }
+            finally
+            {
+                if (chartObjects != null) Marshal.ReleaseComObject(chartObjects);
+                if (ws != null) Marshal.ReleaseComObject(ws);
+
+                if (workbook != null)
+                {
+                    workbook.Close(SaveChanges: false);
+                    Marshal.ReleaseComObject(workbook);
+                }
+
+                if (excel != null)
+                {
+                    excel.Quit();
+                    Marshal.ReleaseComObject(excel);
+                }
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+        }
+
+        private static void AddEvaluationPieChart(Excel.ChartObjects chartObjects, Excel.Worksheet ws)
+        {
+            Excel.ChartObject? chartObject = null;
+            Excel.Chart? chart = null;
+            Excel.SeriesCollection? seriesCollection = null;
+            Excel.Series? series = null;
+            Excel.DataLabels? dataLabels = null;
+            Excel.Range? topLeft = null;
+            Excel.Range? chartArea = null;
+
+            try
+            {
+                topLeft = (Excel.Range)ws.Range["G3"];
+                chartArea = (Excel.Range)ws.Range["G3:M17"];
 
                 chartObject = chartObjects.Add(
                     (double)topLeft.Left,
@@ -1076,9 +1108,6 @@ namespace VykazyPrace.Dialogs
                 chart = chartObject.Chart;
                 chart.ChartType = Excel.XlChartType.xl3DPie;
 
-                // Zdroj dat: pomocná oblast pod grafem
-                // G3:G6 = názvy kategorií
-                // H3:H6 = procenta ze sloupce E
                 seriesCollection = (Excel.SeriesCollection)chart.SeriesCollection();
                 series = seriesCollection.NewSeries();
 
@@ -1086,23 +1115,19 @@ namespace VykazyPrace.Dialogs
                 series.Values = "='VYHODNOCENÍ'!$H$3:$H$6";
                 series.Name = "Podíl";
 
-                // Titulek
                 chart.HasTitle = true;
                 chart.ChartTitle.Text = "Podíl využití časového fondu v rámci AUTOMATIZACE";
                 chart.ChartTitle.Font.Bold = true;
                 chart.ChartTitle.Font.Size = 14;
 
-                // Legenda dole
                 chart.HasLegend = true;
                 chart.Legend.Position = Excel.XlLegendPosition.xlLegendPositionBottom;
                 chart.Legend.Font.Size = 10;
 
-                // 3D natočení podobné předloze
                 chart.Rotation = 120;
                 chart.Elevation = 25;
                 chart.Perspective = 30;
 
-                // Vzhled oblasti grafu - bílé pozadí + černý rámeček
                 chart.ChartArea.Border.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Black);
                 chart.ChartArea.Border.Weight = Excel.XlBorderWeight.xlThin;
 
@@ -1110,7 +1135,6 @@ namespace VykazyPrace.Dialogs
                 chart.PlotArea.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.White);
                 chart.PlotArea.Border.LineStyle = Excel.XlLineStyle.xlLineStyleNone;
 
-                // Datové popisky
                 series.ApplyDataLabels();
 
                 dataLabels = (Excel.DataLabels)series.DataLabels();
@@ -1123,17 +1147,10 @@ namespace VykazyPrace.Dialogs
                 dataLabels.Font.Bold = true;
                 dataLabels.Position = Excel.XlDataLabelPosition.xlLabelPositionBestFit;
 
-                // Barvy výsečí podle předlohy:
-                // 1 Projekty - béžová
-                // 2 Automatizace - světle modrá
-                // 3 Provoz výroba - světle šedá
-                // 4 Ostatní - světle zelená
-                SetPiePointColor(series, 1, "#F8CBAD");
-                SetPiePointColor(series, 2, "#BDD7EE");
-                SetPiePointColor(series, 3, "#D9D9D9");
-                SetPiePointColor(series, 4, "#E2F0D9");
-
-                workbook.Save();
+                SetSeriesPointColor(series, 1, "#F8CBAD");
+                SetSeriesPointColor(series, 2, "#BDD7EE");
+                SetSeriesPointColor(series, 3, "#D9D9D9");
+                SetSeriesPointColor(series, 4, "#E2F0D9");
             }
             finally
             {
@@ -1142,59 +1159,13 @@ namespace VykazyPrace.Dialogs
                 if (seriesCollection != null) Marshal.ReleaseComObject(seriesCollection);
                 if (chart != null) Marshal.ReleaseComObject(chart);
                 if (chartObject != null) Marshal.ReleaseComObject(chartObject);
-                if (chartObjects != null) Marshal.ReleaseComObject(chartObjects);
-                if (ws != null) Marshal.ReleaseComObject(ws);
-
-                if (workbook != null)
-                {
-                    workbook.Close(SaveChanges: false);
-                    Marshal.ReleaseComObject(workbook);
-                }
-
-                if (excel != null)
-                {
-                    excel.Quit();
-                    Marshal.ReleaseComObject(excel);
-                }
-
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
+                if (chartArea != null) Marshal.ReleaseComObject(chartArea);
+                if (topLeft != null) Marshal.ReleaseComObject(topLeft);
             }
         }
 
-        private static void SetPiePointColor(Excel.Series series, int pointIndex, string htmlColor)
+        private static void AddEvaluationColumnChart(Excel.ChartObjects chartObjects, Excel.Worksheet ws)
         {
-            Excel.Point? point = null;
-
-            try
-            {
-                point = (Excel.Point)series.Points(pointIndex);
-
-                int fillColor = System.Drawing.ColorTranslator.ToOle(
-                    System.Drawing.ColorTranslator.FromHtml(htmlColor)
-                );
-
-                int borderColor = System.Drawing.ColorTranslator.ToOle(
-                    System.Drawing.Color.Black
-                );
-
-                point.Interior.Color = fillColor;
-                point.Border.Color = borderColor;
-                point.Border.Weight = Excel.XlBorderWeight.xlThin;
-            }
-            finally
-            {
-                if (point != null)
-                    Marshal.ReleaseComObject(point);
-            }
-        }
-
-        public void AddEvaluationColumnChartWithExcelInterop(string filePath)
-        {
-            Excel.Application? excel = null;
-            Excel.Workbook? workbook = null;
-            Excel.Worksheet? ws = null;
-            Excel.ChartObjects? chartObjects = null;
             Excel.ChartObject? chartObject = null;
             Excel.Chart? chart = null;
             Excel.SeriesCollection? seriesCollection = null;
@@ -1202,23 +1173,13 @@ namespace VykazyPrace.Dialogs
             Excel.DataLabels? dataLabels = null;
             Excel.Axis? valueAxis = null;
             Excel.DataTable? dataTable = null;
+            Excel.Range? topLeft = null;
+            Excel.Range? chartArea = null;
 
             try
             {
-                excel = new Excel.Application
-                {
-                    DisplayAlerts = false,
-                    Visible = false
-                };
-
-                workbook = excel.Workbooks.Open(filePath);
-                ws = (Excel.Worksheet)workbook.Worksheets["VYHODNOCENÍ"];
-
-                chartObjects = (Excel.ChartObjects)ws.ChartObjects(Type.Missing);
-
-                // Umístění grafu přesně do oblasti A18:M35
-                var topLeft = (Excel.Range)ws.Range["A18"];
-                var chartArea = (Excel.Range)ws.Range["A18:M35"];
+                topLeft = (Excel.Range)ws.Range["A18"];
+                chartArea = (Excel.Range)ws.Range["A18:M35"];
 
                 chartObject = chartObjects.Add(
                     (double)topLeft.Left,
@@ -1232,9 +1193,6 @@ namespace VykazyPrace.Dialogs
                 chart = chartObject.Chart;
                 chart.ChartType = Excel.XlChartType.xlColumnClustered;
 
-                // Zdroj dat:
-                // B3:B13 = názvy kategorií
-                // C3:C13 = odpracované hodiny
                 seriesCollection = (Excel.SeriesCollection)chart.SeriesCollection();
                 series = seriesCollection.NewSeries();
 
@@ -1242,31 +1200,32 @@ namespace VykazyPrace.Dialogs
                 series.XValues = "='VYHODNOCENÍ'!$B$3:$B$13";
                 series.Values = "='VYHODNOCENÍ'!$C$3:$C$13";
 
-                // Titulek
                 chart.HasTitle = true;
                 chart.ChartTitle.Text = "Odpracované hodiny";
                 chart.ChartTitle.Font.Bold = true;
                 chart.ChartTitle.Font.Size = 14;
 
-                // Vzhled oblasti grafu
+                chart.HasLegend = false;
+
+                int white = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.White);
+
+                chart.ChartArea.Interior.Color = white;
+                chart.PlotArea.Interior.Color = white;
+
                 chart.ChartArea.Border.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Black);
                 chart.ChartArea.Border.Weight = Excel.XlBorderWeight.xlThin;
 
-                var bgColor = System.Drawing.ColorTranslator.ToOle(
-                    System.Drawing.ColorTranslator.FromHtml("#F2F2F2")
+                valueAxis = (Excel.Axis)chart.Axes(
+                    Excel.XlAxisType.xlValue,
+                    Excel.XlAxisGroup.xlPrimary
                 );
 
-                chart.ChartArea.Interior.Color = bgColor;
-                chart.PlotArea.Interior.Color = bgColor;
-
-                // Osa Y
-                valueAxis = (Excel.Axis)chart.Axes(Excel.XlAxisType.xlValue, Excel.XlAxisGroup.xlPrimary);
                 valueAxis.MinimumScale = 0;
                 valueAxis.HasMajorGridlines = true;
                 valueAxis.TickLabels.NumberFormatLocal = "# ##0,0";
 
-                // Popisky hodnot nad sloupci
                 series.ApplyDataLabels();
+
                 dataLabels = (Excel.DataLabels)series.DataLabels();
                 dataLabels.ShowValue = true;
                 dataLabels.ShowCategoryName = false;
@@ -1276,26 +1235,21 @@ namespace VykazyPrace.Dialogs
                 dataLabels.Font.Bold = true;
                 dataLabels.Position = Excel.XlDataLabelPosition.xlLabelPositionOutsideEnd;
 
-                // Datová tabulka pod grafem
-                chart.HasLegend = false;
                 chart.HasDataTable = true;
                 dataTable = chart.DataTable;
                 dataTable.ShowLegendKey = true;
 
-                // Barvy jednotlivých sloupců – přibližně jako na obrázku
-                SetSeriesPointColor(series, 1, "#D9BEA1"); // EXTERNÍ PROJEKTY
-                SetSeriesPointColor(series, 2, "#E8C6A7"); // INTERNÍ PROJEKTY
-                SetSeriesPointColor(series, 3, "#A7B9CE"); // Provoz Automatizace
-                SetSeriesPointColor(series, 4, "#D9D9D9"); // Provoz SD
-                SetSeriesPointColor(series, 5, "#E7E6E6"); // Provoz HP
-                SetSeriesPointColor(series, 6, "#F4CCCC"); // Provoz MET
-                SetSeriesPointColor(series, 7, "#D9D9D9"); // Provoz KOM
-                SetSeriesPointColor(series, 8, "#8EAADB"); // Provoz SOR
-                SetSeriesPointColor(series, 9, "#C6E0B4"); // ostatní
-                SetSeriesPointColor(series, 10, "#D9EAD3"); // Nepřítomnost
-                SetSeriesPointColor(series, 11, "#D9D2E9"); // Kroužek MT
-
-                workbook.Save();
+                SetSeriesPointColor(series, 1, "#F8CBAD");
+                SetSeriesPointColor(series, 2, "#F4B183");
+                SetSeriesPointColor(series, 3, "#BDD7EE");
+                SetSeriesPointColor(series, 4, "#D9EAD3");
+                SetSeriesPointColor(series, 5, "#E7E6E6");
+                SetSeriesPointColor(series, 6, "#F4CCCC");
+                SetSeriesPointColor(series, 7, "#D9D9D9");
+                SetSeriesPointColor(series, 8, "#8EAADB");
+                SetSeriesPointColor(series, 9, "#C6E0B4");
+                SetSeriesPointColor(series, 10, "#E2F0D9");
+                SetSeriesPointColor(series, 11, "#D9D2E9");
             }
             finally
             {
@@ -1306,23 +1260,8 @@ namespace VykazyPrace.Dialogs
                 if (seriesCollection != null) Marshal.ReleaseComObject(seriesCollection);
                 if (chart != null) Marshal.ReleaseComObject(chart);
                 if (chartObject != null) Marshal.ReleaseComObject(chartObject);
-                if (chartObjects != null) Marshal.ReleaseComObject(chartObjects);
-                if (ws != null) Marshal.ReleaseComObject(ws);
-
-                if (workbook != null)
-                {
-                    workbook.Close(SaveChanges: false);
-                    Marshal.ReleaseComObject(workbook);
-                }
-
-                if (excel != null)
-                {
-                    excel.Quit();
-                    Marshal.ReleaseComObject(excel);
-                }
-
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
+                if (chartArea != null) Marshal.ReleaseComObject(chartArea);
+                if (topLeft != null) Marshal.ReleaseComObject(topLeft);
             }
         }
 
@@ -1680,8 +1619,7 @@ namespace VykazyPrace.Dialogs
 
                 if (buildEvaluationSheet)
                 {
-                    _tableFactory.AddEvaluationPieChartWithExcelInterop(filePath);
-                    _tableFactory.AddEvaluationColumnChartWithExcelInterop(filePath);
+                    _tableFactory.AddEvaluationChartsWithExcelInterop(filePath);
                 }
 
                 Process.Start(new ProcessStartInfo { FileName = filePath, UseShellExecute = true });

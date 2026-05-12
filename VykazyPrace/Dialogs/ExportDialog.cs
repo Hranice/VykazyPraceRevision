@@ -49,7 +49,7 @@ namespace VykazyPrace.Dialogs
             RestoreExportRangeSelectionFromConfig();
             await LoadUserGroupsToTreeViewAsync();
 
-            if(_currentUser.LevelOfAccess > 2)
+            if (_currentUser.LevelOfAccess > 2)
             {
                 gBLock.Visible = true;
             }
@@ -270,12 +270,13 @@ namespace VykazyPrace.Dialogs
                 var (from, to) = GetSelectedExportRange();
 
                 await exportService.ExportAsync(
-                    sfd.FileName,
-                    from,
-                    to,
-                    selection.SelectedGroupIds,
-                    selection.SelectedUserIds,
-                    _currentUser);
+        sfd.FileName,
+        from,
+        to,
+        selection.SelectedGroupIds,
+        selection.SelectedUserIds,
+        selection.SelectedUsers,
+        _currentUser);
 
                 SaveExportSelection(selection);
             }
@@ -484,6 +485,7 @@ namespace VykazyPrace.Dialogs
         {
             public HashSet<int> SelectedGroupIds { get; } = new();
             public HashSet<int> SelectedUserIds { get; } = new();
+            public List<User> SelectedUsers { get; } = new();
         }
 
         private UserSelection GetSelectedUsersAndGroupsFromTreeView()
@@ -493,6 +495,7 @@ namespace VykazyPrace.Dialogs
             if (_currentUser.LevelOfAccess == 1)
             {
                 result.SelectedUserIds.Add(_currentUser.Id);
+                result.SelectedUsers.Add(_currentUser);
                 return result;
             }
 
@@ -506,18 +509,20 @@ namespace VykazyPrace.Dialogs
                     .Where(n => n.Checked && n.Tag is User)
                     .ToList();
 
+                foreach (var userNode in checkedUserNodes)
+                {
+                    if (userNode.Tag is User user)
+                    {
+                        result.SelectedUserIds.Add(user.Id);
+                        result.SelectedUsers.Add(user);
+                    }
+                }
+
                 bool allUsersChecked = groupNode.Nodes.Count > 0 && checkedUserNodes.Count == groupNode.Nodes.Count;
 
                 if (groupNode.Checked && (groupNode.Nodes.Count == 0 || allUsersChecked))
                 {
                     result.SelectedGroupIds.Add(group.Id);
-                    continue;
-                }
-
-                foreach (var userNode in checkedUserNodes)
-                {
-                    if (userNode.Tag is User user)
-                        result.SelectedUserIds.Add(user.Id);
                 }
             }
 
@@ -645,6 +650,7 @@ namespace VykazyPrace.Dialogs
         /// Datová tabulka – souhrn podle uživatele. Souhrnné řádky uživatelů + rozpad na projekty.
         /// </summary>
         public async Task<DataTable> BuildUserSummary(
+            IEnumerable<User> selectedUsers,
             IEnumerable<TimeEntry> timeEntries,
             DateTime exportMonth,
             IReadOnlyDictionary<(int ProjectId, int UserId), double> cumToFullfilledDict)
@@ -680,29 +686,39 @@ namespace VykazyPrace.Dialogs
                 powerKeyData = new Dictionary<int, double>();
             }
 
-            // Ignorujeme nepřítomnost v souhrnu
-            var filteredEntries = timeEntries.Where(e => e.ProjectId != ExportConstants.AbsenceProjectId).ToList();
+            // Odkomentováno - Ignorovali jsme nepřítomnost v souhrnu
+            //var filteredEntries = timeEntries.Where(e => e.ProjectId != ExportConstants.AbsenceProjectId).ToList();
 
-            var groupedUsers = filteredEntries
-                .Where(e => e.User != null)
-                .GroupBy(e => new
-                {
-                    e.User!.Id,
-                    e.User!.PersonalNumber,
-                    FullName = $"{e.User.FirstName} {e.User.Surname}".Trim()
-                })
-                .OrderBy(g => g.Key.PersonalNumber)
-                .ThenBy(g => g.Key.FullName);
+            // Ignorujeme svačinu v souhrnu
+            var filteredEntries = timeEntries.Where(e => e.ProjectId != ExportConstants.ExcludedProjectId).ToList();
 
-            foreach (var userGroup in groupedUsers)
+            var entriesByUserId = filteredEntries
+      .Where(e => e.UserId.HasValue)
+      .GroupBy(e => e.UserId!.Value)
+      .ToDictionary(g => g.Key, g => g.ToList());
+
+            var usersToExport = selectedUsers
+                .Where(u => u != null)
+                .GroupBy(u => u.Id)
+                .Select(g => g.First())
+                .OrderBy(u => u.PersonalNumber)
+                .ThenBy(u => u.Surname)
+                .ThenBy(u => u.FirstName)
+                .ToList();
+
+            foreach (var user in usersToExport)
             {
-                double totalHours = userGroup.Sum(e => e.EntryMinutes) / 60.0;
-                double attendance = powerKeyData.TryGetValue(userGroup.Key.PersonalNumber, out double h) ? h : 0;
+                entriesByUserId.TryGetValue(user.Id, out var userEntries);
+                userEntries ??= new List<TimeEntry>();
 
-                // Souhrnný řádek (uživatel) – Projekt/Popis prázdné
+                double totalHours = userEntries.Sum(e => e.EntryMinutes) / 60.0;
+                double attendance = powerKeyData.TryGetValue(user.PersonalNumber, out double h) ? h : 0;
+                string fullName = $"{user.FirstName} {user.Surname}".Trim();
+
+                // Souhrnný řádek uživatele — vznikne i když userEntries je prázdné
                 dt.Rows.Add(
-                    userGroup.Key.PersonalNumber,
-                    userGroup.Key.FullName,
+                    user.PersonalNumber,
+                    fullName,
                     string.Empty,
                     string.Empty,
                     DBNull.Value!,
@@ -711,10 +727,15 @@ namespace VykazyPrace.Dialogs
                     DBNull.Value!
                 );
 
-                // Projekty pod uživatelem
-                var projects = userGroup
+                var projects = userEntries
                     .Where(e => e.Project != null)
-                    .GroupBy(e => new { e.Project!.Id, e.Project.ProjectTitle, e.Project.ProjectDescription, e.Project.DateFullFilled })
+                    .GroupBy(e => new
+                    {
+                        e.Project!.Id,
+                        e.Project.ProjectTitle,
+                        e.Project.ProjectDescription,
+                        e.Project.DateFullFilled
+                    })
                     .OrderBy(g => g.Key.ProjectTitle);
 
                 foreach (var proj in projects)
@@ -725,14 +746,15 @@ namespace VykazyPrace.Dialogs
                     if (proj.Key.DateFullFilled.HasValue)
                     {
                         int pid = proj.Key.Id;
-                        int uid = userGroup.Key.Id;
+                        int uid = user.Id;
+
                         if (cumToFullfilledDict.TryGetValue((pid, uid), out var val))
                             cumHours = val;
                     }
 
                     dt.Rows.Add(
-                        userGroup.Key.PersonalNumber,
-                        userGroup.Key.FullName,
+                        user.PersonalNumber,
+                        fullName,
                         proj.Key.ProjectTitle ?? "N/A",
                         proj.Key.ProjectDescription ?? "N/A",
                         monthlyHours,
@@ -813,6 +835,9 @@ namespace VykazyPrace.Dialogs
             var userBack = XLColor.FromHtml("#C0E6F5");
             var userTop = XLColor.FromHtml("#156082");
 
+            var userNoHoursFont = XLColor.FromHtml("#CC0000");
+
+
             for (int i = 0; i < userRows.Count; i++)
             {
                 int headerRow = userRows[i];
@@ -820,12 +845,26 @@ namespace VykazyPrace.Dialogs
                 int startDetail = headerRow + 1;
                 int endDetail = nextHeader - 1;
 
+                double totalHours = 0;
+
+                var totalCell = wsSummary.Cell(headerRow, colSuma);
+
+                if (totalCell.TryGetValue(out double parsedTotalHours))
+                    totalHours = parsedTotalHours;
+
+                bool hasNoHours = totalHours <= 0;
+
                 var headerRange = wsSummary.Range(headerRow, firstCol, headerRow, lastCol);
                 headerRange.Style.Font.Bold = true;
                 headerRange.Style.Fill.BackgroundColor = userBack;
                 headerRange.Style.Border.TopBorder = XLBorderStyleValues.Thick;
                 headerRange.Style.Border.TopBorderColor = userTop;
                 headerRange.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+
+                if (hasNoHours)
+                {
+                    headerRange.Style.Font.FontColor = userNoHoursFont;
+                }
 
                 wsSummary.Cell(headerRow, colSuma).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
                 wsSummary.Cell(headerRow, colDoch).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
@@ -917,12 +956,13 @@ namespace VykazyPrace.Dialogs
         /// Načte data, vytvoří listy a uloží XLSX.
         /// </summary>
         public async Task ExportAsync(
-     string filePath,
-     DateTime from,
-     DateTime to,
-     IEnumerable<int> selectedUserGroupIds,
-     IEnumerable<int> selectedUserIds,
-     User currentUser)
+         string filePath,
+         DateTime from,
+         DateTime to,
+         IEnumerable<int> selectedUserGroupIds,
+         IEnumerable<int> selectedUserIds,
+         IEnumerable<User> selectedUsers,
+         User currentUser)
         {
             try
             {
@@ -945,13 +985,16 @@ namespace VykazyPrace.Dialogs
                             (e.User.UserGroup != null && selectedGroupIdSet.Contains(e.User.UserGroup.Id))
                             || selectedUserIdSet.Contains(e.User.Id)
                         ))
-                    .Where(e => !(e.ProjectId == ExportConstants.ExcludedProjectId && e.EntryTypeId == ExportConstants.ExcludedEntryTypeId))
+                    // Exkludované záznamy nepřítomnosti
+                    //.Where(e => !(e.ProjectId == ExportConstants.ExcludedProjectId && e.EntryTypeId == ExportConstants.ExcludedEntryTypeId))
                     .Where(e => e.EntryTypeId != ExportConstants.OutlookEventEntryTypeId)
                     .ToList();
 
-                // Projekty pro jednotlivé listy (jen reálné projekty typu 0)
+                // Projekty pro jednotlivé listy (bez svačiny)
                 var projects = filtered
-                    .Where(e => e.Project?.ProjectType == 0 && e.ProjectId != null)
+                    // odkomentováno - sestavovali jsme bez nepřítomnosti atd
+                    //.Where(e => e.Project?.ProjectType == 0 && e.ProjectId != null)
+                    .Where(e => e.Project?.ProjectType != 6 && e.ProjectId != null)
                     .Select(e => e.Project!)
                     .GroupBy(p => p.Id)
                     .Select(g => g.First())
@@ -982,7 +1025,14 @@ namespace VykazyPrace.Dialogs
 
                 // „Souhrn podle uživatele“
                 var wsSummary = wb.AddWorksheet("Souhrn podle uživatele");
-                var dtSummary = await _tableFactory.BuildUserSummary(filtered, from, cumDict).ConfigureAwait(false);
+                var usersForSummary = selectedUsers
+    .GroupBy(u => u.Id)
+    .Select(g => g.First())
+    .ToList();
+
+                var dtSummary = await _tableFactory
+                    .BuildUserSummary(usersForSummary, filtered, from, cumDict)
+                    .ConfigureAwait(false);
                 var tableSummary = wsSummary.Cell(1, 1).InsertTable(dtSummary, "SouhrnUzivatel", true);
                 _styling.ApplyMedium2Teal(tableSummary);
                 _styling.BeautifyUserSummarySheet(wsSummary, tableSummary);

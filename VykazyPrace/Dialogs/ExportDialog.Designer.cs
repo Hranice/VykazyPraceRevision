@@ -344,7 +344,7 @@
             // cBBuildEvaluationSheet
             // 
             cBBuildEvaluationSheet.AutoSize = true;
-            cBBuildEvaluationSheet.Location = new Point(688, 298);
+            cBBuildEvaluationSheet.Location = new Point(688, 294);
             cBBuildEvaluationSheet.Name = "cBBuildEvaluationSheet";
             cBBuildEvaluationSheet.Size = new Size(172, 29);
             cBBuildEvaluationSheet.TabIndex = 22;

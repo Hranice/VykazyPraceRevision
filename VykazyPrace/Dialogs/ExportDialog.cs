@@ -9,6 +9,8 @@ using ClosedXML.Excel;
 using DataTable = System.Data.DataTable;
 using System.Globalization;
 using VykazyPrace.Core.Configuration;
+using Excel = Microsoft.Office.Interop.Excel;
+using System.Runtime.InteropServices;
 
 /// <summary>
 /// ChatGPT 5 credits:
@@ -792,8 +794,6 @@ namespace VykazyPrace.Dialogs
             var ws = wb.AddWorksheet("VYHODNOCENÍ");
 
             ws.Position = 1;
-
-            // Barva záložky listu
             ws.TabColor = XLColor.Yellow;
 
             var rows = new List<EvaluationRow>
@@ -855,18 +855,24 @@ namespace VykazyPrace.Dialogs
                     g => totalHours > 0 ? g.Sum(r => r.SumHours) / totalHours : 0
                 );
 
-            // 1. řádek prázdný
+            // 1. řádek prázdný, sloučený přes oblast A:M.
+            ws.Range("A1:M1").Merge();
             ws.Row(1).Clear();
 
-            // 2. řádek prázdný, výška 6 px => cca 4.5 pt
+            // 2. řádek prázdný, výška 6 px => cca 4.5 pt.
             ws.Row(2).Clear();
             ws.Row(2).Height = 4.5;
 
             int currentRow = 3;
 
+            // Budeme si pamatovat startovní řádky kategorií,
+            // aby pomocná data pro graf mohla odkazovat na sloupec E.
+            var groupStartRows = new Dictionary<string, int>();
+
             foreach (var group in rows.GroupBy(r => r.Group))
             {
                 int groupStartRow = currentRow;
+                groupStartRows[group.Key] = groupStartRow;
 
                 foreach (var item in group)
                 {
@@ -894,13 +900,13 @@ namespace VykazyPrace.Dialogs
 
                 groupRange.Style.Fill.BackgroundColor = GetEvaluationGroupColor(group.Key);
 
-                // jemné vnitřní čáry v rámci sekce
+                // Jemné vnitřní čáry v rámci sekce.
                 groupRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
 
-                // silné ohraničení celé sekce
+                // Silné ohraničení celé sekce.
                 groupRange.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
 
-                // první sloupec sekce má také silné ohraničení okolo
+                // První sloupec sekce má také silné ohraničení okolo.
                 firstColumnGroupRange.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
 
                 firstColumnGroupRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
@@ -908,6 +914,25 @@ namespace VykazyPrace.Dialogs
                 lastColumnGroupRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
                 lastColumnGroupRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             }
+
+            // Pomocná data pro koláčový graf.
+            // Jsou přímo pod grafem v oblasti G3:H6, takže v Excelu nebudou vidět,
+            // protože graf leží přes oblast G3:M17.
+            int chartDataRow = 3;
+
+            foreach (var groupName in new[] { "Projekty", "Automatizace", "Provoz výroba", "Ostatní" })
+            {
+                if (!groupStartRows.TryGetValue(groupName, out int sourceRow))
+                    continue;
+
+                ws.Cell(chartDataRow, 7).Value = groupName;            // G
+                ws.Cell(chartDataRow, 8).FormulaA1 = $"=E{sourceRow}"; // H
+
+                chartDataRow++;
+            }
+
+            ws.Column(7).Style.NumberFormat.Format = "@";
+            ws.Column(8).Style.NumberFormat.Format = "0.00%";
 
             ws.Column(3).Style.NumberFormat.Format = "# ##0.0";
             ws.Column(4).Style.NumberFormat.Format = "0.00%";
@@ -920,18 +945,18 @@ namespace VykazyPrace.Dialogs
             ws.Column(5).Style.Font.Bold = true;
             ws.Column(5).Style.Font.FontSize = 14;
 
-            ws.Columns().AdjustToContents();
-
-            // Nejdřív dopočítat podle obsahu
+            // Nejdřív dopočítat podle obsahu.
             ws.Columns().AdjustToContents();
 
             // Přibližný převod pixelů na Excel šířku:
-            // ExcelWidth (pixels - 5) / 7
+            // ExcelWidth = (pixels - 5) / 7
             ws.Column(1).Width = 17.57; // cca 128 px - podle šablony od MV
             ws.Column(2).Width = 20.14; // cca 146 px - podle šablony od MV
-            ws.Column(3).Width = 8.43; // cca 64 px - podle šablony od MV
-            ws.Column(4).Width = 8.43; // cca 64 px - podle šablony od MV
-            ws.Column(5).Width = 9; // cca 68 px - podle šablony od MV
+            ws.Column(3).Width = 8.43;  // cca 64 px - podle šablony od MV
+            ws.Column(4).Width = 8.43;  // cca 64 px - podle šablony od MV
+            ws.Column(5).Width = 9;     // cca 68 px - podle šablony od MV
+
+            ws.SetTabActive();
         }
 
         private static XLColor GetEvaluationGroupColor(string groupName)
@@ -944,6 +969,160 @@ namespace VykazyPrace.Dialogs
                 "Ostatní" => XLColor.FromHtml("#EBF1DE"),
                 _ => XLColor.White
             };
+        }
+
+        public void AddEvaluationPieChartWithExcelInterop(string filePath)
+        {
+            Excel.Application? excel = null;
+            Excel.Workbook? workbook = null;
+            Excel.Worksheet? ws = null;
+            Excel.ChartObjects? chartObjects = null;
+            Excel.ChartObject? chartObject = null;
+            Excel.Chart? chart = null;
+            Excel.SeriesCollection? seriesCollection = null;
+            Excel.Series? series = null;
+            Excel.DataLabels? dataLabels = null;
+
+            try
+            {
+                excel = new Excel.Application
+                {
+                    DisplayAlerts = false,
+                    Visible = false
+                };
+
+                workbook = excel.Workbooks.Open(filePath);
+                ws = (Excel.Worksheet)workbook.Worksheets["VYHODNOCENÍ"];
+
+                chartObjects = (Excel.ChartObjects)ws.ChartObjects(Type.Missing);
+
+                // Umístění grafu přesně do oblasti G3:M17
+                var topLeft = (Excel.Range)ws.Range["G3"];
+                var chartArea = (Excel.Range)ws.Range["G3:M17"];
+
+                chartObject = chartObjects.Add(
+                    (double)topLeft.Left,
+                    (double)topLeft.Top,
+                    (double)chartArea.Width,
+                    (double)chartArea.Height
+                );
+
+                chartObject.Name = "VyhodnoceniPieChart";
+
+                chart = chartObject.Chart;
+                chart.ChartType = Excel.XlChartType.xl3DPie;
+
+                // Zdroj dat: pomocná oblast pod grafem
+                // G3:G6 = názvy kategorií
+                // H3:H6 = procenta ze sloupce E
+                seriesCollection = (Excel.SeriesCollection)chart.SeriesCollection();
+                series = seriesCollection.NewSeries();
+
+                series.XValues = "='VYHODNOCENÍ'!$G$3:$G$6";
+                series.Values = "='VYHODNOCENÍ'!$H$3:$H$6";
+                series.Name = "Podíl";
+
+                // Titulek
+                chart.HasTitle = true;
+                chart.ChartTitle.Text = "Podíl využití časového fondu v rámci" + Environment.NewLine + "AUTOMATIZACE";
+                chart.ChartTitle.Font.Bold = true;
+                chart.ChartTitle.Font.Size = 14;
+
+                // Legenda dole
+                chart.HasLegend = true;
+                chart.Legend.Position = Excel.XlLegendPosition.xlLegendPositionBottom;
+                chart.Legend.Font.Size = 10;
+
+                // 3D natočení podobné předloze
+                chart.Rotation = 0;
+                chart.Elevation = 25;
+                chart.Perspective = 30;
+
+                // Vzhled oblasti grafu - bílé pozadí + černý rámeček
+                chart.ChartArea.Border.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Black);
+                chart.ChartArea.Border.Weight = Excel.XlBorderWeight.xlThin;
+
+                chart.ChartArea.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.White);
+                chart.PlotArea.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.White);
+                chart.PlotArea.Border.LineStyle = Excel.XlLineStyle.xlLineStyleNone;
+
+                // Datové popisky
+                series.ApplyDataLabels();
+
+                dataLabels = (Excel.DataLabels)series.DataLabels();
+                dataLabels.ShowCategoryName = true;
+                dataLabels.ShowPercentage = true;
+                dataLabels.ShowValue = false;
+                dataLabels.Separator = "; ";
+                dataLabels.NumberFormatLocal = "0,00%";
+                dataLabels.Font.Size = 8;
+                dataLabels.Font.Bold = true;
+                dataLabels.Position = Excel.XlDataLabelPosition.xlLabelPositionBestFit;
+
+                // Barvy výsečí podle předlohy:
+                // 1 Projekty - béžová
+                // 2 Automatizace - světle modrá
+                // 3 Provoz výroba - světle šedá
+                // 4 Ostatní - světle zelená
+                SetPiePointColor(series, 1, "#F8CBAD");
+                SetPiePointColor(series, 2, "#BDD7EE");
+                SetPiePointColor(series, 3, "#D9D9D9");
+                SetPiePointColor(series, 4, "#E2F0D9");
+
+                workbook.Save();
+            }
+            finally
+            {
+                if (dataLabels != null) Marshal.ReleaseComObject(dataLabels);
+                if (series != null) Marshal.ReleaseComObject(series);
+                if (seriesCollection != null) Marshal.ReleaseComObject(seriesCollection);
+                if (chart != null) Marshal.ReleaseComObject(chart);
+                if (chartObject != null) Marshal.ReleaseComObject(chartObject);
+                if (chartObjects != null) Marshal.ReleaseComObject(chartObjects);
+                if (ws != null) Marshal.ReleaseComObject(ws);
+
+                if (workbook != null)
+                {
+                    workbook.Close(SaveChanges: false);
+                    Marshal.ReleaseComObject(workbook);
+                }
+
+                if (excel != null)
+                {
+                    excel.Quit();
+                    Marshal.ReleaseComObject(excel);
+                }
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+        }
+
+        private static void SetPiePointColor(Excel.Series series, int pointIndex, string htmlColor)
+        {
+            Excel.Point? point = null;
+
+            try
+            {
+                point = (Excel.Point)series.Points(pointIndex);
+
+                int fillColor = System.Drawing.ColorTranslator.ToOle(
+                    System.Drawing.ColorTranslator.FromHtml(htmlColor)
+                );
+
+                int borderColor = System.Drawing.ColorTranslator.ToOle(
+                    System.Drawing.Color.Black
+                );
+
+                point.Interior.Color = fillColor;
+                point.Border.Color = borderColor;
+                point.Border.Weight = Excel.XlBorderWeight.xlThin;
+            }
+            finally
+            {
+                if (point != null)
+                    Marshal.ReleaseComObject(point);
+            }
         }
 
         private sealed class EvaluationRow
@@ -1259,8 +1438,10 @@ namespace VykazyPrace.Dialogs
                     ws.Columns().AdjustToContents();
                 }
 
-                wsSummary.SetTabActive();
                 wb.SaveAs(filePath);
+
+                if(buildEvaluationSheet) _tableFactory.AddEvaluationPieChartWithExcelInterop(filePath);
+
                 Process.Start(new ProcessStartInfo { FileName = filePath, UseShellExecute = true });
             }
             catch (Exception ex)

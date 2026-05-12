@@ -798,12 +798,11 @@ namespace VykazyPrace.Dialogs
         }
 
         public async Task BuildEvaluationSheet(
-     XLWorkbook wb,
-     IEnumerable<TimeEntry> entries,
-     IEnumerable<User> selectedUsers,
-     DateTime from,
-     DateTime to,
-     double rawWorkedHours)
+           XLWorkbook wb,
+           IEnumerable<TimeEntry> entries,
+           IEnumerable<User> selectedUsers,
+           DateTime from,
+           DateTime to)
         {
             var ws = wb.AddWorksheet("VYHODNOCENÍ");
 
@@ -907,7 +906,8 @@ namespace VykazyPrace.Dialogs
 
             int currentRow = 3;
 
-            // Startovní řádky kategorií pro pomocná data koláčového grafu.
+            // Budeme si pamatovat startovní řádky kategorií,
+            // aby pomocná data pro graf mohla odkazovat na sloupec E.
             var groupStartRows = new Dictionary<string, int>();
 
             foreach (var group in rows.GroupBy(r => r.Group))
@@ -941,10 +941,15 @@ namespace VykazyPrace.Dialogs
 
                 groupRange.Style.Fill.BackgroundColor = GetEvaluationGroupColor(group.Key);
 
+                // Jemné vnitřní čáry v rámci sekce.
                 groupRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+
+                // Silné ohraničení celé sekce.
                 groupRange.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
 
+                // První sloupec sekce má také silné ohraničení okolo.
                 firstColumnGroupRange.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+
                 firstColumnGroupRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
                 lastColumnGroupRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
@@ -952,7 +957,8 @@ namespace VykazyPrace.Dialogs
             }
 
             // Pomocná data pro koláčový graf.
-            // Graf leží přes oblast G3:M17.
+            // Jsou přímo pod grafem v oblasti G3:H6, takže v Excelu nebudou vidět,
+            // protože graf leží přes oblast G3:M17.
             int chartDataRow = 3;
 
             foreach (var groupName in new[] { "Projekty", "Automatizace", "Provoz výroba", "Ostatní" })
@@ -960,8 +966,8 @@ namespace VykazyPrace.Dialogs
                 if (!groupStartRows.TryGetValue(groupName, out int sourceRow))
                     continue;
 
-                ws.Cell(chartDataRow, 7).Value = groupName;
-                ws.Cell(chartDataRow, 8).FormulaA1 = $"=E{sourceRow}";
+                ws.Cell(chartDataRow, 7).Value = groupName;            // G
+                ws.Cell(chartDataRow, 8).FormulaA1 = $"=E{sourceRow}"; // H
 
                 chartDataRow++;
             }
@@ -980,7 +986,7 @@ namespace VykazyPrace.Dialogs
             ws.Range("E3:E13").Style.Font.Bold = true;
             ws.Range("E3:E13").Style.Font.FontSize = 14;
 
-            // Součet hodin z vykázané práce
+            // Součet hodin pod tabulkou
             ws.Cell(15, 2).Value = "∑";
             ws.Cell(15, 3).FormulaA1 = "=SUM(C3:C13)";
 
@@ -990,15 +996,6 @@ namespace VykazyPrace.Dialogs
             ws.Cell(15, 3).Style.NumberFormat.Format = "# ##0.0";
             ws.Cell(15, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             ws.Cell(15, 3).Style.Font.Bold = true;
-
-            // Reálné raw hodiny podle příchodů a odchodů
-            ws.Cell(16, 2).Value = "Příchody/odchody";
-            ws.Cell(16, 3).Value = rawWorkedHours;
-
-            ws.Cell(16, 2).Style.Font.Bold = true;
-            ws.Cell(16, 3).Style.NumberFormat.Format = "# ##0.0";
-            ws.Cell(16, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-            ws.Cell(16, 3).Style.Font.Bold = true;
 
             // Celkově odpracované hodiny z PowerKey za všechny vybrané uživatele v daném období
             ws.Cell(17, 2).Value = "PowerKey";
@@ -1014,11 +1011,11 @@ namespace VykazyPrace.Dialogs
 
             // Přibližný převod pixelů na Excel šířku:
             // ExcelWidth = (pixels - 5) / 7
-            ws.Column(1).Width = 17.57;
-            ws.Column(2).Width = 20.14;
-            ws.Column(3).Width = 8.43;
-            ws.Column(4).Width = 8.43;
-            ws.Column(5).Width = 9;
+            ws.Column(1).Width = 17.57; // cca 128 px - podle šablony od MV
+            ws.Column(2).Width = 20.14; // cca 146 px - podle šablony od MV
+            ws.Column(3).Width = 8.43;  // cca 64 px - podle šablony od MV
+            ws.Column(4).Width = 8.43;  // cca 64 px - podle šablony od MV
+            ws.Column(5).Width = 9;     // cca 68 px - podle šablony od MV
 
             ws.SetTabActive();
         }
@@ -1478,15 +1475,14 @@ namespace VykazyPrace.Dialogs
     {
         private readonly TimeEntryRepository _timeEntryRepo;
         private readonly SpecialDayRepository _specialDayRepo;
-        private readonly ArrivalDepartureRepository _arrivalDepartureRepo = new();
         private readonly DataTableFactory _tableFactory;
         private readonly ExcelStylingService _styling;
 
         public TimeEntryExportService(
-        TimeEntryRepository timeEntryRepo,
-        SpecialDayRepository specialDayRepo,
-        DataTableFactory tableFactory,
-        ExcelStylingService styling)
+            TimeEntryRepository timeEntryRepo,
+            SpecialDayRepository specialDayRepo,
+            DataTableFactory tableFactory,
+            ExcelStylingService styling)
         {
             _timeEntryRepo = timeEntryRepo;
             _specialDayRepo = specialDayRepo;
@@ -1498,14 +1494,14 @@ namespace VykazyPrace.Dialogs
         /// Načte data, vytvoří listy a uloží XLSX.
         /// </summary>
         public async Task ExportAsync(
-            string filePath,
-            DateTime from,
-            DateTime to,
-            IEnumerable<int> selectedUserGroupIds,
-            IEnumerable<int> selectedUserIds,
-            IEnumerable<User> selectedUsers,
-            User currentUser,
-            bool buildEvaluationSheet)
+         string filePath,
+         DateTime from,
+         DateTime to,
+         IEnumerable<int> selectedUserGroupIds,
+         IEnumerable<int> selectedUserIds,
+         IEnumerable<User> selectedUsers,
+         User currentUser,
+         bool buildEvaluationSheet)
         {
             try
             {
@@ -1519,12 +1515,8 @@ namespace VykazyPrace.Dialogs
                     selectedUserIdSet.Add(currentUser.Id);
                 }
 
-                var allEntries = await _timeEntryRepo
-                    .GetAllTimeEntriesBetweenDatesAsync(from, to)
-                    .ConfigureAwait(false);
+                var allEntries = await _timeEntryRepo.GetAllTimeEntriesBetweenDatesAsync(from, to).ConfigureAwait(false);
 
-                // Hlavní data exportu.
-                // Svačina je vyfiltrovaná už tady, aby se nepoužila vůbec nikde.
                 var filtered = allEntries
                     .Where(e =>
                         e.User != null &&
@@ -1532,36 +1524,15 @@ namespace VykazyPrace.Dialogs
                             (e.User.UserGroup != null && selectedGroupIdSet.Contains(e.User.UserGroup.Id))
                             || selectedUserIdSet.Contains(e.User.Id)
                         ))
+                    // Exkludované záznamy nepřítomnosti
                     .Where(e => e.EntryTypeId != ExportConstants.OutlookEventEntryTypeId)
                     .Where(e => e.ProjectId != ExportConstants.ExcludedProjectId)
                     .ToList();
 
-                // Vybraní uživatelé bez duplicit.
-                var usersForSummary = selectedUsers
-                    .Where(u => u != null)
-                    .GroupBy(u => u.Id)
-                    .Select(g => g.First())
-                    .ToList();
-
-                // Raw reálně odpracované hodiny podle příchodů/odchodů.
-                // Tyto hodiny jdou do VYHODNOCENÍ!C16.
-                double rawWorkedHours = 0;
-
-                if (buildEvaluationSheet)
-                {
-                    var selectedUserIdsForRawHours = usersForSummary
-                        .Select(u => u.Id)
-                        .Distinct()
-                        .ToList();
-
-                    rawWorkedHours = await _arrivalDepartureRepo
-                        .GetRawWorkedHoursForUsersInRangeAsync(from, to, selectedUserIdsForRawHours)
-                        .ConfigureAwait(false);
-                }
-
-                // Projekty pro jednotlivé listy.
-                // Pracujeme už s filtered, takže svačina tady nikdy nebude.
+                // Projekty pro jednotlivé listy (bez svačiny)
                 var projects = filtered
+                    // odkomentováno - sestavovali jsme bez nepřítomnosti atd
+                    //.Where(e => e.Project?.ProjectType == 0 && e.ProjectId != null)
                     .Where(e =>
                         e.Project?.ProjectType != 6
                         && e.Project?.ProjectType != 1
@@ -1575,18 +1546,14 @@ namespace VykazyPrace.Dialogs
                     .ThenBy(p => p.ProjectTitle)
                     .ToList();
 
-                // Podklady pro kumulativní hodiny do zplnohodnocení.
-                // Vychází z filtered, takže také bez svačiny.
+                // Podklady pro cumulativní hodiny do zplnohodnocení
                 var projectIdsForSummary = filtered
                     .Where(e => e.ProjectId.HasValue && e.Project?.DateFullFilled != null)
                     .Select(e => e.ProjectId!.Value)
                     .Distinct()
                     .ToList();
 
-                var cumulativeRows = await _timeEntryRepo
-                    .GetCumulativeToFullfilledAsync(projectIdsForSummary)
-                    .ConfigureAwait(false);
-
+                var cumulativeRows = await _timeEntryRepo.GetCumulativeToFullfilledAsync(projectIdsForSummary).ConfigureAwait(false);
                 var cumDict = cumulativeRows.ToDictionary(
                     k => (k.ProjectId, k.UserId),
                     v => v.MinutesToFullFilled / 60.0
@@ -1598,20 +1565,21 @@ namespace VykazyPrace.Dialogs
                 var wsBase = wb.AddWorksheet("Časové záznamy");
                 var dtBase = _tableFactory.BuildTimeEntries(filtered);
                 var tableBase = wsBase.Cell(1, 1).InsertTable(dtBase, "CasoveZaznamy", true);
-
                 _styling.ApplyMedium2Teal(tableBase);
                 _styling.BeautifyDetailTable(wsBase, tableBase);
                 wsBase.Columns().AdjustToContents();
 
                 // „Souhrn podle uživatele“
                 var wsSummary = wb.AddWorksheet("Souhrn podle uživatele");
+                var usersForSummary = selectedUsers
+    .GroupBy(u => u.Id)
+    .Select(g => g.First())
+    .ToList();
 
                 var dtSummary = await _tableFactory
-                    .BuildUserSummary(usersForSummary, filtered, from, to, cumDict)
-                    .ConfigureAwait(false);
-
+                  .BuildUserSummary(usersForSummary, filtered, from, to, cumDict)
+                  .ConfigureAwait(false);
                 var tableSummary = wsSummary.Cell(1, 1).InsertTable(dtSummary, "SouhrnUzivatel", true);
-
                 _styling.ApplyMedium2Teal(tableSummary);
                 _styling.BeautifyUserSummarySheet(wsSummary, tableSummary);
                 wsSummary.Columns().AdjustToContents();
@@ -1620,31 +1588,24 @@ namespace VykazyPrace.Dialogs
                 if (buildEvaluationSheet)
                 {
                     await _tableFactory
-                        .BuildEvaluationSheet(wb, filtered, usersForSummary, from, to, rawWorkedHours)
+                        .BuildEvaluationSheet(wb, filtered, usersForSummary, from, to)
                         .ConfigureAwait(false);
                 }
 
                 // Listy podle projektů
                 foreach (var proj in projects)
                 {
-                    var rows = filtered
-                        .Where(e => e.Project?.Id == proj.Id)
-                        .ToList();
-
-                    if (rows.Count == 0)
-                        continue;
+                    var rows = filtered.Where(e => e.Project?.Id == proj.Id).ToList();
+                    if (rows.Count == 0) continue;
 
                     var safeName = SheetNameSanitizer.MakeSafe(proj.ProjectTitle);
                     var ws = wb.AddWorksheet(safeName);
 
                     var dtProj = _tableFactory.BuildTimeEntries(rows);
                     var table = ws.Cell(1, 1).InsertTable(dtProj, $"Projekt_{proj.Id}", true);
-
                     table.ShowTotalsRow = true;
-
                     var hoursField = table.Fields.FirstOrDefault(f => f.Name == "Doba v hodinách");
-                    if (hoursField != null)
-                        hoursField.TotalsRowFunction = XLTotalsRowFunction.Sum;
+                    if (hoursField != null) hoursField.TotalsRowFunction = XLTotalsRowFunction.Sum;
 
                     _styling.ApplyMedium2Teal(table);
                     _styling.BeautifyDetailTable(ws, table);
@@ -1658,16 +1619,12 @@ namespace VykazyPrace.Dialogs
                     _tableFactory.AddEvaluationChartsWithExcelInterop(filePath);
                 }
 
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = filePath,
-                    UseShellExecute = true
-                });
+                Process.Start(new ProcessStartInfo { FileName = filePath, UseShellExecute = true });
             }
             catch (Exception ex)
             {
                 AppLogger.Error("Chyba při exportu ClosedXML.", ex);
-                throw;
+                throw; // nechť UI rozhodne, jak zobrazit
             }
         }
 

@@ -166,33 +166,5 @@ namespace VykazyPrace.Core.Database.Repositories
                 .OrderBy(a => a.WorkDate)
                 .SafeToListAsync();
         }
-
-        /// <summary>
-        /// Vrátí součet reálně odpracovaných hodin podle raw příchodů/odchodů
-        /// za vybrané uživatele a zadané období.
-        /// Bere hodnoty přímo z ArrivalsDepartures.HoursWorked.
-        /// </summary>
-        public async Task<double> GetRawWorkedHoursForUsersInRangeAsync(
-            DateTime from,
-            DateTime to,
-            IEnumerable<int> userIds)
-        {
-            var fromDate = from.Date;
-            var toDate = to.Date;
-
-            var userIdList = userIds
-                .Distinct()
-                .ToList();
-
-            if (userIdList.Count == 0)
-                return 0;
-
-            return await _context.ArrivalsDepartures
-                .Where(a =>
-                    userIdList.Contains(a.UserId) &&
-                    a.WorkDate >= fromDate &&
-                    a.WorkDate <= toDate)
-                .SumAsync(a => (double?)a.HoursWorked) ?? 0;
-        }
     }
 }

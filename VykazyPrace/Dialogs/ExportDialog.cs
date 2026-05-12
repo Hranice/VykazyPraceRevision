@@ -671,10 +671,11 @@ namespace VykazyPrace.Dialogs
         /// Datová tabulka – souhrn podle uživatele. Souhrnné řádky uživatelů + rozpad na projekty.
         /// </summary>
         public async Task<DataTable> BuildUserSummary(
-            IEnumerable<User> selectedUsers,
-            IEnumerable<TimeEntry> timeEntries,
-            DateTime exportMonth,
-            IReadOnlyDictionary<(int ProjectId, int UserId), double> cumToFullfilledDict)
+          IEnumerable<User> selectedUsers,
+          IEnumerable<TimeEntry> timeEntries,
+          DateTime from,
+          DateTime to,
+          IReadOnlyDictionary<(int ProjectId, int UserId), double> cumToFullfilledDict)
         {
             var dt = new DataTable();
             dt.Columns.Add("Osobní číslo", typeof(int));
@@ -686,14 +687,24 @@ namespace VykazyPrace.Dialogs
             dt.Columns.Add("Docházka", typeof(double));
             dt.Columns.Add("Suma (před zplnohodnotněním projektu)", typeof(double));
 
-            // Docházka z PowerKey
+            // Docházka z PowerKey podle konkrétního časového úseku.
+            // Bere se z PowerKey spočítaných denních hodnot AD.WorkedHours,
+            // aby zůstaly zachované systémové tolerance, pauzy a zaokrouhlení.
             Dictionary<int, double> powerKeyData;
 
             try
             {
                 var pkHelper = new PowerKeyHelper();
+
+                var personalNumbers = selectedUsers
+                    .Where(u => u != null && u.PersonalNumber > 0)
+                    .Select(u => u.PersonalNumber)
+                    .Distinct()
+                    .OrderBy(x => x)
+                    .ToList();
+
                 powerKeyData = await pkHelper
-                    .GetWorkedHoursByPersonalNumberForMonthAsync(exportMonth)
+                    .GetWorkedHoursByPersonalNumberForRangeAsync(from, to, personalNumbers)
                     .ConfigureAwait(false);
 
                 powerKeyData ??= new Dictionary<int, double>();
@@ -1426,15 +1437,15 @@ namespace VykazyPrace.Dialogs
     .ToList();
 
                 var dtSummary = await _tableFactory
-                    .BuildUserSummary(usersForSummary, filtered, from, cumDict)
-                    .ConfigureAwait(false);
+                  .BuildUserSummary(usersForSummary, filtered, from, to, cumDict)
+                  .ConfigureAwait(false);
                 var tableSummary = wsSummary.Cell(1, 1).InsertTable(dtSummary, "SouhrnUzivatel", true);
                 _styling.ApplyMedium2Teal(tableSummary);
                 _styling.BeautifyUserSummarySheet(wsSummary, tableSummary);
                 wsSummary.Columns().AdjustToContents();
 
                 // „VYHODNOCENÍ“
-                if(buildEvaluationSheet) _tableFactory.BuildEvaluationSheet(wb, filtered);
+                if (buildEvaluationSheet) _tableFactory.BuildEvaluationSheet(wb, filtered);
 
                 // Listy podle projektů
                 foreach (var proj in projects)
@@ -1458,7 +1469,7 @@ namespace VykazyPrace.Dialogs
 
                 wb.SaveAs(filePath);
 
-                if(buildEvaluationSheet) _tableFactory.AddEvaluationPieChartWithExcelInterop(filePath);
+                if (buildEvaluationSheet) _tableFactory.AddEvaluationPieChartWithExcelInterop(filePath);
 
                 Process.Start(new ProcessStartInfo { FileName = filePath, UseShellExecute = true });
             }

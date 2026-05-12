@@ -71,7 +71,7 @@
             dtpFrom.Name = "dtpFrom";
             dtpFrom.Size = new Size(256, 28);
             dtpFrom.TabIndex = 2;
-            dtpFrom.Value = new DateTime(2025, 3, 1, 15, 43, 0, 0);
+            dtpFrom.Value = new DateTime(2025, 3, 1, 0, 0, 0, 0);
             // 
             // dtpTo
             // 
@@ -80,7 +80,7 @@
             dtpTo.Name = "dtpTo";
             dtpTo.Size = new Size(256, 28);
             dtpTo.TabIndex = 4;
-            dtpTo.Value = new DateTime(2025, 3, 31, 15, 44, 0, 0);
+            dtpTo.Value = new DateTime(2025, 3, 31, 0, 0, 0, 0);
             // 
             // label2
             // 

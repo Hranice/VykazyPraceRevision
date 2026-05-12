@@ -147,6 +147,7 @@ namespace VykazyPrace.Core.PowerKey
         //    }
         //}
 
+        // Zachováno: původní řešení přes původní proceduru
         public async Task<Dictionary<int, double>> GetWorkedHoursByPersonalNumberForMonthAsync(DateTime month)
         {
             const string sql = @"
@@ -207,6 +208,63 @@ HAVING TRY_CONVERT(int, PE.PersonalNum) IS NOT NULL;";
                 AppLogger.Error($"Chyba při čtení dat pro osobní číslo {personalNumber}.", ex);
                 return null;
             }
+        }
+
+        public async Task<Dictionary<int, double>> GetWorkedHoursByPersonalNumberForRangeAsync(
+    DateTime from,
+    DateTime to,
+    IEnumerable<int> personalNumbers)
+        {
+            var result = new Dictionary<int, double>();
+
+            if (to <= from)
+                return result;
+
+            var personalNumberList = personalNumbers
+                .Where(x => x > 0)
+                .Distinct()
+                .OrderBy(x => x)
+                .ToList();
+
+            if (personalNumberList.Count == 0)
+                return result;
+
+            string personalNumsCsv = string.Join(",", personalNumberList);
+
+            await using var conn = new SqlConnection(ConnectionString);
+            await using var cmd = new SqlCommand("[pwk].[Prenos_pracovni_doby_range_summary]", conn)
+            {
+                CommandType = CommandType.StoredProcedure,
+                CommandTimeout = 120
+            };
+
+            cmd.Parameters.Add("@FromDateTime", SqlDbType.DateTime2).Value = from;
+            cmd.Parameters.Add("@ToDateTime", SqlDbType.DateTime2).Value = to;
+            cmd.Parameters.Add("@PersonalNumsCsv", SqlDbType.NVarChar).Value = personalNumsCsv;
+
+            await conn.OpenAsync().ConfigureAwait(false);
+
+            await using var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false);
+
+            while (await reader.ReadAsync().ConfigureAwait(false))
+            {
+                int personalNumber = reader.GetInt32(0);
+                double hours = reader.IsDBNull(1) ? 0 : Convert.ToDouble(reader.GetValue(1));
+
+                result[personalNumber] = hours;
+            }
+
+            return result;
+        }
+
+        private static DateTime NormalizeDateTimeToWorkDate(DateTime workDate, DateTime value)
+        {
+            // Některé systémy vracejí čas jako 1899/1900 datum + čas.
+            // Pokud má hodnota podezřele staré datum, napojíme ji na Datum směny.
+            if (value.Year <= 1901)
+                return workDate.Date.Add(value.TimeOfDay);
+
+            return value;
         }
 
         // Zachováno: helper pro dočasné view na součty hodin (používá AttnMonth/AttnDay)

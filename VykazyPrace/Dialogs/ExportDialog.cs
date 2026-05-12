@@ -558,6 +558,18 @@ namespace VykazyPrace.Dialogs
         /// Typ záznamu reprezentující outlook událost (nevalidní záznam) – nezapočítává se do souhrnů podle uživatele.
         /// </summary>
         public const int OutlookEventEntryTypeId = 25;
+
+        // VYHODNOCENÍ
+        public const int AutomationProjectId = 31;
+
+        public const int ProductionSdProjectId = 19;
+        public const int ProductionHpProjectId = 20;
+        public const int ProductionMetProjectId = 17;
+        public const int ProductionKomProjectId = 21;
+        public const int ProductionSorProjectId = 140;
+        public const int ProductionOtherProjectId = 22;
+
+        public const int ClubYoungTechnicianEntryTypeId = 8;
     }
     #endregion
 
@@ -767,7 +779,190 @@ namespace VykazyPrace.Dialogs
 
             return dt;
         }
+
+        public void BuildEvaluationSheet(XLWorkbook wb, IEnumerable<TimeEntry> entries)
+        {
+            var ws = wb.AddWorksheet("VYHODNOCENÍ");
+
+            var rows = new List<EvaluationRow>
+    {
+        new("Projekty", "EXTERNÍ PROJEKTY",
+            e => e.Project?.ProjectDescription?.Contains("E", StringComparison.OrdinalIgnoreCase) == true),
+
+        new("Projekty", "INTERNÍ PROJEKTY",
+            e => e.Project?.ProjectDescription?.Contains("I", StringComparison.OrdinalIgnoreCase) == true),
+
+        new("Automatizace", "Provoz Automatizace",
+            e => e.ProjectId == ExportConstants.AutomationProjectId),
+
+        new("Provoz výroba", "Provoz SD",
+            e => e.ProjectId == ExportConstants.ProductionSdProjectId),
+
+        new("Provoz výroba", "Provoz HP",
+            e => e.ProjectId == ExportConstants.ProductionHpProjectId),
+
+        new("Provoz výroba", "Provoz MET",
+            e => e.ProjectId == ExportConstants.ProductionMetProjectId),
+
+        new("Provoz výroba", "Provoz KOM",
+            e => e.ProjectId == ExportConstants.ProductionKomProjectId),
+
+        new("Provoz výroba", "Provoz SOR",
+            e => e.ProjectId == ExportConstants.ProductionSorProjectId),
+
+        new("Ostatní", "Ostatní",
+            e => e.ProjectId == ExportConstants.ProductionOtherProjectId),
+
+        new("Ostatní", "Nepřítomnost",
+            e => e.ProjectId == ExportConstants.AbsenceProjectId),
+
+        new("Ostatní", "Kroužek MT",
+            e => e.EntryTypeId == ExportConstants.ClubYoungTechnicianEntryTypeId)
+    };
+
+            foreach (var row in rows)
+            {
+                row.SumHours = entries
+                    .Where(row.Predicate)
+                    .Sum(e => e.EntryMinutes) / 60.0;
+            }
+
+            double totalHours = rows.Sum(r => r.SumHours);
+
+            foreach (var row in rows)
+            {
+                row.Percent = totalHours > 0
+                    ? row.SumHours / totalHours
+                    : 0;
+            }
+
+            var groupPercents = rows
+                .GroupBy(r => r.Group)
+                .ToDictionary(
+                    g => g.Key,
+                    g => totalHours > 0 ? g.Sum(r => r.SumHours) / totalHours : 0
+                );
+
+            ws.Cell(1, 1).Value = "constants";
+            ws.Cell(1, 2).Value = "friendly name";
+            ws.Cell(1, 3).Value = "sum hours";
+            ws.Cell(1, 4).Value = "percent";
+            ws.Cell(1, 5).Value = "total percent";
+
+            var header = ws.Range(1, 1, 1, 5);
+            header.Style.Font.Bold = true;
+            header.Style.Fill.BackgroundColor = XLColor.FromHtml("#D9EAF7");
+            header.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            header.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+
+            int currentRow = 2;
+
+            foreach (var group in rows.GroupBy(r => r.Group))
+            {
+                int groupStartRow = currentRow;
+
+                foreach (var item in group)
+                {
+                    ws.Cell(currentRow, 2).Value = item.Name;
+                    ws.Cell(currentRow, 3).Value = item.SumHours;
+                    ws.Cell(currentRow, 4).Value = item.Percent;
+
+                    currentRow++;
+                }
+
+                int groupEndRow = currentRow - 1;
+
+                ws.Cell(groupStartRow, 1).Value = group.Key;
+                ws.Cell(groupStartRow, 5).Value = groupPercents[group.Key];
+
+                if (groupEndRow > groupStartRow)
+                {
+                    ws.Range(groupStartRow, 1, groupEndRow, 1).Merge();
+                    ws.Range(groupStartRow, 5, groupEndRow, 5).Merge();
+                }
+
+                var groupRange = ws.Range(groupStartRow, 1, groupEndRow, 5);
+                groupRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                groupRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+
+                ws.Range(groupStartRow, 1, groupEndRow, 1)
+                    .Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+                ws.Range(groupStartRow, 5, groupEndRow, 5)
+                    .Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+                currentRow++;
+            }
+
+            ws.Column(3).Style.NumberFormat.Format = "# ##0.0";
+            ws.Column(4).Style.NumberFormat.Format = "0.00%";
+            ws.Column(5).Style.NumberFormat.Format = "0.00%";
+
+            ws.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            ws.Column(4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            ws.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+
+            ApplyEvaluationGroupColor(ws, "Projekty", XLColor.FromHtml("#FCE4D6"));
+            ApplyEvaluationGroupColor(ws, "Automatizace", XLColor.FromHtml("#DDEBF7"));
+            ApplyEvaluationGroupColor(ws, "Provoz výroba", XLColor.FromHtml("#D9D9D9"));
+            ApplyEvaluationGroupColor(ws, "Ostatní", XLColor.FromHtml("#E2F0D9"));
+
+            ws.Column(5).Style.Font.Bold = true;
+            ws.Column(5).Style.Font.FontSize = 14;
+
+            ws.Columns().AdjustToContents();
+            ws.SheetView.FreezeRows(1);
+        }
+
+        private static void ApplyEvaluationGroupColor(IXLWorksheet ws, string groupName, XLColor color)
+        {
+            var usedRange = ws.RangeUsed();
+            if (usedRange == null) return;
+
+            foreach (var row in usedRange.RowsUsed().Skip(1))
+            {
+                var firstCell = row.Cell(1);
+
+                if (firstCell.GetString() == groupName)
+                {
+                    int firstRow = row.RowNumber();
+                    int lastRow = firstRow;
+
+                    var mergedRange = firstCell.MergedRange();
+
+                    if (mergedRange != null)
+                    {
+                        firstRow = mergedRange.FirstRow().RowNumber();
+                        lastRow = mergedRange.LastRow().RowNumber();
+                    }
+
+                    ws.Range(firstRow, 1, lastRow, 5)
+                        .Style.Fill.BackgroundColor = color;
+
+                    break;
+                }
+            }
+        }
+
+        private sealed class EvaluationRow
+        {
+            public string Group { get; }
+            public string Name { get; }
+            public Func<TimeEntry, bool> Predicate { get; }
+
+            public double SumHours { get; set; }
+            public double Percent { get; set; }
+
+            public EvaluationRow(string group, string name, Func<TimeEntry, bool> predicate)
+            {
+                Group = group;
+                Name = name;
+                Predicate = predicate;
+            }
+        }
     }
+
+
     #endregion
 
     #region === Styling Excelu ===
@@ -1037,6 +1232,9 @@ namespace VykazyPrace.Dialogs
                 _styling.ApplyMedium2Teal(tableSummary);
                 _styling.BeautifyUserSummarySheet(wsSummary, tableSummary);
                 wsSummary.Columns().AdjustToContents();
+
+                // „VYHODNOCENÍ“
+                _tableFactory.BuildEvaluationSheet(wb, filtered);
 
                 // Listy podle projektů
                 foreach (var proj in projects)

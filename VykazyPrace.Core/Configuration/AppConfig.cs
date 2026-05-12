@@ -33,6 +33,7 @@ namespace VykazyPrace.Core.Configuration
         public int? Week { get; set; }
         public int? Month { get; set; }
         public int? Year { get; set; }
+        public bool BuildEvaluationSheet { get; set; }
     }
 
 

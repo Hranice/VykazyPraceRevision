@@ -53,6 +53,7 @@
             panelSpecificTimePeriod = new Panel();
             rBSpecificTimePeriod = new RadioButton();
             bSaveAs = new Button();
+            cBBuildEvaluationSheet = new CheckBox();
             gBLock.SuspendLayout();
             gBExport.SuspendLayout();
             panelSpecificYear.SuspendLayout();
@@ -340,11 +341,22 @@
             bSaveAs.UseVisualStyleBackColor = true;
             bSaveAs.Click += bSaveAs_Click;
             // 
+            // cBBuildEvaluationSheet
+            // 
+            cBBuildEvaluationSheet.AutoSize = true;
+            cBBuildEvaluationSheet.Location = new Point(688, 298);
+            cBBuildEvaluationSheet.Name = "cBBuildEvaluationSheet";
+            cBBuildEvaluationSheet.Size = new Size(172, 29);
+            cBBuildEvaluationSheet.TabIndex = 22;
+            cBBuildEvaluationSheet.Text = "+ \"VYHODNOCENÍ\"";
+            cBBuildEvaluationSheet.UseVisualStyleBackColor = true;
+            // 
             // ExportDialog
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(886, 376);
+            Controls.Add(cBBuildEvaluationSheet);
             Controls.Add(bSaveAs);
             Controls.Add(gBExport);
             Controls.Add(gBLock);
@@ -370,6 +382,7 @@
             panelSpecificTimePeriod.ResumeLayout(false);
             panelSpecificTimePeriod.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -398,5 +411,6 @@
         private RadioButton rBSpecificYear;
         private NumericUpDown nUDYear;
         private TreeView tVUserGroupsUsers;
+        private CheckBox cBBuildEvaluationSheet;
     }
 }

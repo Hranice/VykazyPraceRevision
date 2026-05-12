@@ -192,6 +192,8 @@ namespace VykazyPrace.Dialogs
             if (exportConfig == null)
                 return;
 
+            cBBuildEvaluationSheet.Checked = exportConfig.BuildEvaluationSheet;
+
             // Nejdřív vše odškrtnout, protože radio buttony mohou být v různých containerech
             rBSpecificTimePeriod.Checked = false;
             rBSpecificWeek.Checked = false;
@@ -276,7 +278,8 @@ namespace VykazyPrace.Dialogs
         selection.SelectedGroupIds,
         selection.SelectedUserIds,
         selection.SelectedUsers,
-        _currentUser);
+        _currentUser,
+        cBBuildEvaluationSheet.Checked);
 
                 SaveExportSelection(selection);
             }
@@ -454,6 +457,8 @@ namespace VykazyPrace.Dialogs
             _config.ExportSelection.Month = null;
             _config.ExportSelection.Year = null;
 
+            _config.ExportSelection.BuildEvaluationSheet = false;
+
             if (rBSpecificTimePeriod.Checked)
             {
                 _config.ExportSelection.SelectedRangeType = ExportRangeType.TimePeriod;
@@ -477,6 +482,8 @@ namespace VykazyPrace.Dialogs
                 _config.ExportSelection.SelectedRangeType = ExportRangeType.Year;
                 _config.ExportSelection.Year = (int)nUDYear.Value;
             }
+
+            _config.ExportSelection.BuildEvaluationSheet = cBBuildEvaluationSheet.Checked;
 
             ConfigService.Save(_config);
         }
@@ -1152,7 +1159,8 @@ namespace VykazyPrace.Dialogs
          IEnumerable<int> selectedUserGroupIds,
          IEnumerable<int> selectedUserIds,
          IEnumerable<User> selectedUsers,
-         User currentUser)
+         User currentUser,
+         bool buildEvaluationSheet)
         {
             try
             {
@@ -1229,7 +1237,7 @@ namespace VykazyPrace.Dialogs
                 wsSummary.Columns().AdjustToContents();
 
                 // „VYHODNOCENÍ“
-                _tableFactory.BuildEvaluationSheet(wb, filtered);
+                if(buildEvaluationSheet) _tableFactory.BuildEvaluationSheet(wb, filtered);
 
                 // Listy podle projektů
                 foreach (var proj in projects)

@@ -580,6 +580,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 case 25: SelectRadioButtonByText("OSTATNÍ"); break;
                 case 23: SelectRadioButtonByText("NEPŘÍTOMNOST"); break;
                 case 26: SelectRadioButtonByText("ŠKOLENÍ"); break;
+                case 373: SelectRadioButtonByText("ZÁKAZNICKÝ SERVIS"); break;
                 default:
                     int idx = proj.ProjectType + 1;
                     if (idx == 2 || idx == 3) idx = 2;
@@ -2093,7 +2094,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                         checkBoxArchivedProjects.Checked = false;
                         index = 4;
                         break;
-                    default:
+                    case "OSTATNÍ":
                         index = 5;
                         labelType.Text = "Činnost*";
                         tableLayoutPanelProject.Visible = false;
@@ -2101,6 +2102,18 @@ namespace VykazyPrace.UserControls.CalendarV2
                         tableLayoutPanelEntrySubType.Visible = true;
                         checkBoxArchivedProjects.Visible = false;
                         checkBoxArchivedProjects.Checked = false;
+                        break;
+                    case "ZÁKAZNICKÝ SERVIS":
+                        index = 7;
+                        labelType.Text = "Nákladové středisko*";
+                        tableLayoutPanelProject.Visible = false;
+                        tableLayoutPanelEntryType.Visible = true;
+                        tableLayoutPanelEntrySubType.Visible = true;
+                        checkBoxArchivedProjects.Visible = false;
+                        checkBoxArchivedProjects.Checked = false;
+                        break;
+                    default:
+                        AppLogger.Error("Chyba výběru kategorie.", new NotImplementedException("Neznamá kategorie pro sidebar: " + rb.Text));
                         break;
                 }
 

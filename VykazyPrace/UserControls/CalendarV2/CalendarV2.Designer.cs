@@ -94,7 +94,7 @@
             radioButton3 = new RadioButton();
             radioButton4 = new RadioButton();
             radioButton5 = new RadioButton();
-            radioButton6 = new RadioButton();
+            radioButton7 = new RadioButton();
             tableLayoutPanelProject = new TableLayoutPanel();
             panel2 = new Panel();
             checkBoxArchivedProjects = new CheckBox();
@@ -1045,7 +1045,7 @@
             flowLayoutPanel2.Controls.Add(radioButton3);
             flowLayoutPanel2.Controls.Add(radioButton4);
             flowLayoutPanel2.Controls.Add(radioButton5);
-            flowLayoutPanel2.Controls.Add(radioButton6);
+            flowLayoutPanel2.Controls.Add(radioButton7);
             flowLayoutPanel2.Controls.Add(tableLayoutPanelProject);
             flowLayoutPanel2.Controls.Add(tableLayoutPanelEntryType);
             flowLayoutPanel2.Controls.Add(tableLayoutPanelEntrySubType);
@@ -1126,17 +1126,18 @@
             radioButton5.UseVisualStyleBackColor = true;
             radioButton5.CheckedChanged += radioButton_CheckedChanged;
             // 
-            // radioButton6
+            // radioButton7
             // 
-            radioButton6.Appearance = Appearance.Button;
-            radioButton6.AutoSize = true;
-            radioButton6.Location = new Point(3, 85);
-            radioButton6.Name = "radioButton6";
-            radioButton6.Size = new Size(177, 35);
-            radioButton6.TabIndex = 155;
-            radioButton6.TabStop = true;
-            radioButton6.Text = "ZÁKAZNICKÝ SERVIS";
-            radioButton6.UseVisualStyleBackColor = true;
+            radioButton7.Appearance = Appearance.Button;
+            radioButton7.AutoSize = true;
+            radioButton7.Location = new Point(3, 85);
+            radioButton7.Name = "radioButton7";
+            radioButton7.Size = new Size(177, 35);
+            radioButton7.TabIndex = 155;
+            radioButton7.TabStop = true;
+            radioButton7.Text = "ZÁKAZNICKÝ SERVIS";
+            radioButton7.UseVisualStyleBackColor = true;
+            radioButton7.CheckedChanged += radioButton_CheckedChanged;
             // 
             // tableLayoutPanelProject
             // 
@@ -1566,6 +1567,6 @@
         private Label labelHours05;
         private Label labelHours03;
         private CustomComboBox customComboBoxProjects;
-        private RadioButton radioButton6;
+        private RadioButton radioButton7;
     }
 }

@@ -65,9 +65,17 @@ namespace VykazyPrace.Core.Services.TimeEntry
 
                 // OSTATNÍ – projektId 25, s optional subtypem
                 case 5:
+                    projectId = 25;
+                    description = await CreateSubTypeIfNeededAsync(request);
+                    break;
+                case 7:
+                    projectId = 373;
+                    description = await CreateSubTypeIfNeededAsync(request);
+                    break;
                 default:
                     projectId = 25;
                     description = await CreateSubTypeIfNeededAsync(request);
+                    AppLogger.Error("Neznámý CurrentProjectType, nastavuji na \"OSTATNÍ\": " + request.CurrentProjectType);
                     break;
             }
 

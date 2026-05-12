@@ -942,8 +942,19 @@ namespace VykazyPrace.Dialogs
             ws.Column(4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             ws.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-            ws.Column(5).Style.Font.Bold = true;
-            ws.Column(5).Style.Font.FontSize = 14;
+            ws.Range("E3:E13").Style.Font.Bold = true;
+            ws.Range("E3:E13").Style.Font.FontSize = 14;
+
+            // Součet hodin pod tabulkou
+            ws.Cell(15, 2).Value = "∑";
+            ws.Cell(15, 3).FormulaA1 = "=SUM(C3:C13)";
+
+            ws.Cell(15, 2).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+            ws.Cell(15, 2).Style.Font.Bold = true;
+
+            ws.Cell(15, 3).Style.NumberFormat.Format = "# ##0.0";
+            ws.Cell(15, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            ws.Cell(15, 3).Style.Font.Bold = true;
 
             // Nejdřív dopočítat podle obsahu.
             ws.Columns().AdjustToContents();
@@ -1024,7 +1035,7 @@ namespace VykazyPrace.Dialogs
 
                 // Titulek
                 chart.HasTitle = true;
-                chart.ChartTitle.Text = "Podíl využití časového fondu v rámci" + Environment.NewLine + "AUTOMATIZACE";
+                chart.ChartTitle.Text = "Podíl využití časového fondu v rámci AUTOMATIZACE";
                 chart.ChartTitle.Font.Bold = true;
                 chart.ChartTitle.Font.Size = 14;
 
@@ -1034,7 +1045,7 @@ namespace VykazyPrace.Dialogs
                 chart.Legend.Font.Size = 10;
 
                 // 3D natočení podobné předloze
-                chart.Rotation = 0;
+                chart.Rotation = 120;
                 chart.Elevation = 25;
                 chart.Perspective = 30;
 

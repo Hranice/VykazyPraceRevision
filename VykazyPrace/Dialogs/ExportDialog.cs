@@ -721,10 +721,7 @@ namespace VykazyPrace.Dialogs
             // Odkomentováno - Ignorovali jsme nepřítomnost v souhrnu
             //var filteredEntries = timeEntries.Where(e => e.ProjectId != ExportConstants.AbsenceProjectId).ToList();
 
-            // Ignorujeme svačinu v souhrnu
-            var filteredEntries = timeEntries.Where(e => e.ProjectId != ExportConstants.ExcludedProjectId).ToList();
-
-            var entriesByUserId = filteredEntries
+            var entriesByUserId = timeEntries
       .Where(e => e.UserId.HasValue)
       .GroupBy(e => e.UserId!.Value)
       .ToDictionary(g => g.Key, g => g.ToList());
@@ -1528,8 +1525,8 @@ namespace VykazyPrace.Dialogs
                             || selectedUserIdSet.Contains(e.User.Id)
                         ))
                     // Exkludované záznamy nepřítomnosti
-                    //.Where(e => !(e.ProjectId == ExportConstants.ExcludedProjectId && e.EntryTypeId == ExportConstants.ExcludedEntryTypeId))
                     .Where(e => e.EntryTypeId != ExportConstants.OutlookEventEntryTypeId)
+                    .Where(e => e.ProjectId != ExportConstants.ExcludedProjectId)
                     .ToList();
 
                 // Projekty pro jednotlivé listy (bez svačiny)

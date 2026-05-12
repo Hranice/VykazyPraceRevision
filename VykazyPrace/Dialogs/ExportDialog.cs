@@ -784,6 +784,11 @@ namespace VykazyPrace.Dialogs
         {
             var ws = wb.AddWorksheet("VYHODNOCENÍ");
 
+            ws.Position = 1;
+
+            // Barva záložky listu
+            ws.TabColor = XLColor.Yellow;
+
             var rows = new List<EvaluationRow>
     {
         new("Projekty", "EXTERNÍ PROJEKTY",
@@ -843,19 +848,14 @@ namespace VykazyPrace.Dialogs
                     g => totalHours > 0 ? g.Sum(r => r.SumHours) / totalHours : 0
                 );
 
-            ws.Cell(1, 1).Value = "constants";
-            ws.Cell(1, 2).Value = "friendly name";
-            ws.Cell(1, 3).Value = "sum hours";
-            ws.Cell(1, 4).Value = "percent";
-            ws.Cell(1, 5).Value = "total percent";
+            // 1. řádek prázdný
+            ws.Row(1).Clear();
 
-            var header = ws.Range(1, 1, 1, 5);
-            header.Style.Font.Bold = true;
-            header.Style.Fill.BackgroundColor = XLColor.FromHtml("#D9EAF7");
-            header.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-            header.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+            // 2. řádek prázdný, výška 6 px => cca 4.5 pt
+            ws.Row(2).Clear();
+            ws.Row(2).Height = 4.5;
 
-            int currentRow = 2;
+            int currentRow = 3;
 
             foreach (var group in rows.GroupBy(r => r.Group))
             {
@@ -882,16 +882,24 @@ namespace VykazyPrace.Dialogs
                 }
 
                 var groupRange = ws.Range(groupStartRow, 1, groupEndRow, 5);
-                groupRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                var firstColumnGroupRange = ws.Range(groupStartRow, 1, groupEndRow, 1);
+                var lastColumnGroupRange = ws.Range(groupStartRow, 5, groupEndRow, 5);
+
+                groupRange.Style.Fill.BackgroundColor = GetEvaluationGroupColor(group.Key);
+
+                // jemné vnitřní čáry v rámci sekce
                 groupRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
 
-                ws.Range(groupStartRow, 1, groupEndRow, 1)
-                    .Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                // silné ohraničení celé sekce
+                groupRange.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
 
-                ws.Range(groupStartRow, 5, groupEndRow, 5)
-                    .Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                // první sloupec sekce má také silné ohraničení okolo
+                firstColumnGroupRange.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
 
-                currentRow++;
+                firstColumnGroupRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+                lastColumnGroupRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                lastColumnGroupRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             }
 
             ws.Column(3).Style.NumberFormat.Format = "# ##0.0";
@@ -900,48 +908,35 @@ namespace VykazyPrace.Dialogs
 
             ws.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             ws.Column(4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-            ws.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-
-            ApplyEvaluationGroupColor(ws, "Projekty", XLColor.FromHtml("#FCE4D6"));
-            ApplyEvaluationGroupColor(ws, "Automatizace", XLColor.FromHtml("#DDEBF7"));
-            ApplyEvaluationGroupColor(ws, "Provoz výroba", XLColor.FromHtml("#D9D9D9"));
-            ApplyEvaluationGroupColor(ws, "Ostatní", XLColor.FromHtml("#E2F0D9"));
+            ws.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
             ws.Column(5).Style.Font.Bold = true;
             ws.Column(5).Style.Font.FontSize = 14;
 
             ws.Columns().AdjustToContents();
-            ws.SheetView.FreezeRows(1);
+
+            // Nejdřív dopočítat podle obsahu
+            ws.Columns().AdjustToContents();
+
+            // Přibližný převod pixelů na Excel šířku:
+            // ExcelWidth (pixels - 5) / 7
+            ws.Column(1).Width = 17.57; // cca 128 px - podle šablony od MV
+            ws.Column(2).Width = 20.14; // cca 146 px - podle šablony od MV
+            ws.Column(3).Width = 8.43; // cca 64 px - podle šablony od MV
+            ws.Column(4).Width = 8.43; // cca 64 px - podle šablony od MV
+            ws.Column(5).Width = 9; // cca 68 px - podle šablony od MV
         }
 
-        private static void ApplyEvaluationGroupColor(IXLWorksheet ws, string groupName, XLColor color)
+        private static XLColor GetEvaluationGroupColor(string groupName)
         {
-            var usedRange = ws.RangeUsed();
-            if (usedRange == null) return;
-
-            foreach (var row in usedRange.RowsUsed().Skip(1))
+            return groupName switch
             {
-                var firstCell = row.Cell(1);
-
-                if (firstCell.GetString() == groupName)
-                {
-                    int firstRow = row.RowNumber();
-                    int lastRow = firstRow;
-
-                    var mergedRange = firstCell.MergedRange();
-
-                    if (mergedRange != null)
-                    {
-                        firstRow = mergedRange.FirstRow().RowNumber();
-                        lastRow = mergedRange.LastRow().RowNumber();
-                    }
-
-                    ws.Range(firstRow, 1, lastRow, 5)
-                        .Style.Fill.BackgroundColor = color;
-
-                    break;
-                }
-            }
+                "Projekty" => XLColor.FromHtml("#FCE4D6"),
+                "Automatizace" => XLColor.FromHtml("#DDEBF7"),
+                "Provoz výroba" => XLColor.FromHtml("#D9D9D9"),
+                "Ostatní" => XLColor.FromHtml("#EBF1DE"),
+                _ => XLColor.White
+            };
         }
 
         private sealed class EvaluationRow

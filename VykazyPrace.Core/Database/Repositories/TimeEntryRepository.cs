@@ -129,32 +129,48 @@ namespace VykazyPrace.Core.Database.Repositories
         /// Retrieves time entries for a user by project type and date.
         /// </summary>
         public Task<List<TimeEntry>> GetTimeEntriesByProjectTypeAndDateAsync(User user, int projectType, DateTime date)
-            => FetchAsync(
-                $"'VŠECHNY' PRO UŽIVATELE '{FormatHelper.FormatUserToString(user)}', PROJEKT '{projectType}', DEN '{date:yyyy-MM-dd}'",
+        {
+            var dayStart = date.Date;
+            var nextDay = dayStart.AddDays(1);
+
+            return FetchAsync(
+                $"'VŠECHNY' PRO UŽIVATELE '{FormatHelper.FormatUserToString(user)}', PROJEKT '{projectType}', DEN '{dayStart:yyyy-MM-dd}'",
                 q => q.Where(te => te.UserId == user.Id
                                    && te.Project.ProjectType == projectType
                                    && te.Timestamp.HasValue
-                                   && te.Timestamp.Value.Date == date.Date));
+                                   && te.Timestamp.Value >= dayStart
+                                   && te.Timestamp.Value < nextDay));
+        }
 
         /// <summary>
         /// Retrieves time entries for a user by date.
         /// </summary>
         public Task<List<TimeEntry>> GetTimeEntriesByUserAndDateAsync(User user, DateTime date)
-            => FetchAsync(
-                $"'VŠECHNY' PRO UŽIVATELE '{FormatHelper.FormatUserToString(user)}', DEN '{date:yyyy-MM-dd}'",
+        {
+            var dayStart = date.Date;
+            var nextDay = dayStart.AddDays(1);
+
+            return FetchAsync(
+                $"'VŠECHNY' PRO UŽIVATELE '{FormatHelper.FormatUserToString(user)}', DEN '{dayStart:yyyy-MM-dd}'",
                 q => q.Where(te => te.UserId == user.Id
                                    && te.Timestamp.HasValue
-                                   && te.Timestamp.Value.Date == date.Date));
+                                   && te.Timestamp.Value >= dayStart
+                                   && te.Timestamp.Value < nextDay));
+        }
 
         /// <summary>
         /// Retrieves time entries between two dates.
         /// </summary>
         public Task<List<TimeEntry>> GetAllTimeEntriesBetweenDatesAsync(DateTime fromDate, DateTime toDate)
-            => FetchAsync(
-                $"'VŠECHNY' OBDOBÍ '{fromDate:yyyy-MM-dd} - {toDate:yyyy-MM-dd}'",
+        {
+            var range = NormalizeInclusiveDateRange(fromDate, toDate);
+
+            return FetchAsync(
+                $"'VŠECHNY' OBDOBÍ '{range.FromInclusive:yyyy-MM-dd} - {range.ToInclusive:yyyy-MM-dd}'",
                 q => q.Where(te => te.Timestamp.HasValue
-                                   && te.Timestamp.Value.Date >= fromDate.Date
-                                   && te.Timestamp.Value.Date <= toDate.Date));
+                                   && te.Timestamp.Value >= range.FromInclusive
+                                   && te.Timestamp.Value < range.ToExclusive));
+        }
 
         /// <summary>
         /// Retrieves time entries for a user in the week of a given date (Mon-Sun).
@@ -162,13 +178,15 @@ namespace VykazyPrace.Core.Database.Repositories
         public Task<List<TimeEntry>> GetTimeEntriesByUserAndCurrentWeekAsync(User user, DateTime date)
         {
             var start = date.Date.AddDays(-(int)date.DayOfWeek + (date.DayOfWeek == DayOfWeek.Sunday ? -6 : 1));
-            var end = start.AddDays(6);
+            var endInclusive = start.AddDays(6);
+            var endExclusive = endInclusive.AddDays(1);
+
             return FetchAsync(
-                $"'VŠECHNY' PRO UŽIVATELE '{FormatHelper.FormatUserToString(user)}', TÝDEN '{start:yyyy-MM-dd} - {end:yyyy-MM-dd}'",
+                $"'VŠECHNY' PRO UŽIVATELE '{FormatHelper.FormatUserToString(user)}', TÝDEN '{start:yyyy-MM-dd} - {endInclusive:yyyy-MM-dd}'",
                 q => q.Where(te => te.UserId == user.Id
                                    && te.Timestamp.HasValue
-                                   && te.Timestamp.Value.Date >= start
-                                   && te.Timestamp.Value.Date <= end));
+                                   && te.Timestamp.Value >= start
+                                   && te.Timestamp.Value < endExclusive));
         }
 
         /// <summary>
@@ -226,35 +244,50 @@ namespace VykazyPrace.Core.Database.Repositories
         /// Gets total minutes for a user on a specific day.
         /// </summary>
         public Task<int> GetTotalMinutesForUserByDayAsync(User user, DateTime date)
-            => SumAsync(
-                $"'SUMA ODPRACOVANÝCH MINUT' PRO UŽIVATELE '{FormatHelper.FormatUserToString(user)}', DEN '{date:yyyy-MM-dd}'",
+        {
+            var dayStart = date.Date;
+            var nextDay = dayStart.AddDays(1);
+
+            return SumAsync(
+                $"'SUMA ODPRACOVANÝCH MINUT' PRO UŽIVATELE '{FormatHelper.FormatUserToString(user)}', DEN '{dayStart:yyyy-MM-dd}'",
                 q => q.Where(te => te.UserId == user.Id
                                    && te.Timestamp.HasValue
-                                   && te.Timestamp.Value.Date == date.Date));
+                                   && te.Timestamp.Value >= dayStart
+                                   && te.Timestamp.Value < nextDay));
+        }
 
         /// <summary>
         /// Gets total minutes for a user on a specific day and project type.
         /// </summary>
         /// <see cref="GetTotalMinutesForUserByDayAsync(User, DateTime)"/>
         public Task<int> GetTotalMinutesForUserByDayAsync(User user, DateTime date, int projectType)
-            => SumAsync(
-                $"'SUMA ODPRACOVANÝCH MINUT' PRO UŽIVATELE '{FormatHelper.FormatUserToString(user)}', DEN '{date:yyyy-MM-dd}', TYP PROJEKTU '{projectType}'",
+        {
+            var dayStart = date.Date;
+            var nextDay = dayStart.AddDays(1);
+
+            return SumAsync(
+                $"'SUMA ODPRACOVANÝCH MINUT' PRO UŽIVATELE '{FormatHelper.FormatUserToString(user)}', DEN '{dayStart:yyyy-MM-dd}', TYP PROJEKTU '{projectType}'",
                 q => q.Where(te => te.UserId == user.Id
                                    && te.Project.ProjectType == projectType
                                    && te.Timestamp.HasValue
-                                   && te.Timestamp.Value.Date == date.Date));
+                                   && te.Timestamp.Value >= dayStart
+                                   && te.Timestamp.Value < nextDay));
+        }
 
         /// <summary>
         /// Retrieves summary of hours per user and project in a date range.
         /// </summary>
         public async Task<List<TimeEntrySummary>> GetTimeEntriesSummaryAsync(DateTime fromDate, DateTime toDate)
         {
-            Log("ZÍSKÁNÍ", $"'SUMMARY' OBDOBÍ '{fromDate:yyyy-MM-dd} - {toDate:yyyy-MM-dd}'");
+            var range = NormalizeInclusiveDateRange(fromDate, toDate);
+
+            Log("ZÍSKÁNÍ", $"'SUMMARY' OBDOBÍ '{range.FromInclusive:yyyy-MM-dd} - {range.ToInclusive:yyyy-MM-dd}'");
+
             var summary = await _context.SafeGetAsync(async () =>
                 await _context.TimeEntries
                     .Where(te => te.Timestamp.HasValue
-                                 && te.Timestamp.Value.Date >= fromDate.Date
-                                 && te.Timestamp.Value.Date <= toDate.Date
+                                 && te.Timestamp.Value >= range.FromInclusive
+                                 && te.Timestamp.Value < range.ToExclusive
                                  && !(te.ProjectId == 132 && te.EntryTypeId == 24))
                     .GroupBy(te => new { te.UserId, te.ProjectId })
                     .Select(g => new TimeEntrySummary
@@ -346,22 +379,24 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<bool> ExistsEntryAsync(int userId, DateTime day, int projectId, int entryTypeId)
         {
-            Log("ZÍSKÁNÍ", $"EXISTUJE? UŽIVATEL '{userId}', DEN '{day:yyyy-MM-dd}', PROJEKT '{projectId}', TYP '{entryTypeId}'");
+            var dayStart = day.Date;
+            var nextDay = dayStart.AddDays(1);
+
+            Log("ZÍSKÁNÍ", $"EXISTUJE? UŽIVATEL '{userId}', DEN '{dayStart:yyyy-MM-dd}', PROJEKT '{projectId}', TYP '{entryTypeId}'");
 
             var exists = await _context.SafeGetAsync<bool?>(async () =>
-       await BaseQuery(noTracking: true).AnyAsync(te =>
-           te.UserId == userId &&
-           te.Timestamp.HasValue &&
-           te.Timestamp.Value.Date == day.Date &&
-           te.ProjectId == projectId &&
-           te.EntryTypeId == entryTypeId)
-   ) ?? false;
-
+                await BaseQuery(noTracking: true).AnyAsync(te =>
+                    te.UserId == userId &&
+                    te.Timestamp.HasValue &&
+                    te.Timestamp.Value >= dayStart &&
+                    te.Timestamp.Value < nextDay &&
+                    te.ProjectId == projectId &&
+                    te.EntryTypeId == entryTypeId)
+            ) ?? false;
 
             Log("ZÍSKÁNÍ", $"HOTOVO EXISTUJE: {exists}");
             return exists;
         }
-
         #endregion
 
         /// <summary>
@@ -396,7 +431,7 @@ namespace VykazyPrace.Core.Database.Repositories
                              && te.UserId != null
                              && te.Project!.DateFullFilled != null
                              && (ids.Count == 0 || ids.Contains(te.ProjectId!.Value))
-                             && te.Timestamp!.Value <= te.Project!.DateFullFilled!)
+                             && te.Timestamp.Value < te.Project.DateFullFilled.Value.Date.AddDays(1))
                 .GroupBy(te => new { te.ProjectId, te.UserId })
                 .Select(g => new ProjectUserCumulativeDto
                 {
@@ -407,5 +442,20 @@ namespace VykazyPrace.Core.Database.Repositories
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Normalizuje rozsah "od dne včetně do dne včetně"
+        /// na technický rozsah "od včetně do následujícího dne exkluzivně".
+        /// </summary>
+        private static (DateTime FromInclusive, DateTime ToInclusive, DateTime ToExclusive)
+            NormalizeInclusiveDateRange(DateTime fromDate, DateTime toDate)
+        {
+            var fromInclusive = fromDate.Date;
+            var toInclusive = toDate.Date;
+
+            if (toInclusive < fromInclusive)
+                throw new ArgumentException("Datum do nesmí být menší než datum od.");
+
+            return (fromInclusive, toInclusive, toInclusive.AddDays(1));
+        }
     }
 }

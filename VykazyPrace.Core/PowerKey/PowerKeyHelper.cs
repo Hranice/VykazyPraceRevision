@@ -211,14 +211,25 @@ HAVING TRY_CONVERT(int, PE.PersonalNum) IS NOT NULL;";
         }
 
         public async Task<Dictionary<int, double>> GetWorkedHoursByPersonalNumberForRangeAsync(
-    DateTime from,
-    DateTime to,
-    IEnumerable<int> personalNumbers)
+     DateTime from,
+     DateTime to,
+     IEnumerable<int> personalNumbers)
         {
             var result = new Dictionary<int, double>();
 
-            if (to <= from)
+            var fromInclusive = from.Date;
+            var toInclusive = to.Date;
+
+            if (toInclusive < fromInclusive)
                 return result;
+
+            // PowerKey / SQL rozsah:
+            // od fromInclusive včetně
+            // do toExclusive exkluzivně
+            //
+            // Příklad:
+            // 1.3. až 31.3. => >= 1.3. 00:00:00 a < 1.4. 00:00:00
+            var toExclusive = toInclusive.AddDays(1);
 
             var personalNumberList = personalNumbers
                 .Where(x => x > 0)
@@ -232,14 +243,15 @@ HAVING TRY_CONVERT(int, PE.PersonalNum) IS NOT NULL;";
             string personalNumsCsv = string.Join(",", personalNumberList);
 
             await using var conn = new SqlConnection(ConnectionString);
+
             await using var cmd = new SqlCommand("[pwk].[Prenos_pracovni_doby_range_summary]", conn)
             {
                 CommandType = CommandType.StoredProcedure,
                 CommandTimeout = 120
             };
 
-            cmd.Parameters.Add("@FromDateTime", SqlDbType.DateTime2).Value = from;
-            cmd.Parameters.Add("@ToDateTime", SqlDbType.DateTime2).Value = to;
+            cmd.Parameters.Add("@FromDateTime", SqlDbType.DateTime2).Value = fromInclusive;
+            cmd.Parameters.Add("@ToDateTime", SqlDbType.DateTime2).Value = toExclusive;
             cmd.Parameters.Add("@PersonalNumsCsv", SqlDbType.NVarChar).Value = personalNumsCsv;
 
             await conn.OpenAsync().ConfigureAwait(false);
@@ -256,7 +268,6 @@ HAVING TRY_CONVERT(int, PE.PersonalNum) IS NOT NULL;";
 
             return result;
         }
-
         private static DateTime NormalizeDateTimeToWorkDate(DateTime workDate, DateTime value)
         {
             // Některé systémy vracejí čas jako 1899/1900 datum + čas.

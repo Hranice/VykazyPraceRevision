@@ -608,6 +608,24 @@ namespace VykazyPrace.Dialogs
             var lastDay = new DateTime(year, month, DateTime.DaysInMonth(year, month));
             return (firstDay, lastDay);
         }
+
+        /// <summary>
+        /// Normalizuje uživatelský rozsah "od dne včetně do dne včetně".
+        /// Pro databázové filtrování vrací horní mez jako následující den exkluzivně.
+        /// </summary>
+        public static (DateTime FromInclusive, DateTime ToInclusive, DateTime ToExclusive)
+            NormalizeInclusiveDateRange(DateTime from, DateTime to)
+        {
+            var fromInclusive = from.Date;
+            var toInclusive = to.Date;
+
+            if (toInclusive < fromInclusive)
+                throw new InvalidOperationException("Datum do nesmí být menší než datum od.");
+
+            var toExclusive = toInclusive.AddDays(1);
+
+            return (fromInclusive, toInclusive, toExclusive);
+        }
     }
 
     /// <summary>
@@ -1489,22 +1507,29 @@ namespace VykazyPrace.Dialogs
             _tableFactory = tableFactory;
             _styling = styling;
         }
-
         /// <summary>
         /// Načte data, vytvoří listy a uloží XLSX.
+        /// Uživatelský rozsah je chápán jako "od dne včetně do dne včetně".
+        /// Pro časové záznamy se horní hranice technicky filtruje jako následující den exkluzivně.
         /// </summary>
         public async Task ExportAsync(
-         string filePath,
-         DateTime from,
-         DateTime to,
-         IEnumerable<int> selectedUserGroupIds,
-         IEnumerable<int> selectedUserIds,
-         IEnumerable<User> selectedUsers,
-         User currentUser,
-         bool buildEvaluationSheet)
+            string filePath,
+            DateTime from,
+            DateTime to,
+            IEnumerable<int> selectedUserGroupIds,
+            IEnumerable<int> selectedUserIds,
+            IEnumerable<User> selectedUsers,
+            User currentUser,
+            bool buildEvaluationSheet)
         {
             try
             {
+                var range = DateRangeHelper.NormalizeInclusiveDateRange(from, to);
+
+                var fromInclusive = range.FromInclusive;
+                var toInclusive = range.ToInclusive;
+                var toExclusive = range.ToExclusive;
+
                 var selectedGroupIdSet = selectedUserGroupIds?.ToHashSet() ?? new HashSet<int>();
                 var selectedUserIdSet = selectedUserIds?.ToHashSet() ?? new HashSet<int>();
 
@@ -1515,24 +1540,31 @@ namespace VykazyPrace.Dialogs
                     selectedUserIdSet.Add(currentUser.Id);
                 }
 
-                var allEntries = await _timeEntryRepo.GetAllTimeEntriesBetweenDatesAsync(from, to).ConfigureAwait(false);
+                // Důležité:
+                // časové záznamy načítáme od fromInclusive včetně
+                // do toExclusive exkluzivně.
+                var allEntries = await _timeEntryRepo
+                    .GetAllTimeEntriesBetweenDatesAsync(fromInclusive, toExclusive)
+                    .ConfigureAwait(false);
 
+                // Bezpečnostní filtr i v paměti:
+                // kdyby repozitář někdy filtroval špatně nebo vrátil širší rozsah.
                 var filtered = allEntries
+                    .Where(e =>
+                        e.Timestamp.HasValue &&
+                        e.Timestamp.Value >= fromInclusive &&
+                        e.Timestamp.Value < toExclusive)
                     .Where(e =>
                         e.User != null &&
                         (
                             (e.User.UserGroup != null && selectedGroupIdSet.Contains(e.User.UserGroup.Id))
                             || selectedUserIdSet.Contains(e.User.Id)
                         ))
-                    // Exkludované záznamy nepřítomnosti
                     .Where(e => e.EntryTypeId != ExportConstants.OutlookEventEntryTypeId)
                     .Where(e => e.ProjectId != ExportConstants.ExcludedProjectId)
                     .ToList();
 
-                // Projekty pro jednotlivé listy (bez svačiny)
                 var projects = filtered
-                    // odkomentováno - sestavovali jsme bez nepřítomnosti atd
-                    //.Where(e => e.Project?.ProjectType == 0 && e.ProjectId != null)
                     .Where(e =>
                         e.Project?.ProjectType != 6
                         && e.Project?.ProjectType != 1
@@ -1546,14 +1578,16 @@ namespace VykazyPrace.Dialogs
                     .ThenBy(p => p.ProjectTitle)
                     .ToList();
 
-                // Podklady pro cumulativní hodiny do zplnohodnocení
                 var projectIdsForSummary = filtered
                     .Where(e => e.ProjectId.HasValue && e.Project?.DateFullFilled != null)
                     .Select(e => e.ProjectId!.Value)
                     .Distinct()
                     .ToList();
 
-                var cumulativeRows = await _timeEntryRepo.GetCumulativeToFullfilledAsync(projectIdsForSummary).ConfigureAwait(false);
+                var cumulativeRows = await _timeEntryRepo
+                    .GetCumulativeToFullfilledAsync(projectIdsForSummary)
+                    .ConfigureAwait(false);
+
                 var cumDict = cumulativeRows.ToDictionary(
                     k => (k.ProjectId, k.UserId),
                     v => v.MinutesToFullFilled / 60.0
@@ -1565,21 +1599,26 @@ namespace VykazyPrace.Dialogs
                 var wsBase = wb.AddWorksheet("Časové záznamy");
                 var dtBase = _tableFactory.BuildTimeEntries(filtered);
                 var tableBase = wsBase.Cell(1, 1).InsertTable(dtBase, "CasoveZaznamy", true);
+
                 _styling.ApplyMedium2Teal(tableBase);
                 _styling.BeautifyDetailTable(wsBase, tableBase);
                 wsBase.Columns().AdjustToContents();
 
                 // „Souhrn podle uživatele“
                 var wsSummary = wb.AddWorksheet("Souhrn podle uživatele");
+
                 var usersForSummary = selectedUsers
-    .GroupBy(u => u.Id)
-    .Select(g => g.First())
-    .ToList();
+                    .Where(u => u != null)
+                    .GroupBy(u => u.Id)
+                    .Select(g => g.First())
+                    .ToList();
 
                 var dtSummary = await _tableFactory
-                  .BuildUserSummary(usersForSummary, filtered, from, to, cumDict)
-                  .ConfigureAwait(false);
+                    .BuildUserSummary(usersForSummary, filtered, fromInclusive, toInclusive, cumDict)
+                    .ConfigureAwait(false);
+
                 var tableSummary = wsSummary.Cell(1, 1).InsertTable(dtSummary, "SouhrnUzivatel", true);
+
                 _styling.ApplyMedium2Teal(tableSummary);
                 _styling.BeautifyUserSummarySheet(wsSummary, tableSummary);
                 wsSummary.Columns().AdjustToContents();
@@ -1588,24 +1627,31 @@ namespace VykazyPrace.Dialogs
                 if (buildEvaluationSheet)
                 {
                     await _tableFactory
-                        .BuildEvaluationSheet(wb, filtered, usersForSummary, from, to)
+                        .BuildEvaluationSheet(wb, filtered, usersForSummary, fromInclusive, toInclusive)
                         .ConfigureAwait(false);
                 }
 
                 // Listy podle projektů
                 foreach (var proj in projects)
                 {
-                    var rows = filtered.Where(e => e.Project?.Id == proj.Id).ToList();
-                    if (rows.Count == 0) continue;
+                    var rows = filtered
+                        .Where(e => e.Project?.Id == proj.Id)
+                        .ToList();
+
+                    if (rows.Count == 0)
+                        continue;
 
                     var safeName = SheetNameSanitizer.MakeSafe(proj.ProjectTitle);
                     var ws = wb.AddWorksheet(safeName);
 
                     var dtProj = _tableFactory.BuildTimeEntries(rows);
                     var table = ws.Cell(1, 1).InsertTable(dtProj, $"Projekt_{proj.Id}", true);
+
                     table.ShowTotalsRow = true;
+
                     var hoursField = table.Fields.FirstOrDefault(f => f.Name == "Doba v hodinách");
-                    if (hoursField != null) hoursField.TotalsRowFunction = XLTotalsRowFunction.Sum;
+                    if (hoursField != null)
+                        hoursField.TotalsRowFunction = XLTotalsRowFunction.Sum;
 
                     _styling.ApplyMedium2Teal(table);
                     _styling.BeautifyDetailTable(ws, table);
@@ -1619,12 +1665,16 @@ namespace VykazyPrace.Dialogs
                     _tableFactory.AddEvaluationChartsWithExcelInterop(filePath);
                 }
 
-                Process.Start(new ProcessStartInfo { FileName = filePath, UseShellExecute = true });
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = filePath,
+                    UseShellExecute = true
+                });
             }
             catch (Exception ex)
             {
                 AppLogger.Error("Chyba při exportu ClosedXML.", ex);
-                throw; // nechť UI rozhodne, jak zobrazit
+                throw;
             }
         }
 

@@ -1401,14 +1401,31 @@ namespace VykazyPrace.Dialogs
                 int startDetail = headerRow + 1;
                 int endDetail = nextHeader - 1;
 
-                double totalHours = 0;
+                double reportedHours = 0;
+                double attendanceHours = 0;
 
-                var totalCell = wsSummary.Cell(headerRow, colSuma);
+                var reportedCell = wsSummary.Cell(headerRow, colSuma);
+                var attendanceCell = wsSummary.Cell(headerRow, colDoch);
 
-                if (totalCell.TryGetValue(out double parsedTotalHours))
-                    totalHours = parsedTotalHours;
+                if (reportedCell.TryGetValue(out double parsedReportedHours))
+                    reportedHours = parsedReportedHours;
 
-                bool hasNoHours = totalHours <= 0;
+                if (attendanceCell.TryGetValue(out double parsedAttendanceHours))
+                    attendanceHours = parsedAttendanceHours;
+
+                // Červeně označit uživatele, pokud se vykázané hodiny liší
+                // od docházky z PowerKey o více než 5 %.
+                bool hasInvalidHoursDifference;
+
+                if (attendanceHours <= 0)
+                {
+                    hasInvalidHoursDifference = reportedHours > 0;
+                }
+                else
+                {
+                    double differenceRatio = Math.Abs(reportedHours - attendanceHours) / attendanceHours;
+                    hasInvalidHoursDifference = differenceRatio > 0.1;
+                }
 
                 var headerRange = wsSummary.Range(headerRow, firstCol, headerRow, lastCol);
                 headerRange.Style.Font.Bold = true;
@@ -1417,7 +1434,7 @@ namespace VykazyPrace.Dialogs
                 headerRange.Style.Border.TopBorderColor = userTop;
                 headerRange.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
 
-                if (hasNoHours)
+                if (hasInvalidHoursDifference)
                 {
                     headerRange.Style.Font.FontColor = userNoHoursFont;
                 }
@@ -1434,6 +1451,7 @@ namespace VykazyPrace.Dialogs
                         projCell.Style.Alignment.Indent = 1;
                         projCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
                     }
+
                     wsSummary.Rows(startDetail, endDetail).Group();
                 }
 

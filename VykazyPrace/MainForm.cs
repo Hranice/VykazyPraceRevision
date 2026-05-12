@@ -297,7 +297,7 @@ namespace VykazyPrace
                 Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238),
                 Location = new Point(0, 0),
                 Name = "calendarV21",
-                Size = new Size(1126, 620),
+                Size = new Size(1226, 620),
                 TabIndex = 0
             };
             panelContainer.Controls.Add(_calendar);

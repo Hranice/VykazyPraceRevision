@@ -94,11 +94,12 @@
             radioButton3 = new RadioButton();
             radioButton4 = new RadioButton();
             radioButton5 = new RadioButton();
+            radioButton6 = new RadioButton();
             tableLayoutPanelProject = new TableLayoutPanel();
-            customComboBoxProjects = new CustomComboBox();
             panel2 = new Panel();
             checkBoxArchivedProjects = new CheckBox();
             labelProject = new Label();
+            customComboBoxProjects = new CustomComboBox();
             tableLayoutPanelEntryType = new TableLayoutPanel();
             comboBoxEntryType = new ComboBox();
             labelType = new Label();
@@ -146,8 +147,8 @@
             // 
             tableLayoutPanel2.ColumnCount = 3;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 85F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 76.3145447F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23.6854572F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 73.13117F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 26.868824F));
             tableLayoutPanel2.Controls.Add(tableLayoutPanel3, 0, 0);
             tableLayoutPanel2.Controls.Add(panelContainer, 1, 0);
             tableLayoutPanel2.Controls.Add(flowLayoutPanel2, 2, 0);
@@ -156,7 +157,7 @@
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel2.Size = new Size(1126, 600);
+            tableLayoutPanel2.Size = new Size(1226, 660);
             tableLayoutPanel2.TabIndex = 124;
             // 
             // tableLayoutPanel3
@@ -183,7 +184,7 @@
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 14.2851019F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 14.2851019F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 14.2893877F));
-            tableLayoutPanel3.Size = new Size(79, 594);
+            tableLayoutPanel3.Size = new Size(79, 654);
             tableLayoutPanel3.TabIndex = 145;
             // 
             // panelDay6
@@ -192,9 +193,9 @@
             panelDay6.Controls.Add(labelDate07);
             panelDay6.Controls.Add(labelDay07);
             panelDay6.Dock = DockStyle.Fill;
-            panelDay6.Location = new Point(3, 514);
+            panelDay6.Location = new Point(3, 562);
             panelDay6.Name = "panelDay6";
-            panelDay6.Size = new Size(73, 77);
+            panelDay6.Size = new Size(73, 89);
             panelDay6.TabIndex = 126;
             panelDay6.Click += panelDay_Click;
             // 
@@ -273,7 +274,7 @@
             panelDay0.Dock = DockStyle.Fill;
             panelDay0.Location = new Point(3, 28);
             panelDay0.Name = "panelDay0";
-            panelDay0.Size = new Size(73, 75);
+            panelDay0.Size = new Size(73, 83);
             panelDay0.TabIndex = 112;
             panelDay0.Click += panelDay_Click;
             // 
@@ -320,9 +321,9 @@
             panelDay3.Controls.Add(labelDate04);
             panelDay3.Controls.Add(labelDay04);
             panelDay3.Dock = DockStyle.Fill;
-            panelDay3.Location = new Point(3, 271);
+            panelDay3.Location = new Point(3, 295);
             panelDay3.Name = "panelDay3";
-            panelDay3.Size = new Size(73, 75);
+            panelDay3.Size = new Size(73, 83);
             panelDay3.TabIndex = 114;
             panelDay3.Click += panelDay_Click;
             // 
@@ -369,9 +370,9 @@
             panelDay5.Controls.Add(labelDate06);
             panelDay5.Controls.Add(labelDay06);
             panelDay5.Dock = DockStyle.Fill;
-            panelDay5.Location = new Point(3, 433);
+            panelDay5.Location = new Point(3, 473);
             panelDay5.Name = "panelDay5";
-            panelDay5.Size = new Size(73, 75);
+            panelDay5.Size = new Size(73, 83);
             panelDay5.TabIndex = 116;
             panelDay5.Click += panelDay_Click;
             // 
@@ -418,9 +419,9 @@
             panelDay4.Controls.Add(labelDate05);
             panelDay4.Controls.Add(labelDay05);
             panelDay4.Dock = DockStyle.Fill;
-            panelDay4.Location = new Point(3, 352);
+            panelDay4.Location = new Point(3, 384);
             panelDay4.Name = "panelDay4";
-            panelDay4.Size = new Size(73, 75);
+            panelDay4.Size = new Size(73, 83);
             panelDay4.TabIndex = 115;
             panelDay4.Click += panelDay_Click;
             // 
@@ -467,9 +468,9 @@
             panelDay2.Controls.Add(labelDate03);
             panelDay2.Controls.Add(labelDay03);
             panelDay2.Dock = DockStyle.Fill;
-            panelDay2.Location = new Point(3, 190);
+            panelDay2.Location = new Point(3, 206);
             panelDay2.Name = "panelDay2";
-            panelDay2.Size = new Size(73, 75);
+            panelDay2.Size = new Size(73, 83);
             panelDay2.TabIndex = 113;
             panelDay2.Click += panelDay_Click;
             // 
@@ -516,9 +517,9 @@
             panelDay1.Controls.Add(labelDate02);
             panelDay1.Controls.Add(labelDay02);
             panelDay1.Dock = DockStyle.Fill;
-            panelDay1.Location = new Point(3, 109);
+            panelDay1.Location = new Point(3, 117);
             panelDay1.Name = "panelDay1";
-            panelDay1.Size = new Size(73, 75);
+            panelDay1.Size = new Size(73, 83);
             panelDay1.TabIndex = 110;
             panelDay1.Click += panelDay_Click;
             // 
@@ -568,7 +569,7 @@
             panelContainer.Dock = DockStyle.Fill;
             panelContainer.Location = new Point(88, 3);
             panelContainer.Name = "panelContainer";
-            panelContainer.Size = new Size(788, 594);
+            panelContainer.Size = new Size(828, 654);
             panelContainer.TabIndex = 130;
             // 
             // tableLayoutPanelCalendar
@@ -634,7 +635,7 @@
             tableLayoutPanelCalendar.RowStyles.Add(new RowStyle(SizeType.Percent, 14.2851019F));
             tableLayoutPanelCalendar.RowStyles.Add(new RowStyle(SizeType.Percent, 14.2893877F));
             tableLayoutPanelCalendar.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanelCalendar.Size = new Size(1969, 550);
+            tableLayoutPanelCalendar.Size = new Size(1969, 610);
             tableLayoutPanelCalendar.TabIndex = 149;
             tableLayoutPanelCalendar.MouseClick += tableLayoutPanel1_MouseClick;
             tableLayoutPanelCalendar.MouseDoubleClick += TableLayoutPanel1_MouseDoubleClick;
@@ -1044,17 +1045,18 @@
             flowLayoutPanel2.Controls.Add(radioButton3);
             flowLayoutPanel2.Controls.Add(radioButton4);
             flowLayoutPanel2.Controls.Add(radioButton5);
+            flowLayoutPanel2.Controls.Add(radioButton6);
             flowLayoutPanel2.Controls.Add(tableLayoutPanelProject);
             flowLayoutPanel2.Controls.Add(tableLayoutPanelEntryType);
             flowLayoutPanel2.Controls.Add(tableLayoutPanelEntrySubType);
             flowLayoutPanel2.Controls.Add(panel4);
             flowLayoutPanel2.Controls.Add(tableLayoutPanel6);
             flowLayoutPanel2.Controls.Add(tableLayoutPanel4);
-            flowLayoutPanel2.Dock = DockStyle.Top;
+            flowLayoutPanel2.Dock = DockStyle.Fill;
             flowLayoutPanel2.Font = new Font("Reddit Sans", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            flowLayoutPanel2.Location = new Point(882, 3);
+            flowLayoutPanel2.Location = new Point(922, 3);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
-            flowLayoutPanel2.Size = new Size(241, 583);
+            flowLayoutPanel2.Size = new Size(301, 654);
             flowLayoutPanel2.TabIndex = 146;
             flowLayoutPanel2.Visible = false;
             flowLayoutPanel2.SizeChanged += flowLayoutPanel2_SizeChanged;
@@ -1089,7 +1091,7 @@
             // 
             radioButton3.Appearance = Appearance.Button;
             radioButton3.AutoSize = true;
-            radioButton3.Location = new Point(3, 44);
+            radioButton3.Location = new Point(193, 3);
             radioButton3.Name = "radioButton3";
             radioButton3.Size = new Size(86, 35);
             radioButton3.TabIndex = 3;
@@ -1102,7 +1104,7 @@
             // 
             radioButton4.Appearance = Appearance.Button;
             radioButton4.AutoSize = true;
-            radioButton4.Location = new Point(3, 85);
+            radioButton4.Location = new Point(3, 44);
             radioButton4.Name = "radioButton4";
             radioButton4.Size = new Size(144, 35);
             radioButton4.TabIndex = 4;
@@ -1115,7 +1117,7 @@
             // 
             radioButton5.Appearance = Appearance.Button;
             radioButton5.AutoSize = true;
-            radioButton5.Location = new Point(3, 126);
+            radioButton5.Location = new Point(153, 44);
             radioButton5.Name = "radioButton5";
             radioButton5.Size = new Size(87, 35);
             radioButton5.TabIndex = 5;
@@ -1124,31 +1126,34 @@
             radioButton5.UseVisualStyleBackColor = true;
             radioButton5.CheckedChanged += radioButton_CheckedChanged;
             // 
+            // radioButton6
+            // 
+            radioButton6.Appearance = Appearance.Button;
+            radioButton6.AutoSize = true;
+            radioButton6.Location = new Point(3, 85);
+            radioButton6.Name = "radioButton6";
+            radioButton6.Size = new Size(177, 35);
+            radioButton6.TabIndex = 155;
+            radioButton6.TabStop = true;
+            radioButton6.Text = "ZÁKAZNICKÝ SERVIS";
+            radioButton6.UseVisualStyleBackColor = true;
+            // 
             // tableLayoutPanelProject
             // 
             tableLayoutPanelProject.ColumnCount = 1;
             tableLayoutPanelProject.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanelProject.Controls.Add(customComboBoxProjects, 0, 1);
             tableLayoutPanelProject.Controls.Add(panel2, 0, 0);
+            tableLayoutPanelProject.Controls.Add(customComboBoxProjects, 0, 1);
             tableLayoutPanelProject.Dock = DockStyle.Top;
-            tableLayoutPanelProject.Location = new Point(3, 167);
+            tableLayoutPanelProject.Location = new Point(3, 126);
             tableLayoutPanelProject.Name = "tableLayoutPanelProject";
             tableLayoutPanelProject.RowCount = 3;
             tableLayoutPanelProject.RowStyles.Add(new RowStyle());
             tableLayoutPanelProject.RowStyles.Add(new RowStyle());
             tableLayoutPanelProject.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanelProject.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanelProject.Size = new Size(237, 72);
+            tableLayoutPanelProject.Size = new Size(290, 72);
             tableLayoutPanelProject.TabIndex = 149;
-            // 
-            // customComboBoxProjects
-            // 
-            customComboBoxProjects.Dock = DockStyle.Fill;
-            customComboBoxProjects.Location = new Point(3, 35);
-            customComboBoxProjects.Name = "customComboBoxProjects";
-            customComboBoxProjects.SelectedIndex = -1;
-            customComboBoxProjects.Size = new Size(231, 34);
-            customComboBoxProjects.TabIndex = 150;
             // 
             // panel2
             // 
@@ -1157,14 +1162,14 @@
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(3, 3);
             panel2.Name = "panel2";
-            panel2.Size = new Size(231, 26);
+            panel2.Size = new Size(284, 26);
             panel2.TabIndex = 149;
             // 
             // checkBoxArchivedProjects
             // 
             checkBoxArchivedProjects.AutoSize = true;
             checkBoxArchivedProjects.Dock = DockStyle.Right;
-            checkBoxArchivedProjects.Location = new Point(114, 0);
+            checkBoxArchivedProjects.Location = new Point(167, 0);
             checkBoxArchivedProjects.Name = "checkBoxArchivedProjects";
             checkBoxArchivedProjects.Size = new Size(117, 26);
             checkBoxArchivedProjects.TabIndex = 158;
@@ -1178,10 +1183,19 @@
             labelProject.Location = new Point(0, 0);
             labelProject.Margin = new Padding(4, 0, 4, 0);
             labelProject.Name = "labelProject";
-            labelProject.Size = new Size(231, 26);
+            labelProject.Size = new Size(284, 26);
             labelProject.TabIndex = 157;
             labelProject.Text = "Projekt*";
             labelProject.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // customComboBoxProjects
+            // 
+            customComboBoxProjects.Dock = DockStyle.Fill;
+            customComboBoxProjects.Location = new Point(3, 35);
+            customComboBoxProjects.Name = "customComboBoxProjects";
+            customComboBoxProjects.SelectedIndex = -1;
+            customComboBoxProjects.Size = new Size(284, 34);
+            customComboBoxProjects.TabIndex = 150;
             // 
             // tableLayoutPanelEntryType
             // 
@@ -1190,13 +1204,13 @@
             tableLayoutPanelEntryType.Controls.Add(comboBoxEntryType, 0, 1);
             tableLayoutPanelEntryType.Controls.Add(labelType, 0, 0);
             tableLayoutPanelEntryType.Dock = DockStyle.Top;
-            tableLayoutPanelEntryType.Location = new Point(3, 245);
+            tableLayoutPanelEntryType.Location = new Point(3, 204);
             tableLayoutPanelEntryType.Name = "tableLayoutPanelEntryType";
             tableLayoutPanelEntryType.RowCount = 2;
             tableLayoutPanelEntryType.RowStyles.Add(new RowStyle());
             tableLayoutPanelEntryType.RowStyles.Add(new RowStyle());
             tableLayoutPanelEntryType.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanelEntryType.Size = new Size(237, 70);
+            tableLayoutPanelEntryType.Size = new Size(290, 70);
             tableLayoutPanelEntryType.TabIndex = 150;
             // 
             // comboBoxEntryType
@@ -1207,7 +1221,7 @@
             comboBoxEntryType.ItemHeight = 25;
             comboBoxEntryType.Location = new Point(3, 34);
             comboBoxEntryType.Name = "comboBoxEntryType";
-            comboBoxEntryType.Size = new Size(231, 33);
+            comboBoxEntryType.Size = new Size(284, 33);
             comboBoxEntryType.TabIndex = 29;
             // 
             // labelType
@@ -1216,7 +1230,7 @@
             labelType.Location = new Point(4, 0);
             labelType.Margin = new Padding(4, 0, 4, 0);
             labelType.Name = "labelType";
-            labelType.Size = new Size(229, 31);
+            labelType.Size = new Size(282, 31);
             labelType.TabIndex = 30;
             labelType.Text = "Typ*";
             // 
@@ -1227,12 +1241,12 @@
             tableLayoutPanelEntrySubType.Controls.Add(label10, 0, 0);
             tableLayoutPanelEntrySubType.Controls.Add(customComboBoxSubTypes, 0, 1);
             tableLayoutPanelEntrySubType.Dock = DockStyle.Top;
-            tableLayoutPanelEntrySubType.Location = new Point(3, 321);
+            tableLayoutPanelEntrySubType.Location = new Point(3, 280);
             tableLayoutPanelEntrySubType.Name = "tableLayoutPanelEntrySubType";
             tableLayoutPanelEntrySubType.RowCount = 2;
             tableLayoutPanelEntrySubType.RowStyles.Add(new RowStyle());
             tableLayoutPanelEntrySubType.RowStyles.Add(new RowStyle());
-            tableLayoutPanelEntrySubType.Size = new Size(238, 65);
+            tableLayoutPanelEntrySubType.Size = new Size(290, 65);
             tableLayoutPanelEntrySubType.TabIndex = 151;
             // 
             // label10
@@ -1242,7 +1256,7 @@
             label10.Location = new Point(4, 0);
             label10.Margin = new Padding(4, 0, 4, 0);
             label10.Name = "label10";
-            label10.Size = new Size(230, 25);
+            label10.Size = new Size(282, 25);
             label10.TabIndex = 32;
             label10.Text = "Index*";
             // 
@@ -1252,7 +1266,7 @@
             customComboBoxSubTypes.Location = new Point(3, 28);
             customComboBoxSubTypes.Name = "customComboBoxSubTypes";
             customComboBoxSubTypes.SelectedIndex = -1;
-            customComboBoxSubTypes.Size = new Size(232, 34);
+            customComboBoxSubTypes.Size = new Size(284, 34);
             customComboBoxSubTypes.TabIndex = 33;
             // 
             // panel4
@@ -1260,9 +1274,9 @@
             panel4.Controls.Add(tableLayoutPanel13);
             panel4.Controls.Add(tableLayoutPanel12);
             panel4.Dock = DockStyle.Top;
-            panel4.Location = new Point(3, 392);
+            panel4.Location = new Point(3, 351);
             panel4.Name = "panel4";
-            panel4.Size = new Size(238, 65);
+            panel4.Size = new Size(290, 65);
             panel4.TabIndex = 152;
             // 
             // tableLayoutPanel13
@@ -1272,13 +1286,13 @@
             tableLayoutPanel13.Controls.Add(comboBoxEnd, 0, 2);
             tableLayoutPanel13.Controls.Add(label40, 0, 0);
             tableLayoutPanel13.Dock = DockStyle.Fill;
-            tableLayoutPanel13.Location = new Point(111, 0);
+            tableLayoutPanel13.Location = new Point(145, 0);
             tableLayoutPanel13.Name = "tableLayoutPanel13";
             tableLayoutPanel13.RowCount = 3;
             tableLayoutPanel13.RowStyles.Add(new RowStyle());
             tableLayoutPanel13.RowStyles.Add(new RowStyle());
             tableLayoutPanel13.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel13.Size = new Size(127, 65);
+            tableLayoutPanel13.Size = new Size(145, 65);
             tableLayoutPanel13.TabIndex = 146;
             // 
             // comboBoxEnd
@@ -1289,7 +1303,7 @@
             comboBoxEnd.Items.AddRange(new object[] { "0:00", "0:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30" });
             comboBoxEnd.Location = new Point(3, 28);
             comboBoxEnd.Name = "comboBoxEnd";
-            comboBoxEnd.Size = new Size(121, 33);
+            comboBoxEnd.Size = new Size(139, 33);
             comboBoxEnd.TabIndex = 134;
             // 
             // label40
@@ -1298,7 +1312,7 @@
             label40.Dock = DockStyle.Top;
             label40.Location = new Point(3, 0);
             label40.Name = "label40";
-            label40.Size = new Size(121, 25);
+            label40.Size = new Size(139, 25);
             label40.TabIndex = 132;
             label40.Text = "Ukončení*";
             // 
@@ -1315,7 +1329,7 @@
             tableLayoutPanel12.RowStyles.Add(new RowStyle());
             tableLayoutPanel12.RowStyles.Add(new RowStyle());
             tableLayoutPanel12.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel12.Size = new Size(111, 65);
+            tableLayoutPanel12.Size = new Size(145, 65);
             tableLayoutPanel12.TabIndex = 145;
             // 
             // comboBoxStart
@@ -1326,7 +1340,7 @@
             comboBoxStart.Items.AddRange(new object[] { "0:00", "0:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30" });
             comboBoxStart.Location = new Point(3, 28);
             comboBoxStart.Name = "comboBoxStart";
-            comboBoxStart.Size = new Size(105, 33);
+            comboBoxStart.Size = new Size(139, 33);
             comboBoxStart.TabIndex = 134;
             // 
             // label38
@@ -1335,7 +1349,7 @@
             label38.Dock = DockStyle.Top;
             label38.Location = new Point(3, 0);
             label38.Name = "label38";
-            label38.Size = new Size(105, 25);
+            label38.Size = new Size(139, 25);
             label38.TabIndex = 132;
             label38.Text = "Počátek*";
             // 
@@ -1346,12 +1360,12 @@
             tableLayoutPanel6.Controls.Add(label4, 0, 0);
             tableLayoutPanel6.Controls.Add(textBoxNote, 0, 1);
             tableLayoutPanel6.Dock = DockStyle.Top;
-            tableLayoutPanel6.Location = new Point(3, 463);
+            tableLayoutPanel6.Location = new Point(3, 422);
             tableLayoutPanel6.Name = "tableLayoutPanel6";
             tableLayoutPanel6.RowCount = 2;
             tableLayoutPanel6.RowStyles.Add(new RowStyle());
             tableLayoutPanel6.RowStyles.Add(new RowStyle());
-            tableLayoutPanel6.Size = new Size(238, 111);
+            tableLayoutPanel6.Size = new Size(290, 111);
             tableLayoutPanel6.TabIndex = 153;
             // 
             // label4
@@ -1360,7 +1374,7 @@
             label4.Dock = DockStyle.Top;
             label4.Location = new Point(3, 0);
             label4.Name = "label4";
-            label4.Size = new Size(232, 25);
+            label4.Size = new Size(284, 25);
             label4.TabIndex = 5;
             label4.Text = "Poznámka";
             // 
@@ -1371,7 +1385,7 @@
             textBoxNote.Margin = new Padding(5);
             textBoxNote.Multiline = true;
             textBoxNote.Name = "textBoxNote";
-            textBoxNote.Size = new Size(228, 75);
+            textBoxNote.Size = new Size(280, 75);
             textBoxNote.TabIndex = 4;
             // 
             // tableLayoutPanel4
@@ -1382,20 +1396,20 @@
             tableLayoutPanel4.Controls.Add(buttonConfirm, 1, 0);
             tableLayoutPanel4.Controls.Add(buttonRemove, 0, 0);
             tableLayoutPanel4.Dock = DockStyle.Top;
-            tableLayoutPanel4.Location = new Point(3, 580);
+            tableLayoutPanel4.Location = new Point(3, 539);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 1;
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel4.Size = new Size(238, 41);
+            tableLayoutPanel4.Size = new Size(290, 41);
             tableLayoutPanel4.TabIndex = 154;
             // 
             // buttonConfirm
             // 
             buttonConfirm.Dock = DockStyle.Fill;
-            buttonConfirm.Location = new Point(122, 3);
+            buttonConfirm.Location = new Point(148, 3);
             buttonConfirm.Name = "buttonConfirm";
-            buttonConfirm.Size = new Size(113, 35);
+            buttonConfirm.Size = new Size(139, 35);
             buttonConfirm.TabIndex = 141;
             buttonConfirm.Text = "Potvrdit";
             buttonConfirm.UseVisualStyleBackColor = true;
@@ -1406,7 +1420,7 @@
             buttonRemove.Dock = DockStyle.Fill;
             buttonRemove.Location = new Point(3, 3);
             buttonRemove.Name = "buttonRemove";
-            buttonRemove.Size = new Size(113, 35);
+            buttonRemove.Size = new Size(139, 35);
             buttonRemove.TabIndex = 142;
             buttonRemove.Text = "Odstranit";
             buttonRemove.UseVisualStyleBackColor = true;
@@ -1419,7 +1433,7 @@
             Controls.Add(tableLayoutPanel2);
             Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
             Name = "CalendarV2";
-            Size = new Size(1126, 600);
+            Size = new Size(1226, 660);
             Load += CalendarV2_Load;
             Resize += CalendarV2_Resize;
             tableLayoutPanel2.ResumeLayout(false);
@@ -1552,5 +1566,6 @@
         private Label labelHours05;
         private Label labelHours03;
         private CustomComboBox customComboBoxProjects;
+        private RadioButton radioButton6;
     }
 }

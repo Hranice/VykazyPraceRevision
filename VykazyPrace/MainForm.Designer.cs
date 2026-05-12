@@ -237,7 +237,7 @@
             panel1.Dock = DockStyle.Left;
             panel1.Location = new Point(0, 69);
             panel1.Name = "panel1";
-            panel1.Size = new Size(127, 592);
+            panel1.Size = new Size(127, 650);
             panel1.TabIndex = 6;
             // 
             // tableLayoutPanel1
@@ -260,13 +260,13 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 45F));
-            tableLayoutPanel1.Size = new Size(127, 592);
+            tableLayoutPanel1.Size = new Size(127, 650);
             tableLayoutPanel1.TabIndex = 8;
             // 
             // buttonUpdate
             // 
             buttonUpdate.Dock = DockStyle.Fill;
-            buttonUpdate.Location = new Point(3, 550);
+            buttonUpdate.Location = new Point(3, 608);
             buttonUpdate.Name = "buttonUpdate";
             buttonUpdate.Size = new Size(121, 39);
             buttonUpdate.TabIndex = 14;
@@ -281,7 +281,7 @@
             tableLayoutPanel3.Controls.Add(buttonReloadPowerKey, 1, 0);
             tableLayoutPanel3.Controls.Add(label2, 0, 0);
             tableLayoutPanel3.Dock = DockStyle.Bottom;
-            tableLayoutPanel3.Location = new Point(3, 475);
+            tableLayoutPanel3.Location = new Point(3, 533);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 2;
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
@@ -317,7 +317,7 @@
             tableLayoutPanel2.Controls.Add(buttonReloadNetworkDisks, 1, 0);
             tableLayoutPanel2.Controls.Add(label1, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Bottom;
-            tableLayoutPanel2.Location = new Point(3, 400);
+            tableLayoutPanel2.Location = new Point(3, 458);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 2;
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
@@ -349,7 +349,7 @@
             // buttonOutlookEvents
             // 
             buttonOutlookEvents.Dock = DockStyle.Bottom;
-            buttonOutlookEvents.Location = new Point(3, 322);
+            buttonOutlookEvents.Location = new Point(3, 380);
             buttonOutlookEvents.Name = "buttonOutlookEvents";
             buttonOutlookEvents.Size = new Size(121, 72);
             buttonOutlookEvents.TabIndex = 13;
@@ -418,7 +418,7 @@
             panelContainer.Location = new Point(127, 69);
             panelContainer.Margin = new Padding(0);
             panelContainer.Name = "panelContainer";
-            panelContainer.Size = new Size(1142, 592);
+            panelContainer.Size = new Size(1142, 650);
             panelContainer.TabIndex = 7;
             // 
             // panelCalendarContainer
@@ -426,7 +426,7 @@
             panelCalendarContainer.Dock = DockStyle.Fill;
             panelCalendarContainer.Location = new Point(0, 0);
             panelCalendarContainer.Name = "panelCalendarContainer";
-            panelCalendarContainer.Size = new Size(1140, 590);
+            panelCalendarContainer.Size = new Size(1140, 648);
             panelCalendarContainer.TabIndex = 1;
             // 
             // notifyIcon1
@@ -460,7 +460,7 @@
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(1279, 671);
+            ClientSize = new Size(1279, 729);
             Controls.Add(panelContainer);
             Controls.Add(panel1);
             Controls.Add(panel2);

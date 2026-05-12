@@ -1189,6 +1189,168 @@ namespace VykazyPrace.Dialogs
             }
         }
 
+        public void AddEvaluationColumnChartWithExcelInterop(string filePath)
+        {
+            Excel.Application? excel = null;
+            Excel.Workbook? workbook = null;
+            Excel.Worksheet? ws = null;
+            Excel.ChartObjects? chartObjects = null;
+            Excel.ChartObject? chartObject = null;
+            Excel.Chart? chart = null;
+            Excel.SeriesCollection? seriesCollection = null;
+            Excel.Series? series = null;
+            Excel.DataLabels? dataLabels = null;
+            Excel.Axis? valueAxis = null;
+            Excel.DataTable? dataTable = null;
+
+            try
+            {
+                excel = new Excel.Application
+                {
+                    DisplayAlerts = false,
+                    Visible = false
+                };
+
+                workbook = excel.Workbooks.Open(filePath);
+                ws = (Excel.Worksheet)workbook.Worksheets["VYHODNOCENÍ"];
+
+                chartObjects = (Excel.ChartObjects)ws.ChartObjects(Type.Missing);
+
+                // Umístění grafu přesně do oblasti A18:M35
+                var topLeft = (Excel.Range)ws.Range["A18"];
+                var chartArea = (Excel.Range)ws.Range["A18:M35"];
+
+                chartObject = chartObjects.Add(
+                    (double)topLeft.Left,
+                    (double)topLeft.Top,
+                    (double)chartArea.Width,
+                    (double)chartArea.Height
+                );
+
+                chartObject.Name = "OdpracovaneHodinyChart";
+
+                chart = chartObject.Chart;
+                chart.ChartType = Excel.XlChartType.xlColumnClustered;
+
+                // Zdroj dat:
+                // B3:B13 = názvy kategorií
+                // C3:C13 = odpracované hodiny
+                seriesCollection = (Excel.SeriesCollection)chart.SeriesCollection();
+                series = seriesCollection.NewSeries();
+
+                series.Name = "Odpracované hodiny";
+                series.XValues = "='VYHODNOCENÍ'!$B$3:$B$13";
+                series.Values = "='VYHODNOCENÍ'!$C$3:$C$13";
+
+                // Titulek
+                chart.HasTitle = true;
+                chart.ChartTitle.Text = "Odpracované hodiny";
+                chart.ChartTitle.Font.Bold = true;
+                chart.ChartTitle.Font.Size = 14;
+
+                // Vzhled oblasti grafu
+                chart.ChartArea.Border.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Black);
+                chart.ChartArea.Border.Weight = Excel.XlBorderWeight.xlThin;
+
+                var bgColor = System.Drawing.ColorTranslator.ToOle(
+                    System.Drawing.ColorTranslator.FromHtml("#F2F2F2")
+                );
+
+                chart.ChartArea.Interior.Color = bgColor;
+                chart.PlotArea.Interior.Color = bgColor;
+
+                // Osa Y
+                valueAxis = (Excel.Axis)chart.Axes(Excel.XlAxisType.xlValue, Excel.XlAxisGroup.xlPrimary);
+                valueAxis.MinimumScale = 0;
+                valueAxis.HasMajorGridlines = true;
+                valueAxis.TickLabels.NumberFormatLocal = "# ##0,0";
+
+                // Popisky hodnot nad sloupci
+                series.ApplyDataLabels();
+                dataLabels = (Excel.DataLabels)series.DataLabels();
+                dataLabels.ShowValue = true;
+                dataLabels.ShowCategoryName = false;
+                dataLabels.ShowSeriesName = false;
+                dataLabels.NumberFormatLocal = "# ##0,0";
+                dataLabels.Font.Size = 8;
+                dataLabels.Font.Bold = true;
+                dataLabels.Position = Excel.XlDataLabelPosition.xlLabelPositionOutsideEnd;
+
+                // Datová tabulka pod grafem
+                chart.HasLegend = false;
+                chart.HasDataTable = true;
+                dataTable = chart.DataTable;
+                dataTable.ShowLegendKey = true;
+
+                // Barvy jednotlivých sloupců – přibližně jako na obrázku
+                SetSeriesPointColor(series, 1, "#D9BEA1"); // EXTERNÍ PROJEKTY
+                SetSeriesPointColor(series, 2, "#E8C6A7"); // INTERNÍ PROJEKTY
+                SetSeriesPointColor(series, 3, "#A7B9CE"); // Provoz Automatizace
+                SetSeriesPointColor(series, 4, "#D9D9D9"); // Provoz SD
+                SetSeriesPointColor(series, 5, "#E7E6E6"); // Provoz HP
+                SetSeriesPointColor(series, 6, "#F4CCCC"); // Provoz MET
+                SetSeriesPointColor(series, 7, "#D9D9D9"); // Provoz KOM
+                SetSeriesPointColor(series, 8, "#8EAADB"); // Provoz SOR
+                SetSeriesPointColor(series, 9, "#C6E0B4"); // ostatní
+                SetSeriesPointColor(series, 10, "#D9EAD3"); // Nepřítomnost
+                SetSeriesPointColor(series, 11, "#D9D2E9"); // Kroužek MT
+
+                workbook.Save();
+            }
+            finally
+            {
+                if (dataTable != null) Marshal.ReleaseComObject(dataTable);
+                if (valueAxis != null) Marshal.ReleaseComObject(valueAxis);
+                if (dataLabels != null) Marshal.ReleaseComObject(dataLabels);
+                if (series != null) Marshal.ReleaseComObject(series);
+                if (seriesCollection != null) Marshal.ReleaseComObject(seriesCollection);
+                if (chart != null) Marshal.ReleaseComObject(chart);
+                if (chartObject != null) Marshal.ReleaseComObject(chartObject);
+                if (chartObjects != null) Marshal.ReleaseComObject(chartObjects);
+                if (ws != null) Marshal.ReleaseComObject(ws);
+
+                if (workbook != null)
+                {
+                    workbook.Close(SaveChanges: false);
+                    Marshal.ReleaseComObject(workbook);
+                }
+
+                if (excel != null)
+                {
+                    excel.Quit();
+                    Marshal.ReleaseComObject(excel);
+                }
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+        }
+
+        private static void SetSeriesPointColor(Excel.Series series, int pointIndex, string htmlColor)
+        {
+            Excel.Point? point = null;
+
+            try
+            {
+                point = (Excel.Point)series.Points(pointIndex);
+
+                int fillColor = System.Drawing.ColorTranslator.ToOle(
+                    System.Drawing.ColorTranslator.FromHtml(htmlColor)
+                );
+
+                int borderColor = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Black);
+
+                point.Interior.Color = fillColor;
+                point.Border.Color = borderColor;
+                point.Border.Weight = Excel.XlBorderWeight.xlThin;
+            }
+            finally
+            {
+                if (point != null)
+                    Marshal.ReleaseComObject(point);
+            }
+        }
+
         private sealed class EvaluationRow
         {
             public string Group { get; }
@@ -1516,7 +1678,11 @@ namespace VykazyPrace.Dialogs
 
                 wb.SaveAs(filePath);
 
-                if (buildEvaluationSheet) _tableFactory.AddEvaluationPieChartWithExcelInterop(filePath);
+                if (buildEvaluationSheet)
+                {
+                    _tableFactory.AddEvaluationPieChartWithExcelInterop(filePath);
+                    _tableFactory.AddEvaluationColumnChartWithExcelInterop(filePath);
+                }
 
                 Process.Start(new ProcessStartInfo { FileName = filePath, UseShellExecute = true });
             }

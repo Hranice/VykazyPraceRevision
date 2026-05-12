@@ -1382,10 +1382,17 @@ namespace VykazyPrace.Dialogs
                 var projects = filtered
                     // odkomentováno - sestavovali jsme bez nepřítomnosti atd
                     //.Where(e => e.Project?.ProjectType == 0 && e.ProjectId != null)
-                    .Where(e => e.Project?.ProjectType != 6 && e.ProjectId != null)
+                    .Where(e =>
+                        e.Project?.ProjectType != 6
+                        && e.Project?.ProjectType != 1
+                        && e.Project?.ProjectType != 2
+                        && e.Project?.ProjectType != null
+                        && e.ProjectId != null)
                     .Select(e => e.Project!)
                     .GroupBy(p => p.Id)
                     .Select(g => g.First())
+                    .OrderBy(p => p.ProjectType)
+                    .ThenBy(p => p.ProjectTitle)
                     .ToList();
 
                 // Podklady pro cumulativní hodiny do zplnohodnocení

@@ -15,7 +15,11 @@ namespace VykazyPrace.Dialogs
         private readonly User _currentUser;
         private List<Project> _filteredProjects = new List<Project>();
         private List<TimeEntryType> _timeEntryTypes = new List<TimeEntryType>();
+
+        // UI states
+        private bool comboBoxProjectsLoading = false;
         private bool waitForProjectSelection = false;
+        private bool isUpdating;
 
         public ProjectManagementDialog(User currentUser)
         {
@@ -36,25 +40,22 @@ namespace VykazyPrace.Dialogs
                 .GetAllTimeEntryTypesByProjectTypeAsync(projectType);
         }
 
-        private bool comboBoxProjectsLoading = false;
-
         private async Task LoadProjectsAsync(int projectType)
         {
             try
             {
-                // Načtení všech položek
                 var allProjects = await _projectRepo.GetAllProjectsAsync(true);
-                // Filtrování podle zadaného typu
-                var filtered = FilterProjects(allProjects, projectType);
 
-                // Pro typy 4 a 5 navíc načteme time entry types
-                if (projectType == (int)ProjectType.Absence || projectType == (int)ProjectType.Other)
+                var filteredProjects = FilterProjects(allProjects, projectType).ToList();
+
+                if (RequiresTimeEntryTypes(projectType))
+                {
                     await LoadTimeEntryTypesAsync(projectType);
+                }
 
-                // Naplníme ovládací prvky
-                PopulateControls(projectType, filtered);
+                PopulateControls(projectType, filteredProjects);
 
-                _filteredProjects = filtered.ToList();
+                _filteredProjects = filteredProjects;
 
                 ClearSelection();
                 GenerateNextDescription();
@@ -63,6 +64,14 @@ namespace VykazyPrace.Dialogs
             {
                 AppLogger.Error($"Chyba při načítání typu {projectType}.", ex);
             }
+        }
+
+        private static bool RequiresTimeEntryTypes(int projectType)
+        {
+            return projectType is
+                (int)ProjectType.Absence or
+                (int)ProjectType.Other or
+                (int)ProjectType.CustomerService;
         }
 
         private IEnumerable<Project> FilterProjects(IEnumerable<Project> projects, int projectType)
@@ -89,48 +98,67 @@ namespace VykazyPrace.Dialogs
 
         private void PopulateControls(int projectType, IEnumerable<Project> projects)
         {
-            // Pro projekty (typy 1 a 2) vytvoříme wrappery
-            if (projectType == 1 || projectType == 2)
+            switch (projectType)
             {
-                var items = projects
-                    .Select(p => new ProjectItem(p))
-                    .Cast<object>()
-                    .ToArray();
+                case 1:
+                case 2:
+                    {
+                        var items = CreateProjectItems(projects);
 
-                FillListBox(listBoxProject, items);
-                FillComboBox(comboBoxProjects, items);
-            }
-            else if (projectType == 0)
-            {
-                var items = projects
-                    .Select(p => new ProjectItem(p))
-                    .Cast<object>()
-                    .ToArray();
+                        FillListBox(listBoxProject, items);
+                        FillComboBox(comboBoxProjects, items);
 
-                FillListBox(listBoxOperation, items);
-            }
-            else if (projectType == 4)
-            {
-                var items = _timeEntryTypes
-                    .Select(t => FormatHelper.FormatTimeEntryTypeToString(t))
-                    .ToArray();
-                FillListBox(listBoxAbsence, items.Cast<object>().ToArray());
-            }
-            else if (projectType == 5)
-            {
-                var items = _timeEntryTypes
-                    .Select(t => FormatHelper.FormatTimeEntryTypeToString(t))
-                    .ToArray();
-                FillListBox(listBoxOther, items.Cast<object>().ToArray());
+                        break;
+                    }
+
+                case 0:
+                    FillListBox(listBoxOperation, CreateProjectItems(projects));
+                    break;
+
+                case 4:
+                    FillListBox(listBoxAbsence, CreateTimeEntryTypeItems());
+                    break;
+
+                case 5:
+                    FillListBox(listBoxOther, CreateTimeEntryTypeItems());
+                    break;
+
+                case 7:
+                    FillListBox(listBoxCustomerService, CreateTimeEntryTypeItems());
+                    break;
             }
         }
 
-        private void FillListBox(ListBox lb, object[] items)
+        private static object[] CreateProjectItems(IEnumerable<Project> projects)
+        {
+            return ToObjectArray(projects.Select(p => new ProjectItem(p)));
+        }
+
+        private object[] CreateTimeEntryTypeItems()
+        {
+            return ToObjectArray(
+                _timeEntryTypes.Select(FormatHelper.FormatTimeEntryTypeToString)
+            );
+        }
+
+        private static void FillListBox(ListBox lb, object[] items)
         {
             lb.BeginUpdate();
-            lb.Items.Clear();
-            lb.Items.AddRange(items);
-            lb.EndUpdate();
+
+            try
+            {
+                lb.Items.Clear();
+                lb.Items.AddRange(items);
+            }
+            finally
+            {
+                lb.EndUpdate();
+            }
+        }
+
+        private static object[] ToObjectArray<T>(IEnumerable<T> source)
+        {
+            return source.Cast<object>().ToArray();
         }
 
         private void FillComboBox(ComboBox cb, object[] items)
@@ -149,12 +177,16 @@ namespace VykazyPrace.Dialogs
 
         private async void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int type = tabControl1.SelectedTab.Text switch
+            if (tabControl1.SelectedTab is null)
+                return;
+
+            int type = tabControl1.SelectedTab!.Text switch
             {
                 "PROVOZ" => 0,
                 "PROJEKT" => 1,
                 "NEPŘÍTOMNOST" => 4,
                 "OSTATNÍ" => 5,
+                "ZÁKAZNICKÝ SERVIS" => 7,
                 _ => 0
             };
             await LoadProjectsAsync(type);
@@ -301,7 +333,29 @@ namespace VykazyPrace.Dialogs
             ClearSelection();
         }
 
-        private bool isUpdating;
+        private async void buttonAddCustomerService_Click(object sender, EventArgs e)
+        {
+            var timeEntryType = new TimeEntryType()
+            {
+                Title = textBoxCustomerService.Text,
+                Color = "#E6D8AD",
+                ForProjectType = 7
+            };
+
+            if (buttonAddCustomerService.Text == "Přidat")
+            {
+                await _timeEntryTypeRepo.CreateTimeEntryTypeAsync(timeEntryType);
+            }
+
+            else
+            {
+                timeEntryType.Id = _timeEntryTypes[listBoxCustomerService.SelectedIndex].Id;
+                await _timeEntryTypeRepo.UpdateTimeEntryTypeAsync(timeEntryType);
+            }
+
+            await LoadProjectsAsync((int)timeEntryType.ForProjectType);
+            ClearSelection();
+        }
 
         private void comboBoxProjects_SelectionChangeCommitted(object sender, EventArgs e)
         {
@@ -442,17 +496,20 @@ namespace VykazyPrace.Dialogs
             listBoxProject.ClearSelected();
             listBoxAbsence.ClearSelected();
             listBoxOther.ClearSelected();
+            listBoxCustomerService.ClearSelected();
 
             textBoxOperation.Clear();
             textBoxProjectDescription.Clear();
             textBoxProjectTitle.Clear();
             textBoxAbsence.Clear();
             textBoxOther.Clear();
+            textBoxCustomerService.Clear();
 
             buttonAddOperation.Text = "Přidat";
             buttonAddProject.Text = "Přidat";
             buttonAddAbsence.Text = "Přidat";
             buttonAddOther.Text = "Přidat";
+            buttonAddCustomerService.Text = "Přidat";
             groupBox2.Text = "Nový projekt";
 
             buttonArchiveProject.Visible = false;
@@ -475,6 +532,12 @@ namespace VykazyPrace.Dialogs
         {
             textBoxOther.Text = listBoxOther.SelectedItem?.ToString();
             buttonAddOther.Text = "Uložit";
+        }
+
+        private void listBoxCustomerService_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            textBoxCustomerService.Text = listBoxCustomerService.SelectedItem?.ToString();
+            buttonAddCustomerService.Text = "Uložit";
         }
 
         private async void listBoxProject_SelectedIndexChanged(object sender, EventArgs e)

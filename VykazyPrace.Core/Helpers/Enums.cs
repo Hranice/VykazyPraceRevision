@@ -15,7 +15,9 @@ namespace VykazyPrace.Core.Helpers
             Preproject,
             Training,
             Absence,
-            Other
+            Other,
+            Snack,
+            CustomerService
         }
     }
 }

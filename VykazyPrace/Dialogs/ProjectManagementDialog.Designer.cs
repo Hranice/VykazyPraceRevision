@@ -66,6 +66,12 @@
             listBoxOther = new ListBox();
             label13 = new Label();
             textBoxOther = new TextBox();
+            tabPage5 = new TabPage();
+            label2 = new Label();
+            buttonAddCustomerService = new Button();
+            listBoxCustomerService = new ListBox();
+            label3 = new Label();
+            textBoxCustomerService = new TextBox();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -73,6 +79,7 @@
             groupBox1.SuspendLayout();
             tabPage3.SuspendLayout();
             tabPage4.SuspendLayout();
+            tabPage5.SuspendLayout();
             SuspendLayout();
             // 
             // label6
@@ -92,7 +99,7 @@
             listBoxProject.ItemHeight = 25;
             listBoxProject.Location = new Point(14, 25);
             listBoxProject.Name = "listBoxProject";
-            listBoxProject.Size = new Size(476, 202);
+            listBoxProject.Size = new Size(580, 202);
             listBoxProject.TabIndex = 23;
             listBoxProject.SelectedIndexChanged += listBoxProject_SelectedIndexChanged;
             // 
@@ -102,10 +109,11 @@
             tabControl1.Controls.Add(tabPage2);
             tabControl1.Controls.Add(tabPage3);
             tabControl1.Controls.Add(tabPage4);
+            tabControl1.Controls.Add(tabPage5);
             tabControl1.Location = new Point(12, 12);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(512, 603);
+            tabControl1.Size = new Size(618, 562);
             tabControl1.TabIndex = 31;
             tabControl1.SelectedIndexChanged += tabControl1_SelectedIndexChanged;
             // 
@@ -119,7 +127,7 @@
             tabPage1.Location = new Point(4, 34);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(504, 565);
+            tabPage1.Size = new Size(610, 524);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "PROVOZ";
             tabPage1.UseVisualStyleBackColor = true;
@@ -138,7 +146,7 @@
             // buttonAddOperation
             // 
             buttonAddOperation.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonAddOperation.Location = new Point(369, 445);
+            buttonAddOperation.Location = new Point(475, 480);
             buttonAddOperation.Margin = new Padding(4, 5, 4, 5);
             buttonAddOperation.Name = "buttonAddOperation";
             buttonAddOperation.Size = new Size(121, 36);
@@ -154,7 +162,7 @@
             listBoxOperation.ItemHeight = 25;
             listBoxOperation.Location = new Point(14, 25);
             listBoxOperation.Name = "listBoxOperation";
-            listBoxOperation.Size = new Size(476, 327);
+            listBoxOperation.Size = new Size(582, 402);
             listBoxOperation.TabIndex = 45;
             listBoxOperation.SelectedIndexChanged += listBoxOperation_SelectedIndexChanged;
             // 
@@ -162,7 +170,7 @@
             // 
             label10.AutoSize = true;
             label10.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label10.Location = new Point(14, 379);
+            label10.Location = new Point(8, 454);
             label10.Margin = new Padding(4, 0, 4, 0);
             label10.Name = "label10";
             label10.Size = new Size(134, 21);
@@ -171,11 +179,11 @@
             // 
             // textBoxOperation
             // 
-            textBoxOperation.Location = new Point(14, 404);
+            textBoxOperation.Location = new Point(8, 483);
             textBoxOperation.Margin = new Padding(5, 8, 5, 8);
             textBoxOperation.Name = "textBoxOperation";
             textBoxOperation.PlaceholderText = "Provoz HP - Horká ražba";
-            textBoxOperation.Size = new Size(476, 28);
+            textBoxOperation.Size = new Size(458, 28);
             textBoxOperation.TabIndex = 46;
             // 
             // tabPage2
@@ -184,9 +192,9 @@
             tabPage2.Controls.Add(groupBox1);
             tabPage2.Controls.Add(label14);
             tabPage2.Controls.Add(listBoxProject);
-            tabPage2.Location = new Point(4, 34);
+            tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
-            tabPage2.Size = new Size(504, 565);
+            tabPage2.Size = new Size(610, 534);
             tabPage2.TabIndex = 2;
             tabPage2.Text = "PROJEKT";
             tabPage2.UseVisualStyleBackColor = true;
@@ -206,7 +214,7 @@
             groupBox2.Font = new Font("Reddit Sans", 9.75F);
             groupBox2.Location = new Point(14, 357);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(476, 195);
+            groupBox2.Size = new Size(580, 158);
             groupBox2.TabIndex = 59;
             groupBox2.TabStop = false;
             groupBox2.Text = "Nový projekt";
@@ -228,14 +236,14 @@
             dateTimePickerFullfilledProject.Location = new Point(12, 115);
             dateTimePickerFullfilledProject.Name = "dateTimePickerFullfilledProject";
             dateTimePickerFullfilledProject.ShowCheckBox = true;
-            dateTimePickerFullfilledProject.Size = new Size(452, 28);
+            dateTimePickerFullfilledProject.Size = new Size(233, 28);
             dateTimePickerFullfilledProject.TabIndex = 59;
             dateTimePickerFullfilledProject.Value = new DateTime(2000, 1, 1, 0, 0, 0, 0);
             // 
             // buttonDeclineAndReplace
             // 
             buttonDeclineAndReplace.Font = new Font("Reddit Sans", 12F);
-            buttonDeclineAndReplace.Location = new Point(153, 151);
+            buttonDeclineAndReplace.Location = new Point(252, 113);
             buttonDeclineAndReplace.Margin = new Padding(4, 5, 4, 5);
             buttonDeclineAndReplace.Name = "buttonDeclineAndReplace";
             buttonDeclineAndReplace.Size = new Size(187, 36);
@@ -272,13 +280,13 @@
             textBoxProjectTitle.Margin = new Padding(5, 8, 5, 8);
             textBoxProjectTitle.Name = "textBoxProjectTitle";
             textBoxProjectTitle.PlaceholderText = "Projekt vývoje software na výkaz hodin";
-            textBoxProjectTitle.Size = new Size(297, 28);
+            textBoxProjectTitle.Size = new Size(401, 28);
             textBoxProjectTitle.TabIndex = 37;
             // 
             // buttonArchiveProject
             // 
             buttonArchiveProject.Font = new Font("Reddit Sans", 12F);
-            buttonArchiveProject.Location = new Point(219, 151);
+            buttonArchiveProject.Location = new Point(318, 113);
             buttonArchiveProject.Margin = new Padding(4, 5, 4, 5);
             buttonArchiveProject.Name = "buttonArchiveProject";
             buttonArchiveProject.Size = new Size(121, 36);
@@ -291,7 +299,7 @@
             // buttonAddProject
             // 
             buttonAddProject.Font = new Font("Reddit Sans", 12F);
-            buttonAddProject.Location = new Point(343, 151);
+            buttonAddProject.Location = new Point(447, 113);
             buttonAddProject.Margin = new Padding(4, 5, 4, 5);
             buttonAddProject.Name = "buttonAddProject";
             buttonAddProject.Size = new Size(121, 36);
@@ -328,7 +336,7 @@
             groupBox1.Font = new Font("Reddit Sans", 9.75F);
             groupBox1.Location = new Point(14, 233);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(476, 118);
+            groupBox1.Size = new Size(580, 118);
             groupBox1.TabIndex = 58;
             groupBox1.TabStop = false;
             groupBox1.Text = "Filtr";
@@ -362,7 +370,7 @@
             comboBoxProjects.FormattingEnabled = true;
             comboBoxProjects.Location = new Point(12, 66);
             comboBoxProjects.Name = "comboBoxProjects";
-            comboBoxProjects.Size = new Size(452, 33);
+            comboBoxProjects.Size = new Size(556, 33);
             comboBoxProjects.TabIndex = 43;
             comboBoxProjects.SelectionChangeCommitted += comboBoxProjects_SelectionChangeCommitted;
             comboBoxProjects.TextChanged += comboBoxProjects_TextChanged;
@@ -387,7 +395,7 @@
             tabPage3.Controls.Add(textBoxAbsence);
             tabPage3.Location = new Point(4, 24);
             tabPage3.Name = "tabPage3";
-            tabPage3.Size = new Size(504, 575);
+            tabPage3.Size = new Size(610, 534);
             tabPage3.TabIndex = 3;
             tabPage3.Text = "NEPŘÍTOMNOST";
             tabPage3.UseVisualStyleBackColor = true;
@@ -405,7 +413,7 @@
             // 
             // buttonAddAbsence
             // 
-            buttonAddAbsence.Location = new Point(369, 445);
+            buttonAddAbsence.Location = new Point(475, 480);
             buttonAddAbsence.Margin = new Padding(4, 5, 4, 5);
             buttonAddAbsence.Name = "buttonAddAbsence";
             buttonAddAbsence.Size = new Size(121, 36);
@@ -421,7 +429,7 @@
             listBoxAbsence.ItemHeight = 25;
             listBoxAbsence.Location = new Point(14, 25);
             listBoxAbsence.Name = "listBoxAbsence";
-            listBoxAbsence.Size = new Size(476, 327);
+            listBoxAbsence.Size = new Size(580, 402);
             listBoxAbsence.TabIndex = 54;
             listBoxAbsence.SelectedIndexChanged += listBoxAbsence_SelectedIndexChanged;
             // 
@@ -429,7 +437,7 @@
             // 
             label11.AutoSize = true;
             label11.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label11.Location = new Point(14, 379);
+            label11.Location = new Point(14, 454);
             label11.Margin = new Padding(4, 0, 4, 0);
             label11.Name = "label11";
             label11.Size = new Size(115, 21);
@@ -438,11 +446,11 @@
             // 
             // textBoxAbsence
             // 
-            textBoxAbsence.Location = new Point(14, 404);
+            textBoxAbsence.Location = new Point(14, 483);
             textBoxAbsence.Margin = new Padding(5, 8, 5, 8);
             textBoxAbsence.Name = "textBoxAbsence";
             textBoxAbsence.PlaceholderText = "Lékař";
-            textBoxAbsence.Size = new Size(476, 28);
+            textBoxAbsence.Size = new Size(452, 28);
             textBoxAbsence.TabIndex = 55;
             // 
             // tabPage4
@@ -454,7 +462,7 @@
             tabPage4.Controls.Add(textBoxOther);
             tabPage4.Location = new Point(4, 24);
             tabPage4.Name = "tabPage4";
-            tabPage4.Size = new Size(504, 575);
+            tabPage4.Size = new Size(610, 534);
             tabPage4.TabIndex = 4;
             tabPage4.Text = "OSTATNÍ";
             tabPage4.UseVisualStyleBackColor = true;
@@ -472,7 +480,7 @@
             // 
             // buttonAddOther
             // 
-            buttonAddOther.Location = new Point(369, 445);
+            buttonAddOther.Location = new Point(473, 483);
             buttonAddOther.Margin = new Padding(4, 5, 4, 5);
             buttonAddOther.Name = "buttonAddOther";
             buttonAddOther.Size = new Size(121, 36);
@@ -488,7 +496,7 @@
             listBoxOther.ItemHeight = 25;
             listBoxOther.Location = new Point(14, 25);
             listBoxOther.Name = "listBoxOther";
-            listBoxOther.Size = new Size(476, 327);
+            listBoxOther.Size = new Size(580, 402);
             listBoxOther.TabIndex = 61;
             listBoxOther.SelectedIndexChanged += listBoxOther_SelectedIndexChanged;
             // 
@@ -496,7 +504,7 @@
             // 
             label13.AutoSize = true;
             label13.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label13.Location = new Point(14, 379);
+            label13.Location = new Point(14, 457);
             label13.Margin = new Padding(4, 0, 4, 0);
             label13.Name = "label13";
             label13.Size = new Size(35, 21);
@@ -505,18 +513,85 @@
             // 
             // textBoxOther
             // 
-            textBoxOther.Location = new Point(14, 404);
+            textBoxOther.Location = new Point(14, 486);
             textBoxOther.Margin = new Padding(5, 8, 5, 8);
             textBoxOther.Name = "textBoxOther";
             textBoxOther.PlaceholderText = "Včely";
-            textBoxOther.Size = new Size(476, 28);
+            textBoxOther.Size = new Size(450, 28);
             textBoxOther.TabIndex = 62;
+            // 
+            // tabPage5
+            // 
+            tabPage5.Controls.Add(label2);
+            tabPage5.Controls.Add(buttonAddCustomerService);
+            tabPage5.Controls.Add(listBoxCustomerService);
+            tabPage5.Controls.Add(label3);
+            tabPage5.Controls.Add(textBoxCustomerService);
+            tabPage5.Location = new Point(4, 34);
+            tabPage5.Name = "tabPage5";
+            tabPage5.Size = new Size(610, 524);
+            tabPage5.TabIndex = 5;
+            tabPage5.Text = "ZÁKAZNICKÝ SERVIS";
+            tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label2.Location = new Point(14, 3);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(55, 21);
+            label2.TabIndex = 70;
+            label2.Text = "Seznam";
+            // 
+            // buttonAddCustomerService
+            // 
+            buttonAddCustomerService.Location = new Point(474, 484);
+            buttonAddCustomerService.Margin = new Padding(4, 5, 4, 5);
+            buttonAddCustomerService.Name = "buttonAddCustomerService";
+            buttonAddCustomerService.Size = new Size(121, 36);
+            buttonAddCustomerService.TabIndex = 69;
+            buttonAddCustomerService.Text = "Přidat";
+            buttonAddCustomerService.UseVisualStyleBackColor = true;
+            buttonAddCustomerService.Click += buttonAddCustomerService_Click;
+            // 
+            // listBoxCustomerService
+            // 
+            listBoxCustomerService.BorderStyle = BorderStyle.FixedSingle;
+            listBoxCustomerService.FormattingEnabled = true;
+            listBoxCustomerService.ItemHeight = 25;
+            listBoxCustomerService.Location = new Point(14, 25);
+            listBoxCustomerService.Name = "listBoxCustomerService";
+            listBoxCustomerService.Size = new Size(580, 402);
+            listBoxCustomerService.TabIndex = 66;
+            listBoxCustomerService.SelectedIndexChanged += listBoxCustomerService_SelectedIndexChanged;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label3.Location = new Point(15, 458);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(134, 21);
+            label3.TabIndex = 68;
+            label3.Text = "Nákladové středisko*";
+            // 
+            // textBoxCustomerService
+            // 
+            textBoxCustomerService.Location = new Point(15, 487);
+            textBoxCustomerService.Margin = new Padding(5, 8, 5, 8);
+            textBoxCustomerService.Name = "textBoxCustomerService";
+            textBoxCustomerService.PlaceholderText = "Spechtsbrunn";
+            textBoxCustomerService.Size = new Size(450, 28);
+            textBoxCustomerService.TabIndex = 67;
             // 
             // ProjectManagementDialog
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(533, 639);
+            ClientSize = new Size(642, 581);
             Controls.Add(tabControl1);
             Controls.Add(label6);
             Font = new Font("Reddit Sans", 12F);
@@ -539,6 +614,8 @@
             tabPage3.PerformLayout();
             tabPage4.ResumeLayout(false);
             tabPage4.PerformLayout();
+            tabPage5.ResumeLayout(false);
+            tabPage5.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -582,5 +659,11 @@
         private Button buttonDeclineAndReplace;
         private Label label1;
         private DateTimePicker dateTimePickerFullfilledProject;
+        private TabPage tabPage5;
+        private Label label2;
+        private Button buttonAddCustomerService;
+        private ListBox listBoxCustomerService;
+        private Label label3;
+        private TextBox textBoxCustomerService;
     }
 }

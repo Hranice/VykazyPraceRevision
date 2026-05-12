@@ -800,12 +800,45 @@ namespace VykazyPrace.Dialogs
             return dt;
         }
 
-        public void BuildEvaluationSheet(XLWorkbook wb, IEnumerable<TimeEntry> entries)
+        public async Task BuildEvaluationSheet(
+           XLWorkbook wb,
+           IEnumerable<TimeEntry> entries,
+           IEnumerable<User> selectedUsers,
+           DateTime from,
+           DateTime to)
         {
             var ws = wb.AddWorksheet("VYHODNOCENÍ");
 
             ws.Position = 1;
             ws.TabColor = XLColor.Yellow;
+
+            double totalPowerKeyWorkedHours = 0;
+
+            try
+            {
+                var pkHelper = new PowerKeyHelper();
+
+                var personalNumbers = selectedUsers
+                    .Where(u => u != null && u.PersonalNumber > 0)
+                    .Select(u => u.PersonalNumber)
+                    .Distinct()
+                    .OrderBy(x => x)
+                    .ToList();
+
+                var powerKeyData = await pkHelper
+                    .GetWorkedHoursByPersonalNumberForRangeAsync(from, to, personalNumbers)
+                    .ConfigureAwait(false);
+
+                totalPowerKeyWorkedHours = powerKeyData?.Values.Sum() ?? 0;
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error(
+                    "PowerKey nedostupný – celková docházka pro vyhodnocení bude nastavena na 0 a export pokračuje.",
+                    ex);
+
+                totalPowerKeyWorkedHours = 0;
+            }
 
             var rows = new List<EvaluationRow>
     {
@@ -966,6 +999,15 @@ namespace VykazyPrace.Dialogs
             ws.Cell(15, 3).Style.NumberFormat.Format = "# ##0.0";
             ws.Cell(15, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             ws.Cell(15, 3).Style.Font.Bold = true;
+
+            // Celkově odpracované hodiny z PowerKey za všechny vybrané uživatele v daném období
+            ws.Cell(17, 2).Value = "PowerKey";
+            ws.Cell(17, 3).Value = totalPowerKeyWorkedHours;
+
+            ws.Cell(17, 2).Style.Font.Bold = true;
+            ws.Cell(17, 3).Style.NumberFormat.Format = "# ##0.0";
+            ws.Cell(17, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            ws.Cell(17, 3).Style.Font.Bold = true;
 
             // Nejdřív dopočítat podle obsahu.
             ws.Columns().AdjustToContents();
@@ -1445,7 +1487,12 @@ namespace VykazyPrace.Dialogs
                 wsSummary.Columns().AdjustToContents();
 
                 // „VYHODNOCENÍ“
-                if (buildEvaluationSheet) _tableFactory.BuildEvaluationSheet(wb, filtered);
+                if (buildEvaluationSheet)
+                {
+                    await _tableFactory
+                        .BuildEvaluationSheet(wb, filtered, usersForSummary, from, to)
+                        .ConfigureAwait(false);
+                }
 
                 // Listy podle projektů
                 foreach (var proj in projects)

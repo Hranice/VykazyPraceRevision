@@ -11,6 +11,7 @@ using VykazyPrace.Core.Import;
 using VykazyPrace.Core.Logging;
 using VykazyPrace.Core.PowerKey;
 using VykazyPrace.Dialogs;
+using VykazyPrace.Enums;
 using VykazyPrace.Updater;
 using VykazyPrace.UserControls;
 using VykazyPrace.UserControls.Calendar;
@@ -247,13 +248,13 @@ namespace VykazyPrace
             {
                 uživateléToolStripMenuItem.Visible = true;
                 správaProjektùToolStripMenuItem.Visible = true;
-                comboBoxUsers.Visible = true;
+                bChangeUser.Visible = true;
                 správceToolStripMenuItem.Visible = true;
             }
             else if (levelOfAccess == 2)
             {
                 správaProjektùToolStripMenuItem.Visible = true;
-                comboBoxUsers.Visible = true;
+                bChangeUser.Visible = true;
             }
         }
 
@@ -303,12 +304,11 @@ namespace VykazyPrace
             };
             panelContainer.Controls.Add(_calendar);
 
-            // Naplnìní comboboxu
-            comboBoxUsers.Items.Clear();
-            comboBoxUsers.Items.AddRange(users.Select(FormatHelper.FormatUserToString).ToArray());
-            comboBoxUsers.SelectedItem = FormatHelper.FormatUserToString(users.FirstOrDefault(x => x.Id == _selectedUser.Id));
-
-            comboBoxUsers.Enabled = _currentUserLoA > 1;
+            // Zmìna uživatele
+            bChangeUser.Enabled = _currentUserLoA > 1;
+            bChangeUser.Text = _selectedUser != null
+    ? FormatHelper.FormatUserToString(_selectedUser)
+    : "Vybrat uživatele";
 
             panelCalendarContainer.Visible = false;
             _calendar.BringToFront();
@@ -376,51 +376,6 @@ namespace VykazyPrace
                 await _monthlyCalendar.ReloadCalendar();
             }
         }
-
-        private async void comboBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (_isSwitchingUser) return;
-
-            var selectedName = comboBoxUsers.SelectedItem?.ToString();
-            if (string.IsNullOrWhiteSpace(selectedName)) return;
-
-            var newUser = _users.FirstOrDefault(x => FormatHelper.FormatUserToString(x) == selectedName);
-            if (newUser == null || newUser.Id == 0) return;
-
-            if (newUser.Id == _selectedUser.Id) return;
-
-            _isSwitchingUser = true;
-            try
-            {
-                ShowLoading();
-
-                _selectedUser = newUser;
-
-                var powerKeyHelper = new PowerKeyHelper();
-                int totalRows = await powerKeyHelper.DownloadForUserAsync(DateTime.Now, _selectedUser);
-                AppLogger.Information(
-                    $"Staženo {totalRows} záznamù pro mìsíc è.{DateTime.Now.Month} uživatele {FormatHelper.FormatUserToString(_selectedUser)}.",
-                    false);
-
-#if NOTDEBUG
-        buttonOutlookEvents.Visible = _selectedUser.WindowsUsername == Environment.UserName;
-#endif
-
-                _calendar?.ChangeUser(_selectedUser);
-                _monthlyCalendar.ChangeUser(_selectedUser);
-            }
-            catch (Exception ex)
-            {
-                AppLogger.Error("Chyba pøi pøepínání uživatele.", ex);
-            }
-            finally
-            {
-                HideLoading();
-                _isSwitchingUser = false;
-            }
-        }
-
-
 
         private async void buttonPrevious_Click(object sender, EventArgs e)
         {
@@ -660,6 +615,76 @@ namespace VykazyPrace
                     "Chyba importu",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+            }
+        }
+
+        private async void BChangeUser_Click(object sender, EventArgs e)
+        {
+            if (_isSwitchingUser) return;
+
+            using var dialog = new UserSelectionDialog(
+                UserSelectionMode.Single,
+                _selectedUser != null && _selectedUser.Id != 0
+                    ? new[] { _selectedUser.Id }
+                    : null);
+
+            if (dialog.ShowDialog(this) != DialogResult.OK)
+                return;
+
+            var newUser = dialog.SelectedUser;
+
+            if (newUser == null || newUser.Id == 0)
+                return;
+
+            if (_selectedUser != null && newUser.Id == _selectedUser.Id)
+                return;
+
+            await SwitchSelectedUserAsync(newUser);
+        }
+
+        private async Task SwitchSelectedUserAsync(User newUser)
+        {
+            if (_isSwitchingUser) return;
+            if (newUser == null || newUser.Id == 0) return;
+
+            if (_selectedUser != null && newUser.Id == _selectedUser.Id)
+                return;
+
+            _isSwitchingUser = true;
+
+            try
+            {
+                ShowLoading();
+
+                _selectedUser = newUser;
+
+                bChangeUser.Text = FormatHelper.FormatUserToString(_selectedUser);
+
+                var powerKeyHelper = new PowerKeyHelper();
+
+                int totalRows = await powerKeyHelper.DownloadForUserAsync(
+                    DateTime.Now,
+                    _selectedUser);
+
+                AppLogger.Information(
+                    $"Staženo {totalRows} záznamù pro mìsíc è.{DateTime.Now.Month} uživatele {FormatHelper.FormatUserToString(_selectedUser)}.",
+                    false);
+
+#if NOTDEBUG
+        buttonOutlookEvents.Visible = _selectedUser.WindowsUsername == Environment.UserName;
+#endif
+
+                _calendar?.ChangeUser(_selectedUser);
+                _monthlyCalendar.ChangeUser(_selectedUser);
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("Chyba pøi pøepínání uživatele.", ex);
+            }
+            finally
+            {
+                HideLoading();
+                _isSwitchingUser = false;
             }
         }
     }

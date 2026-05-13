@@ -33,6 +33,7 @@
             menuStrip1 = new MenuStrip();
             dataToolStripMenuItem = new ToolStripMenuItem();
             exportToolStripMenuItem = new ToolStripMenuItem();
+            importToolStripMenuItem = new ToolStripMenuItem();
             uživateléToolStripMenuItem = new ToolStripMenuItem();
             správaUživatelůToolStripMenuItem = new ToolStripMenuItem();
             projektyToolStripMenuItem = new ToolStripMenuItem();
@@ -47,7 +48,6 @@
             přehledToolStripMenuItem = new ToolStripMenuItem();
             radioButton1 = new RadioButton();
             radioButton2 = new RadioButton();
-            comboBoxUsers = new ComboBox();
             panel1 = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
             buttonUpdate = new Button();
@@ -59,6 +59,7 @@
             label1 = new Label();
             buttonOutlookEvents = new Button();
             panel2 = new Panel();
+            bChangeUser = new Button();
             buttonNow = new Button();
             labelSelectedDate = new Label();
             buttonNext = new Button();
@@ -69,7 +70,6 @@
             contextMenuStrip1 = new ContextMenuStrip(components);
             zobrazitToolStripMenuItem = new ToolStripMenuItem();
             ukoncitToolStripMenuItem = new ToolStripMenuItem();
-            importToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -99,9 +99,16 @@
             // exportToolStripMenuItem
             // 
             exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            exportToolStripMenuItem.Size = new Size(180, 22);
+            exportToolStripMenuItem.Size = new Size(110, 22);
             exportToolStripMenuItem.Text = "Export";
             exportToolStripMenuItem.Click += exportToolStripMenuItem_Click;
+            // 
+            // importToolStripMenuItem
+            // 
+            importToolStripMenuItem.Name = "importToolStripMenuItem";
+            importToolStripMenuItem.Size = new Size(110, 22);
+            importToolStripMenuItem.Text = "Import";
+            importToolStripMenuItem.Click += importToolStripMenuItem_Click;
             // 
             // uživateléToolStripMenuItem
             // 
@@ -219,18 +226,6 @@
             radioButton2.TextAlign = ContentAlignment.MiddleCenter;
             radioButton2.UseVisualStyleBackColor = true;
             radioButton2.CheckedChanged += radioButton1_CheckedChanged;
-            // 
-            // comboBoxUsers
-            // 
-            comboBoxUsers.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            comboBoxUsers.Enabled = false;
-            comboBoxUsers.FormattingEnabled = true;
-            comboBoxUsers.Location = new Point(961, 7);
-            comboBoxUsers.Name = "comboBoxUsers";
-            comboBoxUsers.Size = new Size(308, 33);
-            comboBoxUsers.TabIndex = 0;
-            comboBoxUsers.Visible = false;
-            comboBoxUsers.SelectedIndexChanged += comboBoxUsers_SelectedIndexChanged;
             // 
             // panel1
             // 
@@ -360,16 +355,26 @@
             // 
             // panel2
             // 
+            panel2.Controls.Add(bChangeUser);
             panel2.Controls.Add(buttonNow);
             panel2.Controls.Add(labelSelectedDate);
             panel2.Controls.Add(buttonNext);
             panel2.Controls.Add(buttonPrevious);
-            panel2.Controls.Add(comboBoxUsers);
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 24);
             panel2.Name = "panel2";
             panel2.Size = new Size(1269, 45);
             panel2.TabIndex = 6;
+            // 
+            // bChangeUser
+            // 
+            bChangeUser.Location = new Point(963, 6);
+            bChangeUser.Name = "bChangeUser";
+            bChangeUser.Size = new Size(303, 33);
+            bChangeUser.TabIndex = 5;
+            bChangeUser.Text = "Uživatel";
+            bChangeUser.UseVisualStyleBackColor = true;
+            bChangeUser.Click += BChangeUser_Click;
             // 
             // buttonNow
             // 
@@ -456,13 +461,6 @@
             ukoncitToolStripMenuItem.Size = new Size(117, 22);
             ukoncitToolStripMenuItem.Text = "Ukončit";
             // 
-            // importToolStripMenuItem
-            // 
-            importToolStripMenuItem.Name = "importToolStripMenuItem";
-            importToolStripMenuItem.Size = new Size(180, 22);
-            importToolStripMenuItem.Text = "Import";
-            importToolStripMenuItem.Click += importToolStripMenuItem_Click;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
@@ -513,7 +511,6 @@
         private ToolStripMenuItem nastaveníToolStripMenuItem;
         private RadioButton radioButton1;
         private RadioButton radioButton2;
-        private ComboBox comboBoxUsers;
         private Panel panel1;
         private Panel panel2;
         private Panel panelContainer;
@@ -541,5 +538,6 @@
         private Button buttonOutlookEvents;
         private Button buttonUpdate;
         private ToolStripMenuItem importToolStripMenuItem;
+        private Button bChangeUser;
     }
 }

@@ -70,8 +70,7 @@
               "RelativeToolTip": "VykazyPrace.Core\\Database\\Repositories\\TimeEntryRepository.cs",
               "ViewState": "AgIAAKMBAAAAAAAAAAAxwLoBAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-12T17:46:52.059Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-12T17:46:52.059Z"
             },
             {
               "$type": "Document",
@@ -81,10 +80,9 @@
               "RelativeDocumentMoniker": "VykazyPrace.Core\\PowerKey\\PowerKeyHelper.cs",
               "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\PowerKey\\PowerKeyHelper.cs",
               "RelativeToolTip": "VykazyPrace.Core\\PowerKey\\PowerKeyHelper.cs",
-              "ViewState": "AgIAAPMAAAAAAAAAAAAowAEBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAANAAAAAAAAAAAAAowN0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-12T14:08:06.089Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-12T14:08:06.089Z"
             },
             {
               "$type": "Document",
@@ -106,7 +104,7 @@
               "RelativeDocumentMoniker": "VykazyPrace\\Dialogs\\ExportDialog.cs",
               "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace\\Dialogs\\ExportDialog.cs",
               "RelativeToolTip": "VykazyPrace\\Dialogs\\ExportDialog.cs",
-              "ViewState": "AgIAAHsFAAAAAAAAAAAowJAFAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAOwCAAAAAAAAAAAkwPoCAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-05-12T10:26:55.915Z",
               "EditorCaption": ""

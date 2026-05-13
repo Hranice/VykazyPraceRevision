@@ -758,7 +758,9 @@ namespace VykazyPrace.Dialogs
                 entriesByUserId.TryGetValue(user.Id, out var userEntries);
                 userEntries ??= new List<TimeEntry>();
 
-                double totalHours = userEntries.Sum(e => e.EntryMinutes) / 60.0;
+                double totalHours = userEntries
+                    .Where(e => e.ProjectId != ExportConstants.AbsenceProjectId)
+                    .Sum(e => e.EntryMinutes) / 60.0;
                 double attendance = powerKeyData.TryGetValue(user.PersonalNumber, out double h) ? h : 0;
                 string fullName = $"{user.FirstName} {user.Surname}".Trim();
 

@@ -7,6 +7,7 @@ using VykazyPrace.Core.Configuration;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Core.Helpers;
+using VykazyPrace.Core.Import;
 using VykazyPrace.Core.Logging;
 using VykazyPrace.Core.PowerKey;
 using VykazyPrace.Dialogs;
@@ -592,6 +593,74 @@ namespace VykazyPrace
         private void buttonUpdate_Click(object sender, EventArgs e)
         {
             new UpdateDialog().ShowDialog();
+        }
+
+        private async void importToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using var dialog = new OpenFileDialog
+            {
+                Title = "Vyberte Excel s externími výkazy",
+                Filter = "Excel soubory (*.xlsx)|*.xlsx",
+                Multiselect = false
+            };
+
+            if (dialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            var confirm = MessageBox.Show(
+                "Import smaže pùvodní záznamy pro dotèené uživatele a dny a následnì vloží nové záznamy z Excelu. Pokraèovat?",
+                "Potvrzení importu",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (confirm != DialogResult.Yes)
+                return;
+
+            try
+            {
+                var service = new ExternalTimeEntryImportService();
+                var result = await service.ImportAsync(dialog.FileName);
+
+                if (!result.Success)
+                {
+                    MessageBox.Show(
+                        string.Join(Environment.NewLine, result.Errors),
+                        "Import se nezdaøil",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+
+                    return;
+                }
+
+                var message =
+                    $"Import dokonèen.{Environment.NewLine}" +
+                    $"Smazáno pùvodních záznamù: {result.DeletedCount}{Environment.NewLine}" +
+                    $"Importováno nových záznamù: {result.ImportedCount}";
+
+                if (result.Warnings.Count > 0)
+                {
+                    message += Environment.NewLine + Environment.NewLine +
+                               "Upozornìní:" + Environment.NewLine +
+                               string.Join(Environment.NewLine, result.Warnings.Take(20));
+
+                    if (result.Warnings.Count > 20)
+                        message += Environment.NewLine + $"... a dalších {result.Warnings.Count - 20} upozornìní.";
+                }
+
+                MessageBox.Show(
+                    message,
+                    "Import dokonèen",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    ex.Message,
+                    "Chyba importu",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
     }
 }

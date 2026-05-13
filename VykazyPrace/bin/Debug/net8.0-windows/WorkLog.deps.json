@@ -903,6 +903,7 @@
       "System.Threading.Tasks.Extensions/4.5.4": {},
       "VykazyPrace.Core/1.0.0": {
         "dependencies": {
+          "ClosedXML": "0.105.0",
           "Microsoft.Data.SqlClient": "6.0.2",
           "Microsoft.Data.Sqlite": "9.0.2",
           "Microsoft.EntityFrameworkCore.Sqlite": "9.0.2",

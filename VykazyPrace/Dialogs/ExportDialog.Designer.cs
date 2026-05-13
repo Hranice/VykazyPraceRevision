@@ -37,7 +37,8 @@
             gBLock = new GroupBox();
             label1 = new Label();
             gBExport = new GroupBox();
-            tVUserGroupsUsers = new TreeView();
+            lSelected = new Label();
+            bUserSelection = new Button();
             panelSpecificYear = new Panel();
             bSetCurrentYear = new Button();
             rBSpecificYear = new RadioButton();
@@ -149,7 +150,8 @@
             // 
             // gBExport
             // 
-            gBExport.Controls.Add(tVUserGroupsUsers);
+            gBExport.Controls.Add(lSelected);
+            gBExport.Controls.Add(bUserSelection);
             gBExport.Controls.Add(panelSpecificYear);
             gBExport.Controls.Add(panelSpecificWeek);
             gBExport.Controls.Add(panelSpecificMonth);
@@ -161,14 +163,26 @@
             gBExport.TabStop = false;
             gBExport.Text = "Export dat";
             // 
-            // tVUserGroupsUsers
+            // lSelected
             // 
-            tVUserGroupsUsers.CheckBoxes = true;
-            tVUserGroupsUsers.Location = new Point(578, 32);
-            tVUserGroupsUsers.Name = "tVUserGroupsUsers";
-            tVUserGroupsUsers.Size = new Size(273, 170);
-            tVUserGroupsUsers.TabIndex = 27;
-            tVUserGroupsUsers.AfterCheck += tVUserGroupsUsers_AfterCheck;
+            lSelected.AutoSize = true;
+            lSelected.Font = new Font("Reddit Sans", 10F);
+            lSelected.Location = new Point(579, 180);
+            lSelected.Margin = new Padding(4, 0, 4, 0);
+            lSelected.Name = "lSelected";
+            lSelected.Size = new Size(178, 22);
+            lSelected.TabIndex = 29;
+            lSelected.Text = "Není vybrán žádný uživatel";
+            // 
+            // bUserSelection
+            // 
+            bUserSelection.Location = new Point(578, 32);
+            bUserSelection.Name = "bUserSelection";
+            bUserSelection.Size = new Size(270, 145);
+            bUserSelection.TabIndex = 28;
+            bUserSelection.Text = "Výběr uživatelů";
+            bUserSelection.UseVisualStyleBackColor = true;
+            bUserSelection.Click += bUserSelection_Click;
             // 
             // panelSpecificYear
             // 
@@ -371,6 +385,7 @@
             gBLock.ResumeLayout(false);
             gBLock.PerformLayout();
             gBExport.ResumeLayout(false);
+            gBExport.PerformLayout();
             panelSpecificYear.ResumeLayout(false);
             panelSpecificYear.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)nUDYear).EndInit();
@@ -410,7 +425,8 @@
         private Button bSetCurrentYear;
         private RadioButton rBSpecificYear;
         private NumericUpDown nUDYear;
-        private TreeView tVUserGroupsUsers;
         private CheckBox cBBuildEvaluationSheet;
+        private Button bUserSelection;
+        private Label lSelected;
     }
 }

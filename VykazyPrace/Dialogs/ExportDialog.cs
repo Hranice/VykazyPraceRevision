@@ -11,6 +11,7 @@ using System.Globalization;
 using VykazyPrace.Core.Configuration;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Runtime.InteropServices;
+using VykazyPrace.Enums;
 
 /// <summary>
 /// ChatGPT 5 credits:
@@ -48,8 +49,8 @@ namespace VykazyPrace.Dialogs
         private async void ExportDialog_Load(object sender, EventArgs e)
         {
             InitializeDatePickers();
+            await LoadExportUsersSelectionAsync();
             RestoreExportRangeSelectionFromConfig();
-            await LoadUserGroupsToTreeViewAsync();
 
             if (_currentUser.LevelOfAccess > 2)
             {
@@ -85,107 +86,6 @@ namespace VykazyPrace.Dialogs
             nUDWeek.Value = ISOWeek.GetWeekOfYear(DateTime.Now);
             cBMonth2.SelectedIndex = DateTime.Now.Month - 1; // 0..11
             nUDYear.Value = DateTime.Now.Year;
-        }
-
-        /// <summary>
-        /// Načte skupiny a jejich uživatele do TreeView.
-        /// Tag na group node = UserGroup
-        /// Tag na user node = User
-        /// </summary>
-        private async Task LoadUserGroupsToTreeViewAsync()
-        {
-            var userGroups = await _userGroupRepository.GetAllUserGroupsAsync().ConfigureAwait(true);
-
-            tVUserGroupsUsers.BeginUpdate();
-            tVUserGroupsUsers.Nodes.Clear();
-            tVUserGroupsUsers.CheckBoxes = true;
-
-            if (_currentUser.LevelOfAccess == 1)
-            {
-                var node = new TreeNode($"{_currentUser.FirstName} {_currentUser.Surname}".Trim())
-                {
-                    Tag = _currentUser,
-                    Checked = true
-                };
-
-                tVUserGroupsUsers.Nodes.Add(node);
-
-                tVUserGroupsUsers.Enabled = false;
-
-                tVUserGroupsUsers.EndUpdate();
-                return;
-            }
-
-            foreach (var group in userGroups.OrderBy(g => g.Title))
-            {
-                var groupNode = new TreeNode(group.Title ?? "(bez názvu)")
-                {
-                    Tag = group,
-                    Checked = true
-                };
-
-                foreach (var user in group.Users.OrderBy(u => u.Surname).ThenBy(u => u.FirstName))
-                {
-                    var userNode = new TreeNode($"{user.FirstName} {user.Surname}".Trim())
-                    {
-                        Tag = user,
-                        Checked = true
-                    };
-
-                    groupNode.Nodes.Add(userNode);
-                }
-
-                tVUserGroupsUsers.Nodes.Add(groupNode);
-            }
-
-            tVUserGroupsUsers.ExpandAll();
-            tVUserGroupsUsers.EndUpdate();
-
-            ApplySavedSelectionToTreeView();
-        }
-
-        private void ApplySavedSelectionToTreeView()
-        {
-            var savedGroupIds = _config.ExportSelection?.SelectedUserGroupIds?.ToHashSet() ?? new HashSet<int>();
-            var savedUserIds = _config.ExportSelection?.SelectedUserIds?.ToHashSet() ?? new HashSet<int>();
-
-            bool anythingSaved = savedGroupIds.Count > 0 || savedUserIds.Count > 0;
-
-            // když nic uložené není, defaultně vše vybrané
-            if (!anythingSaved)
-            {
-                CheckAllTreeNodes();
-                return;
-            }
-
-            _isTreeViewChecking = true;
-            try
-            {
-                foreach (TreeNode groupNode in tVUserGroupsUsers.Nodes)
-                {
-                    if (groupNode.Tag is not UserGroup group)
-                        continue;
-
-                    bool groupChecked = savedGroupIds.Contains(group.Id);
-                    groupNode.Checked = groupChecked;
-
-                    foreach (TreeNode userNode in groupNode.Nodes)
-                    {
-                        if (userNode.Tag is not User user)
-                            continue;
-
-                        userNode.Checked = groupChecked || savedUserIds.Contains(user.Id);
-                    }
-
-                    // rodič checked pokud je checked skupina nebo aspoň jedno dítě
-                    if (!groupChecked)
-                        groupNode.Checked = groupNode.Nodes.Cast<TreeNode>().Any(n => n.Checked);
-                }
-            }
-            finally
-            {
-                _isTreeViewChecking = false;
-            }
         }
 
         private void RestoreExportRangeSelectionFromConfig()
@@ -256,38 +156,57 @@ namespace VykazyPrace.Dialogs
         #region — Handlery —
         private async void bSaveAs_Click(object sender, EventArgs e)
         {
-            using var sfd = new SaveFileDialog { Filter = "Excel Files|*.xlsx", FileName = "Export.xlsx" };
-            if (sfd.ShowDialog() != DialogResult.OK) return;
+            var selectedUsers = GetSelectedExportUsers();
 
-            var selection = GetSelectedUsersAndGroupsFromTreeView();
-
-            if (selection.SelectedGroupIds.Count == 0 && selection.SelectedUserIds.Count == 0)
+            if (selectedUsers.Count == 0)
             {
-                MessageBox.Show("Není vybraná žádná skupina ani uživatel.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(
+                    "Není vybraný žádný uživatel.",
+                    "Export",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
                 return;
             }
 
-            var exportService = new TimeEntryExportService(_timeEntryRepo, _specialDayRepo, _tableFactory, _styling);
+            using var sfd = new SaveFileDialog
+            {
+                Filter = "Excel Files|*.xlsx",
+                FileName = "Export.xlsx"
+            };
+
+            if (sfd.ShowDialog() != DialogResult.OK)
+                return;
+
+            var exportService = new TimeEntryExportService(
+                _timeEntryRepo,
+                _specialDayRepo,
+                _tableFactory,
+                _styling);
 
             try
             {
                 var (from, to) = GetSelectedExportRange();
 
                 await exportService.ExportAsync(
-        sfd.FileName,
-        from,
-        to,
-        selection.SelectedGroupIds,
-        selection.SelectedUserIds,
-        selection.SelectedUsers,
-        _currentUser,
-        cBBuildEvaluationSheet.Checked);
+                    sfd.FileName,
+                    from,
+                    to,
+                    new List<int>(),
+                    selectedUsers.Select(u => u.Id).Distinct().ToList(),
+                    selectedUsers,
+                    _currentUser,
+                    cBBuildEvaluationSheet.Checked);
 
-                SaveExportSelection(selection);
+                SaveExportUserSelectionToConfig();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Export selhal. Podrobnosti v logu.\n{ex.Message}", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    $"Export selhal. Podrobnosti v logu.\n{ex.Message}",
+                    "Chyba",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 
@@ -380,27 +299,130 @@ namespace VykazyPrace.Dialogs
                 _isTreeViewChecking = false;
             }
         }
+
+        private void bUserSelection_Click(object sender, EventArgs e)
+        {
+            if (_currentUser.LevelOfAccess == 1)
+                return;
+
+            using var dialog = new UserSelectionDialog(
+                UserSelectionMode.Multiple,
+                _selectedExportUsers.Select(u => u.Id));
+
+            if (dialog.ShowDialog(this) != DialogResult.OK)
+                return;
+
+            _selectedExportUsers = dialog.SelectedUsers
+                .DistinctBy(u => u.Id)
+                .OrderBy(u => u.UserGroup?.Title)
+                .ThenBy(u => u.Surname)
+                .ThenBy(u => u.FirstName)
+                .ToList();
+
+            UpdateSelectedExportUsersLabel();
+        }
+
+        private readonly UserRepository _userRepository = new();
+
+        private List<User> _selectedExportUsers = new();
+
+        private async Task LoadExportUsersSelectionAsync()
+        {
+            if (_currentUser.LevelOfAccess == 1)
+            {
+                _selectedExportUsers = new List<User> { _currentUser };
+
+                bUserSelection.Enabled = false;
+                bUserSelection.Text = "Vybrán aktuální uživatel";
+                lSelected.Text = FormatHelper.FormatUserToString(_currentUser);
+
+                return;
+            }
+
+            var allUsers = await _userRepository.GetAllUsersAsync();
+
+            var savedUserIds = _config.ExportSelection?.SelectedUserIds?.ToHashSet() ?? new HashSet<int>();
+            var savedGroupIds = _config.ExportSelection?.SelectedUserGroupIds?.ToHashSet() ?? new HashSet<int>();
+
+            bool anythingSaved = savedUserIds.Count > 0 || savedGroupIds.Count > 0;
+
+            _selectedExportUsers = anythingSaved
+                ? allUsers
+                    .Where(u =>
+                        savedUserIds.Contains(u.Id) ||
+                        (u.UserGroupId.HasValue && savedGroupIds.Contains(u.UserGroupId.Value)))
+                    .DistinctBy(u => u.Id)
+                    .OrderBy(u => u.UserGroup?.Title)
+                    .ThenBy(u => u.Surname)
+                    .ThenBy(u => u.FirstName)
+                    .ToList()
+                : allUsers
+                    .DistinctBy(u => u.Id)
+                    .OrderBy(u => u.UserGroup?.Title)
+                    .ThenBy(u => u.Surname)
+                    .ThenBy(u => u.FirstName)
+                    .ToList();
+
+            UpdateSelectedExportUsersLabel();
+        }
+
+        private void UpdateSelectedExportUsersLabel()
+        {
+            if (_selectedExportUsers.Count == 0)
+            {
+                lSelected.Text = "Nevybrán žádný uživatel";
+                bUserSelection.Text = "Vybrat uživatele...";
+                return;
+            }
+
+            if (_selectedExportUsers.Count == 1)
+            {
+                lSelected.Text = FormatHelper.FormatUserToString(_selectedExportUsers[0]);
+                bUserSelection.Text = "Změnit uživatele...";
+                return;
+            }
+
+            lSelected.Text = $"Vybráno uživatelů: {_selectedExportUsers.Count}";
+            bUserSelection.Text = "Změnit výběr uživatelů...";
+        }
+
+        private List<User> GetSelectedExportUsers()
+        {
+            return _selectedExportUsers
+                .Where(u => u.Id > 0)
+                .DistinctBy(u => u.Id)
+                .ToList();
+        }
+
+        private bool ValidateSelectedExportUsers()
+        {
+            if (_selectedExportUsers.Any(u => u.Id > 0))
+                return true;
+
+            MessageBox.Show(
+                "Vyberte alespoň jednoho uživatele.",
+                "Export",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+
+            return false;
+        }
+
+        private void SaveExportUserSelectionToConfig()
+        {
+            _config.ExportSelection ??= new ExportSelectionConfig();
+
+            _config.ExportSelection.SelectedUserIds = _selectedExportUsers
+                .Where(u => u.Id > 0)
+                .Select(u => u.Id)
+                .Distinct()
+                .ToList();
+
+            _config.ExportSelection.SelectedUserGroupIds = new List<int>();
+        }
         #endregion
 
         #region - Helpery -
-        private void CheckAllTreeNodes()
-        {
-            _isTreeViewChecking = true;
-            try
-            {
-                foreach (TreeNode groupNode in tVUserGroupsUsers.Nodes)
-                {
-                    groupNode.Checked = true;
-
-                    foreach (TreeNode userNode in groupNode.Nodes)
-                        userNode.Checked = true;
-                }
-            }
-            finally
-            {
-                _isTreeViewChecking = false;
-            }
-        }
 
         private (DateTime From, DateTime To) GetSelectedExportRange()
         {
@@ -495,47 +517,6 @@ namespace VykazyPrace.Dialogs
             public HashSet<int> SelectedGroupIds { get; } = new();
             public HashSet<int> SelectedUserIds { get; } = new();
             public List<User> SelectedUsers { get; } = new();
-        }
-
-        private UserSelection GetSelectedUsersAndGroupsFromTreeView()
-        {
-            var result = new UserSelection();
-
-            if (_currentUser.LevelOfAccess == 1)
-            {
-                result.SelectedUserIds.Add(_currentUser.Id);
-                result.SelectedUsers.Add(_currentUser);
-                return result;
-            }
-
-            foreach (TreeNode groupNode in tVUserGroupsUsers.Nodes)
-            {
-                if (groupNode.Tag is not UserGroup group)
-                    continue;
-
-                var checkedUserNodes = groupNode.Nodes
-                    .Cast<TreeNode>()
-                    .Where(n => n.Checked && n.Tag is User)
-                    .ToList();
-
-                foreach (var userNode in checkedUserNodes)
-                {
-                    if (userNode.Tag is User user)
-                    {
-                        result.SelectedUserIds.Add(user.Id);
-                        result.SelectedUsers.Add(user);
-                    }
-                }
-
-                bool allUsersChecked = groupNode.Nodes.Count > 0 && checkedUserNodes.Count == groupNode.Nodes.Count;
-
-                if (groupNode.Checked && (groupNode.Nodes.Count == 0 || allUsersChecked))
-                {
-                    result.SelectedGroupIds.Add(group.Id);
-                }
-            }
-
-            return result;
         }
         #endregion
     }

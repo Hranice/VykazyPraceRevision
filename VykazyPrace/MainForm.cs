@@ -22,8 +22,6 @@ namespace VykazyPrace
 {
     public partial class MainForm : Form
     {
-        private readonly NotifyIcon _trayIcon = new NotifyIcon();
-        private readonly ContextMenuStrip _trayMenu = new ContextMenuStrip();
         private readonly UserRepository _userRepo = new UserRepository();
         private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
         private readonly TimeEntryTypeRepository _timeEntryTypeRepo = new TimeEntryTypeRepository();

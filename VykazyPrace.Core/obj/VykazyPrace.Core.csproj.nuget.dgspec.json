@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\VykazyPrace.Core.csproj": {}
+    "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace.Core\\VykazyPrace.Core.csproj": {}
   },
   "projects": {
-    "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\VykazyPrace.Core.csproj": {
+    "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace.Core\\VykazyPrace.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\VykazyPrace.Core.csproj",
+        "projectUniqueName": "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace.Core\\VykazyPrace.Core.csproj",
         "projectName": "VykazyPrace.Core",
-        "projectPath": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\VykazyPrace.Core.csproj",
+        "projectPath": "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace.Core\\VykazyPrace.Core.csproj",
         "packagesPath": "C:\\Users\\jprochazka\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\jprochazka\\source\\repos\\VykazyPrace\\VykazyPrace.Core\\obj\\",
+        "outputPath": "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace.Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -19,18 +19,14 @@
         "configFilePaths": [
           "C:\\Users\\jprochazka\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Zebra.ADA.10.7.170.Offline.Config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\Aurora Design Assistant\\10.7\\CustomSteps\\References": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://www.emgu.com/e03cb1d2-a3aa-4be9-8e4a-546f4de31a35/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
@@ -48,7 +44,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -111,7 +107,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.314/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

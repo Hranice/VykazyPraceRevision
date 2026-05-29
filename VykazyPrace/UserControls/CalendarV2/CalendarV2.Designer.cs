@@ -203,10 +203,10 @@
             // 
             labelHours07.AutoSize = true;
             labelHours07.Dock = DockStyle.Top;
-            labelHours07.Font = new Font("Reddit Sans", 9F, FontStyle.Bold);
-            labelHours07.Location = new Point(0, 42);
+            labelHours07.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold);
+            labelHours07.Location = new Point(0, 32);
             labelHours07.Name = "labelHours07";
-            labelHours07.Size = new Size(34, 19);
+            labelHours07.Size = new Size(39, 15);
             labelHours07.TabIndex = 39;
             labelHours07.Text = "7,5 h";
             labelHours07.TextAlign = ContentAlignment.MiddleRight;
@@ -216,9 +216,9 @@
             // 
             labelDate07.AutoSize = true;
             labelDate07.Dock = DockStyle.Top;
-            labelDate07.Location = new Point(0, 21);
+            labelDate07.Location = new Point(0, 16);
             labelDate07.Name = "labelDate07";
-            labelDate07.Size = new Size(60, 21);
+            labelDate07.Size = new Size(55, 16);
             labelDate07.TabIndex = 36;
             labelDate07.Text = "9.3.2025";
             labelDate07.TextAlign = ContentAlignment.MiddleRight;
@@ -230,7 +230,7 @@
             labelDay07.Dock = DockStyle.Top;
             labelDay07.Location = new Point(0, 0);
             labelDay07.Name = "labelDay07";
-            labelDay07.Size = new Size(51, 21);
+            labelDay07.Size = new Size(52, 16);
             labelDay07.TabIndex = 34;
             labelDay07.Text = "Neděle";
             labelDay07.TextAlign = ContentAlignment.TopRight;
@@ -282,10 +282,10 @@
             // 
             labelHours01.AutoSize = true;
             labelHours01.Dock = DockStyle.Top;
-            labelHours01.Font = new Font("Reddit Sans", 9F, FontStyle.Bold);
-            labelHours01.Location = new Point(0, 42);
+            labelHours01.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold);
+            labelHours01.Location = new Point(0, 32);
             labelHours01.Name = "labelHours01";
-            labelHours01.Size = new Size(34, 19);
+            labelHours01.Size = new Size(39, 15);
             labelHours01.TabIndex = 37;
             labelHours01.Text = "7,5 h";
             labelHours01.TextAlign = ContentAlignment.MiddleRight;
@@ -295,9 +295,9 @@
             // 
             labelDate01.AutoSize = true;
             labelDate01.Dock = DockStyle.Top;
-            labelDate01.Location = new Point(0, 21);
+            labelDate01.Location = new Point(0, 16);
             labelDate01.Name = "labelDate01";
-            labelDate01.Size = new Size(61, 21);
+            labelDate01.Size = new Size(55, 16);
             labelDate01.TabIndex = 36;
             labelDate01.Text = "4.3.2025";
             labelDate01.TextAlign = ContentAlignment.MiddleRight;
@@ -309,7 +309,7 @@
             labelDay01.Dock = DockStyle.Top;
             labelDay01.Location = new Point(0, 0);
             labelDay01.Name = "labelDay01";
-            labelDay01.Size = new Size(52, 21);
+            labelDay01.Size = new Size(53, 16);
             labelDay01.TabIndex = 34;
             labelDay01.Text = "Pondělí";
             labelDay01.TextAlign = ContentAlignment.TopRight;
@@ -331,10 +331,10 @@
             // 
             labelHours04.AutoSize = true;
             labelHours04.Dock = DockStyle.Top;
-            labelHours04.Font = new Font("Reddit Sans", 9F, FontStyle.Bold);
-            labelHours04.Location = new Point(0, 42);
+            labelHours04.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold);
+            labelHours04.Location = new Point(0, 32);
             labelHours04.Name = "labelHours04";
-            labelHours04.Size = new Size(34, 19);
+            labelHours04.Size = new Size(39, 15);
             labelHours04.TabIndex = 39;
             labelHours04.Text = "7,5 h";
             labelHours04.TextAlign = ContentAlignment.MiddleRight;
@@ -344,9 +344,9 @@
             // 
             labelDate04.AutoSize = true;
             labelDate04.Dock = DockStyle.Top;
-            labelDate04.Location = new Point(0, 21);
+            labelDate04.Location = new Point(0, 16);
             labelDate04.Name = "labelDate04";
-            labelDate04.Size = new Size(59, 21);
+            labelDate04.Size = new Size(55, 16);
             labelDate04.TabIndex = 36;
             labelDate04.Text = "7.3.2025";
             labelDate04.TextAlign = ContentAlignment.MiddleRight;
@@ -358,7 +358,7 @@
             labelDay04.Dock = DockStyle.Top;
             labelDay04.Location = new Point(0, 0);
             labelDay04.Name = "labelDay04";
-            labelDay04.Size = new Size(55, 21);
+            labelDay04.Size = new Size(48, 16);
             labelDay04.TabIndex = 34;
             labelDay04.Text = "Čtvrtek";
             labelDay04.TextAlign = ContentAlignment.TopRight;
@@ -380,10 +380,10 @@
             // 
             labelHours06.AutoSize = true;
             labelHours06.Dock = DockStyle.Top;
-            labelHours06.Font = new Font("Reddit Sans", 9F, FontStyle.Bold);
-            labelHours06.Location = new Point(0, 42);
+            labelHours06.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold);
+            labelHours06.Location = new Point(0, 32);
             labelHours06.Name = "labelHours06";
-            labelHours06.Size = new Size(34, 19);
+            labelHours06.Size = new Size(39, 15);
             labelHours06.TabIndex = 39;
             labelHours06.Text = "7,5 h";
             labelHours06.TextAlign = ContentAlignment.MiddleRight;
@@ -393,9 +393,9 @@
             // 
             labelDate06.AutoSize = true;
             labelDate06.Dock = DockStyle.Top;
-            labelDate06.Location = new Point(0, 21);
+            labelDate06.Location = new Point(0, 16);
             labelDate06.Name = "labelDate06";
-            labelDate06.Size = new Size(60, 21);
+            labelDate06.Size = new Size(55, 16);
             labelDate06.TabIndex = 36;
             labelDate06.Text = "9.3.2025";
             labelDate06.TextAlign = ContentAlignment.MiddleRight;
@@ -407,7 +407,7 @@
             labelDay06.Dock = DockStyle.Top;
             labelDay06.Location = new Point(0, 0);
             labelDay06.Name = "labelDay06";
-            labelDay06.Size = new Size(53, 21);
+            labelDay06.Size = new Size(51, 16);
             labelDay06.TabIndex = 34;
             labelDay06.Text = "Sobota";
             labelDay06.TextAlign = ContentAlignment.TopRight;
@@ -429,10 +429,10 @@
             // 
             labelHours05.AutoSize = true;
             labelHours05.Dock = DockStyle.Top;
-            labelHours05.Font = new Font("Reddit Sans", 9F, FontStyle.Bold);
-            labelHours05.Location = new Point(0, 42);
+            labelHours05.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold);
+            labelHours05.Location = new Point(0, 32);
             labelHours05.Name = "labelHours05";
-            labelHours05.Size = new Size(34, 19);
+            labelHours05.Size = new Size(39, 15);
             labelHours05.TabIndex = 39;
             labelHours05.Text = "7,5 h";
             labelHours05.TextAlign = ContentAlignment.MiddleRight;
@@ -442,9 +442,9 @@
             // 
             labelDate05.AutoSize = true;
             labelDate05.Dock = DockStyle.Top;
-            labelDate05.Location = new Point(0, 21);
+            labelDate05.Location = new Point(0, 16);
             labelDate05.Name = "labelDate05";
-            labelDate05.Size = new Size(61, 21);
+            labelDate05.Size = new Size(55, 16);
             labelDate05.TabIndex = 36;
             labelDate05.Text = "8.3.2025";
             labelDate05.TextAlign = ContentAlignment.MiddleRight;
@@ -456,7 +456,7 @@
             labelDay05.Dock = DockStyle.Top;
             labelDay05.Location = new Point(0, 0);
             labelDay05.Name = "labelDay05";
-            labelDay05.Size = new Size(43, 21);
+            labelDay05.Size = new Size(42, 16);
             labelDay05.TabIndex = 34;
             labelDay05.Text = "Pátek";
             labelDay05.TextAlign = ContentAlignment.TopRight;
@@ -478,10 +478,10 @@
             // 
             labelHours03.AutoSize = true;
             labelHours03.Dock = DockStyle.Top;
-            labelHours03.Font = new Font("Reddit Sans", 9F, FontStyle.Bold);
-            labelHours03.Location = new Point(0, 42);
+            labelHours03.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold);
+            labelHours03.Location = new Point(0, 32);
             labelHours03.Name = "labelHours03";
-            labelHours03.Size = new Size(34, 19);
+            labelHours03.Size = new Size(39, 15);
             labelHours03.TabIndex = 39;
             labelHours03.Text = "7,5 h";
             labelHours03.TextAlign = ContentAlignment.MiddleRight;
@@ -491,9 +491,9 @@
             // 
             labelDate03.AutoSize = true;
             labelDate03.Dock = DockStyle.Top;
-            labelDate03.Location = new Point(0, 21);
+            labelDate03.Location = new Point(0, 16);
             labelDate03.Name = "labelDate03";
-            labelDate03.Size = new Size(61, 21);
+            labelDate03.Size = new Size(55, 16);
             labelDate03.TabIndex = 36;
             labelDate03.Text = "6.3.2025";
             labelDate03.TextAlign = ContentAlignment.MiddleRight;
@@ -505,7 +505,7 @@
             labelDay03.Dock = DockStyle.Top;
             labelDay03.Location = new Point(0, 0);
             labelDay03.Name = "labelDay03";
-            labelDay03.Size = new Size(49, 21);
+            labelDay03.Size = new Size(47, 16);
             labelDay03.TabIndex = 34;
             labelDay03.Text = "Středa";
             labelDay03.TextAlign = ContentAlignment.TopRight;
@@ -527,10 +527,10 @@
             // 
             labelHours02.AutoSize = true;
             labelHours02.Dock = DockStyle.Top;
-            labelHours02.Font = new Font("Reddit Sans", 9F, FontStyle.Bold);
-            labelHours02.Location = new Point(0, 42);
+            labelHours02.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold);
+            labelHours02.Location = new Point(0, 32);
             labelHours02.Name = "labelHours02";
-            labelHours02.Size = new Size(34, 19);
+            labelHours02.Size = new Size(39, 15);
             labelHours02.TabIndex = 38;
             labelHours02.Text = "7,5 h";
             labelHours02.TextAlign = ContentAlignment.MiddleRight;
@@ -540,9 +540,9 @@
             // 
             labelDate02.AutoSize = true;
             labelDate02.Dock = DockStyle.Top;
-            labelDate02.Location = new Point(0, 21);
+            labelDate02.Location = new Point(0, 16);
             labelDate02.Name = "labelDate02";
-            labelDate02.Size = new Size(61, 21);
+            labelDate02.Size = new Size(55, 16);
             labelDate02.TabIndex = 36;
             labelDate02.Text = "5.3.2025";
             labelDate02.TextAlign = ContentAlignment.MiddleRight;
@@ -554,7 +554,7 @@
             labelDay02.Dock = DockStyle.Top;
             labelDay02.Location = new Point(0, 0);
             labelDay02.Name = "labelDay02";
-            labelDay02.Size = new Size(43, 21);
+            labelDay02.Size = new Size(39, 16);
             labelDay02.TabIndex = 34;
             labelDay02.Text = "Úterý";
             labelDay02.TextAlign = ContentAlignment.TopRight;
@@ -729,7 +729,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label37, 2);
             label37.Dock = DockStyle.Fill;
-            label37.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label37.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label37.Location = new Point(1231, 0);
             label37.Margin = new Padding(1, 0, 0, 0);
             label37.Name = "label37";
@@ -742,7 +742,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label36, 2);
             label36.Dock = DockStyle.Fill;
-            label36.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label36.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label36.Location = new Point(1313, 0);
             label36.Margin = new Padding(1, 0, 0, 0);
             label36.Name = "label36";
@@ -755,7 +755,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label35, 2);
             label35.Dock = DockStyle.Fill;
-            label35.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label35.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label35.Location = new Point(1149, 0);
             label35.Margin = new Padding(1, 0, 0, 0);
             label35.Name = "label35";
@@ -768,7 +768,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label34, 2);
             label34.Dock = DockStyle.Fill;
-            label34.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label34.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label34.Location = new Point(985, 0);
             label34.Margin = new Padding(1, 0, 0, 0);
             label34.Name = "label34";
@@ -781,7 +781,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label33, 2);
             label33.Dock = DockStyle.Fill;
-            label33.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label33.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label33.Location = new Point(1067, 0);
             label33.Margin = new Padding(1, 0, 0, 0);
             label33.Name = "label33";
@@ -794,7 +794,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label32, 2);
             label32.Dock = DockStyle.Fill;
-            label32.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label32.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label32.Location = new Point(1395, 0);
             label32.Margin = new Padding(1, 0, 0, 0);
             label32.Name = "label32";
@@ -807,7 +807,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label31, 2);
             label31.Dock = DockStyle.Fill;
-            label31.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label31.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label31.Location = new Point(1723, 0);
             label31.Margin = new Padding(1, 0, 0, 0);
             label31.Name = "label31";
@@ -820,7 +820,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label30, 2);
             label30.Dock = DockStyle.Fill;
-            label30.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label30.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label30.Location = new Point(1805, 0);
             label30.Margin = new Padding(1, 0, 0, 0);
             label30.Name = "label30";
@@ -833,7 +833,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label29, 2);
             label29.Dock = DockStyle.Fill;
-            label29.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label29.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label29.Location = new Point(1641, 0);
             label29.Margin = new Padding(1, 0, 0, 0);
             label29.Name = "label29";
@@ -846,7 +846,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label28, 2);
             label28.Dock = DockStyle.Fill;
-            label28.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label28.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label28.Location = new Point(1477, 0);
             label28.Margin = new Padding(1, 0, 0, 0);
             label28.Name = "label28";
@@ -859,7 +859,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label27, 2);
             label27.Dock = DockStyle.Fill;
-            label27.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label27.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label27.Location = new Point(1559, 0);
             label27.Margin = new Padding(1, 0, 0, 0);
             label27.Name = "label27";
@@ -872,7 +872,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label26, 2);
             label26.Dock = DockStyle.Fill;
-            label26.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label26.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label26.Location = new Point(903, 0);
             label26.Margin = new Padding(1, 0, 0, 0);
             label26.Name = "label26";
@@ -885,7 +885,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label25, 2);
             label25.Dock = DockStyle.Fill;
-            label25.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label25.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label25.Location = new Point(247, 0);
             label25.Margin = new Padding(1, 0, 0, 0);
             label25.Name = "label25";
@@ -898,7 +898,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label24, 2);
             label24.Dock = DockStyle.Fill;
-            label24.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label24.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label24.Location = new Point(329, 0);
             label24.Margin = new Padding(1, 0, 0, 0);
             label24.Name = "label24";
@@ -911,7 +911,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label23, 2);
             label23.Dock = DockStyle.Fill;
-            label23.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label23.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label23.Location = new Point(165, 0);
             label23.Margin = new Padding(1, 0, 0, 0);
             label23.Name = "label23";
@@ -924,7 +924,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label22, 2);
             label22.Dock = DockStyle.Fill;
-            label22.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label22.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label22.Location = new Point(1, 0);
             label22.Margin = new Padding(1, 0, 0, 0);
             label22.Name = "label22";
@@ -937,7 +937,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label20, 2);
             label20.Dock = DockStyle.Fill;
-            label20.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label20.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label20.Location = new Point(83, 0);
             label20.Margin = new Padding(1, 0, 0, 0);
             label20.Name = "label20";
@@ -950,7 +950,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label19, 2);
             label19.Dock = DockStyle.Fill;
-            label19.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label19.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label19.Location = new Point(411, 0);
             label19.Margin = new Padding(1, 0, 0, 0);
             label19.Name = "label19";
@@ -963,7 +963,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label18, 2);
             label18.Dock = DockStyle.Fill;
-            label18.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label18.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label18.Location = new Point(739, 0);
             label18.Margin = new Padding(1, 0, 0, 0);
             label18.Name = "label18";
@@ -976,7 +976,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label17, 2);
             label17.Dock = DockStyle.Fill;
-            label17.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label17.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label17.Location = new Point(821, 0);
             label17.Margin = new Padding(1, 0, 0, 0);
             label17.Name = "label17";
@@ -989,7 +989,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label16, 2);
             label16.Dock = DockStyle.Fill;
-            label16.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label16.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label16.Location = new Point(657, 0);
             label16.Margin = new Padding(1, 0, 0, 0);
             label16.Name = "label16";
@@ -1002,7 +1002,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label15, 2);
             label15.Dock = DockStyle.Fill;
-            label15.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label15.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label15.Location = new Point(493, 0);
             label15.Margin = new Padding(1, 0, 0, 0);
             label15.Name = "label15";
@@ -1015,7 +1015,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label1, 2);
             label1.Dock = DockStyle.Fill;
-            label1.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label1.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label1.Location = new Point(575, 0);
             label1.Margin = new Padding(1, 0, 0, 0);
             label1.Name = "label1";
@@ -1028,7 +1028,7 @@
             // 
             customTableLayoutPanel1.SetColumnSpan(label21, 2);
             label21.Dock = DockStyle.Fill;
-            label21.Font = new Font("Reddit Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label21.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             label21.Location = new Point(1887, 0);
             label21.Margin = new Padding(1, 0, 0, 0);
             label21.Name = "label21";
@@ -1053,7 +1053,7 @@
             flowLayoutPanel2.Controls.Add(tableLayoutPanel6);
             flowLayoutPanel2.Controls.Add(tableLayoutPanel4);
             flowLayoutPanel2.Dock = DockStyle.Fill;
-            flowLayoutPanel2.Font = new Font("Reddit Sans", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            flowLayoutPanel2.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
             flowLayoutPanel2.Location = new Point(922, 3);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
             flowLayoutPanel2.Size = new Size(301, 654);
@@ -1067,7 +1067,7 @@
             radioButton1.AutoSize = true;
             radioButton1.Location = new Point(3, 3);
             radioButton1.Name = "radioButton1";
-            radioButton1.Size = new Size(88, 35);
+            radioButton1.Size = new Size(86, 30);
             radioButton1.TabIndex = 0;
             radioButton1.TabStop = true;
             radioButton1.Text = "PROVOZ";
@@ -1078,9 +1078,9 @@
             // 
             radioButton2.Appearance = Appearance.Button;
             radioButton2.AutoSize = true;
-            radioButton2.Location = new Point(97, 3);
+            radioButton2.Location = new Point(95, 3);
             radioButton2.Name = "radioButton2";
-            radioButton2.Size = new Size(90, 35);
+            radioButton2.Size = new Size(91, 30);
             radioButton2.TabIndex = 1;
             radioButton2.TabStop = true;
             radioButton2.Text = "PROJEKT";
@@ -1091,9 +1091,9 @@
             // 
             radioButton3.Appearance = Appearance.Button;
             radioButton3.AutoSize = true;
-            radioButton3.Location = new Point(193, 3);
+            radioButton3.Location = new Point(192, 3);
             radioButton3.Name = "radioButton3";
-            radioButton3.Size = new Size(86, 35);
+            radioButton3.Size = new Size(88, 30);
             radioButton3.TabIndex = 3;
             radioButton3.TabStop = true;
             radioButton3.Text = "ŠKOLENÍ";
@@ -1104,9 +1104,9 @@
             // 
             radioButton4.Appearance = Appearance.Button;
             radioButton4.AutoSize = true;
-            radioButton4.Location = new Point(3, 44);
+            radioButton4.Location = new Point(3, 39);
             radioButton4.Name = "radioButton4";
-            radioButton4.Size = new Size(144, 35);
+            radioButton4.Size = new Size(145, 30);
             radioButton4.TabIndex = 4;
             radioButton4.TabStop = true;
             radioButton4.Text = "NEPŘÍTOMNOST";
@@ -1117,9 +1117,9 @@
             // 
             radioButton5.Appearance = Appearance.Button;
             radioButton5.AutoSize = true;
-            radioButton5.Location = new Point(153, 44);
+            radioButton5.Location = new Point(154, 39);
             radioButton5.Name = "radioButton5";
-            radioButton5.Size = new Size(87, 35);
+            radioButton5.Size = new Size(87, 30);
             radioButton5.TabIndex = 5;
             radioButton5.TabStop = true;
             radioButton5.Text = "OSTATNÍ";
@@ -1130,9 +1130,9 @@
             // 
             radioButton7.Appearance = Appearance.Button;
             radioButton7.AutoSize = true;
-            radioButton7.Location = new Point(3, 85);
+            radioButton7.Location = new Point(3, 75);
             radioButton7.Name = "radioButton7";
-            radioButton7.Size = new Size(177, 35);
+            radioButton7.Size = new Size(184, 30);
             radioButton7.TabIndex = 155;
             radioButton7.TabStop = true;
             radioButton7.Text = "ZÁKAZNICKÝ SERVIS";
@@ -1146,7 +1146,7 @@
             tableLayoutPanelProject.Controls.Add(panel2, 0, 0);
             tableLayoutPanelProject.Controls.Add(customComboBoxProjects, 0, 1);
             tableLayoutPanelProject.Dock = DockStyle.Top;
-            tableLayoutPanelProject.Location = new Point(3, 126);
+            tableLayoutPanelProject.Location = new Point(3, 111);
             tableLayoutPanelProject.Name = "tableLayoutPanelProject";
             tableLayoutPanelProject.RowCount = 3;
             tableLayoutPanelProject.RowStyles.Add(new RowStyle());
@@ -1205,7 +1205,7 @@
             tableLayoutPanelEntryType.Controls.Add(comboBoxEntryType, 0, 1);
             tableLayoutPanelEntryType.Controls.Add(labelType, 0, 0);
             tableLayoutPanelEntryType.Dock = DockStyle.Top;
-            tableLayoutPanelEntryType.Location = new Point(3, 204);
+            tableLayoutPanelEntryType.Location = new Point(3, 189);
             tableLayoutPanelEntryType.Name = "tableLayoutPanelEntryType";
             tableLayoutPanelEntryType.RowCount = 2;
             tableLayoutPanelEntryType.RowStyles.Add(new RowStyle());
@@ -1219,10 +1219,10 @@
             comboBoxEntryType.Dock = DockStyle.Fill;
             comboBoxEntryType.FormattingEnabled = true;
             comboBoxEntryType.IntegralHeight = false;
-            comboBoxEntryType.ItemHeight = 25;
+            comboBoxEntryType.ItemHeight = 20;
             comboBoxEntryType.Location = new Point(3, 34);
             comboBoxEntryType.Name = "comboBoxEntryType";
-            comboBoxEntryType.Size = new Size(284, 33);
+            comboBoxEntryType.Size = new Size(284, 28);
             comboBoxEntryType.TabIndex = 29;
             // 
             // labelType
@@ -1242,7 +1242,7 @@
             tableLayoutPanelEntrySubType.Controls.Add(label10, 0, 0);
             tableLayoutPanelEntrySubType.Controls.Add(customComboBoxSubTypes, 0, 1);
             tableLayoutPanelEntrySubType.Dock = DockStyle.Top;
-            tableLayoutPanelEntrySubType.Location = new Point(3, 280);
+            tableLayoutPanelEntrySubType.Location = new Point(3, 265);
             tableLayoutPanelEntrySubType.Name = "tableLayoutPanelEntrySubType";
             tableLayoutPanelEntrySubType.RowCount = 2;
             tableLayoutPanelEntrySubType.RowStyles.Add(new RowStyle());
@@ -1257,17 +1257,17 @@
             label10.Location = new Point(4, 0);
             label10.Margin = new Padding(4, 0, 4, 0);
             label10.Name = "label10";
-            label10.Size = new Size(282, 25);
+            label10.Size = new Size(282, 20);
             label10.TabIndex = 32;
             label10.Text = "Index*";
             // 
             // customComboBoxSubTypes
             // 
             customComboBoxSubTypes.Dock = DockStyle.Fill;
-            customComboBoxSubTypes.Location = new Point(3, 28);
+            customComboBoxSubTypes.Location = new Point(3, 23);
             customComboBoxSubTypes.Name = "customComboBoxSubTypes";
             customComboBoxSubTypes.SelectedIndex = -1;
-            customComboBoxSubTypes.Size = new Size(284, 34);
+            customComboBoxSubTypes.Size = new Size(284, 39);
             customComboBoxSubTypes.TabIndex = 33;
             // 
             // panel4
@@ -1275,7 +1275,7 @@
             panel4.Controls.Add(tableLayoutPanel13);
             panel4.Controls.Add(tableLayoutPanel12);
             panel4.Dock = DockStyle.Top;
-            panel4.Location = new Point(3, 351);
+            panel4.Location = new Point(3, 336);
             panel4.Name = "panel4";
             panel4.Size = new Size(290, 65);
             panel4.TabIndex = 152;
@@ -1302,9 +1302,9 @@
             comboBoxEnd.Enabled = false;
             comboBoxEnd.FormattingEnabled = true;
             comboBoxEnd.Items.AddRange(new object[] { "0:00", "0:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30" });
-            comboBoxEnd.Location = new Point(3, 28);
+            comboBoxEnd.Location = new Point(3, 23);
             comboBoxEnd.Name = "comboBoxEnd";
-            comboBoxEnd.Size = new Size(139, 33);
+            comboBoxEnd.Size = new Size(139, 28);
             comboBoxEnd.TabIndex = 134;
             // 
             // label40
@@ -1313,7 +1313,7 @@
             label40.Dock = DockStyle.Top;
             label40.Location = new Point(3, 0);
             label40.Name = "label40";
-            label40.Size = new Size(139, 25);
+            label40.Size = new Size(139, 20);
             label40.TabIndex = 132;
             label40.Text = "Ukončení*";
             // 
@@ -1339,9 +1339,9 @@
             comboBoxStart.Enabled = false;
             comboBoxStart.FormattingEnabled = true;
             comboBoxStart.Items.AddRange(new object[] { "0:00", "0:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30" });
-            comboBoxStart.Location = new Point(3, 28);
+            comboBoxStart.Location = new Point(3, 23);
             comboBoxStart.Name = "comboBoxStart";
-            comboBoxStart.Size = new Size(139, 33);
+            comboBoxStart.Size = new Size(139, 28);
             comboBoxStart.TabIndex = 134;
             // 
             // label38
@@ -1350,7 +1350,7 @@
             label38.Dock = DockStyle.Top;
             label38.Location = new Point(3, 0);
             label38.Name = "label38";
-            label38.Size = new Size(139, 25);
+            label38.Size = new Size(139, 20);
             label38.TabIndex = 132;
             label38.Text = "Počátek*";
             // 
@@ -1361,7 +1361,7 @@
             tableLayoutPanel6.Controls.Add(label4, 0, 0);
             tableLayoutPanel6.Controls.Add(textBoxNote, 0, 1);
             tableLayoutPanel6.Dock = DockStyle.Top;
-            tableLayoutPanel6.Location = new Point(3, 422);
+            tableLayoutPanel6.Location = new Point(3, 407);
             tableLayoutPanel6.Name = "tableLayoutPanel6";
             tableLayoutPanel6.RowCount = 2;
             tableLayoutPanel6.RowStyles.Add(new RowStyle());
@@ -1375,14 +1375,14 @@
             label4.Dock = DockStyle.Top;
             label4.Location = new Point(3, 0);
             label4.Name = "label4";
-            label4.Size = new Size(284, 25);
+            label4.Size = new Size(284, 20);
             label4.TabIndex = 5;
             label4.Text = "Poznámka";
             // 
             // textBoxNote
             // 
             textBoxNote.Dock = DockStyle.Top;
-            textBoxNote.Location = new Point(5, 30);
+            textBoxNote.Location = new Point(5, 25);
             textBoxNote.Margin = new Padding(5);
             textBoxNote.Multiline = true;
             textBoxNote.Name = "textBoxNote";
@@ -1397,7 +1397,7 @@
             tableLayoutPanel4.Controls.Add(buttonConfirm, 1, 0);
             tableLayoutPanel4.Controls.Add(buttonRemove, 0, 0);
             tableLayoutPanel4.Dock = DockStyle.Top;
-            tableLayoutPanel4.Location = new Point(3, 539);
+            tableLayoutPanel4.Location = new Point(3, 524);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 1;
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
@@ -1429,10 +1429,10 @@
             // 
             // CalendarV2
             // 
-            AutoScaleDimensions = new SizeF(8F, 21F);
+            AutoScaleDimensions = new SizeF(8F, 16F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(tableLayoutPanel2);
-            Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
             Name = "CalendarV2";
             Size = new Size(1226, 660);
             Load += CalendarV2_Load;

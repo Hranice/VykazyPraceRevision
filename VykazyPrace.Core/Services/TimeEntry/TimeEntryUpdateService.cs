@@ -69,7 +69,7 @@ namespace VykazyPrace.Core.Services.TimeEntry
                     description = await CreateSubTypeIfNeededAsync(request);
                     break;
                 case 7:
-                    projectId = 373;
+                    projectId = 386;
                     description = await CreateSubTypeIfNeededAsync(request);
                     break;
                 default:

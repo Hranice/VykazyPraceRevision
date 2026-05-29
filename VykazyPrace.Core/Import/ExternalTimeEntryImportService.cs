@@ -8,7 +8,7 @@ namespace VykazyPrace.Core.Import
 {
     public sealed class ExternalTimeEntryImportService
     {
-        private const int FallbackProjectId = 22;
+        private const int FallbackProjectId = 31;
         private const int SnackOrSpecialEntryTypeId = 1;
         private const int NormalEntryTypeId = 10;
 

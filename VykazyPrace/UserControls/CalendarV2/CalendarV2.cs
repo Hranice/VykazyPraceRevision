@@ -580,7 +580,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 case 25: SelectRadioButtonByText("OSTATNÍ"); break;
                 case 23: SelectRadioButtonByText("NEPŘÍTOMNOST"); break;
                 case 26: SelectRadioButtonByText("ŠKOLENÍ"); break;
-                case 373: SelectRadioButtonByText("ZÁKAZNICKÝ SERVIS"); break;
+                case 386: SelectRadioButtonByText("ZÁKAZNICKÝ SERVIS"); break;
                 default:
                     int idx = proj.ProjectType + 1;
                     if (idx == 2 || idx == 3) idx = 2;

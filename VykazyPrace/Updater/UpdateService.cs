@@ -125,14 +125,12 @@ namespace VykazyPrace
                     return false;
                 }
 
-                string tempInstaller = Path.Combine(Path.GetTempPath(), InstallerFileName);
-                File.Copy(installerPath, tempInstaller, true);
-
                 var process = Process.Start(new ProcessStartInfo
                 {
-                    FileName = tempInstaller,
+                    FileName = installerPath,
                     Arguments = "/promptrestart",
-                    UseShellExecute = true
+                    UseShellExecute = true,
+                    WorkingDirectory = Path.GetDirectoryName(installerPath)
                 });
 
                 if (process == null)
@@ -141,7 +139,7 @@ namespace VykazyPrace
                     return false;
                 }
 
-                AppLogger.Information("Byl spuštěn instalátor aktualizace.");
+                AppLogger.Information($"Byl spuštěn instalátor aktualizace přímo z umístění: {installerPath}");
                 return true;
             }
             catch (Exception ex)

@@ -54,7 +54,7 @@ namespace VykazyPrace.Dialogs
             }
 
             var result = MessageBox.Show(
-                $"Bude spuštěn instalátor nové verze ({_updateInfo.CurrentVersion} → {_updateInfo.LatestVersion}).\n\n" +
+                $"Bude spuštěn instalátor nové verze ({_updateInfo.CurrentVersion} => {_updateInfo.LatestVersion}).\n\n" +
                 "Pro dokončení aktualizace bude potřeba zavřít aplikaci.\n\n" +
                 "Chcete pokračovat?",
                 "Potvrzení aktualizace",

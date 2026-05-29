@@ -2,7 +2,7 @@ $projectName = "VykazyPrace"
 $publishDir = ".\$projectName\bin\Release\net8.0-windows\win-x64\publish"
 $networkUpdatePath = "Z:\TS\jprochazka-sw\WorkLog\Updates"
 $issPath = ".\WorkLog.iss"
-$innoSetupCompiler = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+$innoSetupCompiler = "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe"
 $changelogPath = ".\Changelog.docx"
 
 # Read version from csproj
@@ -33,13 +33,21 @@ $version | Out-File -FilePath $latestTxtPath -Encoding ASCII
 Write-Host "Generated latest.txt with version: $version"
 
 # Build installer
-if ((Test-Path $innoSetupCompiler) -and (Test-Path $issPath)) {
-    Write-Host "Building installer via Inno Setup..."
-    & "$innoSetupCompiler" "$issPath"
-} else {
-    Write-Host "ERROR: Inno Setup compiler or .iss file not found."
+if (-not (Test-Path $innoSetupCompiler)) {
+    Write-Host "ERROR: Inno Setup compiler not found:"
+    Write-Host $innoSetupCompiler
     exit 1
 }
+
+if (-not (Test-Path $issPath)) {
+    Write-Host "ERROR: .iss file not found:"
+    Write-Host (Resolve-Path ".\" -ErrorAction SilentlyContinue)
+    Write-Host "Expected path: $issPath"
+    exit 1
+}
+
+Write-Host "Building installer via Inno Setup..."
+& "$innoSetupCompiler" "$issPath"
 
 $installerBaseName = "WorkLog_Installer"
 $installerBuiltPath = ".\Output\$installerBaseName.exe"

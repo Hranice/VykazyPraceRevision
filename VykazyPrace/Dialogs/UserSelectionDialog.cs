@@ -79,9 +79,11 @@ namespace VykazyPrace.Dialogs
 
             if (_mode == UserSelectionMode.Single)
             {
-
-                label1.Text = "Skupiny (pouze pro čtení)";
-                cLBUserGroups.Enabled = false;
+                label1.Text = "Filtr skupin";
+            }
+            else
+            {
+                label1.Text = "Skupiny";
             }
         }
 
@@ -91,7 +93,9 @@ namespace VykazyPrace.Dialogs
 
             foreach (var group in _allGroups)
             {
-                cLBUserGroups.Items.Add(new UserGroupListItem(group), false);
+                bool isChecked = _mode == UserSelectionMode.Single;
+
+                cLBUserGroups.Items.Add(new UserGroupListItem(group), isChecked);
             }
         }
 
@@ -100,6 +104,15 @@ namespace VykazyPrace.Dialogs
             var search = FormatHelper.RemoveDiacritics(tBSearch.Text.Trim().ToLowerInvariant());
 
             var users = _allUsers.AsEnumerable();
+
+            if (_mode == UserSelectionMode.Single)
+            {
+                var checkedGroupIds = GetCurrentlyCheckedGroupIds();
+
+                users = users.Where(u =>
+                    u.UserGroupId.HasValue &&
+                    checkedGroupIds.Contains(u.UserGroupId.Value));
+            }
 
             if (!string.IsNullOrWhiteSpace(search))
             {
@@ -143,6 +156,19 @@ namespace VykazyPrace.Dialogs
             return ids;
         }
 
+        private HashSet<int> GetCurrentlyCheckedGroupIds()
+        {
+            var ids = new HashSet<int>();
+
+            foreach (var checkedItem in cLBUserGroups.CheckedItems)
+            {
+                if (checkedItem is UserGroupListItem groupItem)
+                    ids.Add(groupItem.Group.Id);
+            }
+
+            return ids;
+        }
+
         private void ApplyPreselection()
         {
             if (_preselectedUserIds.Count == 0)
@@ -175,7 +201,7 @@ namespace VykazyPrace.Dialogs
 
             if (_mode == UserSelectionMode.Single)
             {
-                e.NewValue = CheckState.Unchecked;
+                BeginInvoke(new Action(FillUsers));
                 return;
             }
 

@@ -1,0 +1,42 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package
+    Name="WorkLog"
+    Manufacturer="Heinz-Glas Decor s.r.o."
+    Version="$(var.AppVersion)"
+    UpgradeCode="{62687F32-9B0F-4466-B923-78CFB71E337C}"
+    Scope="perMachine">
+
+    <MajorUpgrade DowngradeErrorMessage="Novejsi verze aplikace WorkLog je jiz nainstalovana." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Icon Id="WorkLogIcon" SourceFile="WorkLog.ico" />
+    <Property Id="ARPPRODUCTICON" Value="WorkLogIcon" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="WorkLog" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder" />
+
+    <Feature Id="MainFeature" Title="WorkLog" Level="1">
+      <ComponentGroupRef Id="AppComponents" />
+    </Feature>
+
+    <ComponentGroup Id="AppComponents" Directory="INSTALLFOLDER">
+      <Component Id="WorkLogExeComponent" Guid="{486DB73D-4867-46CD-8874-FB6093E23374}">
+        <File
+          Id="WorkLogExe"
+          Source="VykazyPrace\bin\Release\net8.0-windows\win-x64\publish\WorkLog.exe"
+          KeyPath="yes">
+          <Shortcut
+            Id="DesktopShortcut"
+            Directory="DesktopFolder"
+            Name="WorkLog"
+            WorkingDirectory="INSTALLFOLDER"
+            Icon="WorkLogIcon"
+            Advertise="yes" />
+        </File>
+      </Component>
+    </ComponentGroup>
+  </Package>
+</Wix>

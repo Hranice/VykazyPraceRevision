@@ -9,7 +9,7 @@ namespace VykazyPrace
     {
         private const string UpdateFolderPath = @"\\cze-sfs01\data\TS\jprochazka-sw\WorkLog\Updates";
         private const string LatestVersionFileName = "latest.txt";
-        private const string InstallerFileName = "WorkLog_Installer.exe";
+        private const string InstallerFileName = "WorkLog_Installer.msi";
         private const string ChangelogFileName = "Changelog.docx";
 
         public static Version GetCurrentVersion()
@@ -127,8 +127,8 @@ namespace VykazyPrace
 
                 var process = Process.Start(new ProcessStartInfo
                 {
-                    FileName = installerPath,
-                    Arguments = "/promptrestart",
+                    FileName = "msiexec.exe",
+                    Arguments = $"/i \"{installerPath}\" /promptrestart",
                     UseShellExecute = true,
                     WorkingDirectory = Path.GetDirectoryName(installerPath)
                 });

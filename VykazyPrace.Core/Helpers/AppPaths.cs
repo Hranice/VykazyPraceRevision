@@ -31,7 +31,7 @@
             Path.Combine(UpdateFolder, "latest.txt");
 
         public static string InstallerNetworkPath =>
-            Path.Combine(UpdateFolder, "WorkLog_Installer.exe");
+            Path.Combine(UpdateFolder, "WorkLog_Installer.msi");
 
         public static string ChangelogNetworkPath =>
             Path.Combine(UpdateFolder, "Changelog.docx");
@@ -39,7 +39,7 @@
 
         // LOCAL TEMP
         public static string InstallerTempPath =>
-            Path.Combine(Path.GetTempPath(), "WorkLog_Installer.exe");
+            Path.Combine(Path.GetTempPath(), "WorkLog_Installer.msi");
 
 
         // LOCAL INSTALL

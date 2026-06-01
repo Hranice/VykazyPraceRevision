@@ -1,8 +1,12 @@
+param(
+    [switch]$SkipUpload
+)
+
 $projectName = "VykazyPrace"
 $publishDir = ".\$projectName\bin\Release\net8.0-windows\win-x64\publish"
 $networkUpdatePath = "Z:\TS\jprochazka-sw\WorkLog\Updates"
-$issPath = ".\WorkLog.iss"
-$innoSetupCompiler = "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe"
+$wixPath = "wix"
+$wixSourcePath = ".\WorkLog.wxs"
 $changelogPath = ".\Changelog.docx"
 
 # Read version from csproj
@@ -14,9 +18,6 @@ if ($versionLine -eq $null -or -not ($versionLine -match '<Version>(.*?)</Versio
 }
 $version = $matches[1].Trim()
 Write-Host "Application version: $version"
-
-# Set environment variable for Inno Setup
-[System.Environment]::SetEnvironmentVariable("APP_VERSION", $version, "Process")
 
 # Clean previous publish directory
 if (Test-Path $publishDir) {
@@ -33,26 +34,42 @@ $version | Out-File -FilePath $latestTxtPath -Encoding ASCII
 Write-Host "Generated latest.txt with version: $version"
 
 # Build installer
-if (-not (Test-Path $innoSetupCompiler)) {
-    Write-Host "ERROR: Inno Setup compiler not found:"
-    Write-Host $innoSetupCompiler
+if (-not (Get-Command $wixPath -ErrorAction SilentlyContinue)) {
+    Write-Host "ERROR: WiX Toolset command not found: wix"
+    Write-Host "Install WiX Toolset 5.0.2 or another compatible version and make sure wix.exe is available in PATH."
     exit 1
 }
 
-if (-not (Test-Path $issPath)) {
-    Write-Host "ERROR: .iss file not found:"
+if (-not (Test-Path $wixSourcePath)) {
+    Write-Host "ERROR: .wxs file not found:"
     Write-Host (Resolve-Path ".\" -ErrorAction SilentlyContinue)
-    Write-Host "Expected path: $issPath"
+    Write-Host "Expected path: $wixSourcePath"
     exit 1
 }
-
-Write-Host "Building installer via Inno Setup..."
-& "$innoSetupCompiler" "$issPath"
 
 $installerBaseName = "WorkLog_Installer"
-$installerBuiltPath = ".\Output\$installerBaseName.exe"
-$installerDest = Join-Path $networkUpdatePath "$installerBaseName.exe"
+$installerBuiltPath = ".\Output\$installerBaseName.msi"
+$installerDest = Join-Path $networkUpdatePath "$installerBaseName.msi"
 $networkChangelogPath = Join-Path $networkUpdatePath "Changelog.docx"
+
+if (-not (Test-Path ".\Output")) {
+    New-Item -ItemType Directory -Path ".\Output" | Out-Null
+}
+
+Get-ChildItem ".\Output" -Filter "$installerBaseName.*" | Remove-Item -Force
+
+Write-Host "Building installer via WiX Toolset..."
+& $wixPath build $wixSourcePath -d AppVersion=$version -o $installerBuiltPath
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "ERROR: WiX build failed."
+    exit $LASTEXITCODE
+}
+
+if ($SkipUpload) {
+    Write-Host ""
+    Write-Host "SkipUpload enabled. Installer built locally as: $installerBuiltPath"
+    exit 0
+}
 
 Write-Host ""
 Write-Host "Copying files to: $networkUpdatePath"
@@ -68,4 +85,4 @@ if (Test-Path $changelogPath) {
 }
 
 Write-Host ""
-Write-Host "Installer uploaded as: $installerBaseName.exe"
+Write-Host "Installer uploaded as: $installerBaseName.msi"

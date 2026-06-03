@@ -7,6 +7,7 @@ $publishDir = ".\$projectName\bin\Release\net8.0-windows\win-x64\publish"
 $networkUpdatePath = "Z:\TS\jprochazka-sw\WorkLog\Updates"
 $wixPath = "wix"
 $wixSourcePath = ".\WorkLog.wxs"
+$installerArchitecture = "x64"
 $changelogPath = ".\Changelog.docx"
 
 # Read version from csproj
@@ -59,7 +60,7 @@ if (-not (Test-Path ".\Output")) {
 Get-ChildItem ".\Output" -Filter "$installerBaseName.*" | Remove-Item -Force
 
 Write-Host "Building installer via WiX Toolset..."
-& $wixPath build $wixSourcePath -d AppVersion=$version -o $installerBuiltPath
+& $wixPath build $wixSourcePath -arch $installerArchitecture -d AppVersion=$version -o $installerBuiltPath
 if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: WiX build failed."
     exit $LASTEXITCODE

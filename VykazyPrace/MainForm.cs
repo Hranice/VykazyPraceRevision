@@ -119,7 +119,8 @@ namespace VykazyPrace
         private void InitFormUI()
         {
             var config = ConfigService.Load();
-            WindowState = config.AppMaximized ? FormWindowState.Maximized : FormWindowState.Normal;
+
+            RestoreWindowState(config);
 
             _loadingUC.Size = Size;
             Controls.Add(_loadingUC);
@@ -131,6 +132,42 @@ namespace VykazyPrace
             labelSelectedDate.Text = FormatHelper.GetWeekNumberAndRange(_selectedDate);
 
             Enabled = false;
+        }
+
+        private void RestoreWindowState(AppConfig config)
+        {
+            var window = config.MainWindow;
+
+            if (window.Width > 0 && window.Height > 0)
+            {
+                Size = new Size(window.Width, window.Height);
+            }
+
+            if (window.X >= 0 && window.Y >= 0)
+            {
+                var bounds = new Rectangle(window.X, window.Y, window.Width, window.Height);
+
+                bool isVisibleOnAnyScreen = Screen.AllScreens
+                    .Any(screen => screen.WorkingArea.IntersectsWith(bounds));
+
+                if (isVisibleOnAnyScreen)
+                {
+                    StartPosition = FormStartPosition.Manual;
+                    Location = new Point(window.X, window.Y);
+                }
+                else
+                {
+                    StartPosition = FormStartPosition.CenterScreen;
+                }
+            }
+            else
+            {
+                StartPosition = FormStartPosition.CenterScreen;
+            }
+
+            WindowState = window.Maximized
+                ? FormWindowState.Maximized
+                : FormWindowState.Normal;
         }
 
         private async Task HandleUpdatesAsync()
@@ -452,17 +489,29 @@ namespace VykazyPrace
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             var config = ConfigService.Load();
-            config.AppMaximized = this.WindowState == FormWindowState.Maximized;
-            ConfigService.Save(config);
 
-            if (config.MinimizeToTray)
+            if (config.MinimizeToTray && e.CloseReason == CloseReason.UserClosing)
             {
-                if (e.CloseReason == CloseReason.UserClosing)
-                {
-                    e.Cancel = true;
-                    this.Hide();
-                }
+                e.Cancel = true;
+                Hide();
+                return;
             }
+
+            SaveWindowState(config);
+            ConfigService.Save(config);
+        }
+
+        private void SaveWindowState(AppConfig config)
+        {
+            var bounds = WindowState == FormWindowState.Normal
+                ? Bounds
+                : RestoreBounds;
+
+            config.MainWindow.Width = bounds.Width;
+            config.MainWindow.Height = bounds.Height;
+            config.MainWindow.X = bounds.X;
+            config.MainWindow.Y = bounds.Y;
+            config.MainWindow.Maximized = WindowState == FormWindowState.Maximized;
         }
 
         private void správceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -483,12 +532,21 @@ namespace VykazyPrace
 
         public void ShowFromTray()
         {
-            this.Invoke(async () =>
+            Invoke(async () =>
             {
-                this.Show();
-                this.WindowState = FormWindowState.Normal;
-                this.BringToFront();
-                await _calendar.ForceReloadIndicators();
+                var config = ConfigService.Load();
+
+                Show();
+
+                WindowState = config.MainWindow.Maximized
+                    ? FormWindowState.Maximized
+                    : FormWindowState.Normal;
+
+                BringToFront();
+                Activate();
+
+                if (_calendar != null)
+                    await _calendar.ForceReloadIndicators();
             });
         }
 
@@ -620,11 +678,23 @@ namespace VykazyPrace
         {
             if (_isSwitchingUser) return;
 
+            var config = ConfigService.Load();
+
+            IEnumerable<int>? preselectedUserIds = null;
+
+            if (config.UserViewSelection.SelectedUserId.HasValue)
+            {
+                preselectedUserIds = new[] { config.UserViewSelection.SelectedUserId.Value };
+            }
+            else if (_selectedUser != null && _selectedUser.Id != 0)
+            {
+                preselectedUserIds = new[] { _selectedUser.Id };
+            }
+
             using var dialog = new UserSelectionDialog(
                 UserSelectionMode.Single,
-                _selectedUser != null && _selectedUser.Id != 0
-                    ? new[] { _selectedUser.Id }
-                    : null);
+                preselectedUserIds,
+                config.UserViewSelection.SelectedUserGroupIds);
 
             if (dialog.ShowDialog(this) != DialogResult.OK)
                 return;
@@ -633,6 +703,10 @@ namespace VykazyPrace
 
             if (newUser == null || newUser.Id == 0)
                 return;
+
+            config.UserViewSelection.SelectedUserId = newUser.Id;
+            config.UserViewSelection.SelectedUserGroupIds = dialog.SelectedUserGroupIds;
+            ConfigService.Save(config);
 
             if (_selectedUser != null && newUser.Id == _selectedUser.Id)
                 return;

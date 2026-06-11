@@ -18,28 +18,29 @@ namespace VykazyPrace.Dialogs
         private bool _isInternalChange;
 
         public List<User> SelectedUsers { get; private set; } = new();
+        public List<int> SelectedUserGroupIds { get; private set; } = new();
 
         public User? SelectedUser => SelectedUsers.FirstOrDefault();
 
+        private readonly HashSet<int> _preselectedUserIds;
+        private readonly HashSet<int> _preselectedGroupIds;
+
         public UserSelectionDialog(
             UserSelectionMode mode,
-            IEnumerable<int>? preselectedUserIds = null)
+            IEnumerable<int>? preselectedUserIds = null,
+            IEnumerable<int>? preselectedGroupIds = null)
         {
             _mode = mode;
+
+            _preselectedUserIds = preselectedUserIds?.ToHashSet() ?? new HashSet<int>();
+            _preselectedGroupIds = preselectedGroupIds?.ToHashSet() ?? new HashSet<int>();
 
             _userRepository = new UserRepository();
             _userGroupRepository = new UserGroupRepository();
 
             InitializeComponent();
             BuildUi();
-
-            if (preselectedUserIds != null)
-            {
-                _preselectedUserIds = preselectedUserIds.ToHashSet();
-            }
         }
-
-        private readonly HashSet<int> _preselectedUserIds = new();
 
         private async void UserSelectionDialog_Load(object? sender, EventArgs e)
         {
@@ -96,7 +97,16 @@ namespace VykazyPrace.Dialogs
 
             foreach (var group in _allGroups)
             {
-                bool isChecked = _mode == UserSelectionMode.Single;
+                bool isChecked;
+
+                if (_preselectedGroupIds.Count > 0)
+                {
+                    isChecked = _preselectedGroupIds.Contains(group.Id);
+                }
+                else
+                {
+                    isChecked = _mode == UserSelectionMode.Single;
+                }
 
                 cLBUserGroups.Items.Add(new UserGroupListItem(group), isChecked);
             }
@@ -289,6 +299,12 @@ namespace VykazyPrace.Dialogs
                 .OfType<UserListItem>()
                 .Select(i => i.User)
                 .DistinctBy(u => u.Id)
+                .ToList();
+
+            SelectedUserGroupIds = cLBUserGroups.CheckedItems
+                .OfType<UserGroupListItem>()
+                .Select(i => i.Group.Id)
+                .Distinct()
                 .ToList();
 
             if (_mode == UserSelectionMode.Single && SelectedUsers.Count != 1)

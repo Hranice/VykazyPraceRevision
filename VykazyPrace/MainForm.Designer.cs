@@ -289,7 +289,7 @@
             // 
             buttonReloadPowerKey.BackColor = Color.Tomato;
             buttonReloadPowerKey.Dock = DockStyle.Top;
-            buttonReloadPowerKey.Location = new Point(3, 28);
+            buttonReloadPowerKey.Location = new Point(3, 23);
             buttonReloadPowerKey.Name = "buttonReloadPowerKey";
             buttonReloadPowerKey.Size = new Size(115, 41);
             buttonReloadPowerKey.TabIndex = 13;
@@ -302,7 +302,7 @@
             label2.AutoSize = true;
             label2.Location = new Point(3, 0);
             label2.Name = "label2";
-            label2.Size = new Size(83, 25);
+            label2.Size = new Size(79, 20);
             label2.TabIndex = 1;
             label2.Text = "PowerKey";
             // 
@@ -325,7 +325,7 @@
             // 
             buttonReloadNetworkDisks.BackColor = Color.Tomato;
             buttonReloadNetworkDisks.Dock = DockStyle.Top;
-            buttonReloadNetworkDisks.Location = new Point(3, 28);
+            buttonReloadNetworkDisks.Location = new Point(3, 23);
             buttonReloadNetworkDisks.Name = "buttonReloadNetworkDisks";
             buttonReloadNetworkDisks.Size = new Size(115, 41);
             buttonReloadNetworkDisks.TabIndex = 13;
@@ -338,7 +338,7 @@
             label1.AutoSize = true;
             label1.Location = new Point(3, 0);
             label1.Name = "label1";
-            label1.Size = new Size(99, 25);
+            label1.Size = new Size(93, 20);
             label1.TabIndex = 1;
             label1.Text = "Síťové disky";
             // 
@@ -368,9 +368,10 @@
             // 
             // bChangeUser
             // 
-            bChangeUser.Location = new Point(963, 6);
+            bChangeUser.Dock = DockStyle.Right;
+            bChangeUser.Location = new Point(966, 0);
             bChangeUser.Name = "bChangeUser";
-            bChangeUser.Size = new Size(303, 33);
+            bChangeUser.Size = new Size(303, 45);
             bChangeUser.TabIndex = 5;
             bChangeUser.Text = "Uživatel";
             bChangeUser.UseVisualStyleBackColor = true;
@@ -388,7 +389,7 @@
             // 
             // labelSelectedDate
             // 
-            labelSelectedDate.Font = new Font("Reddit Sans", 12F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            labelSelectedDate.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 238);
             labelSelectedDate.Location = new Point(209, 7);
             labelSelectedDate.Name = "labelSelectedDate";
             labelSelectedDate.Size = new Size(274, 32);
@@ -463,7 +464,7 @@
             // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(9F, 25F);
+            AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(1279, 729);
@@ -471,7 +472,7 @@
             Controls.Add(panel1);
             Controls.Add(panel2);
             Controls.Add(menuStrip1);
-            Font = new Font("Reddit Sans", 12F);
+            Font = new Font("Microsoft Sans Serif", 12F);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
             Margin = new Padding(4, 5, 4, 5);

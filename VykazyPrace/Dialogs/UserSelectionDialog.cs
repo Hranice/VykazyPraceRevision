@@ -366,6 +366,15 @@ namespace VykazyPrace.Dialogs
             Close();
         }
 
+        public void SetSelectionEnabled(bool enabled)
+        {
+            cLBUsers.Enabled = enabled;
+            cLBUserGroups.Enabled = enabled;
+            tBSearch.Enabled = enabled;
+
+            UseWaitCursor = !enabled;
+        }
+
         private sealed class UserListItem
         {
             public User User { get; }

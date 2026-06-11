@@ -744,6 +744,7 @@ namespace VykazyPrace
 
             try
             {
+                _userSelectionDialog?.SetSelectionEnabled(false);
                 ShowLoading();
 
                 _selectedUser = newUser;
@@ -774,6 +775,7 @@ namespace VykazyPrace
             finally
             {
                 HideLoading();
+                _userSelectionDialog?.SetSelectionEnabled(true);
                 _isSwitchingUser = false;
             }
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Office.Interop.Outlook;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Office.Interop.Outlook;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
@@ -14,6 +15,11 @@ namespace VykazyPrace.Dialogs
 {
     public partial class OutlookEvents : Form
     {
+        private readonly IServiceProvider _serviceProvider;
+        private readonly UserRepository _userRepo;
+        private readonly CalendarRepository _calendarRepo;
+        private readonly OutlookMeetingImportService _outlookMeetingImportService;
+
         private User? _currentUser;
         private int _currentUserId => _currentUser?.Id ?? 0;
         private DateTime _fromUtc, _toUtc;
@@ -21,16 +27,24 @@ namespace VykazyPrace.Dialogs
         private bool _syncInProgress;
         private CancellationTokenSource _syncCts;
 
-        private readonly CalendarRepository _calendarRepo = new CalendarRepository();
-
         private Panel _overlay;
         private Label _overlayLabel;
 
-        public OutlookEvents(User currentUser)
+        public OutlookEvents(
+    IServiceProvider serviceProvider,
+    User currentUser,
+    UserRepository userRepo,
+    CalendarRepository calendarRepo,
+    OutlookMeetingImportService outlookMeetingImportService)
         {
             InitializeComponent();
 
+            _serviceProvider = serviceProvider;
             _currentUser = currentUser;
+            _userRepo = userRepo;
+            _calendarRepo = calendarRepo;
+            _outlookMeetingImportService = outlookMeetingImportService;
+
             if (_currentUser == null)
             {
                 AppLogger.Error("Nelze načíst aktuálního uživatele.");
@@ -91,9 +105,6 @@ namespace VykazyPrace.Dialogs
             Microsoft.Office.Interop.Outlook.MAPIFolder calendarFolder = null;
             Microsoft.Office.Interop.Outlook.Items items = null;
 
-            // ⚠ DbContext/Repo uvnitř metody -> žádné sdílení přes vlákna
-            var calendarRepo = new CalendarRepository();
-            var userRepo = new UserRepository();
 
             try
             {
@@ -304,7 +315,7 @@ namespace VykazyPrace.Dialogs
                     try { isCanceled = (appt.MeetingStatus == OlMeetingStatus.olMeetingCanceled); } catch { }
 
                     // --- HASH & UPSERT --------------------------------------------------------
-                    var keyInfo = await calendarRepo.TryGetItemKeyInfoAsync(storeId, entryId, occurrenceStartUtc);
+                    var keyInfo = await _calendarRepo.TryGetItemKeyInfoAsync(storeId, entryId, occurrenceStartUtc);
                     string prevHash = keyInfo?.LastHash;
 
                     string currHash = ComputeStableHash(
@@ -346,7 +357,7 @@ namespace VykazyPrace.Dialogs
                     CalendarItem ci;
                     try
                     {
-                        ci = await calendarRepo.UpsertCalendarItemAsync(ciInput);
+                        ci = await _calendarRepo.UpsertCalendarItemAsync(ciInput);
                     }
                     catch (Exception e)
                     {
@@ -395,7 +406,7 @@ namespace VykazyPrace.Dialogs
                                     {
                                         try
                                         {
-                                            var u = await userRepo.ResolveByEmailOrWindowsAsync(key);
+                                            var u = await _userRepo.ResolveByEmailOrWindowsAsync(key);
                                             resolvedUserId = u?.Id;
                                         }
                                         catch
@@ -419,7 +430,7 @@ namespace VykazyPrace.Dialogs
 
                                 if (isCanceled && resolvedUserId.HasValue)
                                 {
-                                    await calendarRepo.SetUserStateAsync(
+                                    await _calendarRepo.SetUserStateAsync(
                                         resolvedUserId.Value, ci.Id, UserItemStateEnum.IgnoreTombstone,
                                         note: "Canceled in Outlook"
                                     ).ConfigureAwait(false);
@@ -440,11 +451,11 @@ namespace VykazyPrace.Dialogs
 
                         if (attendees.Count > 0)
                         {
-                            try { await calendarRepo.UpsertAttendeesAsync(ci.Id, attendees).ConfigureAwait(false); }
+                            try { await _calendarRepo.UpsertAttendeesAsync(ci.Id, attendees).ConfigureAwait(false); }
                             catch (Exception e) { AppLogger.Error($"DB UpsertAttendeesAsync selhal (ItemId={ci.Id})", e); }
                         }
 
-                        try { await calendarRepo.LogChangeAsync(ci.Id, "SYNC_UPSERT", userId: null, detailsJson: null).ConfigureAwait(false); }
+                        try { await _calendarRepo.LogChangeAsync(ci.Id, "SYNC_UPSERT", userId: null, detailsJson: null).ConfigureAwait(false); }
                         catch (Exception e) { AppLogger.Error($"DB LogChangeAsync selhal (ItemId={ci.Id})", e); }
                     }
 
@@ -473,23 +484,23 @@ namespace VykazyPrace.Dialogs
         /// <summary>Vykreslí karty pro přihlášeného uživatele.</summary>
         private async Task RenderOutlookEventsAsync(FlowLayoutPanel host)
         {
-            if (_currentUser == null) return;
+            if (_currentUser == null)
+                return;
 
             if (host.InvokeRequired)
             {
-                host.Invoke(new System.Action(async () => await RenderOutlookEventsAsync(host)));
+                host.BeginInvoke(new System.Action(() => _ = RenderOutlookEventsAsync(host)));
                 return;
             }
 
             host.SuspendLayout();
+
             var oldAutoScroll = host.AutoScroll;
             host.AutoScroll = false;
             host.Controls.Clear();
 
             var itemsWithState = await _calendarRepo
                 .GetVisibleItemsForUserByAttendanceAsync(_currentUserId, _fromUtc, _toUtc);
-
-
 
             var toShow = itemsWithState
                 .Where(x => x.Item != null)
@@ -500,43 +511,55 @@ namespace VykazyPrace.Dialogs
             Func<Task> onChanged = async () => await RenderOutlookEventsAsync(host);
 
             var cards = new List<Control>(toShow.Count);
+
             foreach (var (item, state) in toShow)
             {
                 DateTime dateLocal;
-                DateTime? timeFromLocal = null, timeToLocal = null;
+                DateTime? timeFromLocal = null;
+                DateTime? timeToLocal = null;
 
                 if (item.StartUtc.HasValue)
                 {
-                    var s = item.StartUtc.Value.ToLocalTime();
-                    dateLocal = s.Date; timeFromLocal = s;
+                    var startLocal = item.StartUtc.Value.ToLocalTime();
+
+                    dateLocal = startLocal.Date;
+                    timeFromLocal = startLocal;
                 }
                 else
                 {
                     dateLocal = DateTime.Now.Date;
                 }
 
-                if (item.EndUtc.HasValue) timeToLocal = item.EndUtc.Value.ToLocalTime();
-
-                var subject = string.IsNullOrWhiteSpace(item.Subject) ? "(bez názvu)" : item.Subject;
-
-                var card = new OutlookEvent(
-                    currentUserId: _currentUserId,
-                    itemId: item.Id,
-                    dateLocal: dateLocal,
-                    timeFromLocal: timeFromLocal,
-                    timeToLocal: timeToLocal,
-                    subject: subject,
-                    stateForUser: state,
-                    onChanged: onChanged)
+                if (item.EndUtc.HasValue)
                 {
-                    Width = host.ClientSize.Width - (host.Padding.Left + host.Padding.Right) - 4,
-                    Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top
-                };
+                    timeToLocal = item.EndUtc.Value.ToLocalTime();
+                }
+
+                var subject = string.IsNullOrWhiteSpace(item.Subject)
+                    ? "(bez názvu)"
+                    : item.Subject;
+
+                var card = ActivatorUtilities.CreateInstance<OutlookEvent>(
+                    _serviceProvider,
+                    _currentUserId,
+                    item.Id,
+                    dateLocal,
+                    timeFromLocal,
+                    timeToLocal,
+                    subject,
+                    state,
+                    onChanged);
+
+                card.Width = host.ClientSize.Width - (host.Padding.Left + host.Padding.Right) - 4;
+                card.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
 
                 cards.Add(card);
             }
 
-            if (cards.Count > 0) host.Controls.AddRange(cards.ToArray());
+            if (cards.Count > 0)
+            {
+                host.Controls.AddRange(cards.ToArray());
+            }
 
             host.AutoScroll = oldAutoScroll;
             host.ResumeLayout();
@@ -545,16 +568,21 @@ namespace VykazyPrace.Dialogs
 
         private async Task AddAllVisibleEventsAsync()
         {
-            if (_currentUser == null) return;
+            if (_currentUser == null)
+                return;
 
-            var service = new OutlookMeetingImportService();
+            var (added, conflicts, duplicates) =
+                await _outlookMeetingImportService.AddAllVisibleAsync(
+                    _currentUserId,
+                    _fromUtc,
+                    _toUtc);
 
-            var (added, conflicts, duplicates) = await service.AddAllVisibleAsync(_currentUserId, _fromUtc, _toUtc);
-
-            MessageBox.Show(this,
+            MessageBox.Show(
+                this,
                 $"Přidáno: {added}\nPřeskočeno (konflikt): {conflicts}\nPřeskočeno (duplicitní): {duplicates}",
                 "Hromadné přidání",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
 
             await RenderOutlookEventsAsync(flowLayoutPanel1);
         }

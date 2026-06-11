@@ -81,7 +81,7 @@
             panel1.Controls.Add(labelMonth);
             panel1.Controls.Add(labelPreviousMonth);
             panel1.Dock = DockStyle.Top;
-            panel1.Font = new Font("Reddit Sans", 12F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            panel1.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 238);
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
             panel1.Padding = new Padding(10, 10, 0, 0);
@@ -92,11 +92,11 @@
             // 
             labelNextMonth.AutoSize = true;
             labelNextMonth.Dock = DockStyle.Left;
-            labelNextMonth.Location = new Point(200, 10);
+            labelNextMonth.Location = new Point(199, 10);
             labelNextMonth.Margin = new Padding(4, 0, 4, 0);
             labelNextMonth.Name = "labelNextMonth";
             labelNextMonth.Padding = new Padding(0, 0, 20, 0);
-            labelNextMonth.Size = new Size(40, 25);
+            labelNextMonth.Size = new Size(39, 20);
             labelNextMonth.TabIndex = 5;
             labelNextMonth.Text = ">";
             labelNextMonth.Click += labelNextMonth_Click;
@@ -104,7 +104,7 @@
             // labelMonth
             // 
             labelMonth.Dock = DockStyle.Left;
-            labelMonth.Location = new Point(50, 10);
+            labelMonth.Location = new Point(49, 10);
             labelMonth.Margin = new Padding(4, 0, 4, 0);
             labelMonth.Name = "labelMonth";
             labelMonth.Padding = new Padding(0, 0, 20, 0);
@@ -121,18 +121,18 @@
             labelPreviousMonth.Margin = new Padding(4, 0, 4, 0);
             labelPreviousMonth.Name = "labelPreviousMonth";
             labelPreviousMonth.Padding = new Padding(0, 0, 20, 0);
-            labelPreviousMonth.Size = new Size(40, 25);
+            labelPreviousMonth.Size = new Size(39, 20);
             labelPreviousMonth.TabIndex = 2;
             labelPreviousMonth.Text = "<";
             labelPreviousMonth.Click += labelPreviousMonth_Click;
             // 
             // CalendarUC
             // 
-            AutoScaleDimensions = new SizeF(9F, 25F);
+            AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(panel1);
             Controls.Add(panelContainer);
-            Font = new Font("Reddit Sans", 12F);
+            Font = new Font("Microsoft Sans Serif", 12F);
             Margin = new Padding(4, 5, 4, 5);
             Name = "CalendarUC";
             Size = new Size(658, 563);

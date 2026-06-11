@@ -28,17 +28,18 @@ namespace VykazyPrace.Dialogs
         public event EventHandler<UserSelectionChangedEventArgs>? SelectionChanged;
 
         public UserSelectionDialog(
-            UserSelectionMode mode,
-            IEnumerable<int>? preselectedUserIds = null,
-            IEnumerable<int>? preselectedGroupIds = null)
+     UserSelectionMode mode,
+     IEnumerable<int>? preselectedUserIds,
+     IEnumerable<int>? preselectedGroupIds,
+     UserRepository userRepository,
+     UserGroupRepository userGroupRepository)
         {
             _mode = mode;
+            _userRepository = userRepository;
+            _userGroupRepository = userGroupRepository;
 
             _preselectedUserIds = preselectedUserIds?.ToHashSet() ?? new HashSet<int>();
             _preselectedGroupIds = preselectedGroupIds?.ToHashSet() ?? new HashSet<int>();
-
-            _userRepository = new UserRepository();
-            _userGroupRepository = new UserGroupRepository();
 
             InitializeComponent();
             BuildUi();

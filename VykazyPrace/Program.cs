@@ -1,103 +1,176 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.IO.Pipes;
-using System.Diagnostics;
-using System.Threading;
-using System.Windows.Forms;
-using VykazyPrace.Logging.VykazyPrace;
-using VykazyPrace.Core.Logging;
+using VykazyPrace.Core.Configuration;
+using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
+using VykazyPrace.Core.Import;
+using VykazyPrace.Core.Logging;
+using VykazyPrace.Core.PowerKey;
+using VykazyPrace.Core.Services;
+using VykazyPrace.Dialogs;
+using VykazyPrace.Logging.VykazyPrace;
+using VykazyPrace.UserControls.Calendar;
+using VykazyPrace.UserControls.CalendarV2;
+using VykazyPrace.UserControls.Outlook;
 
 namespace VykazyPrace
 {
     internal static class Program
     {
         public static MainForm? MainFormInstance;
+        public static IServiceProvider Services { get; private set; } = null!;
+
         private const string PipeName = "VykazyPrace_IPC";
+        private const string MutexName = "VykazyPrace_Mutex";
 
         [STAThread]
         static void Main()
         {
-            bool isFirstInstance;
-            using (Mutex mutex = new Mutex(true, "VykazyPrace_Mutex", out isFirstInstance))
+            ApplicationConfiguration.Initialize();
+
+            Services = ConfigureServices();
+
+            var configService = Services.GetRequiredService<IConfigService>();
+
+            AppLogger.Initialize(configService);
+            AppLogger.RegisterPopupService(new WinFormsLoggerPopupService());
+
+            using Mutex mutex = new(true, MutexName, out bool isFirstInstance);
+
+            if (!isFirstInstance)
             {
-                if (isFirstInstance)
-                {
-                    AppLogger.Debug("Zahøívací dotaz na databázi...");
-                    try
-                    {
-                        var warmup = new UserRepository();
-                        var _ = warmup.GetAllUsersAsync().Result.FirstOrDefault();
-                        AppLogger.Debug("Databáze zahøáta.");
-                    }
-                    catch (Exception ex)
-                    {
-                        AppLogger.Error("Zahøívací dotaz selhal: " + ex.Message);
-                    }
+                RestoreExistingInstance();
+                return;
+            }
 
+            AppLogger.Debug("Aplikace spuštìna.");
 
-                    AppLogger.RegisterPopupService(new WinFormsLoggerPopupService());
-                    AppLogger.Debug("Aplikace spuštìna.");
+            WarmupDatabase();
 
-                    StartPipeServer();
+            StartPipeServer();
 
-                    ApplicationConfiguration.Initialize();
-                    MainFormInstance = new MainForm();
-                    Application.Run(MainFormInstance);
-                }
+            MainFormInstance = Services.GetRequiredService<MainForm>();
+            Application.Run(MainFormInstance);
 
-                else
-                {
-                    AppLogger.Debug("Aplikace již bìží, obnovuji pùvodní instanci.");
-                    // Druhá instance => pošli požadavek na zobrazení hlavního okna
-                    try
-                    {
-                        using (NamedPipeClientStream client = new NamedPipeClientStream(".", PipeName, PipeDirection.Out))
-                        {
-                            client.Connect(200);
-                            using (StreamWriter writer = new StreamWriter(client))
-                            {
-                                writer.WriteLine("show");
-                                writer.Flush();
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        AppLogger.Debug("Pùvodní instance nereaguje.");
-                    }
+            AppLogger.CloseAndFlush();
+        }
 
-                    AppLogger.Debug("Pùvodní instance obnovena.");
-                }
+        private static IServiceProvider ConfigureServices()
+        {
+            var services = new ServiceCollection();
+
+            services.AddSingleton<IConfigService, ConfigService>();
+
+            services.AddDbContextFactory<VykazyPraceContext>((provider, options) =>
+            {
+                var configService = provider.GetRequiredService<IConfigService>();
+                var config = configService.Current;
+
+                options.UseSqlite($"Data Source={config.DatabasePath}");
+            });
+
+            // Repositories
+            services.AddTransient<UserRepository>();
+            services.AddTransient<UserGroupRepository>();
+            services.AddTransient<TimeEntryRepository>();
+            services.AddTransient<TimeEntryTypeRepository>();
+            services.AddTransient<TimeEntrySubTypeRepository>();
+            services.AddTransient<ProjectRepository>();
+            services.AddTransient<SpecialDayRepository>();
+            services.AddTransient<ArrivalDepartureRepository>();
+            services.AddTransient<CalendarRepository>();
+            services.AddTransient<ReportRepository>();
+
+            // Services / helpers
+            services.AddTransient<PowerKeyHelper>();
+            services.AddTransient<OutlookMeetingImportService>();
+            services.AddTransient<DataTableFactory>();
+            services.AddTransient<ExternalTimeEntryImportService>();
+
+            // Forms
+            services.AddTransient<MainForm>();
+            services.AddTransient<SettingsDialog>();
+            services.AddTransient<ExportDialog>();
+            services.AddTransient<UserSelectionDialog>();
+            services.AddTransient<ManagerDialog>();
+            services.AddTransient<OutlookEvents>();
+            services.AddTransient<OverviewDialog>();
+
+            // UserControls
+            services.AddTransient<CalendarV2>();
+            services.AddTransient<CalendarUC>();
+            services.AddTransient<OutlookEvent>();
+
+            return services.BuildServiceProvider();
+        }
+
+        private static void WarmupDatabase()
+        {
+            AppLogger.Debug("Zahøívací dotaz na databázi...");
+
+            try
+            {
+                var userRepository = Services.GetRequiredService<UserRepository>();
+                var _ = userRepository.GetAllUsersAsync().Result.FirstOrDefault();
+
+                AppLogger.Debug("Databáze zahøáta.");
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("Zahøívací dotaz selhal: " + ex.Message);
+            }
+        }
+
+        private static void RestoreExistingInstance()
+        {
+            AppLogger.Debug("Aplikace již bìží, obnovuji pùvodní instanci.");
+
+            try
+            {
+                using var client = new NamedPipeClientStream(".", PipeName, PipeDirection.Out);
+
+                client.Connect(200);
+
+                using var writer = new StreamWriter(client);
+                writer.WriteLine("show");
+                writer.Flush();
+
+                AppLogger.Debug("Pùvodní instance obnovena.");
+            }
+            catch
+            {
+                AppLogger.Debug("Pùvodní instance nereaguje.");
             }
         }
 
         private static void StartPipeServer()
         {
-            Thread serverThread = new Thread(() =>
+            Thread serverThread = new(() =>
             {
-                try
+                while (true)
                 {
-                    while (true)
+                    try
                     {
-                        using (NamedPipeServerStream server = new NamedPipeServerStream(PipeName, PipeDirection.In))
+                        using var server = new NamedPipeServerStream(PipeName, PipeDirection.In);
+
+                        server.WaitForConnection();
+
+                        using var reader = new StreamReader(server);
+                        string? message = reader.ReadLine();
+
+                        if (message == "show" && MainFormInstance != null)
                         {
-                            server.WaitForConnection();
-                            using (StreamReader reader = new StreamReader(server))
+                            MainFormInstance.BeginInvoke(() =>
                             {
-                                string? message = reader.ReadLine();
-                                if (message == "show" && MainFormInstance != null)
-                                {
-                                    MainFormInstance.BeginInvoke(() =>
-                                    {
-                                        MainFormInstance.ShowFromTray();
-                                    });
-                                }
-                            }
+                                MainFormInstance.ShowFromTray();
+                            });
                         }
                     }
-                }
-                catch
-                {
-                    // Server thread selhal, ignorujeme
+                    catch (Exception ex)
+                    {
+                        AppLogger.Error("Pipe server selhal: " + ex.Message);
+                    }
                 }
             });
 

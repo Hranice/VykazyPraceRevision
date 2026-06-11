@@ -10,11 +10,16 @@ namespace VykazyPrace.UserControls.Outlook
     {
         private readonly int _currentUserId;
         private readonly int _itemId;
-        private readonly CalendarRepository _repo;
-        private readonly Func<Task>? _onChanged; // callback k obnově UI po změně
-        private readonly UserItemStateEnum? _stateForUser; // aktuální per-user stav (kvůli UI)
+
+        private readonly CalendarRepository _calendarRepo;
+        private readonly OutlookMeetingImportService _outlookMeetingImportService;
+
+        private readonly Func<Task>? _onChanged;
+        private readonly UserItemStateEnum? _stateForUser;
 
         public OutlookEvent(
+            CalendarRepository calendarRepo,
+            OutlookMeetingImportService outlookMeetingImportService,
             int currentUserId,
             int itemId,
             DateTime dateLocal,
@@ -26,23 +31,38 @@ namespace VykazyPrace.UserControls.Outlook
         {
             InitializeComponent();
 
+            _calendarRepo = calendarRepo;
+            _outlookMeetingImportService = outlookMeetingImportService;
+
             _currentUserId = currentUserId;
             _itemId = itemId;
             _onChanged = onChanged;
             _stateForUser = stateForUser;
-            _repo = new CalendarRepository();
 
             labelDate.Text = dateLocal.ToString("dd.MM.yyyy");
 
             if (timeFromLocal.HasValue && timeToLocal.HasValue)
+            {
                 labelTime.Text = $"{timeFromLocal.Value:HH\\:mm} - {timeToLocal.Value:HH\\:mm}";
+            }
             else if (timeFromLocal.HasValue)
+            {
                 labelTime.Text = $"{timeFromLocal.Value:HH\\:mm}";
+            }
             else
+            {
                 labelTime.Text = "Celý den";
+            }
 
-            labelSubject.Text = string.IsNullOrWhiteSpace(subject) ? "(bez názvu)" : subject;
+            labelSubject.Text = string.IsNullOrWhiteSpace(subject)
+                ? "(bez názvu)"
+                : subject;
 
+            ApplyStateToUi();
+        }
+
+        private void ApplyStateToUi()
+        {
             switch (_stateForUser)
             {
                 case UserItemStateEnum.IgnoreTombstone:
@@ -79,31 +99,56 @@ namespace VykazyPrace.UserControls.Outlook
         {
             try
             {
-                var service = new OutlookMeetingImportService();
+                var result = await _outlookMeetingImportService.AddSingleFromUiAsync(
+                    _currentUserId,
+                    _itemId,
+                    labelDate.Text,
+                    labelTime.Text,
+                    labelSubject.Text);
 
-                var r = await service.AddSingleFromUiAsync(_currentUserId, _itemId, labelDate.Text, labelTime.Text, labelSubject.Text);
+                if (result.Status is ImportStatus.Added or ImportStatus.SkippedDuplicate)
+                {
+                    Parent?.Controls.Remove(this);
+                    Dispose();
 
-                if (r.Status is ImportStatus.Added or ImportStatus.SkippedDuplicate)
-                {
-                    this.Parent?.Controls.Remove(this);
-                    this.Dispose();
-                    if (_onChanged != null) await _onChanged();
+                    if (_onChanged != null)
+                    {
+                        await _onChanged();
+                    }
+
+                    return;
                 }
-                else if (r.Status == ImportStatus.SkippedConflict)
+
+                if (result.Status == ImportStatus.SkippedConflict)
                 {
-                    MessageBox.Show(this, "Nelze přidat – v tomto čase už existuje jiný časový záznam.", "Konflikt",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(
+                        this,
+                        "Nelze přidat – v tomto čase už existuje jiný časový záznam.",
+                        "Konflikt",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    return;
                 }
-                else if (r.Status == ImportStatus.InvalidInput)
+
+                if (result.Status == ImportStatus.InvalidInput)
                 {
-                    MessageBox.Show(this, "Neplatné datum/čas v kartě události.", "Chyba",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(
+                        this,
+                        "Neplatné datum/čas v kartě události.",
+                        "Chyba",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+
+                    return;
                 }
-                else
-                {
-                    MessageBox.Show(this, "Akci se nepodařilo dokončit.", "Chyba",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+
+                MessageBox.Show(
+                    this,
+                    "Akci se nepodařilo dokončit.",
+                    "Chyba",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
@@ -111,25 +156,24 @@ namespace VykazyPrace.UserControls.Outlook
             }
         }
 
-
-        /// <summary>
-        /// Klik na Smazat:
-        /// - nastaví stav IgnoreTombstone (trvale skrýt)
-        /// - skryje kartu a refreshne seznam
-        /// </summary>
         private async Task OnDeleteAsync()
         {
             try
             {
-                await _repo.SetUserStateAsync(_currentUserId, _itemId, UserItemStateEnum.IgnoreTombstone);
+                await _calendarRepo.SetUserStateAsync(
+                    _currentUserId,
+                    _itemId,
+                    UserItemStateEnum.IgnoreTombstone);
 
-                var parent = this.Parent;
-                parent?.Controls.Remove(this);
-                this.Dispose();
+                Parent?.Controls.Remove(this);
+                Dispose();
 
-                if (_onChanged != null) await _onChanged();
+                if (_onChanged != null)
+                {
+                    await _onChanged();
+                }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 AppLogger.Error("Smazání se nezdařilo.", ex);
             }

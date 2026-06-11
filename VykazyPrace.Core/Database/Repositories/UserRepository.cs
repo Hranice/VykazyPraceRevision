@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using VykazyPrace.Core.Database.Models;
 
 namespace VykazyPrace.Core.Database.Repositories
 {
     public class UserRepository
     {
-        private readonly VykazyPraceContext _context;
+        private readonly IDbContextFactory<VykazyPraceContext> _contextFactory;
 
-        public UserRepository()
+        public UserRepository(IDbContextFactory<VykazyPraceContext> contextFactory)
         {
-            _context = new VykazyPraceContext();
+            _contextFactory = contextFactory;
         }
 
         /// <summary>
@@ -21,41 +17,37 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<User> CreateUserAsync(User user)
         {
-            _context.Users.Add(user);
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            context.Users.Add(user);
+            await VykazyPraceContextExtensions.SafeSaveAsync(context);
+
             return user;
         }
 
         /// <summary>
         /// Získání všech uživatelů.
         /// </summary>
-        //public async Task<List<User>> GetAllUsersAsync()
-        //{
-        //    return await _context.Users
-        //        .Include(u => u.Projects)
-        //        .Include(u => u.TimeEntries)
-        //        .Include(u => u.UserGroup)
-        //        .OrderBy(u => u.UserGroupId)
-        //        .ToListAsync();
-        //}
-
-        public Task<List<User>> GetAllUsersAsync()
+        public async Task<List<User>> GetAllUsersAsync()
         {
-            return _context.Users
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            return await context.Users
                 .AsNoTracking()
-                .Include(u => u.UserGroup)          // jen pokud nutné
+                .Include(u => u.UserGroup)
                 .OrderBy(u => u.UserGroupId)
                 .ToListAsync();
         }
-
-
 
         /// <summary>
         /// Získání uživatele podle ID.
         /// </summary>
         public async Task<User?> GetUserByIdAsync(int id)
         {
-            return await _context.Users
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            return await context.Users
+                .AsNoTracking()
                 .Include(u => u.Projects)
                 .Include(u => u.TimeEntries)
                 .Include(u => u.UserGroup)
@@ -65,29 +57,25 @@ namespace VykazyPrace.Core.Database.Repositories
         /// <summary>
         /// Získání uživatele podle přihlašovacího jména do Windows.
         /// </summary>
-        //public async Task<User?> GetUserByWindowsUsernameAsync(string windowsUsername)
-        //{
-        //    return await _context.Users
-        //        .Include(u => u.Projects)
-        //        .Include(u => u.TimeEntries)
-        //        .Include(u => u.UserGroup)
-        //        .FirstOrDefaultAsync(u => u.WindowsUsername == windowsUsername);
-        //}
-        public Task<User?> GetUserByWindowsUsernameAsync(string windowsUsername)
+        public async Task<User?> GetUserByWindowsUsernameAsync(string windowsUsername)
         {
-            return _context.Users
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            return await context.Users
                 .AsNoTracking()
-                .Include(u => u.UserGroup) // jen pokud level of access bereš z group
+                .Include(u => u.UserGroup)
                 .FirstOrDefaultAsync(u => u.WindowsUsername == windowsUsername);
         }
-
 
         /// <summary>
         /// Aktualizace uživatele.
         /// </summary>
         public async Task<bool> UpdateUserAsync(User user)
         {
-            var existingUser = await _context.Users.FindAsync(user.Id);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            var existingUser = await context.Users.FindAsync(user.Id);
+
             if (existingUser == null)
                 return false;
 
@@ -96,8 +84,12 @@ namespace VykazyPrace.Core.Database.Repositories
             existingUser.PersonalNumber = user.PersonalNumber;
             existingUser.WindowsUsername = user.WindowsUsername;
             existingUser.LevelOfAccess = user.LevelOfAccess;
+            existingUser.UserGroupId = user.UserGroupId;
+            existingUser.Email = user.Email;
+            existingUser.MasterUserId = user.MasterUserId;
 
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            await VykazyPraceContextExtensions.SafeSaveAsync(context);
+
             return true;
         }
 
@@ -106,61 +98,96 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<bool> DeleteUserAsync(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            var user = await context.Users.FindAsync(id);
+
             if (user == null)
                 return false;
 
-            _context.Users.Remove(user);
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            context.Users.Remove(user);
+            await VykazyPraceContextExtensions.SafeSaveAsync(context);
+
             return true;
         }
 
         /// <summary>
-        /// Najde uživatele podle e-mailu
+        /// Najde uživatele podle e-mailu nebo Windows username.
         /// </summary>
         public async Task<User?> ResolveByEmailOrWindowsAsync(string? email)
         {
             if (string.IsNullOrWhiteSpace(email))
                 return null;
 
-            var e = email.Trim();
-            var eLower = e.ToLowerInvariant();
+            await using var context = await _contextFactory.CreateDbContextAsync();
 
-            var byEmail = await _context.Users
+            var normalizedEmail = email.Trim();
+            var normalizedEmailLower = normalizedEmail.ToLowerInvariant();
+
+            var byEmail = await context.Users
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Email != null && u.Email.ToLower() == eLower);
-            if (byEmail != null) return byEmail;
+                .FirstOrDefaultAsync(u =>
+                    u.Email != null &&
+                    u.Email.ToLower() == normalizedEmailLower);
 
-            // rozpad emailu
-            var atIdx = e.IndexOf('@');
-            var local = atIdx > 0 ? e.Substring(0, atIdx) : e;
-            var domain = atIdx > 0 ? e.Substring(atIdx + 1) : null;
-            var domainUpper = domain?.ToUpperInvariant();
-            var domainLower = domain?.ToLowerInvariant();
+            if (byEmail != null)
+                return byEmail;
 
-            var byUpn = await _context.Users
+            var atIndex = normalizedEmail.IndexOf('@');
+
+            var local = atIndex > 0
+                ? normalizedEmail[..atIndex]
+                : normalizedEmail;
+
+            var domain = atIndex > 0
+                ? normalizedEmail[(atIndex + 1)..]
+                : null;
+
+            var localLower = local.ToLowerInvariant();
+
+            var byUpn = await context.Users
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.WindowsUsername.ToLower() == eLower);
-            if (byUpn != null) return byUpn;
+                .FirstOrDefaultAsync(u =>
+                    u.WindowsUsername != null &&
+                    u.WindowsUsername.ToLower() == normalizedEmailLower);
 
-            var byLocal = await _context.Users
+            if (byUpn != null)
+                return byUpn;
+
+            var byLocal = await context.Users
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.WindowsUsername.ToLower() == local.ToLowerInvariant());
-            if (byLocal != null) return byLocal;
+                .FirstOrDefaultAsync(u =>
+                    u.WindowsUsername != null &&
+                    u.WindowsUsername.ToLower() == localLower);
 
-            if (!string.IsNullOrEmpty(local) && !string.IsNullOrEmpty(domain))
+            if (byLocal != null)
+                return byLocal;
+
+            if (!string.IsNullOrWhiteSpace(local) && !string.IsNullOrWhiteSpace(domain))
             {
-                var domLocalUpper = $"{domainUpper}\\{local}";
-                var byDomLocalUpper = await _context.Users
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(u => u.WindowsUsername.ToUpper() == domLocalUpper);
-                if (byDomLocalUpper != null) return byDomLocalUpper;
+                var domainUpper = domain.ToUpperInvariant();
+                var domainLower = domain.ToLowerInvariant();
 
-                var domLocalLower = $"{domainLower}\\{local}";
-                var byDomLocalLower = await _context.Users
+                var domainLocalUpper = $"{domainUpper}\\{local}";
+                var domainLocalLower = $"{domainLower}\\{localLower}";
+
+                var byDomainLocalUpper = await context.Users
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(u => u.WindowsUsername.ToLower() == domLocalLower);
-                if (byDomLocalLower != null) return byDomLocalLower;
+                    .FirstOrDefaultAsync(u =>
+                        u.WindowsUsername != null &&
+                        u.WindowsUsername.ToUpper() == domainLocalUpper);
+
+                if (byDomainLocalUpper != null)
+                    return byDomainLocalUpper;
+
+                var byDomainLocalLower = await context.Users
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u =>
+                        u.WindowsUsername != null &&
+                        u.WindowsUsername.ToLower() == domainLocalLower);
+
+                if (byDomainLocalLower != null)
+                    return byDomainLocalLower;
             }
 
             return null;

@@ -25,7 +25,7 @@ namespace VykazyPrace
 
             var sqlChecker = new SqlServerHealthChecker("Server=cze-svd02;Database=powerkey;User Id=vykazprace;Password=UtNPs66ZZk56qSt;TrustServerCertificate=True;");
 
-            var config = ConfigService.Load();
+            var config = _configService.Current;
             var sqliteChecker = new SqliteHealthChecker(config.DatabasePath);
 
             _connectivity = new ConnectivityService(sqlChecker, sqliteChecker);

@@ -1,31 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using VykazyPrace.Core.Database.Models;
 
 namespace VykazyPrace.Core.Database.Repositories
 {
     public class UserGroupRepository
     {
-        private readonly VykazyPraceContext _context;
+        private readonly IDbContextFactory<VykazyPraceContext> _contextFactory;
 
-        public UserGroupRepository()
+        public UserGroupRepository(IDbContextFactory<VykazyPraceContext> contextFactory)
         {
-            _context = new VykazyPraceContext();
+            _contextFactory = contextFactory;
         }
 
         public async Task<UserGroup> CreateUserGroupAsync(UserGroup userGroup)
         {
-            _context.UserGroups.Add(userGroup);
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            context.UserGroups.Add(userGroup);
+            await VykazyPraceContextExtensions.SafeSaveAsync(context);
+
             return userGroup;
         }
 
         public async Task<List<UserGroup>> GetAllUserGroupsAsync()
         {
-            return await _context.UserGroups
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            return await context.UserGroups
+                .AsNoTracking()
                 .Include(g => g.Users)
                 .OrderBy(g => g.Title)
                 .ToListAsync();
@@ -33,28 +35,42 @@ namespace VykazyPrace.Core.Database.Repositories
 
         public async Task<UserGroup?> GetUserGroupByIdAsync(int id)
         {
-            return await _context.UserGroups
-                //.Include(ug => ug.TimeEntrySubTypes)
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            return await context.UserGroups
+                .AsNoTracking()
                 .FirstOrDefaultAsync(ug => ug.Id == id);
         }
 
         public async Task<bool> UpdateUserGroupAsync(UserGroup userGroup)
         {
-            var existingGroup = await _context.UserGroups.FindAsync(userGroup.Id);
-            if (existingGroup == null) return false;
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            var existingGroup = await context.UserGroups.FindAsync(userGroup.Id);
+
+            if (existingGroup == null)
+                return false;
 
             existingGroup.Title = userGroup.Title;
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+
+            await VykazyPraceContextExtensions.SafeSaveAsync(context);
+
             return true;
         }
 
         public async Task<bool> DeleteUserGroupAsync(int id)
         {
-            var userGroup = await _context.UserGroups.FindAsync(id);
-            if (userGroup == null) return false;
+            await using var context = await _contextFactory.CreateDbContextAsync();
 
-            _context.UserGroups.Remove(userGroup);
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            var userGroup = await context.UserGroups.FindAsync(id);
+
+            if (userGroup == null)
+                return false;
+
+            context.UserGroups.Remove(userGroup);
+
+            await VykazyPraceContextExtensions.SafeSaveAsync(context);
+
             return true;
         }
     }

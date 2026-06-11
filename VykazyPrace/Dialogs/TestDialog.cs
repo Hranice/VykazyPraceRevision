@@ -12,10 +12,13 @@ namespace VykazyPrace.Dialogs
 {
     public partial class TestDialog : Form
     {
+        private readonly UserRepository _userRepo;
+        private readonly ArrivalDepartureRepository _arrivalDepartureRepo;
+
         private DataTable? _loadedTable;
 
 
-        public TestDialog()
+        public TestDialog(UserRepository userRepo, ArrivalDepartureRepository arrivalDepartureRepo)
         {
             InitializeComponent();
             DoubleBuffered = true;
@@ -23,6 +26,8 @@ namespace VykazyPrace.Dialogs
             LoadFilteredData(DateTime.Now, 1250);
 
             customComboBox1.SetItems(new string[] { "test1", "test2", "paprika" });
+            _userRepo = userRepo;
+            _arrivalDepartureRepo = arrivalDepartureRepo;
         }
 
         private void LoadFilteredData(DateTime monthDate, int personalNumber)
@@ -172,9 +177,7 @@ AND [AM].[MonthNumber] = ([pwk].[DateToMonthNumber] (GETDATE())) - 1";
 
             try
             {
-                var repo = new ArrivalDepartureRepository();
-                var userRepo = new UserRepository();
-                var result = await userRepo.GetUserByWindowsUsernameAsync("jprochazka");
+                var result = await _userRepo.GetUserByWindowsUsernameAsync("jprochazka");
                 int targetUserId = result.Id;
                 int saved = 0;
 
@@ -198,7 +201,7 @@ AND [AM].[MonthNumber] = ([pwk].[DateToMonthNumber] (GETDATE())) - 1";
                         if (!double.TryParse(overtimeStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double overtime)) continue;
 
                         // Kontrola existence záznamu pro daného uživatele a den
-                        var existing = await repo.GetByUserAndDateAsync(targetUserId, workDate);
+                        var existing = await _arrivalDepartureRepo.GetByUserAndDateAsync(targetUserId, workDate);
                         if (existing != null) continue;
 
                         var newEntry = new ArrivalDeparture
@@ -212,7 +215,7 @@ AND [AM].[MonthNumber] = ([pwk].[DateToMonthNumber] (GETDATE())) - 1";
                             HoursOvertime = overtime
                         };
 
-                        await repo.CreateArrivalDepartureAsync(newEntry);
+                        await _arrivalDepartureRepo.CreateArrivalDepartureAsync(newEntry);
                         saved++;
                     }
                     catch (Exception exRow)

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VykazyPrace.Core.Database.Models.OutlookEvents;
+﻿using Microsoft.EntityFrameworkCore;
 using VykazyPrace.Core.Database.Models;
-using Microsoft.EntityFrameworkCore;
+using VykazyPrace.Core.Database.Models.OutlookEvents;
 
 namespace VykazyPrace.Core.Database.Repositories
 {
@@ -14,11 +9,11 @@ namespace VykazyPrace.Core.Database.Repositories
     /// </summary>
     public class CalendarRepository
     {
-        private readonly VykazyPraceContext _context;
+        private readonly IDbContextFactory<VykazyPraceContext> _contextFactory;
 
-        public CalendarRepository()
+        public CalendarRepository(IDbContextFactory<VykazyPraceContext> contextFactory)
         {
-            _context = new VykazyPraceContext();
+            _contextFactory = contextFactory;
         }
 
         /// <summary>
@@ -26,8 +21,9 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<CalendarItem> UpsertCalendarItemAsync(CalendarItem input)
         {
-            // Najdeme existující položku podle unikátní trojice
-            var existing = await _context.CalendarItems
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            var existing = await context.CalendarItems
                 .FirstOrDefaultAsync(ci =>
                     ci.StoreId == input.StoreId &&
                     ci.EntryId == input.EntryId &&
@@ -35,57 +31,67 @@ namespace VykazyPrace.Core.Database.Repositories
 
             if (existing == null)
             {
-                _context.CalendarItems.Add(input);
-            }
-            else
-            {
-                // Přepíše "otisk" a metadata – ponecháme Id
-                existing.LastSeenAtUtc = input.LastSeenAtUtc;
-                existing.LastModifiedUtc = input.LastModifiedUtc;
-                existing.LastFolderEntryId = input.LastFolderEntryId;
-                existing.LastHash = input.LastHash;
-
-                existing.GlobalAppointmentId = input.GlobalAppointmentId ?? existing.GlobalAppointmentId;
-                existing.ICalUid = input.ICalUid ?? existing.ICalUid;
-
-                existing.Subject = input.Subject;
-                existing.Location = input.Location;
-                existing.Organizer = input.Organizer;
-                existing.StartUtc = input.StartUtc;
-                existing.EndUtc = input.EndUtc;
-                existing.IsAllDay = input.IsAllDay;
-                existing.IsRecurringSeries = input.IsRecurringSeries;
-                existing.IsException = input.IsException;
+                context.CalendarItems.Add(input);
+                await VykazyPraceContextExtensions.SafeSaveAsync(context);
+                return input;
             }
 
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
-            return existing ?? input;
+            existing.LastSeenAtUtc = input.LastSeenAtUtc;
+            existing.LastModifiedUtc = input.LastModifiedUtc;
+            existing.LastFolderEntryId = input.LastFolderEntryId;
+            existing.LastHash = input.LastHash;
+
+            existing.GlobalAppointmentId = input.GlobalAppointmentId ?? existing.GlobalAppointmentId;
+            existing.ICalUid = input.ICalUid ?? existing.ICalUid;
+
+            existing.Subject = input.Subject;
+            existing.Location = input.Location;
+            existing.Organizer = input.Organizer;
+            existing.StartUtc = input.StartUtc;
+            existing.EndUtc = input.EndUtc;
+            existing.IsAllDay = input.IsAllDay;
+            existing.IsRecurringSeries = input.IsRecurringSeries;
+            existing.IsException = input.IsException;
+
+            await VykazyPraceContextExtensions.SafeSaveAsync(context);
+
+            return existing;
         }
 
         /// <summary>
-        /// Nahraď účastníky položky (smaž a vlož).
+        /// Nahraď účastníky položky.
         /// </summary>
         public async Task UpsertAttendeesAsync(int itemId, IEnumerable<ItemAttendee> attendees)
         {
-            var olds = _context.ItemAttendees.Where(a => a.ItemId == itemId);
-            _context.ItemAttendees.RemoveRange(olds);
+            await using var context = await _contextFactory.CreateDbContextAsync();
 
-            foreach (var a in attendees)
+            var oldAttendees = await context.ItemAttendees
+                .Where(a => a.ItemId == itemId)
+                .ToListAsync();
+
+            context.ItemAttendees.RemoveRange(oldAttendees);
+
+            foreach (var attendee in attendees)
             {
-                a.ItemId = itemId; // jistota
-                _context.ItemAttendees.Add(a);
+                attendee.ItemId = itemId;
+                context.ItemAttendees.Add(attendee);
             }
 
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            await VykazyPraceContextExtensions.SafeSaveAsync(context);
         }
 
         /// <summary>
-        /// Nastaví stav položky z pohledu uživatele (UPSERT).
-        /// Např. State = IgnoreTombstone = 3.
+        /// Nastaví stav položky z pohledu uživatele.
         /// </summary>
-        public async Task<UserItemState> SetUserStateAsync(int userId, int itemId, UserItemStateEnum state, string? note = null)
+        public async Task<UserItemState> SetUserStateAsync(
+            int userId,
+            int itemId,
+            UserItemStateEnum state,
+            string? note = null)
         {
-            var existing = await _context.UserItemStates
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            var existing = await context.UserItemStates
                 .FirstOrDefaultAsync(s => s.UserId == userId && s.ItemId == itemId);
 
             if (existing == null)
@@ -98,7 +104,8 @@ namespace VykazyPrace.Core.Database.Repositories
                     Note = note,
                     UpdatedAtUtc = DateTime.UtcNow
                 };
-                _context.UserItemStates.Add(existing);
+
+                context.UserItemStates.Add(existing);
             }
             else
             {
@@ -107,45 +114,51 @@ namespace VykazyPrace.Core.Database.Repositories
                 existing.UpdatedAtUtc = DateTime.UtcNow;
             }
 
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            await VykazyPraceContextExtensions.SafeSaveAsync(context);
+
             return existing;
         }
 
         /// <summary>
-        /// Vrátí položky pro uživatele. 
-        /// Ve výchozím stavu skrývá IGNORE_TOMBSTONE (State=3).
+        /// Vrátí položky pro uživatele. Ve výchozím stavu skrývá IgnoreTombstone.
         /// </summary>
         public async Task<List<(CalendarItem Item, UserItemStateEnum? State)>> GetItemsForUserAsync(
-      int userId,
-      bool includeIgnored = false,
-      DateTime? fromUtc = null,
-      DateTime? toUtc = null)
+            int userId,
+            bool includeIgnored = false,
+            DateTime? fromUtc = null,
+            DateTime? toUtc = null)
         {
-            var q = from ci in _context.CalendarItems
-                    join uis in _context.UserItemStates.Where(x => x.UserId == userId)
-                        on ci.Id equals uis.ItemId into gj
-                    from uis in gj.DefaultIfEmpty()
-                    select new
-                    {
-                        ci,
-                        state = (UserItemStateEnum?)uis.State
-                    };
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            var q =
+                from ci in context.CalendarItems.AsNoTracking()
+                join uis in context.UserItemStates
+                        .AsNoTracking()
+                        .Where(x => x.UserId == userId)
+                    on ci.Id equals uis.ItemId into gj
+                from uis in gj.DefaultIfEmpty()
+                select new
+                {
+                    ci,
+                    state = (UserItemStateEnum?)uis.State
+                };
 
             if (!includeIgnored)
             {
-                q = q.Where(x => x.state == null || x.state != UserItemStateEnum.IgnoreTombstone);
+                q = q.Where(x =>
+                    x.state == null ||
+                    x.state != UserItemStateEnum.IgnoreTombstone);
             }
 
-            // test překryvu intervalů [StartUtc, EndUtc] a [fromUtc, toUtc]
             if (fromUtc.HasValue || toUtc.HasValue)
             {
-                var f = fromUtc ?? DateTime.MinValue;
-                var t = toUtc ?? DateTime.MaxValue;
+                var from = fromUtc ?? DateTime.MinValue;
+                var to = toUtc ?? DateTime.MaxValue;
 
                 q = q.Where(x =>
-                    (x.ci.StartUtc == null || x.ci.EndUtc == null) ||
-                    (x.ci.StartUtc <= t && x.ci.EndUtc >= f)
-                );
+                    x.ci.StartUtc == null ||
+                    x.ci.EndUtc == null ||
+                    (x.ci.StartUtc <= to && x.ci.EndUtc >= from));
             }
 
             var data = await q
@@ -157,11 +170,15 @@ namespace VykazyPrace.Core.Database.Repositories
                 .ToList();
         }
 
-
-
-        public async Task LogChangeAsync(int itemId, string action, int? userId = null, string? detailsJson = null)
+        public async Task LogChangeAsync(
+            int itemId,
+            string action,
+            int? userId = null,
+            string? detailsJson = null)
         {
-            _context.ItemChangeLogs.Add(new ItemChangeLog
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            context.ItemChangeLogs.Add(new ItemChangeLog
             {
                 ItemId = itemId,
                 UserId = userId,
@@ -170,22 +187,31 @@ namespace VykazyPrace.Core.Database.Repositories
                 WhenUtc = DateTime.UtcNow
             });
 
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            await VykazyPraceContextExtensions.SafeSaveAsync(context);
         }
 
         /// <summary>
-        /// Vrátí seznam položek, které nebyly viděny od zadaného času (pro případný housekeeping).
+        /// Vrátí seznam položek, které nebyly viděny od zadaného času.
         /// </summary>
         public async Task<List<CalendarItem>> GetStaleItemsAsync(DateTime notSeenSinceUtc)
         {
-            return await _context.CalendarItems
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            return await context.CalendarItems
+                .AsNoTracking()
                 .Where(ci => ci.LastSeenAtUtc < notSeenSinceUtc)
                 .ToListAsync();
         }
 
-        public async Task<CalendarItem?> GetByKeyAsync(string storeId, string entryId, DateTime? occurrenceStartUtc)
+        public async Task<CalendarItem?> GetByKeyAsync(
+            string storeId,
+            string entryId,
+            DateTime? occurrenceStartUtc)
         {
-            return await _context.CalendarItems
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            return await context.CalendarItems
+                .AsNoTracking()
                 .FirstOrDefaultAsync(ci =>
                     ci.StoreId == storeId &&
                     ci.EntryId == entryId &&
@@ -194,58 +220,90 @@ namespace VykazyPrace.Core.Database.Repositories
 
         public async Task<CalendarItem?> GetByIdAsync(int id)
         {
-            return await _context.CalendarItems.FindAsync(id);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            return await context.CalendarItems
+                .AsNoTracking()
+                .FirstOrDefaultAsync(ci => ci.Id == id);
         }
 
         public async Task<List<(CalendarItem Item, UserItemStateEnum? State)>> GetVisibleItemsForUserAsync(
-    int userId,
-    DateTime? fromUtc = null,
-    DateTime? toUtc = null)
+            int userId,
+            DateTime? fromUtc = null,
+            DateTime? toUtc = null)
         {
-            // Stav, které NEMÁME zobrazovat
-            var hiddenStates = new[] { UserItemStateEnum.IgnoreTombstone, UserItemStateEnum.Written };
+            await using var context = await _contextFactory.CreateDbContextAsync();
 
-            var q = from ci in _context.CalendarItems
-                    join uis in _context.UserItemStates.Where(x => x.UserId == userId)
-                        on ci.Id equals uis.ItemId into gj
-                    from uis in gj.DefaultIfEmpty()
-                    where uis == null || !hiddenStates.Contains(uis.State)
-                    select new { ci, state = (UserItemStateEnum?)uis.State };
+            var hiddenStates = new[]
+            {
+                UserItemStateEnum.IgnoreTombstone,
+                UserItemStateEnum.Written
+            };
+
+            var q =
+                from ci in context.CalendarItems.AsNoTracking()
+                join uis in context.UserItemStates
+                        .AsNoTracking()
+                        .Where(x => x.UserId == userId)
+                    on ci.Id equals uis.ItemId into gj
+                from uis in gj.DefaultIfEmpty()
+                where uis == null || !hiddenStates.Contains(uis.State)
+                select new
+                {
+                    ci,
+                    state = (UserItemStateEnum?)uis.State
+                };
 
             if (fromUtc.HasValue)
-                q = q.Where(x => x.ci.StartUtc == null || x.ci.StartUtc >= fromUtc.Value);
+            {
+                q = q.Where(x =>
+                    x.ci.StartUtc == null ||
+                    x.ci.StartUtc >= fromUtc.Value);
+            }
 
             if (toUtc.HasValue)
-                q = q.Where(x => x.ci.StartUtc == null || x.ci.StartUtc <= toUtc.Value);
+            {
+                q = q.Where(x =>
+                    x.ci.StartUtc == null ||
+                    x.ci.StartUtc <= toUtc.Value);
+            }
 
             var data = await q
                 .OrderBy(x => x.ci.StartUtc)
                 .ToListAsync();
 
-            return data.Select(x => (x.ci, x.state)).ToList();
+            return data
+                .Select(x => (x.ci, x.state))
+                .ToList();
         }
 
         public async Task<List<(CalendarItem Item, UserItemStateEnum? State)>> GetVisibleItemsForUserByAttendanceAsync(
-     int userId,
-     DateTime? fromUtc = null,
-     DateTime? toUtc = null)
+            int userId,
+            DateTime? fromUtc = null,
+            DateTime? toUtc = null)
         {
-            var hiddenStates = new[] { UserItemStateEnum.IgnoreTombstone, UserItemStateEnum.Written };
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            var hiddenStates = new[]
+            {
+                UserItemStateEnum.IgnoreTombstone,
+                UserItemStateEnum.Written
+            };
 
             var q =
-                from ci in _context.CalendarItems
+                from ci in context.CalendarItems.AsNoTracking()
 
-                    // stav pro daného usera (LEFT JOIN)
-                join uisTmp in _context.UserItemStates.Where(x => x.UserId == userId)
+                join uisTmp in context.UserItemStates
+                        .AsNoTracking()
+                        .Where(x => x.UserId == userId)
                     on ci.Id equals uisTmp.ItemId into gj
                 from uis in gj.DefaultIfEmpty()
 
-                    // attendees (INNER JOIN) - jen eventy kde je tenhle user účastník
-                join ia in _context.ItemAttendees
+                join ia in context.ItemAttendees.AsNoTracking()
                     on ci.Id equals ia.ItemId
 
-                where ia.UserId == userId
-                   && (uis == null || !hiddenStates.Contains(uis.State))
+                where ia.UserId == userId &&
+                      (uis == null || !hiddenStates.Contains(uis.State))
 
                 select new
                 {
@@ -254,38 +312,42 @@ namespace VykazyPrace.Core.Database.Repositories
                 };
 
             if (fromUtc.HasValue)
-                q = q.Where(x => x.ci.StartUtc == null || x.ci.StartUtc >= fromUtc.Value);
+            {
+                q = q.Where(x =>
+                    x.ci.StartUtc == null ||
+                    x.ci.StartUtc >= fromUtc.Value);
+            }
 
             if (toUtc.HasValue)
-                q = q.Where(x => x.ci.StartUtc == null || x.ci.StartUtc <= toUtc.Value);
+            {
+                q = q.Where(x =>
+                    x.ci.StartUtc == null ||
+                    x.ci.StartUtc <= toUtc.Value);
+            }
 
             var rawData = await q
                 .OrderBy(x => x.ci.StartUtc)
                 .ToListAsync();
 
-            // DEDUP
             var grouped = rawData
                 .GroupBy(x =>
                 {
                     var ci = x.ci;
 
-                    string startKey = ci.StartUtc?.ToString("yyyy-MM-ddTHH:mm") ?? "nostart";
-                    string endKey = ci.EndUtc?.ToString("yyyy-MM-ddTHH:mm") ?? "noend";
+                    var startKey = ci.StartUtc?.ToString("yyyy-MM-ddTHH:mm") ?? "nostart";
+                    var endKey = ci.EndUtc?.ToString("yyyy-MM-ddTHH:mm") ?? "noend";
 
                     if (!string.IsNullOrEmpty(ci.GlobalAppointmentId))
                     {
-                        return "GA:" + ci.GlobalAppointmentId + "|" + (ci.OccurrenceStartUtc?.ToString("o") ?? "noocc");
+                        return "GA:" + ci.GlobalAppointmentId + "|" +
+                               (ci.OccurrenceStartUtc?.ToString("o") ?? "noocc");
                     }
-                    else
-                    {
-                        // fallback klíč
-                        var subj = (ci.Subject ?? "").Trim();
-                        return "FB:" + subj + "|" + startKey + "|" + endKey;
-                    }
+
+                    var subject = (ci.Subject ?? string.Empty).Trim();
+                    return "FB:" + subject + "|" + startKey + "|" + endKey;
                 })
                 .Select(g =>
                 {
-                    // logika: vezmi ten, který má nejnovější LastModifiedUtc (pokud je null, ber min)
                     var best = g
                         .OrderByDescending(x => x.ci.LastModifiedUtc ?? DateTime.MinValue)
                         .First();
@@ -301,23 +363,32 @@ namespace VykazyPrace.Core.Database.Repositories
         public sealed class CalendarItemKeyInfo
         {
             public int Id { get; set; }
-            public string LastHash { get; set; }
+            public string? LastHash { get; set; }
         }
 
-        public async Task<CalendarItemKeyInfo?> TryGetItemKeyInfoAsync(string storeId, string entryId, DateTime? occurrenceStartUtc)
+        public async Task<CalendarItemKeyInfo?> TryGetItemKeyInfoAsync(
+            string storeId,
+            string entryId,
+            DateTime? occurrenceStartUtc)
         {
-            return await _context.CalendarItems
-                .Where(ci => ci.StoreId == storeId
-                          && ci.EntryId == entryId
-                          && ((ci.OccurrenceStartUtc == null && occurrenceStartUtc == null)
-                               || (ci.OccurrenceStartUtc != null && occurrenceStartUtc != null
-                                   && ci.OccurrenceStartUtc == occurrenceStartUtc)))
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            return await context.CalendarItems
+                .AsNoTracking()
+                .Where(ci =>
+                    ci.StoreId == storeId &&
+                    ci.EntryId == entryId &&
+                    (
+                        (ci.OccurrenceStartUtc == null && occurrenceStartUtc == null) ||
+                        (ci.OccurrenceStartUtc != null &&
+                         occurrenceStartUtc != null &&
+                         ci.OccurrenceStartUtc == occurrenceStartUtc)
+                    ))
                 .Select(ci => new CalendarItemKeyInfo
                 {
                     Id = ci.Id,
                     LastHash = ci.LastHash
                 })
-                .AsNoTracking()
                 .FirstOrDefaultAsync();
         }
     }

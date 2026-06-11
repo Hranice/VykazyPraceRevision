@@ -1,26 +1,29 @@
-﻿using VykazyPrace.Core.Database.Models;
-using VykazyPrace.Core.Database.Repositories;
+﻿using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Core.Logging;
 using VykazyPrace.Core.PowerKey;
-using VykazyPrace.Logging;
 
 namespace VykazyPrace.Dialogs
 {
     public partial class ManagerDialog : Form
     {
-        public ManagerDialog()
+        private readonly UserRepository _userRepo;
+        private readonly PowerKeyHelper _powerKeyHelper;
+
+        public ManagerDialog(
+            UserRepository userRepo,
+            PowerKeyHelper powerKeyHelper)
         {
             InitializeComponent();
+
+            _userRepo = userRepo;
+            _powerKeyHelper = powerKeyHelper;
         }
 
         private async void buttonDownloadArrivalsDepartures_Click(object sender, EventArgs e)
         {
             try
             {
-                var powerKeyHelper = new PowerKeyHelper();
-                var userRepo = new UserRepository();
-
-                var allUsers = await userRepo.GetAllUsersAsync();
+                var allUsers = await _userRepo.GetAllUsersAsync();
 
                 var targetUsers = checkBox1.Checked
                     ? allUsers
@@ -35,12 +38,17 @@ namespace VykazyPrace.Dialogs
                 }
 
                 var totalRows = 0;
+
                 foreach (var user in targetUsers)
                 {
-                    totalRows += await powerKeyHelper.DownloadForUserAsync(dateTimePicker1.Value, user);
+                    totalRows += await _powerKeyHelper.DownloadForUserAsync(
+                        dateTimePicker1.Value,
+                        user);
                 }
 
-                AppLogger.Information($"Staženo pro {targetUsers.Count} uživatelů, celkem {totalRows} řádků.", true);
+                AppLogger.Information(
+                    $"Staženo pro {targetUsers.Count} uživatelů, celkem {totalRows} řádků.",
+                    true);
             }
             catch (Exception ex)
             {

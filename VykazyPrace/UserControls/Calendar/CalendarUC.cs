@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
 using System.Globalization;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
@@ -8,20 +9,30 @@ namespace VykazyPrace.UserControls.Calendar
 {
     public partial class CalendarUC : UserControl
     {
+        private readonly TimeEntryRepository _timeEntryRepo;
+
+        private readonly LoadingUC _loadingUC = new();
+
+        private User _selectedUser;
+
         private int _currentMonth;
         private int _currentYear;
-        private readonly LoadingUC _loadingUC = new();
-        private readonly TimeEntryRepository _timeEntryRepo = new();
-        private User _selectedUser;
+
         private readonly Dictionary<int, int> _minutesDict = new();
         private readonly List<DayUC> _dayCells = new();
 
-        public CalendarUC(User currentUser)
+        public CalendarUC(
+     User currentUser,
+     TimeEntryRepository timeEntryRepo)
         {
             InitializeComponent();
+
             _selectedUser = currentUser;
+            _timeEntryRepo = timeEntryRepo;
+
             _currentMonth = DateTime.Now.Month;
             _currentYear = DateTime.Now.Year;
+
             InitializeCalendar();
         }
 
@@ -81,7 +92,6 @@ namespace VykazyPrace.UserControls.Calendar
             }
         }
 
-
         private void CalendarUC_Load(object sender, EventArgs e)
         {
             _loadingUC.Size = Size;
@@ -101,7 +111,6 @@ namespace VykazyPrace.UserControls.Calendar
                 _loadingUC.Visible = false;
             });
         }
-
 
         private void InitializeCalendarCells()
         {
@@ -203,11 +212,8 @@ namespace VykazyPrace.UserControls.Calendar
             }
         }
 
-        private void DayCell_DoubleClick(object? sender, EventArgs e)
+        private async void DayCell_DoubleClick(object? sender, EventArgs e)
         {
-            if (sender is not DayUC dayCell || !int.TryParse(dayCell.labelDay.Text, out int day)) return;
-            new TimeEntryDialog(_selectedUser, new DateTime(_currentYear, _currentMonth, day)).ShowDialog();
-            Task.Run(ReloadCalendar);
         }
 
         private void labelPreviousMonth_Click(object sender, EventArgs e) => ChangeMonth(-1);

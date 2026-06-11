@@ -19,11 +19,14 @@ namespace VykazyPrace.Dialogs
     public partial class ProposeProjectDialog : Form
     {
         private readonly User _currentUser;
-        private readonly ProjectRepository _projectRepo = new ProjectRepository();
+        private readonly ProjectRepository _projectRepo;
 
-        public ProposeProjectDialog(User currentUser)
+        public ProposeProjectDialog(User currentUser, ProjectRepository projetRepo)
         {
             InitializeComponent();
+
+            _projectRepo = projetRepo;
+
             _currentUser = currentUser;
         }
 

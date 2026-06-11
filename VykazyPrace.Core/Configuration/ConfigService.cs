@@ -3,27 +3,52 @@ using VykazyPrace.Core.Helpers;
 
 namespace VykazyPrace.Core.Configuration
 {
-    public static class ConfigService
+    public class ConfigService : IConfigService
     {
-        public static AppConfig Load()
+        private readonly JsonSerializerOptions _jsonOptions = new()
         {
-            if (!File.Exists(AppPaths.ConfigFile))
-            {
-                Directory.CreateDirectory(AppPaths.RoamingDirectory);
-                var defaultConfig = new AppConfig();
-                Save(defaultConfig);
-                return defaultConfig;
-            }
+            WriteIndented = true
+        };
 
-            return JsonSerializer.Deserialize<AppConfig>(File.ReadAllText(AppPaths.ConfigFile))!;
+        public AppConfig Current { get; private set; }
+
+        public ConfigService()
+        {
+            Current = Load();
         }
 
-        public static void Save(AppConfig config)
+        public AppConfig Load()
         {
             Directory.CreateDirectory(AppPaths.RoamingDirectory);
+
+            if (!File.Exists(AppPaths.ConfigFile))
+            {
+                Current = new AppConfig();
+                Save(Current);
+                return Current;
+            }
+
+            var json = File.ReadAllText(AppPaths.ConfigFile);
+
+            Current = JsonSerializer.Deserialize<AppConfig>(json) ?? new AppConfig();
+
+            return Current;
+        }
+
+        public void Save()
+        {
+            Save(Current);
+        }
+
+        public void Save(AppConfig config)
+        {
+            Directory.CreateDirectory(AppPaths.RoamingDirectory);
+
             File.WriteAllText(
                 AppPaths.ConfigFile,
-                JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true }));
+                JsonSerializer.Serialize(config, _jsonOptions));
+
+            Current = config;
         }
     }
 }

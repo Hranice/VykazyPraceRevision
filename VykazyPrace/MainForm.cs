@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using VykazyPrace.Core.Configuration;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
@@ -17,13 +19,22 @@ namespace VykazyPrace
 {
     public partial class MainForm : Form
     {
-        private readonly UserRepository _userRepo = new UserRepository();
-        private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
-        private readonly TimeEntryTypeRepository _timeEntryTypeRepo = new TimeEntryTypeRepository();
-        private readonly TimeEntrySubTypeRepository _timeEntrySubTypeRepo = new TimeEntrySubTypeRepository();
-        private readonly ProjectRepository _projectRepo = new ProjectRepository();
-        private readonly SpecialDayRepository _specialDayRepo = new SpecialDayRepository();
-        private readonly ArrivalDepartureRepository _arrivalDepartureRepo = new ArrivalDepartureRepository();
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IConfigService _configService;
+
+        private readonly IDbContextFactory<VykazyPraceContext> _contextFactory;
+
+        private readonly UserRepository _userRepo;
+        private readonly UserGroupRepository _userGroupRepo;
+        private readonly TimeEntryRepository _timeEntryRepo;
+        private readonly TimeEntryTypeRepository _timeEntryTypeRepo;
+        private readonly TimeEntrySubTypeRepository _timeEntrySubTypeRepo;
+        private readonly ProjectRepository _projectRepo;
+        private readonly SpecialDayRepository _specialDayRepo;
+        private readonly ArrivalDepartureRepository _arrivalDepartureRepo;
+        private readonly PowerKeyHelper _powerKeyHelper;
+        private readonly ExternalTimeEntryImportService _externalImportService;
+
         private readonly LoadingUC _loadingUC = new LoadingUC();
         private User _selectedUser = new();
         private User _loggedUser = new();
@@ -44,13 +55,40 @@ namespace VykazyPrace
         // Update
         private UpdateInfo? _cachedUpdateInfo;
 
-        public MainForm()
+        public MainForm(
+     IServiceProvider serviceProvider,
+     IConfigService configService,
+     IDbContextFactory<VykazyPraceContext> contextFactory,
+     UserRepository userRepo,
+     UserGroupRepository userGroupRepo,
+     TimeEntryRepository timeEntryRepo,
+     TimeEntryTypeRepository timeEntryTypeRepo,
+     TimeEntrySubTypeRepository timeEntrySubTypeRepo,
+     ProjectRepository projectRepo,
+     SpecialDayRepository specialDayRepo,
+     ArrivalDepartureRepository arrivalDepartureRepo,
+     PowerKeyHelper powerKeyHelper,
+     ExternalTimeEntryImportService externalImportService)
         {
+            _serviceProvider = serviceProvider;
+            _configService = configService;
+            _contextFactory = contextFactory;
+
+            _userRepo = userRepo;
+            _userGroupRepo = userGroupRepo;
+            _timeEntryRepo = timeEntryRepo;
+            _timeEntryTypeRepo = timeEntryTypeRepo;
+            _timeEntrySubTypeRepo = timeEntrySubTypeRepo;
+            _projectRepo = projectRepo;
+            _specialDayRepo = specialDayRepo;
+            _arrivalDepartureRepo = arrivalDepartureRepo;
+            _powerKeyHelper = powerKeyHelper;
+            _externalImportService = externalImportService;
+
             InitializeComponent();
 
-            zobrazitToolStripMenuItem.Click += new System.EventHandler(zobrazitToolStripMenuItem_Click);
-            ukoncitToolStripMenuItem.Click += new System.EventHandler(ukoncitToolStripMenuItem_Click);
-
+            zobrazitToolStripMenuItem.Click += zobrazitToolStripMenuItem_Click;
+            ukoncitToolStripMenuItem.Click += ukoncitToolStripMenuItem_Click;
         }
 
         private void zobrazitToolStripMenuItem_Click(object? sender, EventArgs e)
@@ -90,15 +128,19 @@ namespace VykazyPrace
 
         private void NotificationTimer_Tick(object? sender, EventArgs e)
         {
-            var config = ConfigService.Load();
+            var config = _configService.Current;
 
             if (!config.NotificationOn)
                 return;
 
             var now = DateTime.Now;
-            var todayTarget = new DateTime(now.Year, now.Month, now.Day,
-                                            config.NotificationTime.Hour,
-                                            config.NotificationTime.Minute, 0);
+            var todayTarget = new DateTime(
+                now.Year,
+                now.Month,
+                now.Day,
+                config.NotificationTime.Hour,
+                config.NotificationTime.Minute,
+                0);
 
             if (_lastNotificationDate != DateTime.Today && now >= todayTarget && now < todayTarget.AddMinutes(1))
             {
@@ -114,7 +156,7 @@ namespace VykazyPrace
 
         private void InitFormUI()
         {
-            var config = ConfigService.Load();
+            var config = _configService.Current;
 
             RestoreWindowState(config);
 
@@ -180,8 +222,10 @@ namespace VykazyPrace
         {
             try
             {
-                using var testContext = new VykazyPraceContext();
+                using var testContext = _contextFactory.CreateDbContext();
+
                 VykazyPrace.Core.Database.DatabaseValidator.ValidateStructure(testContext);
+
                 return true;
             }
             catch (Exception ex)
@@ -243,15 +287,14 @@ namespace VykazyPrace
                     return;
                 }
 
-                var powerKeyHelper = new PowerKeyHelper();
-                int totalRows = await powerKeyHelper.DownloadForUserAsync(DateTime.Now, _selectedUser);
+                int totalRows = await _powerKeyHelper.DownloadForUserAsync(DateTime.Now, _selectedUser);
                 AppLogger.Information($"Staženo {totalRows} záznamù pro mìsíc è.{DateTime.Now.Month} uživatele {FormatHelper.FormatUserToString(_selectedUser)}.", false);
 
-                // Pokud dnes stahuju mìsíc M a vèerejšek byl v mìsíci M-3, vždy dojeï i M-3
+                // Pokud den pøed tøemi dny spadal do jiného mìsíce, stáhni i ten mìsíc.
                 var previousDay = DateTime.Now.AddDays(-3);
                 if (previousDay.Month != DateTime.Today.Month || previousDay.Year != DateTime.Today.Year)
                 {
-                    await powerKeyHelper.DownloadForUserAsync(previousDay, _selectedUser);
+                    await _powerKeyHelper.DownloadForUserAsync(previousDay, _selectedUser);
                     AppLogger.Information($"Staženo {totalRows} záznamù pro mìsíc è.{previousDay.Month} uživatele {FormatHelper.FormatUserToString(_selectedUser)}.", false);
                 }
 
@@ -296,7 +339,7 @@ namespace VykazyPrace
                 var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
                 {
-                    new Dialogs.SettingsDialog(_selectedUser).ShowDialog();
+                    OpenSettings();
                 }
 
                 else
@@ -309,40 +352,35 @@ namespace VykazyPrace
 
         private void InitializeCalendar(List<User> users)
         {
-            // Pùvodní CalendarUC do panelCalendarContainer
-            _monthlyCalendar = new CalendarUC(_selectedUser)
-            {
-                Dock = DockStyle.Fill
-            };
+            _monthlyCalendar = ActivatorUtilities.CreateInstance<CalendarUC>(
+                _serviceProvider,
+                _selectedUser);
+
+            _monthlyCalendar.Dock = DockStyle.Fill;
+
             panelCalendarContainer.Controls.Add(_monthlyCalendar);
 
-            // Nový CalendarV2 do panelContainer
-            _calendar = new CalendarV2(_selectedUser,
-                                       _timeEntryRepo,
-                                       _timeEntryTypeRepo,
-                                       _timeEntrySubTypeRepo,
-                                       _projectRepo,
-                                       _userRepo,
-                                       _specialDayRepo,
-                                       _arrivalDepartureRepo)
-            {
-                Dock = DockStyle.Fill,
-                Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238),
-                Location = new Point(0, 0),
-                Name = "calendarV21",
-                Size = new Size(1226, 620),
-                TabIndex = 0
-            };
+            _calendar = ActivatorUtilities.CreateInstance<CalendarV2>(
+                _serviceProvider,
+                _selectedUser);
+
+            _calendar.Dock = DockStyle.Fill;
+            _calendar.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            _calendar.Location = new Point(0, 0);
+            _calendar.Name = "calendarV21";
+            _calendar.Size = new Size(1226, 620);
+            _calendar.TabIndex = 0;
+
             panelContainer.Controls.Add(_calendar);
 
-            // Zmìna uživatele
             bChangeUser.Enabled = _currentUserLoA > 1;
             bChangeUser.Text = _selectedUser != null
-    ? FormatHelper.FormatUserToString(_selectedUser)
-    : "Vybrat uživatele";
+                ? FormatHelper.FormatUserToString(_selectedUser)
+                : "Vybrat uživatele";
 
             panelCalendarContainer.Visible = false;
             _calendar.BringToFront();
+
             HideLoading();
         }
 
@@ -350,7 +388,7 @@ namespace VykazyPrace
         {
             if (_currentUserLoA > 1)
             {
-                new Dialogs.UserManagementDialog().ShowDialog();
+                OpenSettings();
             }
 
             else
@@ -363,7 +401,11 @@ namespace VykazyPrace
         {
             if (_currentUserLoA > 1)
             {
-                new Dialogs.ProjectManagementDialog(_selectedUser).ShowDialog();
+                var dialog = ActivatorUtilities.CreateInstance<ProjectManagementDialog>(
+    _serviceProvider,
+    _selectedUser);
+
+                dialog.ShowDialog(this);
             }
 
             else
@@ -374,12 +416,16 @@ namespace VykazyPrace
 
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new Dialogs.ExportDialog(_loggedUser).ShowDialog();
+            using var dialog = ActivatorUtilities.CreateInstance<ExportDialog>(
+    _serviceProvider,
+    _loggedUser);
+
+            dialog.ShowDialog(this);
         }
 
         private void nastaveníToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new Dialogs.SettingsDialog(_loggedUser).ShowDialog();
+            OpenSettings();
         }
 
         private async void radioButton1_CheckedChanged(object sender, EventArgs e)
@@ -464,7 +510,10 @@ namespace VykazyPrace
 
         private void testToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            new TestDialog().ShowDialog();
+            using var dialog = ActivatorUtilities.CreateInstance<TestDialog>(
+    _serviceProvider);
+
+            dialog.ShowDialog(this);
         }
 
         private async void správaIndexùToolStripMenuItem_Click(object sender, EventArgs e)
@@ -472,7 +521,12 @@ namespace VykazyPrace
             if (_selectedUser.Id != _loggedUser.Id && _selectedUser.MasterUserId != _loggedUser.Id)
                 return;
 
-            new TimeEntrySubTypeManagement(_selectedUser, _timeEntrySubTypeRepo, _timeEntryRepo).ShowDialog();
+            using var dialog = ActivatorUtilities.CreateInstance<TimeEntrySubTypeManagement>(
+    _serviceProvider,
+    _selectedUser);
+
+            dialog.ShowDialog(this);
+
             await _calendar.ForceReloadAsync();
         }
 
@@ -484,7 +538,7 @@ namespace VykazyPrace
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            var config = ConfigService.Load();
+            var config = _configService.Current;
 
             if (config.MinimizeToTray && e.CloseReason == CloseReason.UserClosing)
             {
@@ -494,7 +548,7 @@ namespace VykazyPrace
             }
 
             SaveWindowState(config);
-            ConfigService.Save(config);
+            _configService.Save();
         }
 
         private void SaveWindowState(AppConfig config)
@@ -512,13 +566,18 @@ namespace VykazyPrace
 
         private void správceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var mngDialog = new ManagerDialog();
-            mngDialog.ShowDialog();
+            using var dialog = ActivatorUtilities.CreateInstance<ManagerDialog>(
+    _serviceProvider);
+
+            dialog.ShowDialog(this);
         }
 
         private void návrhProjektuToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new Dialogs.ProposeProjectDialog(_selectedUser).ShowDialog();
+            var proposalProjectDialog = ActivatorUtilities.CreateInstance<ProposeProjectDialog>(
+    _serviceProvider,
+    _selectedUser);
+            proposalProjectDialog.ShowDialog(this);
         }
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -530,7 +589,7 @@ namespace VykazyPrace
         {
             Invoke(async () =>
             {
-                var config = ConfigService.Load();
+                var config = _configService.Current;
 
                 Show();
 
@@ -555,8 +614,11 @@ namespace VykazyPrace
 
         private void pøehledToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var overviewDialog = new OverviewDialog(_selectedUser, DateRangeHelper.GetMonthRange(_selectedDate));
-            overviewDialog.ShowDialog();
+            using var dialog = ActivatorUtilities.CreateInstance<OverviewDialog>(
+    _serviceProvider,
+    _selectedUser, DateRangeHelper.GetMonthRange(_selectedDate));
+
+            dialog.ShowDialog(this);
         }
 
         private async void buttonOutlookEvents_Click(object sender, EventArgs e)
@@ -576,8 +638,10 @@ namespace VykazyPrace
                 return;
             }
 
-            var outlookEventsDialog = new OutlookEvents(_selectedUser);
-            outlookEventsDialog.ShowDialog();
+            var dialog = ActivatorUtilities.CreateInstance<OutlookEvents>(
+    _serviceProvider,
+    _selectedUser);
+            dialog.ShowDialog(this);
 
             await _calendar.ForceReloadAsync();
         }
@@ -625,8 +689,7 @@ namespace VykazyPrace
 
             try
             {
-                var service = new ExternalTimeEntryImportService();
-                var result = await service.ImportAsync(dialog.FileName);
+                var result = await _externalImportService.ImportAsync(dialog.FileName);
 
                 if (!result.Success)
                 {
@@ -682,7 +745,7 @@ namespace VykazyPrace
                 return;
             }
 
-            var config = ConfigService.Load();
+            var config = _configService.Current;
 
             IEnumerable<int>? preselectedUserIds = null;
 
@@ -695,7 +758,8 @@ namespace VykazyPrace
                 preselectedUserIds = new[] { _selectedUser.Id };
             }
 
-            _userSelectionDialog = new UserSelectionDialog(
+            _userSelectionDialog = ActivatorUtilities.CreateInstance<UserSelectionDialog>(
+                _serviceProvider,
                 UserSelectionMode.Single,
                 preselectedUserIds,
                 config.UserViewSelection.SelectedUserGroupIds);
@@ -717,12 +781,12 @@ namespace VykazyPrace
             if (_selectedUser != null && e.SelectedUser.Id == _selectedUser.Id)
                 return;
 
-            var config = ConfigService.Load();
+            var config = _configService.Current;
 
             config.UserViewSelection.SelectedUserId = e.SelectedUser.Id;
             config.UserViewSelection.SelectedUserGroupIds = e.SelectedUserGroupIds;
 
-            ConfigService.Save(config);
+            _configService.Save();
 
             await SwitchSelectedUserAsync(e.SelectedUser);
         }
@@ -751,11 +815,7 @@ namespace VykazyPrace
 
                 bChangeUser.Text = FormatHelper.FormatUserToString(_selectedUser);
 
-                var powerKeyHelper = new PowerKeyHelper();
-
-                int totalRows = await powerKeyHelper.DownloadForUserAsync(
-                    DateTime.Now,
-                    _selectedUser);
+                int totalRows = await _powerKeyHelper.DownloadForUserAsync(DateTime.Now, _selectedUser);
 
                 AppLogger.Information(
                     $"Staženo {totalRows} záznamù pro mìsíc è.{DateTime.Now.Month} uživatele {FormatHelper.FormatUserToString(_selectedUser)}.",
@@ -778,6 +838,15 @@ namespace VykazyPrace
                 _userSelectionDialog?.SetSelectionEnabled(true);
                 _isSwitchingUser = false;
             }
+        }
+
+        private void OpenSettings()
+        {
+            using var dialog = ActivatorUtilities.CreateInstance<SettingsDialog>(
+    _serviceProvider,
+    _loggedUser);
+
+            dialog.ShowDialog(this);
         }
     }
 }

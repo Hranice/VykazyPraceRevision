@@ -9,10 +9,12 @@ namespace VykazyPrace.Dialogs
 {
     public partial class ProjectManagementDialog : Form
     {
-        private readonly ProjectRepository _projectRepo = new ProjectRepository();
-        private readonly TimeEntryTypeRepository _timeEntryTypeRepo = new TimeEntryTypeRepository();
-        private readonly TimeEntryRepository _timeEntryRepo = new TimeEntryRepository();
+        private readonly ProjectRepository _projectRepo;
+        private readonly TimeEntryTypeRepository _timeEntryTypeRepo;
+        private readonly TimeEntryRepository _timeEntryRepo;
+
         private readonly User _currentUser;
+
         private List<Project> _filteredProjects = new List<Project>();
         private List<TimeEntryType> _timeEntryTypes = new List<TimeEntryType>();
 
@@ -21,9 +23,13 @@ namespace VykazyPrace.Dialogs
         private bool waitForProjectSelection = false;
         private bool isUpdating;
 
-        public ProjectManagementDialog(User currentUser)
+        public ProjectManagementDialog(User currentUser, TimeEntryRepository timeEntryRepo, TimeEntryTypeRepository timeEntryTypeRepo, ProjectRepository projectRepo)
         {
             InitializeComponent();
+
+            _projectRepo = projectRepo;
+            _timeEntryTypeRepo = timeEntryTypeRepo;
+            _timeEntryRepo = timeEntryRepo;
 
             KeyPreview = true;
             _currentUser = currentUser;

@@ -11,15 +11,22 @@ namespace VykazyPrace.Dialogs
 {
     public partial class UserManagementDialog : Form
     {
-        private readonly UserRepository _userRepo = new UserRepository();
-        private readonly UserGroupRepository _userGroupRepo = new UserGroupRepository();
+        private readonly UserRepository _userRepo;
+        private readonly UserGroupRepository _userGroupRepo;
+
         private List<User> _users = new List<User>();
         private List<UserGroup> _userGroups = new List<UserGroup>();
+
         private readonly LoadingUC _loadingUC = new LoadingUC();
 
-        public UserManagementDialog()
+        public UserManagementDialog(
+            UserRepository userRepo,
+            UserGroupRepository userGroupRepo)
         {
             InitializeComponent();
+
+            _userRepo = userRepo;
+            _userGroupRepo = userGroupRepo;
         }
 
         private void UserManagementDialog_Load(object sender, EventArgs e)

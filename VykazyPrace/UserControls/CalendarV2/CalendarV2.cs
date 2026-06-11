@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.Vml.Office;
-using System.DirectoryServices.ActiveDirectory;
-using VykazyPrace.Core.Configuration;
+﻿using VykazyPrace.Core.Configuration;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Core.Helpers;
@@ -85,17 +83,17 @@ namespace VykazyPrace.UserControls.CalendarV2
         };
 
         // Configuration
-        private AppConfig _config;
+        private readonly IConfigService _configService;
 
-
-        public CalendarV2(User currentUser,
-                          TimeEntryRepository timeEntryRepo,
-                          TimeEntryTypeRepository timeEntryTypeRepo,
-                          TimeEntrySubTypeRepository timeEntrySubTypeRepo,
-                          ProjectRepository projectRepo,
-                          UserRepository userRepo,
-                          SpecialDayRepository specialDayRepo,
-                          ArrivalDepartureRepository arrivalDepartureRepo)
+        public CalendarV2(
+            User currentUser,
+            IConfigService configService,
+            TimeEntryRepository timeEntryRepo,
+            TimeEntryTypeRepository timeEntryTypeRepo,
+            TimeEntrySubTypeRepository timeEntrySubTypeRepo,
+            ProjectRepository projectRepo,
+            SpecialDayRepository specialDayRepo,
+            ArrivalDepartureRepository arrivalDepartureRepo)
         {
             InitializeComponent();
             DoubleBuffered = true;
@@ -104,6 +102,8 @@ namespace VykazyPrace.UserControls.CalendarV2
             _selectedUser = currentUser;
             _loggedUser = currentUser;
 
+            _configService = configService;
+
             _timeEntryRepo = timeEntryRepo;
             _timeEntryTypeRepo = timeEntryTypeRepo;
             _timeEntrySubTypeRepo = timeEntrySubTypeRepo;
@@ -111,27 +111,29 @@ namespace VykazyPrace.UserControls.CalendarV2
             _specialDayRepo = specialDayRepo;
             _arrivalDepartureRepo = arrivalDepartureRepo;
 
-            _timeEntryUpdateService = new TimeEntryUpdateService(_timeEntryRepo, _timeEntrySubTypeRepo);
+            _timeEntryUpdateService = new TimeEntryUpdateService(
+                _timeEntryRepo,
+                _timeEntrySubTypeRepo);
 
             _resizeTimer.Tick += async (_, _) =>
             {
                 _resizeTimer.Stop();
-                int headerH = customTableLayoutPanel1.Height;
-                int newH = this.ClientSize.Height - headerH;
 
-                // nastav ji, vyvolej layout a překresli
+                int headerH = customTableLayoutPanel1.Height;
+                int newH = ClientSize.Height - headerH;
+
                 tableLayoutPanelCalendar.Height = Math.Max(0, newH);
                 tableLayoutPanelCalendar.PerformLayout();
                 tableLayoutPanelCalendar.Invalidate();
-                await AdjustIndicatorsAsync(panelContainer.AutoScrollPosition, _selectedUser.Id, _selectedDate);
+
+                await AdjustIndicatorsAsync(
+                    panelContainer.AutoScrollPosition,
+                    _selectedUser.Id,
+                    _selectedDate);
             };
 
-            this.Resize += (_, __) => SyncColumns();
-            this.Load += (_, __) => SyncColumns();
-
-            _specialDayRepo = specialDayRepo;
-
-            _config = ConfigService.Load();
+            Resize += (_, __) => SyncColumns();
+            Load += (_, __) => SyncColumns();
 
             InitializeContextMenus();
         }
@@ -1916,14 +1918,16 @@ namespace VykazyPrace.UserControls.CalendarV2
         /// </summary>
         private void panelDay_Click(object sender, EventArgs e)
         {
-            var current = _config.PanelDayView;
+            var config = _configService.Current;
+
+            var panelDayView = config.PanelDayView;
             var enumValues = Enum.GetValues(typeof(PanelDayView)).Cast<PanelDayView>().ToArray();
-            int index = Array.IndexOf(enumValues, current);
+            int index = Array.IndexOf(enumValues, panelDayView);
             int nextIndex = (index + 1) % enumValues.Length;
-            _config.PanelDayView = enumValues[nextIndex];
+            config.PanelDayView = enumValues[nextIndex];
 
             UpdateHourLabels();
-            ConfigService.Save(_config);
+            _configService.Save();
         }
 
         /// <summary>
@@ -1955,6 +1959,8 @@ namespace VykazyPrace.UserControls.CalendarV2
         /// </summary>
         private void UpdateHourLabels()
         {
+            var config = _configService.Current;
+
             // Pole labelů pro 7 dní (Po–Ne)
             Label[] hourLabels =
             {
@@ -1988,7 +1994,7 @@ namespace VykazyPrace.UserControls.CalendarV2
                 double hoursWorked = dochazka?.HoursWorked ?? 0;
 
                 // Určení formátování textu podle nastavení PanelDayView
-                switch (_config.PanelDayView)
+                switch (config.PanelDayView)
                 {
                     case PanelDayView.Default:
                         // Pouze vykázané hodiny (černá)

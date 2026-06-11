@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion; // pro konverzi DateTime -> UTC
-using VykazyPrace.Core.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VykazyPrace.Core.Database.Models.OutlookEvents;
 
 namespace VykazyPrace.Core.Database.Models;
@@ -35,15 +32,6 @@ public partial class VykazyPraceContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        if (!optionsBuilder.IsConfigured)
-        {
-            var config = ConfigService.Load();
-            optionsBuilder.UseSqlite($"Data Source={config.DatabasePath}");
-            // Pozn.: Pro sdílené použití SQLite mezi více klienty zvaž:
-            //  - PRAGMA journal_mode=WAL
-            //  - PRAGMA busy_timeout=5000
-            // Nastav tyto hodnoty při otevření připojení (např. přes custom interceptor / init script).
-        }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -75,9 +63,7 @@ public partial class VykazyPraceContext : DbContext
                 .HasColumnType("DATETIME");
 
             entity.HasOne(d => d.EntryType).WithMany(p => p.TimeEntries).HasForeignKey(d => d.EntryTypeId);
-
             entity.HasOne(d => d.Project).WithMany(p => p.TimeEntries).HasForeignKey(d => d.ProjectId);
-
             entity.HasOne(d => d.User).WithMany(p => p.TimeEntries).HasForeignKey(d => d.UserId);
         });
 
@@ -99,11 +85,12 @@ public partial class VykazyPraceContext : DbContext
             entity.HasIndex(e => e.Id, "IX_Users_ID").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("ID");
-
             entity.Property(e => e.Email).HasColumnType("TEXT");
+
             entity.HasIndex(e => e.Email).HasDatabaseName("IX_Users_Email");
 
-            entity.HasOne(d => d.UserGroup).WithMany(p => p.Users).HasForeignKey(d => d.UserGroupId);
+            entity.HasOne(d => d.UserGroup).WithMany(p => p.Users)
+                .HasForeignKey(d => d.UserGroupId);
         });
 
         modelBuilder.Entity<UserGroup>(entity =>
@@ -141,14 +128,9 @@ public partial class VykazyPraceContext : DbContext
                 .HasColumnType("TEXT")
                 .IsRequired();
 
-            entity.Property(e => e.ArrivalTimestamp)
-                .HasColumnType("TEXT");
-
-            entity.Property(e => e.DepartureTimestamp)
-                .HasColumnType("TEXT");
-
-            entity.Property(e => e.DepartureReason)
-                .HasColumnType("TEXT");
+            entity.Property(e => e.ArrivalTimestamp).HasColumnType("TEXT");
+            entity.Property(e => e.DepartureTimestamp).HasColumnType("TEXT");
+            entity.Property(e => e.DepartureReason).HasColumnType("TEXT");
 
             entity.Property(e => e.HoursWorked)
                 .HasColumnType("REAL")
@@ -164,7 +146,6 @@ public partial class VykazyPraceContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // CalendarItems
         modelBuilder.Entity<CalendarItem>(e =>
         {
             e.Property(x => x.LastSeenAtUtc).HasConversion(dtToUtc);
@@ -173,76 +154,68 @@ public partial class VykazyPraceContext : DbContext
             e.Property(x => x.StartUtc).HasConversion(dtNullableToUtc);
             e.Property(x => x.EndUtc).HasConversion(dtNullableToUtc);
 
-            // Unikátní identita fyzické instance v Outlooku
             e.HasIndex(x => new { x.StoreId, x.EntryId, x.OccurrenceStartUtc })
-             .IsUnique();
+                .IsUnique();
 
-            // Časté dotazy
             e.HasIndex(x => new { x.StoreId, x.EntryId });
             e.HasIndex(x => x.StartUtc);
         });
 
-        // UserItemStates
         modelBuilder.Entity<UserItemState>(e =>
         {
             e.Property(x => x.UpdatedAtUtc).HasConversion(dtToUtc);
 
-            // Každý uživatel má max. 1 stav k jedné položce
             e.HasIndex(x => new { x.UserId, x.ItemId }).IsUnique();
 
             e.HasOne(x => x.Item)
-             .WithMany(i => i.UserStates)
-             .HasForeignKey(x => x.ItemId)
-             .OnDelete(DeleteBehavior.Cascade);
+                .WithMany(i => i.UserStates)
+                .HasForeignKey(x => x.ItemId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             e.HasOne(x => x.User)
-             .WithMany()
-             .HasForeignKey(x => x.UserId)
-             .OnDelete(DeleteBehavior.Cascade);
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // ItemChangeLogs
         modelBuilder.Entity<ItemChangeLog>(e =>
         {
             e.Property(x => x.WhenUtc).HasConversion(dtToUtc);
             e.HasIndex(x => new { x.ItemId, x.WhenUtc });
 
             e.HasOne(x => x.Item)
-             .WithMany(i => i.ChangeLogs)
-             .HasForeignKey(x => x.ItemId)
-             .OnDelete(DeleteBehavior.Cascade);
+                .WithMany(i => i.ChangeLogs)
+                .HasForeignKey(x => x.ItemId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             e.HasOne(x => x.User)
-             .WithMany()
-             .HasForeignKey(x => x.UserId)
-             .OnDelete(DeleteBehavior.SetNull);
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
-        // ItemAttendees
         modelBuilder.Entity<ItemAttendee>(e =>
         {
             e.HasIndex(x => x.ItemId);
             e.HasIndex(x => x.Email);
 
             e.HasOne(x => x.Item)
-             .WithMany(i => i.Attendees)
-             .HasForeignKey(x => x.ItemId)
-             .OnDelete(DeleteBehavior.Cascade);
+                .WithMany(i => i.Attendees)
+                .HasForeignKey(x => x.ItemId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             e.HasOne(x => x.User)
-             .WithMany()
-             .HasForeignKey(x => x.UserId)
-             .OnDelete(DeleteBehavior.SetNull);
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
-        // SyncSessions
         modelBuilder.Entity<SyncSession>(e =>
         {
             e.Property(x => x.StartedUtc).HasConversion(dtToUtc);
             e.Property(x => x.FinishedUtc).HasConversion(dtNullableToUtc);
         });
 
-        // SyncState
         modelBuilder.Entity<SyncState>(e =>
         {
             e.HasIndex(x => new { x.UserId, x.MachineName, x.Key }).IsUnique();
@@ -253,7 +226,6 @@ public partial class VykazyPraceContext : DbContext
             .WithMany(u => u.ChildUsers)
             .HasForeignKey(u => u.MasterUserId)
             .OnDelete(DeleteBehavior.Restrict);
-
 
         OnModelCreatingPartial(modelBuilder);
     }

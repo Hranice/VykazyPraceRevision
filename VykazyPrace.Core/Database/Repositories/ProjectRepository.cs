@@ -1,21 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using VykazyPrace.Core.Database.Models;
 
 namespace VykazyPrace.Core.Database.Repositories
 {
     public class ProjectRepository
     {
-        private readonly VykazyPraceContext _context;
+        private readonly IDbContextFactory<VykazyPraceContext> _contextFactory;
 
-        public ProjectRepository()
+        public ProjectRepository(IDbContextFactory<VykazyPraceContext> contextFactory)
         {
-            _context = new VykazyPraceContext();
+            _contextFactory = contextFactory;
         }
 
         /// <summary>
@@ -23,7 +18,10 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<Project> CreateProjectAsync(Project project)
         {
-            var user = await _context.Users.FindAsync(project.CreatedBy);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            var user = await context.Users.FindAsync(project.CreatedBy);
+
             if (user == null)
             {
                 throw new Exception($"Uživatel s ID {project.CreatedBy} neexistuje.");
@@ -31,20 +29,20 @@ namespace VykazyPrace.Core.Database.Repositories
 
             project.CreatedByNavigation = user;
 
-            _context.Projects.Add(project);
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            context.Projects.Add(project);
+            await VykazyPraceContextExtensions.SafeSaveAsync(context);
+
             return project;
         }
 
         /// <summary>
-        /// Získání všech projektů i zakázek, seřazených podle interního/externího označení,
-        /// roku sestupně a pořadového čísla sestupně. Chybné záznamy jsou umístěny na konec.
+        /// Získání všech projektů.
         /// </summary>
         public async Task<List<Project>> GetAllProjectsAsync(bool includeArchived = false)
         {
-            _context.ChangeTracker.Clear();
+            await using var context = await _contextFactory.CreateDbContextAsync();
 
-            IQueryable<Project> projectsQuery = _context.Projects
+            IQueryable<Project> projectsQuery = context.Projects
                 .AsNoTracking()
                 .Include(p => p.CreatedByNavigation);
 
@@ -61,77 +59,45 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
-        /// Vrací pořadové číslo jako číslo, nebo nejnižší možnou hodnotu pro neplatné záznamy.
+        /// Filtrováno podle typu projektu.
         /// </summary>
-        private int GetProjectNumber(string description)
+        public async Task<List<Project>> GetAllProjectsAsyncByProjectType(
+            int projectType,
+            bool onlyArchived = false)
         {
-            if (string.IsNullOrWhiteSpace(description))
-                return int.MaxValue; // Na konec
+            await using var context = await _contextFactory.CreateDbContextAsync();
 
-            var match = Regex.Match(description, @"^\d+");
-            return match.Success && int.TryParse(match.Value, out int number) ? number : int.MaxValue;
-        }
-
-        /// <summary>
-        /// Získání všech projektů i zakázek, seřazených podle interního/externího označení,
-        /// roku sestupně a pořadového čísla sestupně. Filtrováno podle typu projektu.
-        /// Chybné záznamy jsou umístěny na konec.
-        /// </summary>
-        public async Task<List<Project>> GetAllProjectsAsyncByProjectType(int projectType, bool onlyArchived = false)
-        {
-            var projects = await _context.Projects
+            var projects = await context.Projects
+                .AsNoTracking()
                 .Include(p => p.CreatedByNavigation)
-                .Where(p => p.IsArchived == (onlyArchived ? 1 : 0) && p.ProjectType == projectType)
-                .ToListAsync(); // Asynchronní načtení dat do paměti
-
-            return projects
-                 .OrderBy(p => GetProjectNumber(p.ProjectDescription))
-                 .ToList();
-        }
-
-        /// <summary>
-        /// Získání všech projektů i zakázek, seřazených podle interního/externího označení,
-        /// roku sestupně a pořadového čísla sestupně. Filtrováno podle typu projektu.
-        /// Chybné záznamy jsou umístěny na konec.
-        /// </summary>
-        public async Task<List<Project>> GetAllFullProjectsAndPreProjectsAsync(bool archived = false)
-        {
-            var projects = await _context.Projects
-                .Include(p => p.CreatedByNavigation)
-                .Where(p => p.IsArchived == (archived ? 1 : 0) && (p.ProjectType == 1 || p.ProjectType == 2))
+                .Where(p =>
+                    p.IsArchived == (onlyArchived ? 1 : 0) &&
+                    p.ProjectType == projectType)
                 .ToListAsync();
 
             return projects
-                 .OrderBy(p => GetProjectNumber(p.ProjectDescription))
-                 .ToList();
+                .OrderBy(p => GetProjectNumber(p.ProjectDescription))
+                .ToList();
         }
 
         /// <summary>
-        /// Ověří, zda je ProjectDescription platný (má správnou délku a formát).
+        /// Získání všech zakázek a předprojektů.
         /// </summary>
-        private bool IsValidProjectDescription(string description)
+        public async Task<List<Project>> GetAllFullProjectsAndPreProjectsAsync(bool archived = false)
         {
-            return !string.IsNullOrEmpty(description) &&
-                   description.Length >= 7 &&
-                   (description[4] == 'I' || description[4] == 'E') &&
-                   int.TryParse(description.Substring(5, 2), out _) &&
-                   int.TryParse(description.Substring(0, 4), out _);
-        }
+            await using var context = await _contextFactory.CreateDbContextAsync();
 
-        /// <summary>
-        /// Vrací typ projektu (I/E) nebo prázdný string pro neplatné záznamy.
-        /// </summary>
-        private string GetProjectType(string description)
-        {
-            return IsValidProjectDescription(description) ? description.Substring(4, 1) : "";
-        }
+            var projects = await context.Projects
+                .AsNoTracking()
+                .Include(p => p.CreatedByNavigation)
+                .Where(p =>
+                    p.IsArchived == (archived ? 1 : 0) &&
+                    (p.ProjectType == 1 || p.ProjectType == 2))
+                .ToListAsync();
 
-        /// <summary>
-        /// Vrací rok jako číslo, nebo nejnižší možnou hodnotu pro neplatné záznamy.
-        /// </summary>
-        private int GetProjectYear(string description)
-        {
-            return IsValidProjectDescription(description) && int.TryParse(description.Substring(5, 2), out int year) ? year : int.MinValue;
+            return projects
+                .OrderBy(p => GetProjectNumber(p.ProjectDescription))
+                .ToList();
         }
 
         /// <summary>
@@ -139,7 +105,10 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<Project?> GetProjectByIdAsync(int id)
         {
-            return await _context.Projects
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            return await context.Projects
+                .AsNoTracking()
                 .Include(p => p.CreatedByNavigation)
                 .Include(p => p.TimeEntries)
                 .FirstOrDefaultAsync(p => p.Id == id);
@@ -150,7 +119,10 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<bool> UpdateProjectAsync(Project project)
         {
-            var existingProject = await _context.Projects.FindAsync(project.Id);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            var existingProject = await context.Projects.FindAsync(project.Id);
+
             if (existingProject == null)
                 return false;
 
@@ -161,7 +133,8 @@ namespace VykazyPrace.Core.Database.Repositories
             existingProject.DateFullFilled = project.DateFullFilled;
             existingProject.IsArchived = project.IsArchived;
 
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            await VykazyPraceContextExtensions.SafeSaveAsync(context);
+
             return true;
         }
 
@@ -170,13 +143,65 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<bool> DeleteProjectAsync(int id)
         {
-            var project = await _context.Projects.FindAsync(id);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            var project = await context.Projects.FindAsync(id);
+
             if (project == null)
                 return false;
 
-            _context.Projects.Remove(project);
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            context.Projects.Remove(project);
+            await VykazyPraceContextExtensions.SafeSaveAsync(context);
+
             return true;
+        }
+
+        /// <summary>
+        /// Vrací pořadové číslo jako číslo, nebo nejvyšší možnou hodnotu pro neplatné záznamy.
+        /// </summary>
+        private static int GetProjectNumber(string? description)
+        {
+            if (string.IsNullOrWhiteSpace(description))
+                return int.MaxValue;
+
+            var match = Regex.Match(description, @"^\d+");
+
+            return match.Success && int.TryParse(match.Value, out int number)
+                ? number
+                : int.MaxValue;
+        }
+
+        /// <summary>
+        /// Ověří, zda je ProjectDescription platný.
+        /// </summary>
+        private static bool IsValidProjectDescription(string? description)
+        {
+            return !string.IsNullOrEmpty(description) &&
+                   description.Length >= 7 &&
+                   (description[4] == 'I' || description[4] == 'E') &&
+                   int.TryParse(description.Substring(5, 2), out _) &&
+                   int.TryParse(description.Substring(0, 4), out _);
+        }
+
+        /// <summary>
+        /// Vrací typ projektu I/E nebo prázdný string pro neplatné záznamy.
+        /// </summary>
+        private static string GetProjectType(string? description)
+        {
+            return IsValidProjectDescription(description)
+                ? description!.Substring(4, 1)
+                : string.Empty;
+        }
+
+        /// <summary>
+        /// Vrací rok jako číslo, nebo nejnižší možnou hodnotu pro neplatné záznamy.
+        /// </summary>
+        private static int GetProjectYear(string? description)
+        {
+            return IsValidProjectDescription(description) &&
+                   int.TryParse(description!.Substring(5, 2), out int year)
+                ? year
+                : int.MinValue;
         }
     }
 }

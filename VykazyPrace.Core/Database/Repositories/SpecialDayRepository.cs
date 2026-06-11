@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using VykazyPrace.Core.Database.Models;
 
 namespace VykazyPrace.Core.Database.Repositories
 {
     public class SpecialDayRepository
     {
-        private readonly VykazyPraceContext _context;
+        private readonly IDbContextFactory<VykazyPraceContext> _contextFactory;
 
-        public SpecialDayRepository()
+        public SpecialDayRepository(IDbContextFactory<VykazyPraceContext> contextFactory)
         {
-            _context = new VykazyPraceContext();
+            _contextFactory = contextFactory;
         }
 
         /// <summary>
@@ -21,38 +17,41 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<SpecialDay> CreateSpecialDayAsync(SpecialDay specialDay)
         {
-            _context.SpecialDays.Add(specialDay);
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            context.SpecialDays.Add(specialDay);
+            await VykazyPraceContextExtensions.SafeSaveAsync(context);
+
             return specialDay;
         }
 
         /// <summary>
-        /// Uzamkne všechny dny v daném měsíci (vytvoří SpecialDay pro každý den).
+        /// Uzamkne všechny dny v daném měsíci.
         /// Pokud už SpecialDay na dané datum existuje, aktualizuje ho.
         /// </summary>
-        /// <param name="month">Číslo měsíce (1-12)</param>
-        /// <param name="year">Rok (např. 2025)</param>
         public async Task<bool> LockEntireMonthAsync(int month, int year)
         {
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
             try
             {
-                var firstDayOfMonth = new DateTime(year, month, 1);
-                var daysInMonth = DateTime.DaysInMonth(year, month);
+                int daysInMonth = DateTime.DaysInMonth(year, month);
 
                 for (int day = 1; day <= daysInMonth; day++)
                 {
                     var date = new DateTime(year, month, day);
-                    var existingSpecialDay = await _context.SpecialDays
+
+                    var existingSpecialDay = await context.SpecialDays
                         .FirstOrDefaultAsync(sd => sd.Date.Date == date.Date);
 
                     if (existingSpecialDay != null)
                     {
-                        // Aktualizuj existující SpecialDay
                         existingSpecialDay.Locked = true;
+                        existingSpecialDay.Color = "#DCDCDC";
+                        existingSpecialDay.Title = "Uzamčeno";
                     }
                     else
                     {
-                        // Přidej nový SpecialDay
                         var newSpecialDay = new SpecialDay
                         {
                             Date = date,
@@ -60,11 +59,13 @@ namespace VykazyPrace.Core.Database.Repositories
                             Color = "#DCDCDC",
                             Title = "Uzamčeno"
                         };
-                        _context.SpecialDays.Add(newSpecialDay);
+
+                        context.SpecialDays.Add(newSpecialDay);
                     }
                 }
 
-                await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+                await VykazyPraceContextExtensions.SafeSaveAsync(context);
+
                 return true;
             }
             catch
@@ -73,38 +74,45 @@ namespace VykazyPrace.Core.Database.Repositories
             }
         }
 
-
         /// <summary>
         /// Získání všech speciálních dnů.
         /// </summary>
         public async Task<List<SpecialDay>> GetAllSpecialDaysAsync()
         {
-            return await _context.SpecialDays
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            return await context.SpecialDays
+                .AsNoTracking()
                 .OrderBy(sd => sd.Date)
                 .ToListAsync();
         }
 
         /// <summary>
-        /// Získání všech speciálních dnů pro zadaný týden (od pondělí do neděle).
+        /// Získání všech speciálních dnů pro zadaný týden.
         /// </summary>
-        /// <param name="weekStart">Datum začátku týdne (pondělí).</param>
         public async Task<List<SpecialDay>> GetSpecialDaysForWeekAsync(DateTime weekStart)
         {
-            var weekEnd = weekStart.AddDays(7);
+            await using var context = await _contextFactory.CreateDbContextAsync();
 
-            return await _context.SpecialDays
-                .Where(sd => sd.Date.Date >= weekStart.Date && sd.Date.Date < weekEnd.Date)
+            var from = weekStart.Date;
+            var to = from.AddDays(7);
+
+            return await context.SpecialDays
+                .AsNoTracking()
+                .Where(sd => sd.Date.Date >= from && sd.Date.Date < to)
                 .OrderBy(sd => sd.Date)
                 .ToListAsync();
         }
-
 
         /// <summary>
         /// Získání speciálního dne podle ID.
         /// </summary>
         public async Task<SpecialDay?> GetSpecialDayByIdAsync(int id)
         {
-            return await _context.SpecialDays
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            return await context.SpecialDays
+                .AsNoTracking()
                 .FirstOrDefaultAsync(sd => sd.Id == id);
         }
 
@@ -113,8 +121,13 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<SpecialDay?> GetSpecialDayByDateAsync(DateTime date)
         {
-            return await _context.SpecialDays
-                .FirstOrDefaultAsync(sd => sd.Date.Date == date.Date);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            var day = date.Date;
+
+            return await context.SpecialDays
+                .AsNoTracking()
+                .FirstOrDefaultAsync(sd => sd.Date.Date == day);
         }
 
         /// <summary>
@@ -122,7 +135,10 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<bool> UpdateSpecialDayAsync(SpecialDay specialDay)
         {
-            var existingDay = await _context.SpecialDays.FindAsync(specialDay.Id);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            var existingDay = await context.SpecialDays.FindAsync(specialDay.Id);
+
             if (existingDay == null)
                 return false;
 
@@ -131,7 +147,8 @@ namespace VykazyPrace.Core.Database.Repositories
             existingDay.Locked = specialDay.Locked;
             existingDay.Color = specialDay.Color;
 
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            await VykazyPraceContextExtensions.SafeSaveAsync(context);
+
             return true;
         }
 
@@ -140,12 +157,16 @@ namespace VykazyPrace.Core.Database.Repositories
         /// </summary>
         public async Task<bool> DeleteSpecialDayAsync(int id)
         {
-            var specialDay = await _context.SpecialDays.FindAsync(id);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            var specialDay = await context.SpecialDays.FindAsync(id);
+
             if (specialDay == null)
                 return false;
 
-            _context.SpecialDays.Remove(specialDay);
-            await VykazyPraceContextExtensions.SafeSaveAsync(_context);
+            context.SpecialDays.Remove(specialDay);
+            await VykazyPraceContextExtensions.SafeSaveAsync(context);
+
             return true;
         }
     }

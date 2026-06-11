@@ -12,11 +12,18 @@ namespace VykazyPrace.Core.Import
         private const int SnackOrSpecialEntryTypeId = 1;
         private const int NormalEntryTypeId = 10;
 
+        private readonly IDbContextFactory<VykazyPraceContext> _contextFactory;
+
+        public ExternalTimeEntryImportService(IDbContextFactory<VykazyPraceContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
+        }
+
         public async Task<ExternalImportResult> ImportAsync(string filePath)
         {
             var result = new ExternalImportResult();
 
-            using var context = new VykazyPraceContext();
+            await using var context = await _contextFactory.CreateDbContextAsync();
             using var workbook = new XLWorkbook(filePath);
 
             var users = await context.Users.AsNoTracking().ToListAsync();

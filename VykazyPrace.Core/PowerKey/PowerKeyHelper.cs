@@ -9,8 +9,15 @@ namespace VykazyPrace.Core.PowerKey
 {
     public class PowerKeyHelper
     {
+        private readonly ArrivalDepartureRepository _arrivalDepartureRepository;
+
         private const string ConnectionString =
             "Server=cze-svd02;Database=powerkey;User Id=vykazprace;Password=UtNPs66ZZk56qSt;TrustServerCertificate=True;";
+
+        public PowerKeyHelper(ArrivalDepartureRepository arrivalDepartureRepository)
+        {
+            _arrivalDepartureRepository = arrivalDepartureRepository;
+        }
 
         public async Task<int> DownloadForUserAsync(DateTime month, User user)
         {
@@ -26,7 +33,6 @@ namespace VykazyPrace.Core.PowerKey
                 var data = await GetUserDataFromSpAsync(user.PersonalNumber, month);
                 if (data == null || data.Rows.Count == 0) return 0;
 
-                var repo = new ArrivalDepartureRepository();
                 int saved = 0;
 
                 foreach (DataRow row in data.Rows)
@@ -40,7 +46,7 @@ namespace VykazyPrace.Core.PowerKey
                                              out string? reason))
                         continue;
 
-                    var existingForDay = await repo.ListByUserAndDateAsync(user.Id, workDate.Date);
+                    var existingForDay = await _arrivalDepartureRepository.ListByUserAndDateAsync(user.Id, workDate.Date);
 
                     // Helpery
                     static bool SameDT(DateTime? a, DateTime? b, TimeSpan? tol = null)
@@ -102,7 +108,7 @@ namespace VykazyPrace.Core.PowerKey
                         if (string.IsNullOrWhiteSpace(subset.DepartureReason) && !string.IsNullOrWhiteSpace(reason))
                             subset.DepartureReason = reason;
 
-                        await repo.UpdateArrivalDepartureAsync(subset);
+                        await _arrivalDepartureRepository.UpdateArrivalDepartureAsync(subset);
                         saved++;
                         continue;
                     }
@@ -118,7 +124,7 @@ namespace VykazyPrace.Core.PowerKey
                         HoursOvertime = overtime
                     };
 
-                    await repo.CreateArrivalDepartureAsync(entity);
+                    await _arrivalDepartureRepository.CreateArrivalDepartureAsync(entity);
                     saved++;
                 }
 

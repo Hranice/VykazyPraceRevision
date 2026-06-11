@@ -5,62 +5,86 @@ namespace VykazyPrace.Dialogs
 {
     public partial class SettingsDialog : Form
     {
-        private AppConfig _config;
-        private bool databaseChanged = false;
+        private readonly IConfigService _configService;
         private readonly User _selectedUser;
 
-        public SettingsDialog(User selectedUser)
+        private bool _databaseChanged;
+
+        public SettingsDialog(
+            IConfigService configService,
+            User selectedUser)
         {
+            _configService = configService;
+            _selectedUser = selectedUser;
+
             InitializeComponent();
 
-            _config = ConfigService.Load();
-            labelDatabaseFilePath.Text = _config.DatabasePath;
-            dateTimePicker1.Value = _config.NotificationTime;
-            checkBoxEnableNotification.Checked = _config.NotificationOn;
-            checkBoxMinimizeToTray.Checked = _config.MinimizeToTray;
-            textBoxNotificationTitle.Text = _config.NotificationTitle;
-            textBoxNotificationText.Text = _config.NotificationText;
+            LoadConfigToUi();
+        }
 
-            _selectedUser = selectedUser;
+        private void LoadConfigToUi()
+        {
+            var config = _configService.Current;
+
+            labelDatabaseFilePath.Text = config.DatabasePath;
+            dateTimePicker1.Value = config.NotificationTime;
+            checkBoxEnableNotification.Checked = config.NotificationOn;
+            checkBoxMinimizeToTray.Checked = config.MinimizeToTray;
+            textBoxNotificationTitle.Text = config.NotificationTitle;
+            textBoxNotificationText.Text = config.NotificationText;
         }
 
         private void buttonPathToDatabase_Click(object sender, EventArgs e)
         {
+            var config = _configService.Current;
+
             using var ofd = new OpenFileDialog
             {
                 Title = "Vyberte databázový soubor",
                 Filter = "SQLite databáze (*.db)|*.db|Všechny soubory (*.*)|*.*"
             };
 
-            if (ofd.ShowDialog() == DialogResult.OK)
+            if (ofd.ShowDialog(this) != DialogResult.OK)
+                return;
+
+            labelDatabaseFilePath.Text = ofd.FileName;
+
+            if (config.DatabasePath != ofd.FileName)
             {
-                labelDatabaseFilePath.Text = ofd.FileName;
-                if (_config.DatabasePath != ofd.FileName)
-                {
-                    databaseChanged = true;
-                }
+                _databaseChanged = true;
             }
         }
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            _config.DatabasePath = labelDatabaseFilePath.Text;
-            _config.NotificationTime = dateTimePicker1.Value;
-            _config.NotificationOn = checkBoxEnableNotification.Checked;
-            _config.MinimizeToTray = checkBoxMinimizeToTray.Checked;
-            _config.NotificationTitle = textBoxNotificationTitle.Text;
-            _config.NotificationText = textBoxNotificationText.Text;
-            ConfigService.Save(_config);
+            var config = _configService.Current;
 
-            if (databaseChanged)
+            config.DatabasePath = labelDatabaseFilePath.Text;
+            config.NotificationTime = dateTimePicker1.Value;
+            config.NotificationOn = checkBoxEnableNotification.Checked;
+            config.MinimizeToTray = checkBoxMinimizeToTray.Checked;
+            config.NotificationTitle = textBoxNotificationTitle.Text;
+            config.NotificationText = textBoxNotificationText.Text;
+
+            _configService.Save();
+
+            if (_databaseChanged)
             {
-                MessageBox.Show("Nové nastavení bylo uloženo.\n\nZměna databáze se projeví až po restartu aplikace.", "Uloženo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(
+                    "Nové nastavení bylo uloženo.\n\nZměna databáze se projeví až po restartu aplikace.",
+                    "Uloženo",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
-
             else
             {
-                MessageBox.Show("Nové nastavení bylo uloženo.", "Uloženo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(
+                    "Nové nastavení bylo uloženo.",
+                    "Uloženo",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
+
             Close();
         }
     }

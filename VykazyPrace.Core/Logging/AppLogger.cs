@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using Serilog;
+﻿using Serilog;
 using Serilog.Events;
 using VykazyPrace.Core.Configuration;
 using VykazyPrace.Core.Helpers;
@@ -9,22 +7,20 @@ namespace VykazyPrace.Core.Logging
 {
     public static class AppLogger
     {
-        public static ILogger Logger { get; private set; }
+        public static ILogger Logger { get; private set; } = Serilog.Core.Logger.None;
 
         private static ILoggerPopupService? _popupService;
+        private static bool _initialized;
 
-        public static void RegisterPopupService(ILoggerPopupService service)
+        public static void Initialize(IConfigService configService)
         {
-            _popupService = service;
-        }
+            if (_initialized)
+                return;
 
-        static AppLogger()
-        {
-            var config = ConfigService.Load();
+            var config = configService.Current;
             var level = ParseLogLevel(config.LogLevel);
 
             var logDirectory = AppPaths.LogsDirectory;
-
             Directory.CreateDirectory(logDirectory);
 
             var logFilePath = Path.Combine(logDirectory, "log-.txt");
@@ -34,9 +30,16 @@ namespace VykazyPrace.Core.Logging
                 .WriteTo.Console()
                 .WriteTo.File(logFilePath, rollingInterval: RollingInterval.Day)
                 .CreateLogger();
+
+            _initialized = true;
         }
 
-        private static LogEventLevel ParseLogLevel(string level)
+        public static void RegisterPopupService(ILoggerPopupService service)
+        {
+            _popupService = service;
+        }
+
+        private static LogEventLevel ParseLogLevel(string? level)
         {
             return level?.ToLower() switch
             {
@@ -58,15 +61,16 @@ namespace VykazyPrace.Core.Logging
         public static void Information(string message, bool showDialog = false)
         {
             Logger.Information(message);
-            if (showDialog && _popupService != null)
+
+            if (showDialog)
             {
-                _popupService.ShowInformation(message);
+                _popupService?.ShowInformation(message);
             }
         }
 
         public static void Error(string message, Exception ex)
         {
-            Logger.Error(ex, $"{message}\n\nInner exception: {ex.InnerException}");
+            Logger.Error(ex, "{Message}\n\nInner exception: {InnerException}", message, ex.InnerException);
             _popupService?.ShowError(message, ex);
         }
 
@@ -74,6 +78,11 @@ namespace VykazyPrace.Core.Logging
         {
             Logger.Error(message);
             _popupService?.ShowError(message);
+        }
+
+        public static void CloseAndFlush()
+        {
+            Log.CloseAndFlush();
         }
     }
 }

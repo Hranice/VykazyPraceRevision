@@ -9,6 +9,7 @@
       "WorkLog/1.6.0.0": {
         "dependencies": {
           "ClosedXML": "0.105.0",
+          "Microsoft.EntityFrameworkCore.Sqlite": "9.0.2",
           "Microsoft.Office.Interop.Outlook": "15.0.4797.1004",
           "System.Data.SqlClient": "4.9.0",
           "VykazyPrace.Core": "1.0.0",

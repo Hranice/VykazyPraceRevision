@@ -165,6 +165,10 @@
               "target": "Package",
               "version": "[0.105.0, )"
             },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[9.0.2, )"
+            },
             "Microsoft.Office.Interop.Outlook": {
               "target": "Package",
               "version": "[15.0.4797.1004, )"

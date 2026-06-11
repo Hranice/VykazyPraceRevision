@@ -1,17 +1,18 @@
-﻿using System.Data;
+﻿using ClosedXML.Excel;
+using Microsoft.Extensions.DependencyInjection;
+using System.Data;
+using System.Diagnostics;
+using System.Globalization;
+using System.Runtime.InteropServices;
+using VykazyPrace.Core.Configuration;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
-using System.Diagnostics;
-using VykazyPrace.Core.PowerKey;
-using VykazyPrace.Core.Logging;
 using VykazyPrace.Core.Helpers;
-using ClosedXML.Excel;
-using DataTable = System.Data.DataTable;
-using System.Globalization;
-using VykazyPrace.Core.Configuration;
-using Excel = Microsoft.Office.Interop.Excel;
-using System.Runtime.InteropServices;
+using VykazyPrace.Core.Logging;
+using VykazyPrace.Core.PowerKey;
 using VykazyPrace.Enums;
+using DataTable = System.Data.DataTable;
+using Excel = Microsoft.Office.Interop.Excel;
 
 /// <summary>
 /// ChatGPT 5 credits:
@@ -25,27 +26,44 @@ namespace VykazyPrace.Dialogs
     /// </summary>
     public partial class ExportDialog : Form
     {
-        // Repozitáře
-        private readonly TimeEntryRepository _timeEntryRepo = new();
-        private readonly UserGroupRepository _userGroupRepository = new();
-        private readonly SpecialDayRepository _specialDayRepo = new();
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IConfigService _configService;
+
+        private readonly UserRepository _userRepository;
+        private readonly TimeEntryRepository _timeEntryRepo;
+        private readonly SpecialDayRepository _specialDayRepo;
 
         private readonly User _currentUser;
-        private readonly AppConfig _config;
 
-        // Služby
-        private readonly DataTableFactory _tableFactory = new();
+        private readonly DataTableFactory _tableFactory;
         private readonly ExcelStylingService _styling = new();
 
+        private List<(RadioButton radioButton, Panel panel)> _options = new();
+        private List<User> _selectedExportUsers = new();
 
-        public ExportDialog(User currentUser)
+        private bool _isTreeViewChecking;
+
+        public ExportDialog(
+     IServiceProvider serviceProvider,
+     IConfigService configService,
+     User currentUser,
+     TimeEntryRepository timeEntryRepo,
+     SpecialDayRepository specialDayRepo,
+     UserRepository userRepository,
+     DataTableFactory tableFactory)
         {
-            InitializeComponent();
+            _serviceProvider = serviceProvider;
+            _configService = configService;
             _currentUser = currentUser;
-            _config = ConfigService.Load();
+
+            _timeEntryRepo = timeEntryRepo;
+            _specialDayRepo = specialDayRepo;
+            _userRepository = userRepository;
+            _tableFactory = tableFactory;
+
+            InitializeComponent();
         }
 
-        #region — Životní cyklus dialogu —
         private async void ExportDialog_Load(object sender, EventArgs e)
         {
             InitializeDatePickers();
@@ -57,14 +75,7 @@ namespace VykazyPrace.Dialogs
                 gBLock.Visible = true;
             }
         }
-        #endregion
 
-        #region — Inicializace UI —
-        private List<(RadioButton radioButton, Panel panel)> options;
-
-        /// <summary>
-        /// Nastaví výchozí rozmezí (předchozí měsíc) a předvybere měsíc v ComboBoxu.
-        /// </summary>
         private void InitializeDatePickers()
         {
             var firstDayThisMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
@@ -73,9 +84,9 @@ namespace VykazyPrace.Dialogs
 
             dtpFrom.Value = range.From;
             dtpTo.Value = range.To;
-            cBMonth.SelectedIndex = previousMonth.Month - 1; // 0..11
+            cBMonth.SelectedIndex = previousMonth.Month - 1;
 
-            options = new List<(RadioButton, Panel)>
+            _options = new List<(RadioButton, Panel)>
             {
                 (rBSpecificTimePeriod, panelSpecificTimePeriod),
                 (rBSpecificWeek, panelSpecificWeek),
@@ -84,19 +95,20 @@ namespace VykazyPrace.Dialogs
             };
 
             nUDWeek.Value = ISOWeek.GetWeekOfYear(DateTime.Now);
-            cBMonth2.SelectedIndex = DateTime.Now.Month - 1; // 0..11
+            cBMonth2.SelectedIndex = DateTime.Now.Month - 1;
             nUDYear.Value = DateTime.Now.Year;
         }
 
         private void RestoreExportRangeSelectionFromConfig()
         {
-            var exportConfig = _config.ExportSelection;
+            var config = _configService.Current;
+            var exportConfig = config.ExportSelection;
+
             if (exportConfig == null)
                 return;
 
             cBBuildEvaluationSheet.Checked = exportConfig.BuildEvaluationSheet;
 
-            // Nejdřív vše odškrtnout, protože radio buttony mohou být v různých containerech
             rBSpecificTimePeriod.Checked = false;
             rBSpecificWeek.Checked = false;
             rBSpecificMonth.Checked = false;
@@ -104,7 +116,6 @@ namespace VykazyPrace.Dialogs
 
             RadioButton targetRadioButton = rBSpecificTimePeriod;
 
-            // nejdřív rok, protože ho používá víc režimů
             if (exportConfig.Year.HasValue)
             {
                 int year = exportConfig.Year.Value;
@@ -138,8 +149,12 @@ namespace VykazyPrace.Dialogs
                 case ExportRangeType.Month:
                     targetRadioButton = rBSpecificMonth;
 
-                    if (exportConfig.Month.HasValue && exportConfig.Month.Value >= 1 && exportConfig.Month.Value <= 12)
+                    if (exportConfig.Month.HasValue &&
+                        exportConfig.Month.Value >= 1 &&
+                        exportConfig.Month.Value <= 12)
+                    {
                         cBMonth2.SelectedIndex = exportConfig.Month.Value - 1;
+                    }
 
                     break;
 
@@ -151,9 +166,7 @@ namespace VykazyPrace.Dialogs
             targetRadioButton.Checked = true;
             SelectOption(targetRadioButton);
         }
-        #endregion
 
-        #region — Handlery —
         private async void bSaveAs_Click(object sender, EventArgs e)
         {
             var selectedUsers = GetSelectedExportUsers();
@@ -175,7 +188,7 @@ namespace VykazyPrace.Dialogs
                 FileName = "Export.xlsx"
             };
 
-            if (sfd.ShowDialog() != DialogResult.OK)
+            if (sfd.ShowDialog(this) != DialogResult.OK)
                 return;
 
             var exportService = new TimeEntryExportService(
@@ -198,7 +211,13 @@ namespace VykazyPrace.Dialogs
                     _currentUser,
                     cBBuildEvaluationSheet.Checked);
 
-                SaveExportUserSelectionToConfig();
+                SaveExportSelectionToConfig();
+
+                MessageBox.Show(
+                    "Export byl dokončen.",
+                    "Export",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
@@ -212,52 +231,79 @@ namespace VykazyPrace.Dialogs
 
         private void cboMonth_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            var (from, to) = DateRangeHelper.GetMonthRangeByIndex(cBMonth.SelectedIndex, dtpFrom.Value.Year);
+            var (from, to) = DateRangeHelper.GetMonthRangeByIndex(
+                cBMonth.SelectedIndex,
+                dtpFrom.Value.Year);
+
             dtpFrom.Value = from;
             dtpTo.Value = to;
         }
 
         private async void bLockEntries_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(cBMonth.Text)) return;
+            if (string.IsNullOrWhiteSpace(cBMonth.Text))
+                return;
 
-            var result = MessageBox.Show($"Zamknout záznamy za měsíc {cBMonth.Text}?", "Zamknout data?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
-            if (result != DialogResult.Yes) return;
+            var result = MessageBox.Show(
+                $"Zamknout záznamy za měsíc {cBMonth.Text}?",
+                "Zamknout data?",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Warning);
 
-            var exportService = new TimeEntryExportService(_timeEntryRepo, _specialDayRepo, _tableFactory, _styling);
+            if (result != DialogResult.Yes)
+                return;
+
+            var exportService = new TimeEntryExportService(
+                _timeEntryRepo,
+                _specialDayRepo,
+                _tableFactory,
+                _styling);
+
             try
             {
                 await exportService.LockMonthAsync(cBMonth.Text, dtpFrom.Value.Year);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Zámek selhal. Podrobnosti v logu.\n{ex.Message}", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    $"Zámek selhal. Podrobnosti v logu.\n{ex.Message}",
+                    "Chyba",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 
         private void SelectOption(RadioButton selectedRadioButton)
         {
-            foreach (var option in options)
+            foreach (var option in _options)
             {
                 bool isSelected = option.radioButton == selectedRadioButton;
+
                 option.radioButton.Checked = isSelected;
-                option.panel.BackColor = isSelected ? Color.White : SystemColors.Control;
+                option.panel.BackColor = isSelected
+                    ? Color.White
+                    : SystemColors.Control;
             }
         }
 
         private void radioButtonTimePeriod_CheckedChanged(object sender, EventArgs e)
         {
-            var rb = (RadioButton)sender;
-            if (rb.Checked)
+            if (sender is RadioButton rb && rb.Checked)
+            {
                 SelectOption(rb);
+            }
         }
 
         private void panelTimePeriod_Click(object sender, EventArgs e)
         {
-            if (sender == panelSpecificTimePeriod) SelectOption(rBSpecificTimePeriod);
-            else if (sender == panelSpecificMonth) SelectOption(rBSpecificMonth);
-            else if (sender == panelSpecificWeek) SelectOption(rBSpecificWeek);
-            else if (sender == panelSpecificYear) SelectOption(rBSpecificYear);
+            if (sender == panelSpecificTimePeriod)
+                SelectOption(rBSpecificTimePeriod);
+            else if (sender == panelSpecificMonth)
+                SelectOption(rBSpecificMonth);
+            else if (sender == panelSpecificWeek)
+                SelectOption(rBSpecificWeek);
+            else if (sender == panelSpecificYear)
+                SelectOption(rBSpecificYear);
         }
 
         private void bSetCurrentWeek_Click(object sender, EventArgs e)
@@ -267,7 +313,7 @@ namespace VykazyPrace.Dialogs
 
         private void bSetCurrentMonth_Click(object sender, EventArgs e)
         {
-            cBMonth2.SelectedIndex = DateTime.Now.Month - 1; // 0..11
+            cBMonth2.SelectedIndex = DateTime.Now.Month - 1;
         }
 
         private void bSetCurrentYear_Click(object sender, EventArgs e)
@@ -275,23 +321,26 @@ namespace VykazyPrace.Dialogs
             nUDYear.Value = DateTime.Now.Year;
         }
 
-        private bool _isTreeViewChecking;
         private void tVUserGroupsUsers_AfterCheck(object sender, TreeViewEventArgs e)
         {
-            if (_isTreeViewChecking) return;
+            if (_isTreeViewChecking)
+                return;
 
             try
             {
                 _isTreeViewChecking = true;
 
                 foreach (TreeNode child in e.Node.Nodes)
+                {
                     child.Checked = e.Node.Checked;
+                }
 
-                // rodič checked = aspoň jedno dítě checked
                 if (e.Node.Parent != null)
                 {
                     var parent = e.Node.Parent;
-                    parent.Checked = parent.Nodes.Cast<TreeNode>().Any(n => n.Checked);
+                    parent.Checked = parent.Nodes
+                        .Cast<TreeNode>()
+                        .Any(n => n.Checked);
                 }
             }
             finally
@@ -305,9 +354,11 @@ namespace VykazyPrace.Dialogs
             if (_currentUser.LevelOfAccess == 1)
                 return;
 
-            using var dialog = new UserSelectionDialog(
+            using var dialog = ActivatorUtilities.CreateInstance<UserSelectionDialog>(
+                _serviceProvider,
                 UserSelectionMode.Multiple,
-                _selectedExportUsers.Select(u => u.Id));
+                _selectedExportUsers.Select(u => u.Id),
+                Enumerable.Empty<int>());
 
             if (dialog.ShowDialog(this) != DialogResult.OK)
                 return;
@@ -321,10 +372,6 @@ namespace VykazyPrace.Dialogs
 
             UpdateSelectedExportUsersLabel();
         }
-
-        private readonly UserRepository _userRepository = new();
-
-        private List<User> _selectedExportUsers = new();
 
         private async Task LoadExportUsersSelectionAsync()
         {
@@ -341,8 +388,13 @@ namespace VykazyPrace.Dialogs
 
             var allUsers = await _userRepository.GetAllUsersAsync();
 
-            var savedUserIds = _config.ExportSelection?.SelectedUserIds?.ToHashSet() ?? new HashSet<int>();
-            var savedGroupIds = _config.ExportSelection?.SelectedUserGroupIds?.ToHashSet() ?? new HashSet<int>();
+            var config = _configService.Current;
+
+            var savedUserIds = config.ExportSelection?.SelectedUserIds?.ToHashSet()
+                ?? new HashSet<int>();
+
+            var savedGroupIds = config.ExportSelection?.SelectedUserGroupIds?.ToHashSet()
+                ?? new HashSet<int>();
 
             bool anythingSaved = savedUserIds.Count > 0 || savedGroupIds.Count > 0;
 
@@ -394,35 +446,54 @@ namespace VykazyPrace.Dialogs
                 .ToList();
         }
 
-        private bool ValidateSelectedExportUsers()
+        private void SaveExportSelectionToConfig()
         {
-            if (_selectedExportUsers.Any(u => u.Id > 0))
-                return true;
+            var config = _configService.Current;
 
-            MessageBox.Show(
-                "Vyberte alespoň jednoho uživatele.",
-                "Export",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning);
+            config.ExportSelection ??= new ExportSelectionConfig();
 
-            return false;
-        }
-
-        private void SaveExportUserSelectionToConfig()
-        {
-            _config.ExportSelection ??= new ExportSelectionConfig();
-
-            _config.ExportSelection.SelectedUserIds = _selectedExportUsers
+            config.ExportSelection.SelectedUserIds = _selectedExportUsers
                 .Where(u => u.Id > 0)
                 .Select(u => u.Id)
                 .Distinct()
                 .ToList();
 
-            _config.ExportSelection.SelectedUserGroupIds = new List<int>();
-        }
-        #endregion
+            config.ExportSelection.SelectedUserGroupIds = new List<int>();
 
-        #region - Helpery -
+            config.ExportSelection.From = null;
+            config.ExportSelection.To = null;
+            config.ExportSelection.Week = null;
+            config.ExportSelection.Month = null;
+            config.ExportSelection.Year = null;
+
+            if (rBSpecificTimePeriod.Checked)
+            {
+                config.ExportSelection.SelectedRangeType = ExportRangeType.TimePeriod;
+                config.ExportSelection.From = dtpFrom.Value.Date;
+                config.ExportSelection.To = dtpTo.Value.Date;
+            }
+            else if (rBSpecificWeek.Checked)
+            {
+                config.ExportSelection.SelectedRangeType = ExportRangeType.Week;
+                config.ExportSelection.Week = (int)nUDWeek.Value;
+                config.ExportSelection.Year = (int)nUDYear.Value;
+            }
+            else if (rBSpecificMonth.Checked)
+            {
+                config.ExportSelection.SelectedRangeType = ExportRangeType.Month;
+                config.ExportSelection.Month = cBMonth2.SelectedIndex + 1;
+                config.ExportSelection.Year = (int)nUDYear.Value;
+            }
+            else if (rBSpecificYear.Checked)
+            {
+                config.ExportSelection.SelectedRangeType = ExportRangeType.Year;
+                config.ExportSelection.Year = (int)nUDYear.Value;
+            }
+
+            config.ExportSelection.BuildEvaluationSheet = cBBuildEvaluationSheet.Checked;
+
+            _configService.Save();
+        }
 
         private (DateTime From, DateTime To) GetSelectedExportRange()
         {
@@ -459,6 +530,7 @@ namespace VykazyPrace.Dialogs
             if (rBSpecificYear.Checked)
             {
                 int year = (int)nUDYear.Value;
+
                 var from = new DateTime(year, 1, 1);
                 var to = new DateTime(year, 12, 31);
 
@@ -467,58 +539,6 @@ namespace VykazyPrace.Dialogs
 
             throw new InvalidOperationException("Není vybraná možnost časového rozsahu exportu.");
         }
-
-        private void SaveExportSelection(UserSelection selection)
-        {
-            _config.ExportSelection ??= new ExportSelectionConfig();
-
-            _config.ExportSelection.SelectedUserGroupIds = selection.SelectedGroupIds.ToList();
-            _config.ExportSelection.SelectedUserIds = selection.SelectedUserIds.ToList();
-
-            _config.ExportSelection.From = null;
-            _config.ExportSelection.To = null;
-            _config.ExportSelection.Week = null;
-            _config.ExportSelection.Month = null;
-            _config.ExportSelection.Year = null;
-
-            _config.ExportSelection.BuildEvaluationSheet = false;
-
-            if (rBSpecificTimePeriod.Checked)
-            {
-                _config.ExportSelection.SelectedRangeType = ExportRangeType.TimePeriod;
-                _config.ExportSelection.From = dtpFrom.Value.Date;
-                _config.ExportSelection.To = dtpTo.Value.Date;
-            }
-            else if (rBSpecificWeek.Checked)
-            {
-                _config.ExportSelection.SelectedRangeType = ExportRangeType.Week;
-                _config.ExportSelection.Week = (int)nUDWeek.Value;
-                _config.ExportSelection.Year = (int)nUDYear.Value;
-            }
-            else if (rBSpecificMonth.Checked)
-            {
-                _config.ExportSelection.SelectedRangeType = ExportRangeType.Month;
-                _config.ExportSelection.Month = cBMonth2.SelectedIndex + 1;
-                _config.ExportSelection.Year = (int)nUDYear.Value;
-            }
-            else if (rBSpecificYear.Checked)
-            {
-                _config.ExportSelection.SelectedRangeType = ExportRangeType.Year;
-                _config.ExportSelection.Year = (int)nUDYear.Value;
-            }
-
-            _config.ExportSelection.BuildEvaluationSheet = cBBuildEvaluationSheet.Checked;
-
-            ConfigService.Save(_config);
-        }
-
-        private sealed class UserSelection
-        {
-            public HashSet<int> SelectedGroupIds { get; } = new();
-            public HashSet<int> SelectedUserIds { get; } = new();
-            public List<User> SelectedUsers { get; } = new();
-        }
-        #endregion
     }
     #endregion
 
@@ -629,8 +649,15 @@ namespace VykazyPrace.Dialogs
     /// <summary>
     /// Vytváří <see cref="DataTable"/> pro jednotlivé listy exportu.
     /// </summary>
-    internal sealed class DataTableFactory
+    public sealed class DataTableFactory
     {
+        private readonly PowerKeyHelper _powerKeyHelper;
+
+        public DataTableFactory(PowerKeyHelper powerKeyHelper)
+        {
+            _powerKeyHelper = powerKeyHelper;
+        }
+
         /// <summary>
         /// Datová tabulka pro detailní záznamy (časové záznamy / projekty).
         /// </summary>
@@ -693,8 +720,6 @@ namespace VykazyPrace.Dialogs
 
             try
             {
-                var pkHelper = new PowerKeyHelper();
-
                 var personalNumbers = selectedUsers
                     .Where(u => u != null && u.PersonalNumber > 0)
                     .Select(u => u.PersonalNumber)
@@ -702,7 +727,7 @@ namespace VykazyPrace.Dialogs
                     .OrderBy(x => x)
                     .ToList();
 
-                powerKeyData = await pkHelper
+                powerKeyData = await _powerKeyHelper
                     .GetWorkedHoursByPersonalNumberForRangeAsync(from, to, personalNumbers)
                     .ConfigureAwait(false);
 
@@ -814,16 +839,14 @@ namespace VykazyPrace.Dialogs
 
             try
             {
-                var pkHelper = new PowerKeyHelper();
-
                 var personalNumbers = selectedUsers
-                    .Where(u => u != null && u.PersonalNumber > 0)
-                    .Select(u => u.PersonalNumber)
-                    .Distinct()
-                    .OrderBy(x => x)
-                    .ToList();
+        .Where(u => u != null && u.PersonalNumber > 0)
+        .Select(u => u.PersonalNumber)
+        .Distinct()
+        .OrderBy(x => x)
+        .ToList();
 
-                var powerKeyData = await pkHelper
+                var powerKeyData = await _powerKeyHelper
                     .GetWorkedHoursByPersonalNumberForRangeAsync(from, to, personalNumbers)
                     .ConfigureAwait(false);
 

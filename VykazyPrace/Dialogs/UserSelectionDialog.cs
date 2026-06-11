@@ -25,6 +25,8 @@ namespace VykazyPrace.Dialogs
         private readonly HashSet<int> _preselectedUserIds;
         private readonly HashSet<int> _preselectedGroupIds;
 
+        public event EventHandler<UserSelectionChangedEventArgs>? SelectionChanged;
+
         public UserSelectionDialog(
             UserSelectionMode mode,
             IEnumerable<int>? preselectedUserIds = null,
@@ -89,6 +91,9 @@ namespace VykazyPrace.Dialogs
 
             cLBUserGroups.CheckOnClick = true;
             cLBUsers.CheckOnClick = true;
+
+            StartPosition = FormStartPosition.CenterParent;
+            ShowInTaskbar = false;
         }
 
         private void FillGroups()
@@ -259,10 +264,38 @@ namespace VykazyPrace.Dialogs
                     }
 
                     _isInternalChange = false;
+
+                    RaiseSelectionChangedIfValid();
                 }));
+
+                return;
             }
 
             BeginInvoke(new Action(UpdateGroupsBySelectedUsers));
+        }
+
+        private void RaiseSelectionChangedIfValid()
+        {
+            if (_mode != UserSelectionMode.Single)
+                return;
+
+            var selectedUser = cLBUsers.CheckedItems
+                .OfType<UserListItem>()
+                .Select(i => i.User)
+                .FirstOrDefault();
+
+            if (selectedUser == null || selectedUser.Id == 0)
+                return;
+
+            var selectedGroupIds = cLBUserGroups.CheckedItems
+                .OfType<UserGroupListItem>()
+                .Select(i => i.Group.Id)
+                .Distinct()
+                .ToList();
+
+            SelectionChanged?.Invoke(
+                this,
+                new UserSelectionChangedEventArgs(selectedUser, selectedGroupIds));
         }
 
         private void UpdateGroupsBySelectedUsers()
@@ -361,6 +394,17 @@ namespace VykazyPrace.Dialogs
             {
                 return FormatHelper.FormatUserGroupToString(Group);
             }
+        }
+    }
+    public sealed class UserSelectionChangedEventArgs : EventArgs
+    {
+        public User SelectedUser { get; }
+        public List<int> SelectedUserGroupIds { get; }
+
+        public UserSelectionChangedEventArgs(User selectedUser, List<int> selectedUserGroupIds)
+        {
+            SelectedUser = selectedUser;
+            SelectedUserGroupIds = selectedUserGroupIds;
         }
     }
 }

@@ -1,8 +1,3 @@
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
-using System.Globalization;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using VykazyPrace.Core.Configuration;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
@@ -34,6 +29,7 @@ namespace VykazyPrace
         private User _loggedUser = new();
         private int _currentUserLoA = 0;
         private DateTime _selectedDate;
+        private UserSelectionDialog? _userSelectionDialog;
         private CalendarV2 _calendar;
         private CalendarUC _monthlyCalendar;
 
@@ -674,9 +670,17 @@ namespace VykazyPrace
             }
         }
 
-        private async void BChangeUser_Click(object sender, EventArgs e)
+        private void BChangeUser_Click(object sender, EventArgs e)
         {
-            if (_isSwitchingUser) return;
+            if (_isSwitchingUser)
+                return;
+
+            if (_userSelectionDialog != null && !_userSelectionDialog.IsDisposed)
+            {
+                _userSelectionDialog.BringToFront();
+                _userSelectionDialog.Activate();
+                return;
+            }
 
             var config = ConfigService.Load();
 
@@ -691,27 +695,41 @@ namespace VykazyPrace
                 preselectedUserIds = new[] { _selectedUser.Id };
             }
 
-            using var dialog = new UserSelectionDialog(
+            _userSelectionDialog = new UserSelectionDialog(
                 UserSelectionMode.Single,
                 preselectedUserIds,
                 config.UserViewSelection.SelectedUserGroupIds);
 
-            if (dialog.ShowDialog(this) != DialogResult.OK)
+            _userSelectionDialog.SelectionChanged += UserSelectionDialog_SelectionChanged;
+            _userSelectionDialog.FormClosed += UserSelectionDialog_FormClosed;
+
+            _userSelectionDialog.Show(this);
+            _userSelectionDialog.Activate();
+        }
+
+        private async void UserSelectionDialog_SelectionChanged(
+    object? sender,
+    UserSelectionChangedEventArgs e)
+        {
+            if (_isSwitchingUser)
                 return;
 
-            var newUser = dialog.SelectedUser;
-
-            if (newUser == null || newUser.Id == 0)
+            if (_selectedUser != null && e.SelectedUser.Id == _selectedUser.Id)
                 return;
 
-            config.UserViewSelection.SelectedUserId = newUser.Id;
-            config.UserViewSelection.SelectedUserGroupIds = dialog.SelectedUserGroupIds;
+            var config = ConfigService.Load();
+
+            config.UserViewSelection.SelectedUserId = e.SelectedUser.Id;
+            config.UserViewSelection.SelectedUserGroupIds = e.SelectedUserGroupIds;
+
             ConfigService.Save(config);
 
-            if (_selectedUser != null && newUser.Id == _selectedUser.Id)
-                return;
+            await SwitchSelectedUserAsync(e.SelectedUser);
+        }
 
-            await SwitchSelectedUserAsync(newUser);
+        private void UserSelectionDialog_FormClosed(object? sender, FormClosedEventArgs e)
+        {
+            _userSelectionDialog = null;
         }
 
         private async Task SwitchSelectedUserAsync(User newUser)

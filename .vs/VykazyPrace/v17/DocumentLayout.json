@@ -68,7 +68,7 @@
               "RelativeDocumentMoniker": "VykazyPrace\\Dialogs\\UserSelectionDialog.cs",
               "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace\\Dialogs\\UserSelectionDialog.cs",
               "RelativeToolTip": "VykazyPrace\\Dialogs\\UserSelectionDialog.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAuwBMAAAA2AAAAAAAAAA==",
+              "ViewState": "AgIAAD4AAAAAAAAAAAASwFoAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-06-01T08:37:22.612Z",
               "EditorCaption": ""
@@ -82,7 +82,8 @@
               "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace\\Dialogs\\UserSelectionDialog.cs [N\u00E1vrh]",
               "RelativeToolTip": "VykazyPrace\\Dialogs\\UserSelectionDialog.cs [N\u00E1vrh]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-01T08:36:02.688Z"
+              "WhenOpened": "2026-06-01T08:36:02.688Z",
+              "EditorCaption": " [N\u00E1vrh]"
             },
             {
               "$type": "Document",

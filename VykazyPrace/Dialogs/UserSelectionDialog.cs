@@ -85,6 +85,9 @@ namespace VykazyPrace.Dialogs
             {
                 label1.Text = "Skupiny";
             }
+
+            cLBUserGroups.CheckOnClick = true;
+            cLBUsers.CheckOnClick = true;
         }
 
         private void FillGroups()

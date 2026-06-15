@@ -25,13 +25,6 @@ namespace VykazyPrace
         private readonly IDbContextFactory<VykazyPraceContext> _contextFactory;
 
         private readonly UserRepository _userRepo;
-        private readonly UserGroupRepository _userGroupRepo;
-        private readonly TimeEntryRepository _timeEntryRepo;
-        private readonly TimeEntryTypeRepository _timeEntryTypeRepo;
-        private readonly TimeEntrySubTypeRepository _timeEntrySubTypeRepo;
-        private readonly ProjectRepository _projectRepo;
-        private readonly SpecialDayRepository _specialDayRepo;
-        private readonly ArrivalDepartureRepository _arrivalDepartureRepo;
         private readonly PowerKeyHelper _powerKeyHelper;
         private readonly ExternalTimeEntryImportService _externalImportService;
 
@@ -60,13 +53,6 @@ namespace VykazyPrace
      IConfigService configService,
      IDbContextFactory<VykazyPraceContext> contextFactory,
      UserRepository userRepo,
-     UserGroupRepository userGroupRepo,
-     TimeEntryRepository timeEntryRepo,
-     TimeEntryTypeRepository timeEntryTypeRepo,
-     TimeEntrySubTypeRepository timeEntrySubTypeRepo,
-     ProjectRepository projectRepo,
-     SpecialDayRepository specialDayRepo,
-     ArrivalDepartureRepository arrivalDepartureRepo,
      PowerKeyHelper powerKeyHelper,
      ExternalTimeEntryImportService externalImportService)
         {
@@ -75,13 +61,6 @@ namespace VykazyPrace
             _contextFactory = contextFactory;
 
             _userRepo = userRepo;
-            _userGroupRepo = userGroupRepo;
-            _timeEntryRepo = timeEntryRepo;
-            _timeEntryTypeRepo = timeEntryTypeRepo;
-            _timeEntrySubTypeRepo = timeEntrySubTypeRepo;
-            _projectRepo = projectRepo;
-            _specialDayRepo = specialDayRepo;
-            _arrivalDepartureRepo = arrivalDepartureRepo;
             _powerKeyHelper = powerKeyHelper;
             _externalImportService = externalImportService;
 
@@ -103,7 +82,7 @@ namespace VykazyPrace
         }
 
 
-        private async void MainForm_Load(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
             InitFormUI();
 
@@ -152,7 +131,6 @@ namespace VykazyPrace
                 _lastNotificationDate = DateTime.Today;
             }
         }
-
 
         private void InitFormUI()
         {
@@ -388,7 +366,10 @@ namespace VykazyPrace
         {
             if (_currentUserLoA > 1)
             {
-                OpenSettings();
+                 using var dialog = ActivatorUtilities.CreateInstance<UserManagementDialog>(
+    _serviceProvider);
+
+                dialog.ShowDialog(this);
             }
 
             else
@@ -401,7 +382,7 @@ namespace VykazyPrace
         {
             if (_currentUserLoA > 1)
             {
-                var dialog = ActivatorUtilities.CreateInstance<ProjectManagementDialog>(
+                using var dialog = ActivatorUtilities.CreateInstance<ProjectManagementDialog>(
     _serviceProvider,
     _selectedUser);
 
@@ -638,7 +619,7 @@ namespace VykazyPrace
                 return;
             }
 
-            var dialog = ActivatorUtilities.CreateInstance<OutlookEvents>(
+            using var dialog = ActivatorUtilities.CreateInstance<OutlookEvents>(
     _serviceProvider,
     _selectedUser);
             dialog.ShowDialog(this);
@@ -843,8 +824,7 @@ namespace VykazyPrace
         private void OpenSettings()
         {
             using var dialog = ActivatorUtilities.CreateInstance<SettingsDialog>(
-    _serviceProvider,
-    _loggedUser);
+    _serviceProvider);
 
             dialog.ShowDialog(this);
         }

@@ -25,7 +25,7 @@ namespace VykazyPrace
         private const string MutexName = "VykazyPrace_Mutex";
 
         [STAThread]
-        static void Main()
+        static async Task Main()
         {
             ApplicationConfiguration.Initialize();
 
@@ -46,14 +46,19 @@ namespace VykazyPrace
 
             AppLogger.Debug("Aplikace spuštìna.");
 
-            WarmupDatabase();
+            await WarmupDatabaseAsync();
 
             StartPipeServer();
 
-            MainFormInstance = Services.GetRequiredService<MainForm>();
-            Application.Run(MainFormInstance);
-
-            AppLogger.CloseAndFlush();
+            try
+            {
+                MainFormInstance = Services.GetRequiredService<MainForm>();
+                Application.Run(MainFormInstance);
+            }
+            finally
+            {
+                AppLogger.CloseAndFlush();
+            }
         }
 
         private static IServiceProvider ConfigureServices()
@@ -105,14 +110,16 @@ namespace VykazyPrace
             return services.BuildServiceProvider();
         }
 
-        private static void WarmupDatabase()
+        private static async Task WarmupDatabaseAsync()
         {
             AppLogger.Debug("Zahøívací dotaz na databázi...");
 
             try
             {
                 var userRepository = Services.GetRequiredService<UserRepository>();
-                var _ = userRepository.GetAllUsersAsync().Result.FirstOrDefault();
+                var users = await userRepository.GetAllUsersAsync();
+
+                _ = users.FirstOrDefault();
 
                 AppLogger.Debug("Databáze zahøáta.");
             }

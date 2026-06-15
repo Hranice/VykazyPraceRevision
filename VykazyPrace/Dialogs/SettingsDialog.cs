@@ -6,16 +6,13 @@ namespace VykazyPrace.Dialogs
     public partial class SettingsDialog : Form
     {
         private readonly IConfigService _configService;
-        private readonly User _selectedUser;
 
         private bool _databaseChanged;
 
         public SettingsDialog(
-            IConfigService configService,
-            User selectedUser)
+            IConfigService configService)
         {
             _configService = configService;
-            _selectedUser = selectedUser;
 
             InitializeComponent();
 

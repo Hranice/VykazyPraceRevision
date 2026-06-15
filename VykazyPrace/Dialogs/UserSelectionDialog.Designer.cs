@@ -43,7 +43,7 @@
             cLBUserGroups.Location = new Point(13, 39);
             cLBUserGroups.Margin = new Padding(4, 5, 4, 5);
             cLBUserGroups.Name = "cLBUserGroups";
-            cLBUserGroups.Size = new Size(188, 211);
+            cLBUserGroups.Size = new Size(188, 193);
             cLBUserGroups.TabIndex = 0;
             cLBUserGroups.ItemCheck += ClbGroups_ItemCheck;
             // 
@@ -53,7 +53,7 @@
             label1.Location = new Point(13, 9);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
-            label1.Size = new Size(69, 25);
+            label1.Size = new Size(65, 20);
             label1.TabIndex = 1;
             label1.Text = "Skupiny";
             // 
@@ -63,7 +63,7 @@
             cLBUsers.Location = new Point(209, 39);
             cLBUsers.Margin = new Padding(4, 5, 4, 5);
             cLBUsers.Name = "cLBUsers";
-            cLBUsers.Size = new Size(352, 211);
+            cLBUsers.Size = new Size(352, 193);
             cLBUsers.TabIndex = 2;
             cLBUsers.ItemCheck += ClbUsers_ItemCheck;
             // 
@@ -72,7 +72,7 @@
             tBSearch.Location = new Point(209, 258);
             tBSearch.Name = "tBSearch";
             tBSearch.PlaceholderText = "Josef Novák";
-            tBSearch.Size = new Size(352, 28);
+            tBSearch.Size = new Size(352, 26);
             tBSearch.TabIndex = 3;
             tBSearch.TextChanged += TxtSearch_TextChanged;
             // 
@@ -82,7 +82,7 @@
             label2.Location = new Point(209, 9);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
-            label2.Size = new Size(79, 25);
+            label2.Size = new Size(74, 20);
             label2.TabIndex = 4;
             label2.Text = "Uživatelé";
             // 
@@ -105,10 +105,11 @@
             bCancel.TabIndex = 7;
             bCancel.Text = "Zrušit";
             bCancel.UseVisualStyleBackColor = true;
+            bCancel.Click += bCancel_Click;
             // 
             // UserSelectionDialog
             // 
-            AutoScaleDimensions = new SizeF(9F, 25F);
+            AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(570, 334);
             Controls.Add(bCancel);
@@ -118,7 +119,7 @@
             Controls.Add(cLBUsers);
             Controls.Add(label1);
             Controls.Add(cLBUserGroups);
-            Font = new Font("Reddit Sans", 12F);
+            Font = new Font("Microsoft Sans Serif", 12F);
             Margin = new Padding(4, 5, 4, 5);
             Name = "UserSelectionDialog";
             StartPosition = FormStartPosition.CenterScreen;

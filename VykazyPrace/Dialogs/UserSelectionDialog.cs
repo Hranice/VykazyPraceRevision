@@ -405,7 +405,13 @@ namespace VykazyPrace.Dialogs
                 return FormatHelper.FormatUserGroupToString(Group);
             }
         }
+
+        private void bCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
+
     public sealed class UserSelectionChangedEventArgs : EventArgs
     {
         public User SelectedUser { get; }

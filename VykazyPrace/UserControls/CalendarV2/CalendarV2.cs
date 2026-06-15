@@ -1669,6 +1669,8 @@ namespace VykazyPrace.UserControls.CalendarV2
         /// </summary>
         public async Task DeleteRecord()
         {
+            if (_selectedUser.Id != _loggedUser.Id && _selectedUser.MasterUserId != _loggedUser.Id) return;
+
             var timeEntry = _currentEntries.FirstOrDefault(e => e.Id == _selectedTimeEntryId);
             if (timeEntry == null) return;
 

@@ -28,290 +28,56 @@
         /// </summary>
         private void InitializeComponent()
         {
-            buttonAdd = new Button();
-            label5 = new Label();
-            textBoxFirstName = new TextBox();
-            label6 = new Label();
-            listBoxUsers = new ListBox();
-            groupBox1 = new GroupBox();
-            checkBoxMasterAccount = new CheckBox();
-            comboBoxUsers = new ComboBox();
-            label2 = new Label();
-            comboBoxGroup = new ComboBox();
-            buttonGenerateWindowsUsername = new Button();
-            label1 = new Label();
-            numericUpDownLevelOfAccess = new NumericUpDown();
-            maskedTextBoxPersonalNumber = new MaskedTextBox();
-            label7 = new Label();
-            textBoxWindowsUsername = new TextBox();
-            label9 = new Label();
-            buttonRemove = new Button();
-            label8 = new Label();
-            textBoxSurname = new TextBox();
-            groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)numericUpDownLevelOfAccess).BeginInit();
+            buttonSave = new Button();
+            dataGridView1 = new DataGridView();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
-            // buttonAdd
+            // buttonSave
             // 
-            buttonAdd.Location = new Point(12, 302);
-            buttonAdd.Margin = new Padding(4, 5, 4, 5);
-            buttonAdd.Name = "buttonAdd";
-            buttonAdd.Size = new Size(147, 36);
-            buttonAdd.TabIndex = 19;
-            buttonAdd.Text = "Přidat";
-            buttonAdd.UseVisualStyleBackColor = true;
-            buttonAdd.Click += buttonAdd_Click;
+            buttonSave.Location = new Point(825, 366);
+            buttonSave.Margin = new Padding(4, 5, 4, 5);
+            buttonSave.Name = "buttonSave";
+            buttonSave.Size = new Size(147, 36);
+            buttonSave.TabIndex = 19;
+            buttonSave.Text = "Uložit";
+            buttonSave.UseVisualStyleBackColor = true;
+            buttonSave.Click += buttonAdd_Click;
             // 
-            // label5
+            // dataGridView1
             // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label5.Location = new Point(12, 36);
-            label5.Margin = new Padding(4, 0, 4, 0);
-            label5.Name = "label5";
-            label5.Size = new Size(53, 21);
-            label5.TabIndex = 14;
-            label5.Text = "Jméno*";
-            // 
-            // textBoxFirstName
-            // 
-            textBoxFirstName.Location = new Point(12, 61);
-            textBoxFirstName.Margin = new Padding(5, 8, 5, 8);
-            textBoxFirstName.Name = "textBoxFirstName";
-            textBoxFirstName.Size = new Size(121, 28);
-            textBoxFirstName.TabIndex = 13;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Reddit Sans", 8F);
-            label6.Location = new Point(12, 9);
-            label6.Name = "label6";
-            label6.Size = new Size(96, 17);
-            label6.TabIndex = 28;
-            label6.Text = "Seznam uživatelů:";
-            // 
-            // listBoxUsers
-            // 
-            listBoxUsers.BorderStyle = BorderStyle.FixedSingle;
-            listBoxUsers.FormattingEnabled = true;
-            listBoxUsers.ItemHeight = 25;
-            listBoxUsers.Location = new Point(14, 29);
-            listBoxUsers.Name = "listBoxUsers";
-            listBoxUsers.Size = new Size(275, 77);
-            listBoxUsers.TabIndex = 27;
-            listBoxUsers.SelectedIndexChanged += listBoxUsers_SelectedIndexChanged;
-            // 
-            // groupBox1
-            // 
-            groupBox1.Controls.Add(checkBoxMasterAccount);
-            groupBox1.Controls.Add(comboBoxUsers);
-            groupBox1.Controls.Add(label2);
-            groupBox1.Controls.Add(comboBoxGroup);
-            groupBox1.Controls.Add(buttonGenerateWindowsUsername);
-            groupBox1.Controls.Add(label1);
-            groupBox1.Controls.Add(numericUpDownLevelOfAccess);
-            groupBox1.Controls.Add(maskedTextBoxPersonalNumber);
-            groupBox1.Controls.Add(label7);
-            groupBox1.Controls.Add(textBoxWindowsUsername);
-            groupBox1.Controls.Add(label9);
-            groupBox1.Controls.Add(buttonRemove);
-            groupBox1.Controls.Add(label8);
-            groupBox1.Controls.Add(textBoxSurname);
-            groupBox1.Controls.Add(buttonAdd);
-            groupBox1.Controls.Add(label5);
-            groupBox1.Controls.Add(textBoxFirstName);
-            groupBox1.Location = new Point(14, 112);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(277, 352);
-            groupBox1.TabIndex = 26;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Přidání uživatele";
-            // 
-            // checkBoxMasterAccount
-            // 
-            checkBoxMasterAccount.AutoSize = true;
-            checkBoxMasterAccount.Location = new Point(12, 232);
-            checkBoxMasterAccount.Name = "checkBoxMasterAccount";
-            checkBoxMasterAccount.Size = new Size(170, 29);
-            checkBoxMasterAccount.TabIndex = 32;
-            checkBoxMasterAccount.Text = "Sekundární vlastník";
-            checkBoxMasterAccount.UseVisualStyleBackColor = true;
-            checkBoxMasterAccount.CheckedChanged += checkBoxMasterAccount_CheckedChanged;
-            // 
-            // comboBoxUsers
-            // 
-            comboBoxUsers.Enabled = false;
-            comboBoxUsers.FormattingEnabled = true;
-            comboBoxUsers.Location = new Point(12, 261);
-            comboBoxUsers.Name = "comboBoxUsers";
-            comboBoxUsers.Size = new Size(246, 33);
-            comboBoxUsers.TabIndex = 31;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label2.Location = new Point(12, 157);
-            label2.Margin = new Padding(4, 0, 4, 0);
-            label2.Name = "label2";
-            label2.Size = new Size(56, 21);
-            label2.TabIndex = 30;
-            label2.Text = "Skupina";
-            // 
-            // comboBoxGroup
-            // 
-            comboBoxGroup.FormattingEnabled = true;
-            comboBoxGroup.Location = new Point(12, 181);
-            comboBoxGroup.Name = "comboBoxGroup";
-            comboBoxGroup.Size = new Size(246, 33);
-            comboBoxGroup.TabIndex = 29;
-            // 
-            // buttonGenerateWindowsUsername
-            // 
-            buttonGenerateWindowsUsername.FlatAppearance.BorderColor = Color.FromArgb(122, 122, 122);
-            buttonGenerateWindowsUsername.FlatStyle = FlatStyle.Flat;
-            buttonGenerateWindowsUsername.Font = new Font("Roboto", 12F, FontStyle.Bold, GraphicsUnit.Point, 238);
-            buttonGenerateWindowsUsername.Location = new Point(175, 121);
-            buttonGenerateWindowsUsername.Margin = new Padding(0);
-            buttonGenerateWindowsUsername.Name = "buttonGenerateWindowsUsername";
-            buttonGenerateWindowsUsername.Size = new Size(28, 28);
-            buttonGenerateWindowsUsername.TabIndex = 28;
-            buttonGenerateWindowsUsername.Text = "↻";
-            buttonGenerateWindowsUsername.UseVisualStyleBackColor = true;
-            buttonGenerateWindowsUsername.Click += buttonGenerateWindowsUsername_Click;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label1.Location = new Point(218, 96);
-            label1.Margin = new Padding(4, 0, 4, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(55, 21);
-            label1.TabIndex = 27;
-            label1.Text = "Přístup*";
-            // 
-            // numericUpDownLevelOfAccess
-            // 
-            numericUpDownLevelOfAccess.Location = new Point(218, 121);
-            numericUpDownLevelOfAccess.Maximum = new decimal(new int[] { 3, 0, 0, 0 });
-            numericUpDownLevelOfAccess.Name = "numericUpDownLevelOfAccess";
-            numericUpDownLevelOfAccess.Size = new Size(40, 28);
-            numericUpDownLevelOfAccess.TabIndex = 26;
-            numericUpDownLevelOfAccess.Value = new decimal(new int[] { 1, 0, 0, 0 });
-            // 
-            // maskedTextBoxPersonalNumber
-            // 
-            maskedTextBoxPersonalNumber.Location = new Point(12, 121);
-            maskedTextBoxPersonalNumber.Mask = "0000";
-            maskedTextBoxPersonalNumber.Name = "maskedTextBoxPersonalNumber";
-            maskedTextBoxPersonalNumber.Size = new Size(53, 28);
-            maskedTextBoxPersonalNumber.TabIndex = 25;
-            maskedTextBoxPersonalNumber.ValidatingType = typeof(int);
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label7.Location = new Point(82, 97);
-            label7.Margin = new Padding(4, 0, 4, 0);
-            label7.Name = "label7";
-            label7.Size = new Size(100, 21);
-            label7.TabIndex = 24;
-            label7.Text = "Windows login*";
-            // 
-            // textBoxWindowsUsername
-            // 
-            textBoxWindowsUsername.Location = new Point(82, 121);
-            textBoxWindowsUsername.Margin = new Padding(5, 8, 5, 8);
-            textBoxWindowsUsername.Name = "textBoxWindowsUsername";
-            textBoxWindowsUsername.Size = new Size(94, 28);
-            textBoxWindowsUsername.TabIndex = 23;
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label9.Location = new Point(12, 97);
-            label9.Margin = new Padding(4, 0, 4, 0);
-            label9.Name = "label9";
-            label9.Size = new Size(62, 21);
-            label9.TabIndex = 22;
-            label9.Text = "Os. číslo*";
-            // 
-            // buttonRemove
-            // 
-            buttonRemove.Location = new Point(167, 302);
-            buttonRemove.Margin = new Padding(4, 5, 4, 5);
-            buttonRemove.Name = "buttonRemove";
-            buttonRemove.Size = new Size(97, 36);
-            buttonRemove.TabIndex = 20;
-            buttonRemove.Text = "Odstranit";
-            buttonRemove.UseVisualStyleBackColor = true;
-            buttonRemove.Click += buttonRemove_Click;
-            // 
-            // label8
-            // 
-            label8.AutoSize = true;
-            label8.Font = new Font("Reddit Sans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label8.Location = new Point(143, 36);
-            label8.Margin = new Padding(4, 0, 4, 0);
-            label8.Name = "label8";
-            label8.Size = new Size(61, 21);
-            label8.TabIndex = 16;
-            label8.Text = "Příjmení*";
-            // 
-            // textBoxSurname
-            // 
-            textBoxSurname.Location = new Point(143, 60);
-            textBoxSurname.Margin = new Padding(5, 8, 5, 8);
-            textBoxSurname.Name = "textBoxSurname";
-            textBoxSurname.Size = new Size(121, 28);
-            textBoxSurname.TabIndex = 15;
+            dataGridView1.AllowUserToDeleteRows = false;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView1.BackgroundColor = SystemColors.ButtonHighlight;
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Location = new Point(12, 12);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.Size = new Size(960, 346);
+            dataGridView1.TabIndex = 29;
+            dataGridView1.CellValidating += dataGridView1_CellValidating;
+            dataGridView1.CellValueChanged += dataGridView1_CellValueChanged;
+            dataGridView1.CurrentCellDirtyStateChanged += dataGridView1_CurrentCellDirtyStateChanged;
+            dataGridView1.DataError += dataGridView1_DataError;
             // 
             // UserManagementDialog
             // 
-            AutoScaleDimensions = new SizeF(9F, 25F);
+            AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(304, 476);
-            Controls.Add(label6);
-            Controls.Add(listBoxUsers);
-            Controls.Add(groupBox1);
-            Font = new Font("Reddit Sans", 12F);
+            ClientSize = new Size(985, 413);
+            Controls.Add(dataGridView1);
+            Controls.Add(buttonSave);
+            Font = new Font("Microsoft Sans Serif", 12F);
             Margin = new Padding(4, 5, 4, 5);
             Name = "UserManagementDialog";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "UserManagementDialog";
+            Text = "Správa uživatelů";
             Load += UserManagementDialog_Load;
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)numericUpDownLevelOfAccess).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
-        private Button buttonAdd;
-        private Label label5;
-        private TextBox textBoxFirstName;
-        private Label label6;
-        private ListBox listBoxUsers;
-        private GroupBox groupBox1;
-        private Button buttonRemove;
-        private Label label8;
-        private TextBox textBoxSurname;
-        private Label label7;
-        private TextBox textBoxWindowsUsername;
-        private Label label9;
-        private MaskedTextBox maskedTextBoxPersonalNumber;
-        private Label label1;
-        private NumericUpDown numericUpDownLevelOfAccess;
-        private Button buttonGenerateWindowsUsername;
-        private Label label2;
-        private ComboBox comboBoxGroup;
-        private CheckBox checkBoxMasterAccount;
-        private ComboBox comboBoxUsers;
+        private Button buttonSave;
+        private DataGridView dataGridView1;
     }
 }

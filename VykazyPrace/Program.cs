@@ -25,7 +25,7 @@ namespace VykazyPrace
         private const string MutexName = "VykazyPrace_Mutex";
 
         [STAThread]
-        static async Task Main()
+        static void Main()
         {
             ApplicationConfiguration.Initialize();
 
@@ -46,7 +46,7 @@ namespace VykazyPrace
 
             AppLogger.Debug("Aplikace spuštìna.");
 
-            await WarmupDatabaseAsync();
+            WarmupDatabaseAsync().GetAwaiter().GetResult();
 
             StartPipeServer();
 

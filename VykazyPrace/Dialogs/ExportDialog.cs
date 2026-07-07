@@ -41,6 +41,8 @@ namespace VykazyPrace.Dialogs
         private List<(RadioButton radioButton, Panel panel)> _options = new();
         private List<User> _selectedExportUsers = new();
         private List<User> _availableExportUsers = new();
+        private List<User>? _previousAvailableExportUsers;
+        private int _exportUsersRefreshVersion;
 
         private bool _isTreeViewChecking;
 
@@ -295,7 +297,7 @@ namespace VykazyPrace.Dialogs
             if (sender is RadioButton rb && rb.Checked)
             {
                 SelectOption(rb);
-                _ = RefreshAvailableExportUsersAsync(keepCurrentSelection: true);
+                _ = RefreshAvailableExportUsersAsync(keepCurrentSelection: true, notifyCountChange: true);
             }
         }
 
@@ -310,7 +312,6 @@ namespace VykazyPrace.Dialogs
             else if (sender == panelSpecificYear)
                 SelectOption(rBSpecificYear);
 
-            _ = RefreshAvailableExportUsersAsync(keepCurrentSelection: true);
         }
 
         private void bSetCurrentWeek_Click(object sender, EventArgs e)
@@ -411,10 +412,10 @@ namespace VykazyPrace.Dialogs
 
         private void ExportRangeInputChanged(object? sender, EventArgs e)
         {
-            _ = RefreshAvailableExportUsersAsync(keepCurrentSelection: true);
+            _ = RefreshAvailableExportUsersAsync(keepCurrentSelection: true, notifyCountChange: true);
         }
 
-        private async Task RefreshAvailableExportUsersAsync(bool keepCurrentSelection)
+        private async Task RefreshAvailableExportUsersAsync(bool keepCurrentSelection, bool notifyCountChange = false)
         {
             if (_currentUser.LevelOfAccess == 1)
             {
@@ -430,12 +431,24 @@ namespace VykazyPrace.Dialogs
 
             try
             {
+                var refreshVersion = ++_exportUsersRefreshVersion;
+                var previousAvailableUsers = _previousAvailableExportUsers;
+
                 bUserSelection.Enabled = false;
                 bUserSelection.Text = "Načítám uživatele...";
 
                 var (from, to) = GetSelectedExportRange();
 
-                _availableExportUsers = await _userRepository.GetUsersAvailableForExportAsync(from, to);
+                var availableUsers = await _userRepository.GetUsersAvailableForExportAsync(from, to);
+
+                if (refreshVersion != _exportUsersRefreshVersion)
+                    return;
+
+                _availableExportUsers = availableUsers;
+                _previousAvailableExportUsers = _availableExportUsers.ToList();
+
+                if (notifyCountChange)
+                    ShowExportUsersCountChangeNotification(previousAvailableUsers, _availableExportUsers);
 
                 var availableUserIds = _availableExportUsers
                     .Select(u => u.Id)
@@ -477,6 +490,58 @@ namespace VykazyPrace.Dialogs
                 bUserSelection.Enabled = _availableExportUsers.Count > 0;
                 UpdateSelectedExportUsersLabel();
             }
+        }
+
+        private void ShowExportUsersCountChangeNotification(List<User>? previousUsers, List<User> currentUsers)
+        {
+            if (previousUsers == null)
+                return;
+
+            var previousUserIds = previousUsers.Select(u => u.Id).ToHashSet();
+            var currentUserIds = currentUsers.Select(u => u.Id).ToHashSet();
+
+            var addedUsers = currentUsers
+                .Where(u => !previousUserIds.Contains(u.Id))
+                .OrderBy(u => u.UserGroup?.Title)
+                .ThenBy(u => u.Surname)
+                .ThenBy(u => u.FirstName)
+                .ToList();
+
+            var removedUsers = previousUsers
+                .Where(u => !currentUserIds.Contains(u.Id))
+                .OrderBy(u => u.UserGroup?.Title)
+                .ThenBy(u => u.Surname)
+                .ThenBy(u => u.FirstName)
+                .ToList();
+
+            if (addedUsers.Count == 0 && removedUsers.Count == 0)
+                return;
+
+            var lines = new List<string>
+            {
+                $"Po změně období se změnil seznam uživatelů pro export.",
+                $"Původně: {previousUsers.Count}, nyní: {currentUsers.Count}."
+            };
+
+            if (addedUsers.Count > 0)
+            {
+                lines.Add("");
+                lines.Add($"Přidáni ({addedUsers.Count}):");
+                lines.AddRange(addedUsers.Select(u => $"- {FormatHelper.FormatUserToString(u)}"));
+            }
+
+            if (removedUsers.Count > 0)
+            {
+                lines.Add("");
+                lines.Add($"Odebráni ({removedUsers.Count}):");
+                lines.AddRange(removedUsers.Select(u => $"- {FormatHelper.FormatUserToString(u)}"));
+            }
+
+            MessageBox.Show(
+                string.Join(Environment.NewLine, lines),
+                "Změna seznamu uživatelů",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
         }
 
         private List<User> GetInitialExportUsersFromConfig(List<User> availableUsers)

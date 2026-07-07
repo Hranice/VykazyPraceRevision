@@ -35,7 +35,7 @@
             // 
             // buttonSave
             // 
-            buttonSave.Location = new Point(825, 366);
+            buttonSave.Location = new Point(915, 363);
             buttonSave.Margin = new Padding(4, 5, 4, 5);
             buttonSave.Name = "buttonSave";
             buttonSave.Size = new Size(147, 36);
@@ -52,7 +52,7 @@
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Location = new Point(12, 12);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(960, 346);
+            dataGridView1.Size = new Size(1050, 346);
             dataGridView1.TabIndex = 29;
             dataGridView1.CellValidating += dataGridView1_CellValidating;
             dataGridView1.CellValueChanged += dataGridView1_CellValueChanged;
@@ -63,7 +63,7 @@
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(985, 413);
+            ClientSize = new Size(1075, 413);
             Controls.Add(dataGridView1);
             Controls.Add(buttonSave);
             Font = new Font("Microsoft Sans Serif", 12F);

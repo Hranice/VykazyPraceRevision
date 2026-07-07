@@ -368,6 +368,7 @@
             // 
             // bChangeUser
             // 
+            bChangeUser.AutoSize = true;
             bChangeUser.Dock = DockStyle.Right;
             bChangeUser.Location = new Point(966, 0);
             bChangeUser.Name = "bChangeUser";
@@ -492,6 +493,7 @@
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
             panel2.ResumeLayout(false);
+            panel2.PerformLayout();
             panelContainer.ResumeLayout(false);
             contextMenuStrip1.ResumeLayout(false);
             ResumeLayout(false);

@@ -59,7 +59,7 @@ namespace VykazyPrace.Dialogs
             dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = nameof(UserGridRow.FirstName),
-                HeaderText = "Jm�no",
+                HeaderText = "Jméno",
                 DataPropertyName = nameof(UserGridRow.FirstName),
                 Width = 120
             });
@@ -67,7 +67,7 @@ namespace VykazyPrace.Dialogs
             dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = nameof(UserGridRow.Surname),
-                HeaderText = "P��jmen�",
+                HeaderText = "Příjmení",
                 DataPropertyName = nameof(UserGridRow.Surname),
                 Width = 140
             });
@@ -84,7 +84,7 @@ namespace VykazyPrace.Dialogs
             dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = nameof(UserGridRow.PersonalNumber),
-                HeaderText = "Osobn� ��slo",
+                HeaderText = "Osobní číslo",
                 DataPropertyName = nameof(UserGridRow.PersonalNumber),
                 Width = 100
             });
@@ -111,17 +111,18 @@ namespace VykazyPrace.Dialogs
             dataGridView1.Columns.Add(new DataGridViewComboBoxColumn
             {
                 Name = nameof(UserGridRow.MasterUserId),
-                HeaderText = "Sekund�rn� vlastn�k",
+                HeaderText = "Sekundární vlastník",
                 DataPropertyName = nameof(UserGridRow.MasterUserId),
                 DisplayMember = nameof(ComboItem<int?>.Text),
                 ValueMember = nameof(ComboItem<int?>.Id),
                 Width = 240,
                 FlatStyle = FlatStyle.Flat
             });
+
             dataGridView1.Columns.Add(new DataGridViewCheckBoxColumn
             {
                 Name = nameof(UserGridRow.IsArchived),
-                HeaderText = "Archivov�n",
+                HeaderText = "Archivován",
                 DataPropertyName = nameof(UserGridRow.IsArchived),
                 Width = 90
             });
@@ -185,7 +186,7 @@ namespace VykazyPrace.Dialogs
             }
             catch (Exception ex)
             {
-                AppLogger.Error("Chyba p�i na��t�n� u�ivatel�.", ex);
+                AppLogger.Error("Chyba při načítání uživatelů.", ex);
                 _loadingUC.Visible = false;
             }
         }
@@ -219,7 +220,7 @@ namespace VykazyPrace.Dialogs
 
             if (rowsToSave.Count == 0)
             {
-                AppLogger.Information("Nen� zad�n ��dn� u�ivatel k ulo�en�.", true);
+                AppLogger.Information("Není zadán žádný uživatel k uložení.", true);
                 return;
             }
 
@@ -234,7 +235,7 @@ namespace VykazyPrace.Dialogs
 
             if (newRows.Count == 0 && changedExistingRows.Count == 0)
             {
-                AppLogger.Information("Nejsou ��dn� zm�ny k ulo�en�.", true);
+                AppLogger.Information("Nejsou žádné změny k uložení.", true);
                 return;
             }
 
@@ -246,7 +247,7 @@ namespace VykazyPrace.Dialogs
 
                 if (!dataCheck.IsValid)
                 {
-                    AppLogger.Error($"Je t�eba spr�vn� vyplnit v�echna pot�ebn� data! Chybn� parametr: {dataCheck.Parameter}");
+                    AppLogger.Error($"Je třeba správně vyplnit všechna potřebná data! Chybný parametr: {dataCheck.Parameter}");
                     return;
                 }
 
@@ -266,11 +267,11 @@ namespace VykazyPrace.Dialogs
 
                 if (addedUser is not null)
                 {
-                    AppLogger.Information($"U�ivatel {FormatHelper.FormatUserToString(addedUser)} byl p�id�n do datab�ze.", true);
+                    AppLogger.Information($"Uživatel {FormatHelper.FormatUserToString(addedUser)} byl přidán do databáze.", true);
                 }
                 else
                 {
-                    AppLogger.Error($"U�ivatel {FormatHelper.FormatUserToString(newUser)} nebyl p�id�n do datab�ze.");
+                    AppLogger.Error($"Uživatel {FormatHelper.FormatUserToString(newUser)} nebyl přidán do databáze.");
                     return;
                 }
             }
@@ -283,7 +284,7 @@ namespace VykazyPrace.Dialogs
 
                 if (!dataCheck.IsValid)
                 {
-                    AppLogger.Error($"Je t�eba spr�vn� vyplnit v�echna pot�ebn� data! Chybn� parametr: {dataCheck.Parameter}");
+                    AppLogger.Error($"Je třeba správně vyplnit všechna potřebná data! Chybný parametr: {dataCheck.Parameter}");
                     return;
                 }
 
@@ -304,11 +305,11 @@ namespace VykazyPrace.Dialogs
 
                 if (success)
                 {
-                    AppLogger.Information($"U�ivatel {FormatHelper.FormatUserToString(updatedUser)} byl upraven.", true);
+                    AppLogger.Information($"Uživatel {FormatHelper.FormatUserToString(updatedUser)} byl upraven.", true);
                 }
                 else
                 {
-                    AppLogger.Error($"U�ivatele {FormatHelper.FormatUserToString(updatedUser)} se nepoda�ilo upravit.");
+                    AppLogger.Error($"Uživatele {FormatHelper.FormatUserToString(updatedUser)} se nepodařilo upravit.");
                     return;
                 }
             }
@@ -364,7 +365,7 @@ namespace VykazyPrace.Dialogs
             {
                 if (!int.TryParse(e.FormattedValue?.ToString(), out var value) || value < 0)
                 {
-                    AppLogger.Error("Osobn� ��slo mus� b�t ��slo.");
+                    AppLogger.Error("Osobní číslo musí být číslo.");
                     e.Cancel = true;
                 }
             }
@@ -373,7 +374,7 @@ namespace VykazyPrace.Dialogs
             {
                 if (!int.TryParse(e.FormattedValue?.ToString(), out var value) || value < 0)
                 {
-                    AppLogger.Error("LoA mus� b�t ��slo v�t�� nebo rovno 0.");
+                    AppLogger.Error("LoA musí být číslo větší nebo rovno 0.");
                     e.Cancel = true;
                 }
             }
@@ -381,7 +382,7 @@ namespace VykazyPrace.Dialogs
 
         private void dataGridView1_DataError(object? sender, DataGridViewDataErrorEventArgs e)
         {
-            AppLogger.Error($"Chyba v tabulce u�ivatel�: {e.Exception.Message}");
+            AppLogger.Error($"Chyba v tabulce uživatelů: {e.Exception.Message}");
             e.ThrowException = false;
         }
 
@@ -398,19 +399,19 @@ namespace VykazyPrace.Dialogs
         private (bool IsValid, string Parameter) CheckGridRow(UserGridRow row)
         {
             if (string.IsNullOrWhiteSpace(row.FirstName))
-                return (false, "Jm�no");
+                return (false, "Jméno");
 
             if (string.IsNullOrWhiteSpace(row.Surname))
-                return (false, "P��jmen�");
+                return (false, "Příjmení");
 
             if (string.IsNullOrWhiteSpace(row.WindowsUsername))
                 return (false, "Windows login");
 
             if (row.PersonalNumber < 0)
-                return (false, "Osobn� ��slo");
+                return (false, "Osobní číslo");
 
             if (row.LevelOfAccess < 0)
-                return (false, "�rove� opr�vn�n�");
+                return (false, "Úroveň oprávnění");
 
             if (row.UserGroupId <= 0)
                 return (false, "Skupina");
@@ -431,13 +432,13 @@ namespace VykazyPrace.Dialogs
             if (string.IsNullOrEmpty(input))
                 return input;
 
-            input = input.Replace("�", "ue")
-                         .Replace("�", "Ue")
-                         .Replace("�", "oe")
-                         .Replace("�", "Oe")
-                         .Replace("�", "ae")
-                         .Replace("�", "Ae")
-                         .Replace("�", "ss");
+            input = input.Replace("ü", "ue")
+                         .Replace("Ü", "Ue")
+                         .Replace("ö", "oe")
+                         .Replace("Ö", "Oe")
+                         .Replace("ä", "ae")
+                         .Replace("Ä", "Ae")
+                         .Replace("ß", "ss");
 
             string normalized = input.Normalize(NormalizationForm.FormD);
             StringBuilder sb = new();

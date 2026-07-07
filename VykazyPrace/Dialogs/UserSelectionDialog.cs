@@ -46,7 +46,6 @@ namespace VykazyPrace.Dialogs
             BuildUi();
         }
 
-        
         public void SetAvailableUsers(IEnumerable<User> users)
         {
             _availableUsers = users?.ToList() ?? new List<User>();
@@ -82,8 +81,8 @@ namespace VykazyPrace.Dialogs
         private void BuildUi()
         {
             Text = _mode == UserSelectionMode.Single
-                ? "V�b�r u�ivatele"
-                : "V�b�r u�ivatel�";
+                ? "Výběr uživatele"
+                : "Výběr uživatelů";
 
             MinimizeBox = false;
             MaximizeBox = false;
@@ -352,8 +351,8 @@ namespace VykazyPrace.Dialogs
             if (_mode == UserSelectionMode.Single && SelectedUsers.Count != 1)
             {
                 MessageBox.Show(
-                    "Vyberte pr�v� jednoho u�ivatele.",
-                    "V�b�r u�ivatele",
+                    "Vyberte právě jednoho uživatele.",
+                    "Výběr uživatele",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 
@@ -363,8 +362,8 @@ namespace VykazyPrace.Dialogs
             if (_mode == UserSelectionMode.Multiple && SelectedUsers.Count == 0)
             {
                 MessageBox.Show(
-                    "Vyberte alespo� jednoho u�ivatele.",
-                    "V�b�r u�ivatel�",
+                    "Vyberte alespoň jednoho uživatele.",
+                    "Výběr uživatelů",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 

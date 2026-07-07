@@ -44,7 +44,7 @@ namespace VykazyPrace
                 return;
             }
 
-            AppLogger.Debug("Aplikace spu�t�na.");
+            AppLogger.Debug("Aplikace spuštěna.");
 
             WarmupDatabaseAsync().GetAwaiter().GetResult();
 
@@ -112,7 +112,7 @@ namespace VykazyPrace
 
         private static async Task WarmupDatabaseAsync()
         {
-            AppLogger.Debug("Zah��vac� dotaz na datab�zi...");
+            AppLogger.Debug("Zahřívací dotaz na databázi...");
 
             try
             {
@@ -121,17 +121,17 @@ namespace VykazyPrace
 
                 _ = users.FirstOrDefault();
 
-                AppLogger.Debug("Datab�ze zah��ta.");
+                AppLogger.Debug("Databáze zahřáta.");
             }
             catch (Exception ex)
             {
-                AppLogger.Error("Zah��vac� dotaz selhal: " + ex.Message);
+                AppLogger.Error("Zahřívací dotaz selhal: " + ex.Message);
             }
         }
 
         private static void RestoreExistingInstance()
         {
-            AppLogger.Debug("Aplikace ji� b��, obnovuji p�vodn� instanci.");
+            AppLogger.Debug("Aplikace již běží, obnovuji původní instanci.");
 
             try
             {
@@ -143,11 +143,11 @@ namespace VykazyPrace
                 writer.WriteLine("show");
                 writer.Flush();
 
-                AppLogger.Debug("P�vodn� instance obnovena.");
+                AppLogger.Debug("Původní instance obnovena.");
             }
             catch
             {
-                AppLogger.Debug("P�vodn� instance nereaguje.");
+                AppLogger.Debug("Původní instance nereaguje.");
             }
         }
 

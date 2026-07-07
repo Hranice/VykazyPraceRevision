@@ -40,40 +40,43 @@ namespace VykazyPrace.Core.Database
             {
                 if (!foundTables.Contains(table))
                 {
-                    throw new InvalidOperationException($"Chyb� tabulka '{table}' v datab�zi.");
+                    throw new InvalidOperationException($"Chybí tabulka '{table}' v databázi.");
                 }
             }
-
-            EnsureUserArchiveColumn(connection);
 
             if (!context.Users.Any())
             {
-                throw new InvalidOperationException("Datab�ze neobsahuje ��dn�ho u�ivatele.");
+                throw new InvalidOperationException("Databáze neobsahuje žádného uživatele.");
             }
+
+            EnsureUsersArchiveColumn(context);
         }
-        private static void EnsureUserArchiveColumn(System.Data.Common.DbConnection connection)
+
+        private static void EnsureUsersArchiveColumn(VykazyPraceContext context)
         {
-            var columns = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var connection = context.Database.GetDbConnection();
+            using var cmd = connection.CreateCommand();
+            cmd.CommandText = "PRAGMA table_info(Users);";
 
-            using (var cmd = connection.CreateCommand())
+            var hasColumn = false;
+            using (var reader = cmd.ExecuteReader())
             {
-                cmd.CommandText = "PRAGMA table_info(Users);";
-
-                using var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    columns.Add(reader.GetString(1));
+                    if (string.Equals(reader["name"]?.ToString(), "IsArchived", StringComparison.OrdinalIgnoreCase))
+                    {
+                        hasColumn = true;
+                        break;
+                    }
                 }
             }
 
-            if (columns.Contains("IsArchived"))
+            if (hasColumn)
                 return;
 
-            using (var cmd = connection.CreateCommand())
-            {
-                cmd.CommandText = "ALTER TABLE Users ADD COLUMN IsArchived INTEGER NOT NULL DEFAULT 0;";
-                cmd.ExecuteNonQuery();
-            }
+            using var alterCmd = connection.CreateCommand();
+            alterCmd.CommandText = "ALTER TABLE Users ADD COLUMN IsArchived INTEGER NOT NULL DEFAULT 0;";
+            alterCmd.ExecuteNonQuery();
         }
     }
 }

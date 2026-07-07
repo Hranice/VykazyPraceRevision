@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data;
 using System.Diagnostics;
@@ -16,13 +16,13 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 /// <summary>
 /// ChatGPT 5 credits:
-///     názvy proměnných, komentáře, regiony a základ designu excel tabulek
+///     n�zvy prom�nn�ch, koment��e, regiony a z�klad designu excel tabulek
 /// </summary>
 namespace VykazyPrace.Dialogs
 {
-    #region === UI vrstvička (WinForms) ===
+    #region === UI vrstvi�ka (WinForms) ===
     /// <summary>
-    /// Dialog pro export časových záznamů do Excelu – zjednodušená UI vrstva.
+    /// Dialog pro export �asov�ch z�znam� do Excelu � zjednodu�en� UI vrstva.
     /// </summary>
     public partial class ExportDialog : Form
     {
@@ -39,6 +39,7 @@ namespace VykazyPrace.Dialogs
         private readonly ExcelStylingService _styling = new();
 
         private List<(RadioButton radioButton, Panel panel)> _options = new();
+        private List<User> _availableExportUsers = new();
         private List<User> _selectedExportUsers = new();
 
         private bool _isTreeViewChecking;
@@ -67,8 +68,9 @@ namespace VykazyPrace.Dialogs
         private async void ExportDialog_Load(object sender, EventArgs e)
         {
             InitializeDatePickers();
-            await LoadExportUsersSelectionAsync();
             RestoreExportRangeSelectionFromConfig();
+            RegisterExportRangeChangeHandlers();
+            await LoadExportUsersSelectionAsync();
 
             if (_currentUser.LevelOfAccess > 2)
             {
@@ -169,12 +171,14 @@ namespace VykazyPrace.Dialogs
 
         private async void bSaveAs_Click(object sender, EventArgs e)
         {
+            await RefreshAvailableExportUsersAsync(keepCurrentSelection: true);
+
             var selectedUsers = GetSelectedExportUsers();
 
             if (selectedUsers.Count == 0)
             {
                 MessageBox.Show(
-                    "Není vybraný žádný uživatel.",
+                    "Nen� vybran� ��dn� u�ivatel.",
                     "Export",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -214,7 +218,7 @@ namespace VykazyPrace.Dialogs
                 SaveExportSelectionToConfig();
 
                 MessageBox.Show(
-                    "Export byl dokončen.",
+                    "Export byl dokon�en.",
                     "Export",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -245,7 +249,7 @@ namespace VykazyPrace.Dialogs
                 return;
 
             var result = MessageBox.Show(
-                $"Zamknout záznamy za měsíc {cBMonth.Text}?",
+                $"Zamknout z�znamy za m�s�c {cBMonth.Text}?",
                 "Zamknout data?",
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Warning);
@@ -266,7 +270,7 @@ namespace VykazyPrace.Dialogs
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    $"Zámek selhal. Podrobnosti v logu.\n{ex.Message}",
+                    $"Z�mek selhal. Podrobnosti v logu.\n{ex.Message}",
                     "Chyba",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
@@ -286,15 +290,16 @@ namespace VykazyPrace.Dialogs
             }
         }
 
-        private void radioButtonTimePeriod_CheckedChanged(object sender, EventArgs e)
+                private void radioButtonTimePeriod_CheckedChanged(object sender, EventArgs e)
         {
             if (sender is RadioButton rb && rb.Checked)
             {
                 SelectOption(rb);
+                _ = RefreshAvailableExportUsersAsync(keepCurrentSelection: true);
             }
         }
 
-        private void panelTimePeriod_Click(object sender, EventArgs e)
+                private void panelTimePeriod_Click(object sender, EventArgs e)
         {
             if (sender == panelSpecificTimePeriod)
                 SelectOption(rBSpecificTimePeriod);
@@ -304,6 +309,8 @@ namespace VykazyPrace.Dialogs
                 SelectOption(rBSpecificWeek);
             else if (sender == panelSpecificYear)
                 SelectOption(rBSpecificYear);
+
+            _ = RefreshAvailableExportUsersAsync(keepCurrentSelection: true);
         }
 
         private void bSetCurrentWeek_Click(object sender, EventArgs e)
@@ -349,16 +356,31 @@ namespace VykazyPrace.Dialogs
             }
         }
 
-        private void bUserSelection_Click(object sender, EventArgs e)
+        private async void bUserSelection_Click(object sender, EventArgs e)
         {
             if (_currentUser.LevelOfAccess == 1)
                 return;
+
+            await RefreshAvailableExportUsersAsync(keepCurrentSelection: true);
+
+            if (_availableExportUsers.Count == 0)
+            {
+                MessageBox.Show(
+                    "Ve zvolen�m obdob� nejsou ��dn� u�ivatel� s vyk�zan�mi hodinami.",
+                    "V�b�r u�ivatel�",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                return;
+            }
 
             using var dialog = ActivatorUtilities.CreateInstance<UserSelectionDialog>(
                 _serviceProvider,
                 UserSelectionMode.Multiple,
                 _selectedExportUsers.Select(u => u.Id),
                 Enumerable.Empty<int>());
+
+            dialog.SetAvailableUsers(_availableExportUsers);
 
             if (dialog.ShowDialog(this) != DialogResult.OK)
                 return;
@@ -372,22 +394,92 @@ namespace VykazyPrace.Dialogs
 
             UpdateSelectedExportUsersLabel();
         }
-
         private async Task LoadExportUsersSelectionAsync()
+        {
+            await RefreshAvailableExportUsersAsync(keepCurrentSelection: false);
+        }
+
+        private void RegisterExportRangeChangeHandlers()
+        {
+            dtpFrom.ValueChanged += ExportRangeInputChanged;
+            dtpTo.ValueChanged += ExportRangeInputChanged;
+            nUDWeek.ValueChanged += ExportRangeInputChanged;
+            nUDYear.ValueChanged += ExportRangeInputChanged;
+            cBMonth2.SelectedIndexChanged += ExportRangeInputChanged;
+        }
+
+        private void ExportRangeInputChanged(object? sender, EventArgs e)
+        {
+            _ = RefreshAvailableExportUsersAsync(keepCurrentSelection: true);
+        }
+
+        private async Task RefreshAvailableExportUsersAsync(bool keepCurrentSelection)
         {
             if (_currentUser.LevelOfAccess == 1)
             {
+                _availableExportUsers = new List<User> { _currentUser };
                 _selectedExportUsers = new List<User> { _currentUser };
 
                 bUserSelection.Enabled = false;
-                bUserSelection.Text = "Vybrán aktuální uživatel";
+                bUserSelection.Text = "Vybr�n aktu�ln� u�ivatel";
                 lSelected.Text = FormatHelper.FormatUserToString(_currentUser);
 
                 return;
             }
 
-            var allUsers = await _userRepository.GetAllUsersAsync();
+            try
+            {
+                bUserSelection.Enabled = false;
+                bUserSelection.Text = "Na��t�m u�ivatele...";
 
+                var (from, to) = GetSelectedExportRange();
+
+                _availableExportUsers = await _userRepository.GetUsersWithTimeEntriesAsync(from, to);
+
+                var availableUserIds = _availableExportUsers
+                    .Select(u => u.Id)
+                    .ToHashSet();
+
+                if (keepCurrentSelection)
+                {
+                    _selectedExportUsers = _selectedExportUsers
+                        .Where(u => availableUserIds.Contains(u.Id))
+                        .DistinctBy(u => u.Id)
+                        .OrderBy(u => u.UserGroup?.Title)
+                        .ThenBy(u => u.Surname)
+                        .ThenBy(u => u.FirstName)
+                        .ToList();
+
+                    if (_selectedExportUsers.Count == 0)
+                    {
+                        _selectedExportUsers = _availableExportUsers
+                            .DistinctBy(u => u.Id)
+                            .OrderBy(u => u.UserGroup?.Title)
+                            .ThenBy(u => u.Surname)
+                            .ThenBy(u => u.FirstName)
+                            .ToList();
+                    }
+                }
+                else
+                {
+                    _selectedExportUsers = GetInitialExportUsersFromConfig(_availableExportUsers);
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error("Chyba p�i na��t�n� u�ivatel� pro export.", ex);
+                _availableExportUsers = new List<User>();
+                _selectedExportUsers = new List<User>();
+            }
+            finally
+            {
+                bUserSelection.Enabled = _availableExportUsers.Count > 0;
+                UpdateSelectedExportUsersLabel();
+            }
+        }
+
+        private List<User> GetInitialExportUsersFromConfig(List<User> availableUsers)
+        {
             var config = _configService.Current;
 
             var savedUserIds = config.ExportSelection?.SelectedUserIds?.ToHashSet()
@@ -398,44 +490,48 @@ namespace VykazyPrace.Dialogs
 
             bool anythingSaved = savedUserIds.Count > 0 || savedGroupIds.Count > 0;
 
-            _selectedExportUsers = anythingSaved
-                ? allUsers
+            var selectedUsers = anythingSaved
+                ? availableUsers
                     .Where(u =>
                         savedUserIds.Contains(u.Id) ||
                         (u.UserGroupId.HasValue && savedGroupIds.Contains(u.UserGroupId.Value)))
-                    .DistinctBy(u => u.Id)
-                    .OrderBy(u => u.UserGroup?.Title)
-                    .ThenBy(u => u.Surname)
-                    .ThenBy(u => u.FirstName)
-                    .ToList()
-                : allUsers
+                : availableUsers;
+
+            var result = selectedUsers
+                .DistinctBy(u => u.Id)
+                .OrderBy(u => u.UserGroup?.Title)
+                .ThenBy(u => u.Surname)
+                .ThenBy(u => u.FirstName)
+                .ToList();
+
+            return result.Count > 0
+                ? result
+                : availableUsers
                     .DistinctBy(u => u.Id)
                     .OrderBy(u => u.UserGroup?.Title)
                     .ThenBy(u => u.Surname)
                     .ThenBy(u => u.FirstName)
                     .ToList();
-
-            UpdateSelectedExportUsersLabel();
         }
 
         private void UpdateSelectedExportUsersLabel()
         {
             if (_selectedExportUsers.Count == 0)
             {
-                lSelected.Text = "Nevybrán žádný uživatel";
-                bUserSelection.Text = "Vybrat uživatele...";
+                lSelected.Text = "Nevybr�n ��dn� u�ivatel";
+                bUserSelection.Text = "Vybrat u�ivatele...";
                 return;
             }
 
             if (_selectedExportUsers.Count == 1)
             {
                 lSelected.Text = FormatHelper.FormatUserToString(_selectedExportUsers[0]);
-                bUserSelection.Text = "Změnit uživatele...";
+                bUserSelection.Text = "Zm�nit u�ivatele...";
                 return;
             }
 
-            lSelected.Text = $"Vybráno uživatelů: {_selectedExportUsers.Count}";
-            bUserSelection.Text = "Změnit výběr uživatelů...";
+            lSelected.Text = $"Vybr�no u�ivatel�: {_selectedExportUsers.Count}";
+            bUserSelection.Text = "Zm�nit v�b�r u�ivatel�...";
         }
 
         private List<User> GetSelectedExportUsers()
@@ -519,7 +615,7 @@ namespace VykazyPrace.Dialogs
                 int month = cBMonth2.SelectedIndex + 1;
 
                 if (month < 1 || month > 12)
-                    throw new InvalidOperationException("Není vybraný měsíc pro export.");
+                    throw new InvalidOperationException("Nen� vybran� m�s�c pro export.");
 
                 var from = new DateTime(year, month, 1);
                 var to = new DateTime(year, month, DateTime.DaysInMonth(year, month));
@@ -537,39 +633,39 @@ namespace VykazyPrace.Dialogs
                 return (from.Date, to.Date);
             }
 
-            throw new InvalidOperationException("Není vybraná možnost časového rozsahu exportu.");
+            throw new InvalidOperationException("Nen� vybran� mo�nost �asov�ho rozsahu exportu.");
         }
     }
     #endregion
 
-    #region === Doménové konstanty ===
+    #region === Dom�nov� konstanty ===
     /// <summary>
-    /// Centralizované ID a další konstanty pro filtrování záznamů.
-    /// Vyhneme se "magic numbers" rozesetým v kódu.
+    /// Centralizovan� ID a dal�� konstanty pro filtrov�n� z�znam�.
+    /// Vyhneme se "magic numbers" rozeset�m v k�du.
     /// </summary>
     internal static class ExportConstants
     {
         /// <summary>
-        /// Projekt, který je vyloučen v kombinaci s <see cref="ExcludedEntryTypeId"/>.
+        /// Projekt, kter� je vylou�en v kombinaci s <see cref="ExcludedEntryTypeId"/>.
         /// </summary>
         public const int ExcludedProjectId = 132;
 
         /// <summary>
-        /// Typ záznamu, který je spolu s <see cref="ExcludedProjectId"/> vyloučen z exportu.
+        /// Typ z�znamu, kter� je spolu s <see cref="ExcludedProjectId"/> vylou�en z exportu.
         /// </summary>
         public const int ExcludedEntryTypeId = 24;
 
         /// <summary>
-        /// Projekt reprezentující nepřítomnost – nezapočítává se do souhrnů podle uživatele.
+        /// Projekt reprezentuj�c� nep��tomnost � nezapo��t�v� se do souhrn� podle u�ivatele.
         /// </summary>
         public const int AbsenceProjectId = 23;
 
         /// <summary>
-        /// Typ záznamu reprezentující outlook událost (nevalidní záznam) – nezapočítává se do souhrnů podle uživatele.
+        /// Typ z�znamu reprezentuj�c� outlook ud�lost (nevalidn� z�znam) � nezapo��t�v� se do souhrn� podle u�ivatele.
         /// </summary>
         public const int OutlookEventEntryTypeId = 25;
 
-        // VYHODNOCENÍ
+        // VYHODNOCEN�
         public const int AutomationProjectId = 31;
 
         public const int ProductionSdProjectId = 19;
@@ -583,14 +679,14 @@ namespace VykazyPrace.Dialogs
     }
     #endregion
 
-    #region === Pomocné utility ===
+    #region === Pomocn� utility ===
     /// <summary>
-    /// Nástroje pro práci s datovým rozsahem exportu (měsíce, dny, atd.).
+    /// N�stroje pro pr�ci s datov�m rozsahem exportu (m�s�ce, dny, atd.).
     /// </summary>
     internal static class DateRangeHelper
     {
         /// <summary>
-        /// Vrátí první a poslední den měsíce podle vstupního data.
+        /// Vr�t� prvn� a posledn� den m�s�ce podle vstupn�ho data.
         /// </summary>
         public static (DateTime From, DateTime To) GetMonthRange(DateTime anchor)
         {
@@ -600,7 +696,7 @@ namespace VykazyPrace.Dialogs
         }
 
         /// <summary>
-        /// Vrátí (From, To) pro měsíc určený indexem 0..11 v daném roce.
+        /// Vr�t� (From, To) pro m�s�c ur�en� indexem 0..11 v dan�m roce.
         /// </summary>
         public static (DateTime From, DateTime To) GetMonthRangeByIndex(int monthIndex, int year)
         {
@@ -611,8 +707,8 @@ namespace VykazyPrace.Dialogs
         }
 
         /// <summary>
-        /// Normalizuje uživatelský rozsah "od dne včetně do dne včetně".
-        /// Pro databázové filtrování vrací horní mez jako následující den exkluzivně.
+        /// Normalizuje u�ivatelsk� rozsah "od dne v�etn� do dne v�etn�".
+        /// Pro datab�zov� filtrov�n� vrac� horn� mez jako n�sleduj�c� den exkluzivn�.
         /// </summary>
         public static (DateTime FromInclusive, DateTime ToInclusive, DateTime ToExclusive)
             NormalizeInclusiveDateRange(DateTime from, DateTime to)
@@ -621,7 +717,7 @@ namespace VykazyPrace.Dialogs
             var toInclusive = to.Date;
 
             if (toInclusive < fromInclusive)
-                throw new InvalidOperationException("Datum do nesmí být menší než datum od.");
+                throw new InvalidOperationException("Datum do nesm� b�t men�� ne� datum od.");
 
             var toExclusive = toInclusive.AddDays(1);
 
@@ -630,7 +726,7 @@ namespace VykazyPrace.Dialogs
     }
 
     /// <summary>
-    /// Zajišťuje bezpečné názvy listů pro Excel (omezení 31 znaků, nepovolené znaky).
+    /// Zaji��uje bezpe�n� n�zvy list� pro Excel (omezen� 31 znak�, nepovolen� znaky).
     /// </summary>
     internal static class SheetNameSanitizer
     {
@@ -645,9 +741,9 @@ namespace VykazyPrace.Dialogs
     }
     #endregion
 
-    #region === Továrna na datové tabulky ===
+    #region === Tov�rna na datov� tabulky ===
     /// <summary>
-    /// Vytváří <see cref="DataTable"/> pro jednotlivé listy exportu.
+    /// Vytv��� <see cref="DataTable"/> pro jednotliv� listy exportu.
     /// </summary>
     public sealed class DataTableFactory
     {
@@ -659,31 +755,31 @@ namespace VykazyPrace.Dialogs
         }
 
         /// <summary>
-        /// Datová tabulka pro detailní záznamy (časové záznamy / projekty).
+        /// Datov� tabulka pro detailn� z�znamy (�asov� z�znamy / projekty).
         /// </summary>
         public DataTable BuildTimeEntries(IEnumerable<TimeEntry> items)
         {
             var dt = new DataTable();
-            dt.Columns.Add("Osobní číslo", typeof(int));
-            dt.Columns.Add("Jméno", typeof(string));
+            dt.Columns.Add("Osobn� ��slo", typeof(int));
+            dt.Columns.Add("Jm�no", typeof(string));
             dt.Columns.Add("Skupina", typeof(string));
             dt.Columns.Add("Projekt", typeof(string));
             dt.Columns.Add("Popis projektu", typeof(string));
-            dt.Columns.Add("Typ záznamu", typeof(string));
-            dt.Columns.Add("Časový záznam", typeof(DateTime));
+            dt.Columns.Add("Typ z�znamu", typeof(string));
+            dt.Columns.Add("�asov� z�znam", typeof(DateTime));
             dt.Columns.Add("Popis", typeof(string));
-            dt.Columns.Add("Poznámky", typeof(string));
-            dt.Columns.Add("Doba v hodinách", typeof(double));
+            dt.Columns.Add("Pozn�mky", typeof(string));
+            dt.Columns.Add("Doba v hodin�ch", typeof(double));
 
             foreach (var e in items)
             {
                 dt.Rows.Add(
                     e.User?.PersonalNumber ?? 0,
                     $"{e.User?.FirstName} {e.User?.Surname}".Trim(),
-                    e.User?.UserGroup?.Title ?? "CHYBÍ DATA",
+                    e.User?.UserGroup?.Title ?? "CHYB� DATA",
                     e.Project?.ProjectTitle ?? "N/A",
                     e.Project?.ProjectDescription ?? "N/A",
-                    e.EntryType?.Title ?? "Neznámý typ",
+                    e.EntryType?.Title ?? "Nezn�m� typ",
                     e.Timestamp?.Date ?? (object)DBNull.Value!,
                     e.Description ?? "N/A",
                     e.Note ?? "N/A",
@@ -694,7 +790,7 @@ namespace VykazyPrace.Dialogs
         }
 
         /// <summary>
-        /// Datová tabulka – souhrn podle uživatele. Souhrnné řádky uživatelů + rozpad na projekty.
+        /// Datov� tabulka � souhrn podle u�ivatele. Souhrnn� ��dky u�ivatel� + rozpad na projekty.
         /// </summary>
         public async Task<DataTable> BuildUserSummary(
           IEnumerable<User> selectedUsers,
@@ -704,18 +800,18 @@ namespace VykazyPrace.Dialogs
           IReadOnlyDictionary<(int ProjectId, int UserId), double> cumToFullfilledDict)
         {
             var dt = new DataTable();
-            dt.Columns.Add("Osobní číslo", typeof(int));
-            dt.Columns.Add("Jméno", typeof(string));
+            dt.Columns.Add("Osobn� ��slo", typeof(int));
+            dt.Columns.Add("Jm�no", typeof(string));
             dt.Columns.Add("Projekt", typeof(string));
             dt.Columns.Add("Popis projektu", typeof(string));
-            dt.Columns.Add("Součet hodin", typeof(double));
-            dt.Columns.Add("Suma (čas. úsek)", typeof(double));
-            dt.Columns.Add("Docházka", typeof(double));
-            dt.Columns.Add("Suma (před zplnohodnotněním projektu)", typeof(double));
+            dt.Columns.Add("Sou�et hodin", typeof(double));
+            dt.Columns.Add("Suma (�as. �sek)", typeof(double));
+            dt.Columns.Add("Doch�zka", typeof(double));
+            dt.Columns.Add("Suma (p�ed zplnohodnotn�n�m projektu)", typeof(double));
 
-            // Docházka z PowerKey podle konkrétního časového úseku.
-            // Bere se z PowerKey spočítaných denních hodnot AD.WorkedHours,
-            // aby zůstaly zachované systémové tolerance, pauzy a zaokrouhlení.
+            // Doch�zka z PowerKey podle konkr�tn�ho �asov�ho �seku.
+            // Bere se z PowerKey spo��tan�ch denn�ch hodnot AD.WorkedHours,
+            // aby z�staly zachovan� syst�mov� tolerance, pauzy a zaokrouhlen�.
             Dictionary<int, double> powerKeyData;
 
             try
@@ -736,13 +832,13 @@ namespace VykazyPrace.Dialogs
             catch (Exception ex)
             {
                 AppLogger.Error(
-                    "PowerKey nedostupný – docházka bude nastavena na 0 a export pokračuje.",
+                    "PowerKey nedostupn� � doch�zka bude nastavena na 0 a export pokra�uje.",
                     ex);
 
                 powerKeyData = new Dictionary<int, double>();
             }
 
-            // Odkomentováno - Ignorovali jsme nepřítomnost v souhrnu
+            // Odkomentov�no - Ignorovali jsme nep��tomnost v souhrnu
             //var filteredEntries = timeEntries.Where(e => e.ProjectId != ExportConstants.AbsenceProjectId).ToList();
 
             var entriesByUserId = timeEntries
@@ -770,7 +866,7 @@ namespace VykazyPrace.Dialogs
                 double attendance = powerKeyData.TryGetValue(user.PersonalNumber, out double h) ? h : 0;
                 string fullName = $"{user.FirstName} {user.Surname}".Trim();
 
-                // Souhrnný řádek uživatele — vznikne i když userEntries je prázdné
+                // Souhrnn� ��dek u�ivatele � vznikne i kdy� userEntries je pr�zdn�
                 dt.Rows.Add(
                     user.PersonalNumber,
                     fullName,
@@ -830,7 +926,7 @@ namespace VykazyPrace.Dialogs
            DateTime from,
            DateTime to)
         {
-            var ws = wb.AddWorksheet("VYHODNOCENÍ");
+            var ws = wb.AddWorksheet("VYHODNOCEN�");
 
             ws.Position = 1;
             ws.TabColor = XLColor.Yellow;
@@ -855,7 +951,7 @@ namespace VykazyPrace.Dialogs
             catch (Exception ex)
             {
                 AppLogger.Error(
-                    "PowerKey nedostupný – celková docházka pro vyhodnocení bude nastavena na 0 a export pokračuje.",
+                    "PowerKey nedostupn� � celkov� doch�zka pro vyhodnocen� bude nastavena na 0 a export pokra�uje.",
                     ex);
 
                 totalPowerKeyWorkedHours = 0;
@@ -863,37 +959,37 @@ namespace VykazyPrace.Dialogs
 
             var rows = new List<EvaluationRow>
     {
-        new("Projekty", "EXTERNÍ PROJEKTY",
+        new("Projekty", "EXTERN� PROJEKTY",
             e => e.Project?.ProjectDescription?.Contains("E", StringComparison.OrdinalIgnoreCase) == true),
 
-        new("Projekty", "INTERNÍ PROJEKTY",
+        new("Projekty", "INTERN� PROJEKTY",
             e => e.Project?.ProjectDescription?.Contains("I", StringComparison.OrdinalIgnoreCase) == true),
 
         new("Automatizace", "Provoz Automatizace",
             e => e.ProjectId == ExportConstants.AutomationProjectId),
 
-        new("Provoz výroba", "Provoz SD",
+        new("Provoz v�roba", "Provoz SD",
             e => e.ProjectId == ExportConstants.ProductionSdProjectId),
 
-        new("Provoz výroba", "Provoz HP",
+        new("Provoz v�roba", "Provoz HP",
             e => e.ProjectId == ExportConstants.ProductionHpProjectId),
 
-        new("Provoz výroba", "Provoz MET",
+        new("Provoz v�roba", "Provoz MET",
             e => e.ProjectId == ExportConstants.ProductionMetProjectId),
 
-        new("Provoz výroba", "Provoz KOM",
+        new("Provoz v�roba", "Provoz KOM",
             e => e.ProjectId == ExportConstants.ProductionKomProjectId),
 
-        new("Provoz výroba", "Provoz SOR",
+        new("Provoz v�roba", "Provoz SOR",
             e => e.ProjectId == ExportConstants.ProductionSorProjectId),
 
-        new("Ostatní", "Ostatní",
+        new("Ostatn�", "Ostatn�",
             e => e.ProjectId == ExportConstants.ProductionOtherProjectId),
 
-        new("Ostatní", "Nepřítomnost",
+        new("Ostatn�", "Nep��tomnost",
             e => e.ProjectId == ExportConstants.AbsenceProjectId),
 
-        new("Ostatní", "Kroužek MT",
+        new("Ostatn�", "Krou�ek MT",
             e => e.EntryTypeId == ExportConstants.ClubYoungTechnicianEntryTypeId)
     };
 
@@ -920,18 +1016,18 @@ namespace VykazyPrace.Dialogs
                     g => totalHours > 0 ? g.Sum(r => r.SumHours) / totalHours : 0
                 );
 
-            // 1. řádek prázdný, sloučený přes oblast A:M.
+            // 1. ��dek pr�zdn�, slou�en� p�es oblast A:M.
             ws.Range("A1:M1").Merge();
             ws.Row(1).Clear();
 
-            // 2. řádek prázdný, výška 6 px => cca 4.5 pt.
+            // 2. ��dek pr�zdn�, v��ka 6 px => cca 4.5 pt.
             ws.Row(2).Clear();
             ws.Row(2).Height = 4.5;
 
             int currentRow = 3;
 
-            // Budeme si pamatovat startovní řádky kategorií,
-            // aby pomocná data pro graf mohla odkazovat na sloupec E.
+            // Budeme si pamatovat startovn� ��dky kategori�,
+            // aby pomocn� data pro graf mohla odkazovat na sloupec E.
             var groupStartRows = new Dictionary<string, int>();
 
             foreach (var group in rows.GroupBy(r => r.Group))
@@ -965,13 +1061,13 @@ namespace VykazyPrace.Dialogs
 
                 groupRange.Style.Fill.BackgroundColor = GetEvaluationGroupColor(group.Key);
 
-                // Jemné vnitřní čáry v rámci sekce.
+                // Jemn� vnit�n� ��ry v r�mci sekce.
                 groupRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
 
-                // Silné ohraničení celé sekce.
+                // Siln� ohrani�en� cel� sekce.
                 groupRange.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
 
-                // První sloupec sekce má také silné ohraničení okolo.
+                // Prvn� sloupec sekce m� tak� siln� ohrani�en� okolo.
                 firstColumnGroupRange.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
 
                 firstColumnGroupRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
@@ -980,12 +1076,12 @@ namespace VykazyPrace.Dialogs
                 lastColumnGroupRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             }
 
-            // Pomocná data pro koláčový graf.
-            // Jsou přímo pod grafem v oblasti G3:H6, takže v Excelu nebudou vidět,
-            // protože graf leží přes oblast G3:M17.
+            // Pomocn� data pro kol��ov� graf.
+            // Jsou p��mo pod grafem v oblasti G3:H6, tak�e v Excelu nebudou vid�t,
+            // proto�e graf le�� p�es oblast G3:M17.
             int chartDataRow = 3;
 
-            foreach (var groupName in new[] { "Projekty", "Automatizace", "Provoz výroba", "Ostatní" })
+            foreach (var groupName in new[] { "Projekty", "Automatizace", "Provoz v�roba", "Ostatn�" })
             {
                 if (!groupStartRows.TryGetValue(groupName, out int sourceRow))
                     continue;
@@ -1010,8 +1106,8 @@ namespace VykazyPrace.Dialogs
             ws.Range("E3:E13").Style.Font.Bold = true;
             ws.Range("E3:E13").Style.Font.FontSize = 14;
 
-            // Součet hodin pod tabulkou
-            ws.Cell(15, 2).Value = "∑";
+            // Sou�et hodin pod tabulkou
+            ws.Cell(15, 2).Value = "?";
             ws.Cell(15, 3).FormulaA1 = "=SUM(C3:C13)";
 
             ws.Cell(15, 2).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
@@ -1021,7 +1117,7 @@ namespace VykazyPrace.Dialogs
             ws.Cell(15, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             ws.Cell(15, 3).Style.Font.Bold = true;
 
-            // Celkově odpracované hodiny z PowerKey za všechny vybrané uživatele v daném období
+            // Celkov� odpracovan� hodiny z PowerKey za v�echny vybran� u�ivatele v dan�m obdob�
             ws.Cell(17, 2).Value = "PowerKey";
             ws.Cell(17, 3).Value = totalPowerKeyWorkedHours;
 
@@ -1030,16 +1126,16 @@ namespace VykazyPrace.Dialogs
             ws.Cell(17, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             ws.Cell(17, 3).Style.Font.Bold = true;
 
-            // Nejdřív dopočítat podle obsahu.
+            // Nejd��v dopo��tat podle obsahu.
             ws.Columns().AdjustToContents();
 
-            // Přibližný převod pixelů na Excel šířku:
+            // P�ibli�n� p�evod pixel� na Excel ���ku:
             // ExcelWidth = (pixels - 5) / 7
-            ws.Column(1).Width = 17.57; // cca 128 px - podle šablony od MV
-            ws.Column(2).Width = 20.14; // cca 146 px - podle šablony od MV
-            ws.Column(3).Width = 8.43;  // cca 64 px - podle šablony od MV
-            ws.Column(4).Width = 8.43;  // cca 64 px - podle šablony od MV
-            ws.Column(5).Width = 9;     // cca 68 px - podle šablony od MV
+            ws.Column(1).Width = 17.57; // cca 128 px - podle �ablony od MV
+            ws.Column(2).Width = 20.14; // cca 146 px - podle �ablony od MV
+            ws.Column(3).Width = 8.43;  // cca 64 px - podle �ablony od MV
+            ws.Column(4).Width = 8.43;  // cca 64 px - podle �ablony od MV
+            ws.Column(5).Width = 9;     // cca 68 px - podle �ablony od MV
 
             ws.SetTabActive();
         }
@@ -1050,8 +1146,8 @@ namespace VykazyPrace.Dialogs
             {
                 "Projekty" => XLColor.FromHtml("#FCE4D6"),
                 "Automatizace" => XLColor.FromHtml("#DDEBF7"),
-                "Provoz výroba" => XLColor.FromHtml("#D9D9D9"),
-                "Ostatní" => XLColor.FromHtml("#EBF1DE"),
+                "Provoz v�roba" => XLColor.FromHtml("#D9D9D9"),
+                "Ostatn�" => XLColor.FromHtml("#EBF1DE"),
                 _ => XLColor.White
             };
         }
@@ -1072,7 +1168,7 @@ namespace VykazyPrace.Dialogs
                 };
 
                 workbook = excel.Workbooks.Open(filePath);
-                ws = (Excel.Worksheet)workbook.Worksheets["VYHODNOCENÍ"];
+                ws = (Excel.Worksheet)workbook.Worksheets["VYHODNOCEN�"];
                 chartObjects = (Excel.ChartObjects)ws.ChartObjects(Type.Missing);
 
                 AddEvaluationPieChart(chartObjects, ws);
@@ -1132,12 +1228,12 @@ namespace VykazyPrace.Dialogs
                 seriesCollection = (Excel.SeriesCollection)chart.SeriesCollection();
                 series = seriesCollection.NewSeries();
 
-                series.XValues = "='VYHODNOCENÍ'!$G$3:$G$6";
-                series.Values = "='VYHODNOCENÍ'!$H$3:$H$6";
-                series.Name = "Podíl";
+                series.XValues = "='VYHODNOCEN�'!$G$3:$G$6";
+                series.Values = "='VYHODNOCEN�'!$H$3:$H$6";
+                series.Name = "Pod�l";
 
                 chart.HasTitle = true;
-                chart.ChartTitle.Text = "Podíl využití časového fondu v rámci AUTOMATIZACE";
+                chart.ChartTitle.Text = "Pod�l vyu�it� �asov�ho fondu v r�mci AUTOMATIZACE";
                 chart.ChartTitle.Font.Bold = true;
                 chart.ChartTitle.Font.Size = 14;
 
@@ -1217,12 +1313,12 @@ namespace VykazyPrace.Dialogs
                 seriesCollection = (Excel.SeriesCollection)chart.SeriesCollection();
                 series = seriesCollection.NewSeries();
 
-                series.Name = "Odpracované hodiny";
-                series.XValues = "='VYHODNOCENÍ'!$B$3:$B$13";
-                series.Values = "='VYHODNOCENÍ'!$C$3:$C$13";
+                series.Name = "Odpracovan� hodiny";
+                series.XValues = "='VYHODNOCEN�'!$B$3:$B$13";
+                series.Values = "='VYHODNOCEN�'!$C$3:$C$13";
 
                 chart.HasTitle = true;
-                chart.ChartTitle.Text = "Odpracované hodiny";
+                chart.ChartTitle.Text = "Odpracovan� hodiny";
                 chart.ChartTitle.Font.Bold = true;
                 chart.ChartTitle.Font.Size = 14;
 
@@ -1334,18 +1430,18 @@ namespace VykazyPrace.Dialogs
 
     #region === Styling Excelu ===
     /// <summary>
-    /// Styly a formátování pro listy a tabulky v ClosedXML.
+    /// Styly a form�tov�n� pro listy a tabulky v ClosedXML.
     /// </summary>
     internal sealed class ExcelStylingService
     {
         /// <summary>
-        /// Detailní listy – formáty sloupců, čísla, datumy (bez změny theme).
+        /// Detailn� listy � form�ty sloupc�, ��sla, datumy (bez zm�ny theme).
         /// </summary>
         public void BeautifyDetailTable(IXLWorksheet ws, IXLTable table)
         {
             var colPopis = table.Field("Popis projektu").Column.ColumnNumber();
-            var colDatum = table.Field("Časový záznam").Column.ColumnNumber();
-            var colHod = table.Field("Doba v hodinách").Column.ColumnNumber();
+            var colDatum = table.Field("�asov� z�znam").Column.ColumnNumber();
+            var colHod = table.Field("Doba v hodin�ch").Column.ColumnNumber();
 
             ws.Column(colPopis).Style.Alignment.WrapText = false;
             ws.Column(colDatum).Style.DateFormat.Format = "dd.mm.yyyy";
@@ -1353,7 +1449,7 @@ namespace VykazyPrace.Dialogs
         }
 
         /// <summary>
-        /// Souhrn – zvýraznění „uživatelských“ řádků, odsazení projektů, grouping, formáty.
+        /// Souhrn � zv�razn�n� �u�ivatelsk�ch� ��dk�, odsazen� projekt�, grouping, form�ty.
         /// </summary>
         public void BeautifyUserSummarySheet(IXLWorksheet wsSummary, IXLTable tableSummary)
         {
@@ -1368,11 +1464,11 @@ namespace VykazyPrace.Dialogs
             int lastRow = data.LastRow().RowNumber();
 
             int colProjekt = tableSummary.Field("Projekt").Column.ColumnNumber();
-            int colSoucet = tableSummary.Field("Součet hodin").Column.ColumnNumber();
-            int colSuma = tableSummary.Field("Suma (čas. úsek)").Column.ColumnNumber();
-            int colDoch = tableSummary.Field("Docházka").Column.ColumnNumber();
+            int colSoucet = tableSummary.Field("Sou�et hodin").Column.ColumnNumber();
+            int colSuma = tableSummary.Field("Suma (�as. �sek)").Column.ColumnNumber();
+            int colDoch = tableSummary.Field("Doch�zka").Column.ColumnNumber();
 
-            // Vodorovné čáry mezi řádky (uvnitř tabulky)
+            // Vodorovn� ��ry mezi ��dky (uvnit� tabulky)
             var gridColor = XLColor.FromHtml("#95B3D7");
             for (int rr = firstRow; rr <= lastRow; rr++)
             {
@@ -1419,8 +1515,8 @@ namespace VykazyPrace.Dialogs
                 if (attendanceCell.TryGetValue(out double parsedAttendanceHours))
                     attendanceHours = parsedAttendanceHours;
 
-                // Červeně označit uživatele, pokud se vykázané hodiny liší
-                // od docházky z PowerKey o více než 5 %.
+                // �erven� ozna�it u�ivatele, pokud se vyk�zan� hodiny li��
+                // od doch�zky z PowerKey o v�ce ne� 5 %.
                 bool hasInvalidHoursDifference;
 
                 if (attendanceHours <= 0)
@@ -1448,7 +1544,7 @@ namespace VykazyPrace.Dialogs
                 wsSummary.Cell(headerRow, colSuma).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
                 wsSummary.Cell(headerRow, colDoch).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
 
-                // Detailní projektové řádky: odsazení + seskupení
+                // Detailn� projektov� ��dky: odsazen� + seskupen�
                 if (endDetail >= startDetail)
                 {
                     for (int rr = startDetail; rr <= endDetail; rr++)
@@ -1464,14 +1560,14 @@ namespace VykazyPrace.Dialogs
                 wsSummary.Row(headerRow).Height = 18.5;
             }
 
-            // Formáty čísel
+            // Form�ty ��sel
             wsSummary.Column(colSoucet).Style.NumberFormat.Format = "0.0#";
             wsSummary.Column(colSuma).Style.NumberFormat.Format = "0.0#";
             wsSummary.Column(colDoch).Style.NumberFormat.Format = "0.0#";
         }
 
         /// <summary>
-        /// Aplikuje vzhled "Excel TableStyleMedium2" (teal) s vlastním pruhováním.
+        /// Aplikuje vzhled "Excel TableStyleMedium2" (teal) s vlastn�m pruhov�n�m.
         /// </summary>
         public void ApplyMedium2Teal(IXLTable table)
         {
@@ -1484,7 +1580,7 @@ namespace VykazyPrace.Dialogs
             var stripeBg = XLColor.FromHtml("#EAF6FB");
             var white = XLColor.White;
 
-            // Hlavička
+            // Hlavi�ka
             var hdr = table.HeadersRow().Cells();
             hdr.Style.Fill.BackgroundColor = headerBg;
             hdr.Style.Font.FontColor = white;
@@ -1497,7 +1593,7 @@ namespace VykazyPrace.Dialogs
                 row.Style.Fill.BackgroundColor = (r % 2 == 1) ? white : stripeBg;
             }
 
-            // Totals řádek – stejné jako header
+            // Totals ��dek � stejn� jako header
             if (table.ShowTotalsRow)
             {
                 var tot = table.TotalsRow().Cells();
@@ -1509,9 +1605,9 @@ namespace VykazyPrace.Dialogs
     }
     #endregion
 
-    #region === Služba pro export (logika mimo UI) ===
+    #region === Slu�ba pro export (logika mimo UI) ===
     /// <summary>
-    /// Orchestruje načtení dat, sestavení sešitu a uložení souboru.
+    /// Orchestruje na�ten� dat, sestaven� se�itu a ulo�en� souboru.
     /// </summary>
     internal sealed class TimeEntryExportService
     {
@@ -1532,9 +1628,9 @@ namespace VykazyPrace.Dialogs
             _styling = styling;
         }
         /// <summary>
-        /// Načte data, vytvoří listy a uloží XLSX.
-        /// Uživatelský rozsah je chápán jako "od dne včetně do dne včetně".
-        /// Pro časové záznamy se horní hranice technicky filtruje jako následující den exkluzivně.
+        /// Na�te data, vytvo�� listy a ulo�� XLSX.
+        /// U�ivatelsk� rozsah je ch�p�n jako "od dne v�etn� do dne v�etn�".
+        /// Pro �asov� z�znamy se horn� hranice technicky filtruje jako n�sleduj�c� den exkluzivn�.
         /// </summary>
         public async Task ExportAsync(
             string filePath,
@@ -1564,15 +1660,15 @@ namespace VykazyPrace.Dialogs
                     selectedUserIdSet.Add(currentUser.Id);
                 }
 
-                // Důležité:
-                // časové záznamy načítáme od fromInclusive včetně
-                // do toExclusive exkluzivně.
+                // D�le�it�:
+                // �asov� z�znamy na��t�me od fromInclusive v�etn�
+                // do toExclusive exkluzivn�.
                 var allEntries = await _timeEntryRepo
                     .GetAllTimeEntriesBetweenDatesAsync(fromInclusive, toExclusive)
                     .ConfigureAwait(false);
 
-                // Bezpečnostní filtr i v paměti:
-                // kdyby repozitář někdy filtroval špatně nebo vrátil širší rozsah.
+                // Bezpe�nostn� filtr i v pam�ti:
+                // kdyby repozit�� n�kdy filtroval �patn� nebo vr�til �ir�� rozsah.
                 var filtered = allEntries
                     .Where(e =>
                         e.Timestamp.HasValue &&
@@ -1619,8 +1715,8 @@ namespace VykazyPrace.Dialogs
 
                 using var wb = new XLWorkbook();
 
-                // „Časové záznamy“
-                var wsBase = wb.AddWorksheet("Časové záznamy");
+                // ��asov� z�znamy�
+                var wsBase = wb.AddWorksheet("�asov� z�znamy");
                 var dtBase = _tableFactory.BuildTimeEntries(filtered);
                 var tableBase = wsBase.Cell(1, 1).InsertTable(dtBase, "CasoveZaznamy", true);
 
@@ -1628,8 +1724,8 @@ namespace VykazyPrace.Dialogs
                 _styling.BeautifyDetailTable(wsBase, tableBase);
                 wsBase.Columns().AdjustToContents();
 
-                // „Souhrn podle uživatele“
-                var wsSummary = wb.AddWorksheet("Souhrn podle uživatele");
+                // �Souhrn podle u�ivatele�
+                var wsSummary = wb.AddWorksheet("Souhrn podle u�ivatele");
 
                 var usersForSummary = selectedUsers
                     .Where(u => u != null)
@@ -1647,7 +1743,7 @@ namespace VykazyPrace.Dialogs
                 _styling.BeautifyUserSummarySheet(wsSummary, tableSummary);
                 wsSummary.Columns().AdjustToContents();
 
-                // „VYHODNOCENÍ“
+                // �VYHODNOCEN͓
                 if (buildEvaluationSheet)
                 {
                     await _tableFactory
@@ -1655,7 +1751,7 @@ namespace VykazyPrace.Dialogs
                         .ConfigureAwait(false);
                 }
 
-                // Listy podle projektů
+                // Listy podle projekt�
                 foreach (var proj in projects)
                 {
                     var rows = filtered
@@ -1673,7 +1769,7 @@ namespace VykazyPrace.Dialogs
 
                     table.ShowTotalsRow = true;
 
-                    var hoursField = table.Fields.FirstOrDefault(f => f.Name == "Doba v hodinách");
+                    var hoursField = table.Fields.FirstOrDefault(f => f.Name == "Doba v hodin�ch");
                     if (hoursField != null)
                         hoursField.TotalsRowFunction = XLTotalsRowFunction.Sum;
 
@@ -1697,13 +1793,13 @@ namespace VykazyPrace.Dialogs
             }
             catch (Exception ex)
             {
-                AppLogger.Error("Chyba při exportu ClosedXML.", ex);
+                AppLogger.Error("Chyba p�i exportu ClosedXML.", ex);
                 throw;
             }
         }
 
         /// <summary>
-        /// Zamkne zápisy za měsíc a speciální dny daného měsíce/roku.
+        /// Zamkne z�pisy za m�s�c a speci�ln� dny dan�ho m�s�ce/roku.
         /// </summary>
         public async Task LockMonthAsync(string monthNameCz, int year)
         {

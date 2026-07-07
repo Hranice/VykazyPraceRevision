@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace VykazyPrace.Core.Database.Models;
@@ -20,6 +20,7 @@ public partial class User
     public int? UserGroupId { get; set; }
     public string? Email { get; set; }
     public int? MasterUserId { get; set; }
+    public bool IsArchived { get; set; }
 
     public virtual User? MasterUser { get; set; }
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -40,13 +40,39 @@ namespace VykazyPrace.Core.Database
             {
                 if (!foundTables.Contains(table))
                 {
-                    throw new InvalidOperationException($"Chybí tabulka '{table}' v databázi.");
+                    throw new InvalidOperationException($"Chyb� tabulka '{table}' v datab�zi.");
                 }
             }
 
+            EnsureUserArchiveColumn(connection);
+
             if (!context.Users.Any())
             {
-                throw new InvalidOperationException("Databáze neobsahuje žádného uživatele.");
+                throw new InvalidOperationException("Datab�ze neobsahuje ��dn�ho u�ivatele.");
+            }
+        }
+        private static void EnsureUserArchiveColumn(System.Data.Common.DbConnection connection)
+        {
+            var columns = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            using (var cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = "PRAGMA table_info(Users);";
+
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    columns.Add(reader.GetString(1));
+                }
+            }
+
+            if (columns.Contains("IsArchived"))
+                return;
+
+            using (var cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = "ALTER TABLE Users ADD COLUMN IsArchived INTEGER NOT NULL DEFAULT 0;";
+                cmd.ExecuteNonQuery();
             }
         }
     }

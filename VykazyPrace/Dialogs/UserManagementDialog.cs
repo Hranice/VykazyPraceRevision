@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.Text;
 using VykazyPrace.Core.Database.Models;
@@ -59,7 +59,7 @@ namespace VykazyPrace.Dialogs
             dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = nameof(UserGridRow.FirstName),
-                HeaderText = "Jméno",
+                HeaderText = "Jm�no",
                 DataPropertyName = nameof(UserGridRow.FirstName),
                 Width = 120
             });
@@ -67,7 +67,7 @@ namespace VykazyPrace.Dialogs
             dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = nameof(UserGridRow.Surname),
-                HeaderText = "Příjmení",
+                HeaderText = "P��jmen�",
                 DataPropertyName = nameof(UserGridRow.Surname),
                 Width = 140
             });
@@ -84,7 +84,7 @@ namespace VykazyPrace.Dialogs
             dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = nameof(UserGridRow.PersonalNumber),
-                HeaderText = "Osobní číslo",
+                HeaderText = "Osobn� ��slo",
                 DataPropertyName = nameof(UserGridRow.PersonalNumber),
                 Width = 100
             });
@@ -111,12 +111,19 @@ namespace VykazyPrace.Dialogs
             dataGridView1.Columns.Add(new DataGridViewComboBoxColumn
             {
                 Name = nameof(UserGridRow.MasterUserId),
-                HeaderText = "Sekundární vlastník",
+                HeaderText = "Sekund�rn� vlastn�k",
                 DataPropertyName = nameof(UserGridRow.MasterUserId),
                 DisplayMember = nameof(ComboItem<int?>.Text),
                 ValueMember = nameof(ComboItem<int?>.Id),
                 Width = 240,
                 FlatStyle = FlatStyle.Flat
+            });
+            dataGridView1.Columns.Add(new DataGridViewCheckBoxColumn
+            {
+                Name = nameof(UserGridRow.IsArchived),
+                HeaderText = "Archivov�n",
+                DataPropertyName = nameof(UserGridRow.IsArchived),
+                Width = 90
             });
         }
 
@@ -139,7 +146,8 @@ namespace VykazyPrace.Dialogs
                     PersonalNumber = u.PersonalNumber,
                     LevelOfAccess = u.LevelOfAccess,
                     UserGroupId = u.UserGroupId,
-                    MasterUserId = u.MasterUserId
+                    MasterUserId = u.MasterUserId,
+                    IsArchived = u.IsArchived
                 }).ToList();
 
                 _gridRows = new BindingList<UserGridRow>(rows);
@@ -177,7 +185,7 @@ namespace VykazyPrace.Dialogs
             }
             catch (Exception ex)
             {
-                AppLogger.Error("Chyba při načítání uživatelů.", ex);
+                AppLogger.Error("Chyba p�i na��t�n� u�ivatel�.", ex);
                 _loadingUC.Visible = false;
             }
         }
@@ -197,7 +205,8 @@ namespace VykazyPrace.Dialogs
                    || originalUser.PersonalNumber != row.PersonalNumber
                    || originalUser.LevelOfAccess != row.LevelOfAccess
                    || originalUser.UserGroupId != row.UserGroupId
-                   || originalUser.MasterUserId != row.MasterUserId;
+                   || originalUser.MasterUserId != row.MasterUserId
+                   || originalUser.IsArchived != row.IsArchived;
         }
 
         private async void buttonAdd_Click(object sender, EventArgs e)
@@ -210,7 +219,7 @@ namespace VykazyPrace.Dialogs
 
             if (rowsToSave.Count == 0)
             {
-                AppLogger.Information("Není zadán žádný uživatel k uložení.", true);
+                AppLogger.Information("Nen� zad�n ��dn� u�ivatel k ulo�en�.", true);
                 return;
             }
 
@@ -225,7 +234,7 @@ namespace VykazyPrace.Dialogs
 
             if (newRows.Count == 0 && changedExistingRows.Count == 0)
             {
-                AppLogger.Information("Nejsou žádné změny k uložení.", true);
+                AppLogger.Information("Nejsou ��dn� zm�ny k ulo�en�.", true);
                 return;
             }
 
@@ -237,7 +246,7 @@ namespace VykazyPrace.Dialogs
 
                 if (!dataCheck.IsValid)
                 {
-                    AppLogger.Error($"Je třeba správně vyplnit všechna potřebná data! Chybný parametr: {dataCheck.Parameter}");
+                    AppLogger.Error($"Je t�eba spr�vn� vyplnit v�echna pot�ebn� data! Chybn� parametr: {dataCheck.Parameter}");
                     return;
                 }
 
@@ -249,18 +258,19 @@ namespace VykazyPrace.Dialogs
                     WindowsUsername = row.WindowsUsername.Trim(),
                     LevelOfAccess = row.LevelOfAccess,
                     UserGroupId = row.UserGroupId,
-                    MasterUserId = row.MasterUserId
+                    MasterUserId = row.MasterUserId,
+                    IsArchived = row.IsArchived
                 };
 
                 var addedUser = await _userRepo.CreateUserAsync(newUser);
 
                 if (addedUser is not null)
                 {
-                    AppLogger.Information($"Uživatel {FormatHelper.FormatUserToString(addedUser)} byl přidán do databáze.", true);
+                    AppLogger.Information($"U�ivatel {FormatHelper.FormatUserToString(addedUser)} byl p�id�n do datab�ze.", true);
                 }
                 else
                 {
-                    AppLogger.Error($"Uživatel {FormatHelper.FormatUserToString(newUser)} nebyl přidán do databáze.");
+                    AppLogger.Error($"U�ivatel {FormatHelper.FormatUserToString(newUser)} nebyl p�id�n do datab�ze.");
                     return;
                 }
             }
@@ -273,7 +283,7 @@ namespace VykazyPrace.Dialogs
 
                 if (!dataCheck.IsValid)
                 {
-                    AppLogger.Error($"Je třeba správně vyplnit všechna potřebná data! Chybný parametr: {dataCheck.Parameter}");
+                    AppLogger.Error($"Je t�eba spr�vn� vyplnit v�echna pot�ebn� data! Chybn� parametr: {dataCheck.Parameter}");
                     return;
                 }
 
@@ -286,18 +296,19 @@ namespace VykazyPrace.Dialogs
                     WindowsUsername = row.WindowsUsername.Trim(),
                     LevelOfAccess = row.LevelOfAccess,
                     UserGroupId = row.UserGroupId,
-                    MasterUserId = row.MasterUserId
+                    MasterUserId = row.MasterUserId,
+                    IsArchived = row.IsArchived
                 };
 
                 var success = await _userRepo.UpdateUserAsync(updatedUser);
 
                 if (success)
                 {
-                    AppLogger.Information($"Uživatel {FormatHelper.FormatUserToString(updatedUser)} byl upraven.", true);
+                    AppLogger.Information($"U�ivatel {FormatHelper.FormatUserToString(updatedUser)} byl upraven.", true);
                 }
                 else
                 {
-                    AppLogger.Error($"Uživatele {FormatHelper.FormatUserToString(updatedUser)} se nepodařilo upravit.");
+                    AppLogger.Error($"U�ivatele {FormatHelper.FormatUserToString(updatedUser)} se nepoda�ilo upravit.");
                     return;
                 }
             }
@@ -353,7 +364,7 @@ namespace VykazyPrace.Dialogs
             {
                 if (!int.TryParse(e.FormattedValue?.ToString(), out var value) || value < 0)
                 {
-                    AppLogger.Error("Osobní číslo musí být číslo.");
+                    AppLogger.Error("Osobn� ��slo mus� b�t ��slo.");
                     e.Cancel = true;
                 }
             }
@@ -362,7 +373,7 @@ namespace VykazyPrace.Dialogs
             {
                 if (!int.TryParse(e.FormattedValue?.ToString(), out var value) || value < 0)
                 {
-                    AppLogger.Error("LoA musí být číslo větší nebo rovno 0.");
+                    AppLogger.Error("LoA mus� b�t ��slo v�t�� nebo rovno 0.");
                     e.Cancel = true;
                 }
             }
@@ -370,7 +381,7 @@ namespace VykazyPrace.Dialogs
 
         private void dataGridView1_DataError(object? sender, DataGridViewDataErrorEventArgs e)
         {
-            AppLogger.Error($"Chyba v tabulce uživatelů: {e.Exception.Message}");
+            AppLogger.Error($"Chyba v tabulce u�ivatel�: {e.Exception.Message}");
             e.ThrowException = false;
         }
 
@@ -387,19 +398,19 @@ namespace VykazyPrace.Dialogs
         private (bool IsValid, string Parameter) CheckGridRow(UserGridRow row)
         {
             if (string.IsNullOrWhiteSpace(row.FirstName))
-                return (false, "Jméno");
+                return (false, "Jm�no");
 
             if (string.IsNullOrWhiteSpace(row.Surname))
-                return (false, "Příjmení");
+                return (false, "P��jmen�");
 
             if (string.IsNullOrWhiteSpace(row.WindowsUsername))
                 return (false, "Windows login");
 
             if (row.PersonalNumber < 0)
-                return (false, "Osobní číslo");
+                return (false, "Osobn� ��slo");
 
             if (row.LevelOfAccess < 0)
-                return (false, "Úroveň oprávnění");
+                return (false, "�rove� opr�vn�n�");
 
             if (row.UserGroupId <= 0)
                 return (false, "Skupina");
@@ -420,13 +431,13 @@ namespace VykazyPrace.Dialogs
             if (string.IsNullOrEmpty(input))
                 return input;
 
-            input = input.Replace("ü", "ue")
-                         .Replace("Ü", "Ue")
-                         .Replace("ö", "oe")
-                         .Replace("Ö", "Oe")
-                         .Replace("ä", "ae")
-                         .Replace("Ä", "Ae")
-                         .Replace("ß", "ss");
+            input = input.Replace("�", "ue")
+                         .Replace("�", "Ue")
+                         .Replace("�", "oe")
+                         .Replace("�", "Oe")
+                         .Replace("�", "ae")
+                         .Replace("�", "Ae")
+                         .Replace("�", "ss");
 
             string normalized = input.Normalize(NormalizationForm.FormD);
             StringBuilder sb = new();
@@ -460,6 +471,8 @@ namespace VykazyPrace.Dialogs
             public int? UserGroupId { get; set; }
 
             public int? MasterUserId { get; set; }
+
+            public bool IsArchived { get; set; }
 
             public bool IsExistingUser => Id > 0;
         }

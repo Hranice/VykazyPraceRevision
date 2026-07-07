@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Core.Helpers;
@@ -14,6 +14,7 @@ namespace VykazyPrace.Dialogs
 
         private List<User> _allUsers = new();
         private List<UserGroup> _allGroups = new();
+        private IEnumerable<User>? _availableUsers;
 
         private bool _isInternalChange;
 
@@ -45,6 +46,12 @@ namespace VykazyPrace.Dialogs
             BuildUi();
         }
 
+        
+        public void SetAvailableUsers(IEnumerable<User> users)
+        {
+            _availableUsers = users?.ToList() ?? new List<User>();
+        }
+
         private async void UserSelectionDialog_Load(object? sender, EventArgs e)
         {
             await LoadDataAsync();
@@ -52,7 +59,7 @@ namespace VykazyPrace.Dialogs
 
         private async Task LoadDataAsync()
         {
-            _allUsers = await _userRepository.GetAllUsersAsync();
+            _allUsers = _availableUsers?.ToList() ?? await _userRepository.GetActiveUsersAsync();
             _allGroups = await _userGroupRepository.GetAllUserGroupsAsync();
 
             _allUsers = _allUsers
@@ -62,6 +69,7 @@ namespace VykazyPrace.Dialogs
                 .ToList();
 
             _allGroups = _allGroups
+                .Where(g => _allUsers.Any(u => u.UserGroupId == g.Id))
                 .OrderBy(g => g.Title)
                 .ToList();
 
@@ -74,8 +82,8 @@ namespace VykazyPrace.Dialogs
         private void BuildUi()
         {
             Text = _mode == UserSelectionMode.Single
-                ? "Výběr uživatele"
-                : "Výběr uživatelů";
+                ? "V�b�r u�ivatele"
+                : "V�b�r u�ivatel�";
 
             MinimizeBox = false;
             MaximizeBox = false;
@@ -344,8 +352,8 @@ namespace VykazyPrace.Dialogs
             if (_mode == UserSelectionMode.Single && SelectedUsers.Count != 1)
             {
                 MessageBox.Show(
-                    "Vyberte právě jednoho uživatele.",
-                    "Výběr uživatele",
+                    "Vyberte pr�v� jednoho u�ivatele.",
+                    "V�b�r u�ivatele",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 
@@ -355,8 +363,8 @@ namespace VykazyPrace.Dialogs
             if (_mode == UserSelectionMode.Multiple && SelectedUsers.Count == 0)
             {
                 MessageBox.Show(
-                    "Vyberte alespoň jednoho uživatele.",
-                    "Výběr uživatelů",
+                    "Vyberte alespo� jednoho u�ivatele.",
+                    "V�b�r u�ivatel�",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 

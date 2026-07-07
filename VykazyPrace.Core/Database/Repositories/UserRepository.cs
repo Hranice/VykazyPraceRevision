@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using VykazyPrace.Core.Database.Models;
 
 namespace VykazyPrace.Core.Database.Repositories
@@ -13,7 +13,7 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
-        /// Přidání nového uživatele.
+        /// P�id�n� nov�ho u�ivatele.
         /// </summary>
         public async Task<User> CreateUserAsync(User user)
         {
@@ -26,7 +26,7 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
-        /// Získání všech uživatelů.
+        /// Z�sk�n� v�ech u�ivatel�.
         /// </summary>
         public async Task<List<User>> GetAllUsersAsync()
         {
@@ -38,9 +38,53 @@ namespace VykazyPrace.Core.Database.Repositories
                 .OrderBy(u => u.UserGroupId)
                 .ToListAsync();
         }
+        /// <summary>
+        /// Z�sk�n� aktivn�ch u�ivatel� pro b�n� v�b�ry.
+        /// </summary>
+        public async Task<List<User>> GetActiveUsersAsync()
+        {
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            return await context.Users
+                .AsNoTracking()
+                .Include(u => u.UserGroup)
+                .Where(u => !u.IsArchived)
+                .OrderBy(u => u.UserGroupId)
+                .ToListAsync();
+        }
 
         /// <summary>
-        /// Získání uživatele podle ID.
+        /// Z�sk�n� u�ivatel�, kte�� maj� �asov� z�znamy v dan�m obdob�.
+        /// </summary>
+        public async Task<List<User>> GetUsersWithTimeEntriesAsync(DateTime fromDate, DateTime toDate)
+        {
+            await using var context = await _contextFactory.CreateDbContextAsync();
+
+            var fromInclusive = fromDate.Date;
+            var toInclusive = toDate.Date;
+
+            if (toInclusive < fromInclusive)
+                throw new ArgumentException("Datum do nesm� b�t men�� ne� datum od.");
+
+            var toExclusive = toInclusive.AddDays(1);
+
+            return await context.Users
+                .AsNoTracking()
+                .Include(u => u.UserGroup)
+                .Where(u => context.TimeEntries.Any(te =>
+                    te.UserId == u.Id &&
+                    te.Timestamp.HasValue &&
+                    te.Timestamp.Value >= fromInclusive &&
+                    te.Timestamp.Value < toExclusive))
+                .OrderBy(u => u.UserGroupId)
+                .ThenBy(u => u.Surname)
+                .ThenBy(u => u.FirstName)
+                .ToListAsync();
+        }
+
+
+        /// <summary>
+        /// Z�sk�n� u�ivatele podle ID.
         /// </summary>
         public async Task<User?> GetUserByIdAsync(int id)
         {
@@ -55,7 +99,7 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
-        /// Získání uživatele podle přihlašovacího jména do Windows.
+        /// Z�sk�n� u�ivatele podle p�ihla�ovac�ho jm�na do Windows.
         /// </summary>
         public async Task<User?> GetUserByWindowsUsernameAsync(string windowsUsername)
         {
@@ -68,7 +112,7 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
-        /// Aktualizace uživatele.
+        /// Aktualizace u�ivatele.
         /// </summary>
         public async Task<bool> UpdateUserAsync(User user)
         {
@@ -87,6 +131,7 @@ namespace VykazyPrace.Core.Database.Repositories
             existingUser.UserGroupId = user.UserGroupId;
             existingUser.Email = user.Email;
             existingUser.MasterUserId = user.MasterUserId;
+            existingUser.IsArchived = user.IsArchived;
 
             await VykazyPraceContextExtensions.SafeSaveAsync(context);
 
@@ -94,7 +139,7 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
-        /// Smazání uživatele podle ID.
+        /// Smaz�n� u�ivatele podle ID.
         /// </summary>
         public async Task<bool> DeleteUserAsync(int id)
         {
@@ -112,7 +157,7 @@ namespace VykazyPrace.Core.Database.Repositories
         }
 
         /// <summary>
-        /// Najde uživatele podle e-mailu nebo Windows username.
+        /// Najde u�ivatele podle e-mailu nebo Windows username.
         /// </summary>
         public async Task<User?> ResolveByEmailOrWindowsAsync(string? email)
         {

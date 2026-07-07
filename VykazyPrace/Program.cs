@@ -44,7 +44,7 @@ namespace VykazyPrace
                 return;
             }
 
-            AppLogger.Debug("Aplikace spuštìna.");
+            AppLogger.Debug("Aplikace spuï¿½tï¿½na.");
 
             WarmupDatabaseAsync().GetAwaiter().GetResult();
 
@@ -112,7 +112,7 @@ namespace VykazyPrace
 
         private static async Task WarmupDatabaseAsync()
         {
-            AppLogger.Debug("Zahøívací dotaz na databázi...");
+            AppLogger.Debug("Zahï¿½ï¿½vacï¿½ dotaz na databï¿½zi...");
 
             try
             {
@@ -121,17 +121,17 @@ namespace VykazyPrace
 
                 _ = users.FirstOrDefault();
 
-                AppLogger.Debug("Databáze zahøáta.");
+                AppLogger.Debug("Databï¿½ze zahï¿½ï¿½ta.");
             }
             catch (Exception ex)
             {
-                AppLogger.Error("Zahøívací dotaz selhal: " + ex.Message);
+                AppLogger.Error("Zahï¿½ï¿½vacï¿½ dotaz selhal: " + ex.Message);
             }
         }
 
         private static void RestoreExistingInstance()
         {
-            AppLogger.Debug("Aplikace již bìží, obnovuji pùvodní instanci.");
+            AppLogger.Debug("Aplikace jiï¿½ bï¿½ï¿½, obnovuji pï¿½vodnï¿½ instanci.");
 
             try
             {
@@ -143,11 +143,11 @@ namespace VykazyPrace
                 writer.WriteLine("show");
                 writer.Flush();
 
-                AppLogger.Debug("Pùvodní instance obnovena.");
+                AppLogger.Debug("Pï¿½vodnï¿½ instance obnovena.");
             }
             catch
             {
-                AppLogger.Debug("Pùvodní instance nereaguje.");
+                AppLogger.Debug("Pï¿½vodnï¿½ instance nereaguje.");
             }
         }
 

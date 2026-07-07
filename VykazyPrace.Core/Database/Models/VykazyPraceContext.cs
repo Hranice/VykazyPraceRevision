@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VykazyPrace.Core.Database.Models.OutlookEvents;
 
@@ -86,6 +86,7 @@ public partial class VykazyPraceContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Email).HasColumnType("TEXT");
+            entity.Property(e => e.IsArchived).HasColumnType("INTEGER").HasDefaultValue(false);
 
             entity.HasIndex(e => e.Email).HasDatabaseName("IX_Users_Email");
 

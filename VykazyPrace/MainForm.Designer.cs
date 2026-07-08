@@ -351,6 +351,7 @@
             buttonOutlookEvents.TabIndex = 13;
             buttonOutlookEvents.Text = "Outlook události";
             buttonOutlookEvents.UseVisualStyleBackColor = true;
+            buttonOutlookEvents.Visible = false;
             buttonOutlookEvents.Click += buttonOutlookEvents_Click;
             // 
             // panel2

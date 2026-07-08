@@ -108,12 +108,11 @@ namespace VykazyPrace.Dialogs
 
             try
             {
-                // 1) Outlook + MAPI + přihlášení profilu (bez UI)
                 outlook = new Microsoft.Office.Interop.Outlook.Application();
                 mapi = outlook.GetNamespace("MAPI");
-                try { mapi.Logon(Type.Missing, Type.Missing, /*ShowDialog*/ false, /*NewSession*/ false); } catch { }
+                try { mapi.Logon(Type.Missing, Type.Missing, false, false); } catch { }
 
-                // 2) Výchozí kalendář aktuálního profilu
+                // Výchozí kalendář aktuálního profilu
                 calendarFolder = mapi.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
 
                 var current = mapi?.CurrentUser;
@@ -123,14 +122,12 @@ namespace VykazyPrace.Dialogs
                     false
                 );
 
-                // 3) Items – rekurence + řazení (kvůli Find/Restrict)
                 items = calendarFolder.Items;
                 items.IncludeRecurrences = true;
                 items.Sort("[Start]", Type.Missing);
 
-                // --- definice časových oken/filtrů ---
-                var fromUtc = _fromUtc; // např. dnes 00:00Z
-                var toUtc = _toUtc;   // např. +7 dní
+                var fromUtc = _fromUtc;
+                var toUtc = _toUtc;
 
                 var localFrom = fromUtc.ToLocalTime();
                 var localTo = toUtc.ToLocalTime();
@@ -145,7 +142,6 @@ namespace VykazyPrace.Dialogs
                 string invFilter(DateTime f, DateTime t) =>
                     "[Start] <= '" + inv(t) + "' AND [End] >= '" + inv(f) + "'";
 
-                // --- 4) PRIMARY: Find/FindNext s en-US a aktuálním oknem ---
                 var collected = new List<AppointmentItem>();
                 AppointmentItem found = null;
                 string filter = enFilter(localFrom, localTo);
@@ -170,7 +166,7 @@ namespace VykazyPrace.Dialogs
                     AppLogger.Information($"Find/FindNext COMException: 0x{ex.HResult:X8} {ex.Message}", false);
                 }
 
-                // --- 5) Fallback A: širší okno (±180d) + en-US ---
+                // Fallback A: širší okno (±180d) + en-US
                 if (collected.Count == 0)
                 {
                     var wideFrom = DateTime.Now.Date.AddDays(-180);
@@ -193,7 +189,7 @@ namespace VykazyPrace.Dialogs
                     }
                 }
 
-                // --- 6) Fallback B: invariantní formát + aktuální okno ---
+                // Fallback B: invariantní formát + aktuální okno
                 if (collected.Count == 0)
                 {
                     string invF = invFilter(localFrom, localTo);
@@ -213,7 +209,7 @@ namespace VykazyPrace.Dialogs
                     }
                 }
 
-                // --- 7) Fallback C: RUČNÍ ENUMERACE přes GetFirst/GetNext bez filtru ---
+                // Fallback C: RUČNÍ ENUMERACE bez filtru
                 if (collected.Count == 0)
                 {
                     AppLogger.Information("Fallback C: enumeruji celý kalendář přes GetFirst/GetNext…", false);
@@ -235,7 +231,6 @@ namespace VykazyPrace.Dialogs
                     }
                 }
 
-                // --- 8) Na závěr aplikuj náš UTC rozsah (když Fallback C nasbírá vše) ---
                 var appts = collected
                     .Where(a =>
                     {
@@ -250,13 +245,12 @@ namespace VykazyPrace.Dialogs
                     false
                 );
 
-                // --- 9) Persist – hash, UPSERT, (podmíněně) Recipients ---
                 var userCache = new Dictionary<string, int?>(StringComparer.OrdinalIgnoreCase);
                 const string PR_SMTP_ADDRESS = "http://schemas.microsoft.com/mapi/proptag/0x39FE001E";
 
                 foreach (var appt in appts)
                 {
-                    // ⚠ Bezpečné načtení EntryID – pokud se položka mezitím smazala/zlomila, getter hodí COMException.
+                    // pokud se položka mezitím rozbila, getter hodí COMException.
                     string entryId = SafeGet(() => appt.EntryID);
 
                     if (string.IsNullOrEmpty(entryId))
@@ -269,11 +263,9 @@ namespace VykazyPrace.Dialogs
                         continue;
                     }
 
-                    // ⚠ StoreID a FolderEntryID také mohou selhat při COM chybách
                     string storeId = SafeGet(() => calendarFolder.StoreID) ?? "";
                     string folderEntryId = SafeGet(() => calendarFolder.EntryID) ?? "";
 
-                    // Často bezpečné i bez wrapperu, ale obalíme — Outlook někdy vrací COM výjimky při broken items
                     bool isRecurringSeries = false;
                     bool isException = false;
 
@@ -282,9 +274,8 @@ namespace VykazyPrace.Dialogs
                         isRecurringSeries = (appt.RecurrenceState == OlRecurrenceState.olApptMaster);
                         isException = (appt.RecurrenceState == OlRecurrenceState.olApptException);
                     }
-                    catch { /* Ignorovat – item může být broken */ }
+                    catch { /* Ignorovat */ }
 
-                    // Bezpečné převody času
                     DateTime? startUtc2 = null;
                     DateTime? endUtc2 = null;
                     DateTime? occurrenceStartUtc = null;
@@ -301,7 +292,6 @@ namespace VykazyPrace.Dialogs
                     }
                     catch { }
 
-                    // Ostatní textové properties obalené přes SafeGet
                     string subject = SafeGet(() => appt.Subject) ?? "(bez názvu)";
                     string location = SafeGet(() => appt.Location);
                     string organizer = SafeGet(() => appt.Organizer);
@@ -314,7 +304,7 @@ namespace VykazyPrace.Dialogs
                     try { lastModifiedUtc = appt.LastModificationTime.ToUniversalTime(); } catch { }
                     try { isCanceled = (appt.MeetingStatus == OlMeetingStatus.olMeetingCanceled); } catch { }
 
-                    // --- HASH & UPSERT --------------------------------------------------------
+                    // HASH & UPSERT
                     var keyInfo = await _calendarRepo.TryGetItemKeyInfoAsync(storeId, entryId, occurrenceStartUtc);
                     string prevHash = keyInfo?.LastHash;
 
@@ -366,7 +356,7 @@ namespace VykazyPrace.Dialogs
                         continue;
                     }
 
-                    // --- RECIPIENTS ----------------------------------------------------------
+                    // RECIPIENTS
                     if (changed)
                     {
                         Microsoft.Office.Interop.Outlook.Recipients recipients = null;
@@ -459,7 +449,6 @@ namespace VykazyPrace.Dialogs
                         catch (Exception e) { AppLogger.Error($"DB LogChangeAsync selhal (ItemId={ci.Id})", e); }
                     }
 
-                    // --- Uvolnění COM objektu ------------------------------------------------
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(appt);
                 }
 
@@ -477,9 +466,6 @@ namespace VykazyPrace.Dialogs
                 if (outlook != null) System.Runtime.InteropServices.Marshal.ReleaseComObject(outlook);
             }
         }
-
-
-
 
         /// <summary>Vykreslí karty pro přihlášeného uživatele.</summary>
         private async Task RenderOutlookEventsAsync(FlowLayoutPanel host)

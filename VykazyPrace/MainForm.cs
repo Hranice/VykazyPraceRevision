@@ -604,21 +604,6 @@ namespace VykazyPrace
 
         private async void buttonOutlookEvents_Click(object sender, EventArgs e)
         {
-            var outlookType = Type.GetTypeFromProgID("Outlook.Application");
-            if (outlookType == null)
-            {
-                // Starý Outlook není k dispozici
-                MessageBox.Show(
-                    "Nebyl nalezen klasický Outlook pro Windows. " +
-                    "Nový Outlook 2023+ nepodporuje pøímé propojení s kalendáøem pøes COM.\n\n" +
-                    "Pro tuto funkci prosím použijte klasický Outlook pro Windows.",
-                    "Outlook integrace",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
-                return;
-            }
-
             using var dialog = ActivatorUtilities.CreateInstance<OutlookEvents>(
     _serviceProvider,
     _selectedUser);

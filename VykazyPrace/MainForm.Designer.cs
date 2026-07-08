@@ -368,11 +368,11 @@
             // 
             // bChangeUser
             // 
+            bChangeUser.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             bChangeUser.AutoSize = true;
-            bChangeUser.Dock = DockStyle.Right;
-            bChangeUser.Location = new Point(966, 0);
+            bChangeUser.Location = new Point(966, 6);
             bChangeUser.Name = "bChangeUser";
-            bChangeUser.Size = new Size(303, 45);
+            bChangeUser.Size = new Size(303, 33);
             bChangeUser.TabIndex = 5;
             bChangeUser.Text = "Uživatel";
             bChangeUser.UseVisualStyleBackColor = true;

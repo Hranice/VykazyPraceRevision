@@ -1,4 +1,4 @@
-﻿using VykazyPrace.Core.Database.Models;
+using VykazyPrace.Core.Database.Models;
 
 namespace VykazyPrace.Core.Services.TimeEntry
 {
@@ -36,7 +36,7 @@ namespace VykazyPrace.Core.Services.TimeEntry
 
         /// <summary>
         /// ID vybraného projektu pro PROVOZ/PROJEKT/PŘEDPROJEKT.
-        /// U ostatních typů ignorováno (použijí se fixní projekty 23/25/26).
+        /// U ostatních typů ignorováno (použijí se výchozí projekty z WorkLogIds).
         /// </summary>
         public int? SelectedProjectId { get; init; }
 

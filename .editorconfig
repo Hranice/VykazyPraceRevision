@@ -1,0 +1,17 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{cs,csproj,sln,resx,xaml,xml,json,config,props,targets,md,ps1,bat,iss,wxs}]
+indent_style = space
+indent_size = 4
+
+[*.sln]
+indent_style = tab
+
+[*.md]
+trim_trailing_whitespace = false

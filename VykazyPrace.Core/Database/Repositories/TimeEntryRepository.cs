@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Helpers;
 using VykazyPrace.Core.Logging;
@@ -104,7 +104,7 @@ namespace VykazyPrace.Core.Database.Repositories
                     if (!includeSnacks)
                     {
                         filtered = filtered.Where(te =>
-                            !(te.ProjectId == 132 && te.EntryTypeId == 24));
+                            !(te.ProjectId == WorkLogIds.Projects.Snack && te.EntryTypeId == WorkLogIds.EntryTypes.Snack));
                     }
 
                     return filtered;
@@ -291,7 +291,7 @@ namespace VykazyPrace.Core.Database.Repositories
                         te.Timestamp.HasValue &&
                         te.Timestamp.Value >= range.FromInclusive &&
                         te.Timestamp.Value < range.ToExclusive &&
-                        !(te.ProjectId == 132 && te.EntryTypeId == 24))
+                        !(te.ProjectId == WorkLogIds.Projects.Snack && te.EntryTypeId == WorkLogIds.EntryTypes.Snack))
                     .GroupBy(te => new { te.UserId, te.ProjectId })
                     .Select(g => new TimeEntrySummary
                     {

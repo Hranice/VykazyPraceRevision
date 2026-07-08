@@ -1,6 +1,7 @@
-﻿using VykazyPrace.Core.Database.Models;
+using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Models.OutlookEvents;
 using VykazyPrace.Core.Database.Repositories;
+using VykazyPrace.Core.Helpers;
 
 namespace VykazyPrace.Core.Services
 {
@@ -9,8 +10,8 @@ namespace VykazyPrace.Core.Services
     /// </summary>
     public sealed class MeetingImportOptions
     {
-        public int ProjectIdForMeetings { get; init; } = 25;
-        public int EntryTypeIdForMeetings { get; init; } = 25;
+        public int ProjectIdForMeetings { get; init; } = WorkLogIds.Projects.Other;
+        public int EntryTypeIdForMeetings { get; init; } = WorkLogIds.EntryTypes.OutlookEvent;
         public int RoundStepMinutes { get; init; } = 30;
         public int MinMinutes { get; init; } = 30;
         public int AllDayDefaultMinutes { get; init; } = 450;

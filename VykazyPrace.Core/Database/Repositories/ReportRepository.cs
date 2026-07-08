@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using VykazyPrace.Core.Database.Models;
+using VykazyPrace.Core.Helpers;
 
 namespace VykazyPrace.Core.Database.Repositories
 {
@@ -25,7 +26,7 @@ namespace VykazyPrace.Core.Database.Repositories
             var from = fromDate.Date;
             var to = toDate.Date;
 
-            // 1) ReportedHours bez dovolené (6), svačiny (7), lékaře (24) a bez IsValid==0
+            // 1) ReportedHours bez dovolené, svačiny, lékaře a bez IsValid==0
             double reportedMinutes = await context.TimeEntries
                 .AsNoTracking()
                 .Where(te =>
@@ -34,9 +35,9 @@ namespace VykazyPrace.Core.Database.Repositories
                     te.Timestamp.Value.Date >= from &&
                     te.Timestamp.Value.Date <= to &&
                     te.IsValid != 0 &&
-                    te.EntryTypeId != 6 &&
-                    te.EntryTypeId != 7 &&
-                    te.EntryTypeId != 24)
+                    te.EntryTypeId != WorkLogIds.EntryTypes.Vacation &&
+                    te.EntryTypeId != WorkLogIds.EntryTypes.SnackBreak &&
+                    te.EntryTypeId != WorkLogIds.EntryTypes.Doctor)
                 .SumAsync(te => (double?)te.EntryMinutes) ?? 0;
 
             double reportedHours = reportedMinutes / 60.0;

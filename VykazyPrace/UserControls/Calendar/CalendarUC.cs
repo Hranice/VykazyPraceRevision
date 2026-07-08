@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 using System.Globalization;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
+using VykazyPrace.Core.Helpers;
 using VykazyPrace.Dialogs;
 
 namespace VykazyPrace.UserControls.Calendar
@@ -66,9 +67,6 @@ namespace VykazyPrace.UserControls.Calendar
 
             var timeEntries = await _timeEntryRepo.GetAllTimeEntriesByUserAsync(_selectedUser);
 
-            const int SnackProjectId = 132;     // projekt "svačina"
-            const int SnackEntryTypeId = 24;    // typ záznamu "svačina"
-            const int AbsenceProjectId = 23;    // projekt "nepřítomnost"
 
             //    - musí mít Timestamp
             //    - spadat do aktuálního roku a měsíce
@@ -80,8 +78,8 @@ namespace VykazyPrace.UserControls.Calendar
                 e.Timestamp.Value.Year == _currentYear &&
                 e.Timestamp.Value.Month == _currentMonth &&
                 e.IsValid == 1 &&
-                !(e.ProjectId == SnackProjectId && e.EntryTypeId == SnackEntryTypeId) &&
-                !(e.ProjectId == AbsenceProjectId)
+                !(e.ProjectId == WorkLogIds.Projects.Snack && e.EntryTypeId == WorkLogIds.EntryTypes.Snack) &&
+                e.ProjectId != WorkLogIds.Projects.Absence
             );
 
             // Seskupení podle dne v měsíci a sumace minut

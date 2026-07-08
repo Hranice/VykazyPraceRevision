@@ -713,34 +713,34 @@ namespace VykazyPrace.Dialogs
         /// <summary>
         /// Projekt, který je vyloučen v kombinaci s <see cref="ExcludedEntryTypeId"/>.
         /// </summary>
-        public const int ExcludedProjectId = 132;
+        public const int ExcludedProjectId = WorkLogIds.Projects.Snack;
 
         /// <summary>
         /// Typ záznamu, který je spolu s <see cref="ExcludedProjectId"/> vyloučen z exportu.
         /// </summary>
-        public const int ExcludedEntryTypeId = 24;
+        public const int ExcludedEntryTypeId = WorkLogIds.EntryTypes.Snack;
 
         /// <summary>
         /// Projekt reprezentující nepřítomnost – nezapočítává se do souhrnů podle uživatele.
         /// </summary>
-        public const int AbsenceProjectId = 23;
+        public const int AbsenceProjectId = WorkLogIds.Projects.Absence;
 
         /// <summary>
         /// Typ záznamu reprezentující outlook událost (nevalidní záznam) – nezapočítává se do souhrnů podle uživatele.
         /// </summary>
-        public const int OutlookEventEntryTypeId = 25;
+        public const int OutlookEventEntryTypeId = WorkLogIds.EntryTypes.OutlookEvent;
 
         // VYHODNOCENÍ
-        public const int AutomationProjectId = 31;
+        public const int AutomationProjectId = WorkLogIds.Projects.Automation;
 
-        public const int ProductionSdProjectId = 19;
-        public const int ProductionHpProjectId = 20;
-        public const int ProductionMetProjectId = 17;
-        public const int ProductionKomProjectId = 21;
-        public const int ProductionSorProjectId = 140;
-        public const int ProductionOtherProjectId = 22;
+        public const int ProductionSdProjectId = WorkLogIds.Projects.ProductionSd;
+        public const int ProductionHpProjectId = WorkLogIds.Projects.ProductionHp;
+        public const int ProductionMetProjectId = WorkLogIds.Projects.ProductionMet;
+        public const int ProductionKomProjectId = WorkLogIds.Projects.ProductionKom;
+        public const int ProductionSorProjectId = WorkLogIds.Projects.ProductionSor;
+        public const int ProductionOtherProjectId = WorkLogIds.Projects.ProductionOther;
 
-        public const int ClubYoungTechnicianEntryTypeId = 8;
+        public const int ClubYoungTechnicianEntryTypeId = WorkLogIds.EntryTypes.ClubYoungTechnician;
     }
     #endregion
 

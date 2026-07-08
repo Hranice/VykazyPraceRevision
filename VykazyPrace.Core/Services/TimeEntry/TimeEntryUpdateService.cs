@@ -1,4 +1,4 @@
-﻿using VykazyPrace.Core.Database.Models;
+using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Core.Helpers;
 using VykazyPrace.Core.Logging;
@@ -51,29 +51,29 @@ namespace VykazyPrace.Core.Services.TimeEntry
                     description = await CreateSubTypeIfNeededAsync(request);
                     break;
 
-                // ŠKOLENÍ – projektId 26, bez description
+                // ŠKOLENÍ – bez description
                 case 3:
-                    projectId = 26;
+                    projectId = WorkLogIds.Projects.Training;
                     description = null;
                     break;
 
-                // NEPŘÍTOMNOST – projektId 23, bez description
+                // NEPŘÍTOMNOST – bez description
                 case 4:
-                    projectId = 23;
+                    projectId = WorkLogIds.Projects.Absence;
                     description = null;
                     break;
 
-                // OSTATNÍ – projektId 25, s optional subtypem
+                // OSTATNÍ – s optional subtypem
                 case 5:
-                    projectId = 25;
+                    projectId = WorkLogIds.Projects.Other;
                     description = await CreateSubTypeIfNeededAsync(request);
                     break;
                 case 7:
-                    projectId = 386;
+                    projectId = WorkLogIds.Projects.CustomerService;
                     description = await CreateSubTypeIfNeededAsync(request);
                     break;
                 default:
-                    projectId = 25;
+                    projectId = WorkLogIds.Projects.Other;
                     description = await CreateSubTypeIfNeededAsync(request);
                     AppLogger.Error("Neznámý CurrentProjectType, nastavuji na \"OSTATNÍ\": " + request.CurrentProjectType);
                     break;

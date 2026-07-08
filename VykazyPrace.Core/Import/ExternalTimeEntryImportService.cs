@@ -1,16 +1,17 @@
-﻿using ClosedXML.Excel;
+using ClosedXML.Excel;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Text;
 using VykazyPrace.Core.Database.Models;
+using VykazyPrace.Core.Helpers;
 
 namespace VykazyPrace.Core.Import
 {
     public sealed class ExternalTimeEntryImportService
     {
-        private const int FallbackProjectId = 31;
-        private const int SnackOrSpecialEntryTypeId = 1;
-        private const int NormalEntryTypeId = 10;
+        private const int FallbackProjectId = WorkLogIds.Projects.Automation;
+        private const int SnackOrSpecialEntryTypeId = WorkLogIds.EntryTypes.ImportedSpecial;
+        private const int NormalEntryTypeId = WorkLogIds.EntryTypes.ImportedNormal;
 
         private readonly IDbContextFactory<VykazyPraceContext> _contextFactory;
 

@@ -1,4 +1,4 @@
-﻿using VykazyPrace.Core.Configuration;
+using VykazyPrace.Core.Configuration;
 using VykazyPrace.Core.Database.Models;
 using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Core.Helpers;
@@ -530,7 +530,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             if (timeEntry == null) return;
 
             // pokud je svačina, schovej sidebar
-            if (timeEntry.ProjectId == 132 && timeEntry.EntryTypeId == 24)
+            if (timeEntry.ProjectId == WorkLogIds.Projects.Snack && timeEntry.EntryTypeId == WorkLogIds.EntryTypes.Snack)
             {
                 flowLayoutPanel2.Visible = false;
                 return;
@@ -579,10 +579,10 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             switch (proj.Id)
             {
-                case 25: SelectRadioButtonByText("OSTATNÍ"); break;
-                case 23: SelectRadioButtonByText("NEPŘÍTOMNOST"); break;
-                case 26: SelectRadioButtonByText("ŠKOLENÍ"); break;
-                case 386: SelectRadioButtonByText("ZÁKAZNICKÝ SERVIS"); break;
+                case WorkLogIds.Projects.Other: SelectRadioButtonByText("OSTATNÍ"); break;
+                case WorkLogIds.Projects.Absence: SelectRadioButtonByText("NEPŘÍTOMNOST"); break;
+                case WorkLogIds.Projects.Training: SelectRadioButtonByText("ŠKOLENÍ"); break;
+                case WorkLogIds.Projects.CustomerService: SelectRadioButtonByText("ZÁKAZNICKÝ SERVIS"); break;
                 default:
                     int idx = proj.ProjectType + 1;
                     if (idx == 2 || idx == 3) idx = 2;
@@ -1205,7 +1205,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             var snackDates = new HashSet<DateTime>(
                 weekEntries
-                    .Where(e => e.ProjectId == 132 && e.EntryTypeId == 24 && e.Timestamp.HasValue)
+                    .Where(e => e.ProjectId == WorkLogIds.Projects.Snack && e.EntryTypeId == WorkLogIds.EntryTypes.Snack && e.Timestamp.HasValue)
                     .Select(e => e.Timestamp.Value.Date)
             );
 
@@ -1214,8 +1214,8 @@ namespace VykazyPrace.UserControls.CalendarV2
                 .Where(d => !snackDates.Contains(d))
                 .Select(day => new TimeEntry
                 {
-                    ProjectId = 132,
-                    EntryTypeId = 24,
+                    ProjectId = WorkLogIds.Projects.Snack,
+                    EntryTypeId = WorkLogIds.EntryTypes.Snack,
                     UserId = _selectedUser.Id,
                     Timestamp = day.AddMinutes(18 * TimeSlotLengthInMinutes),
                     EntryMinutes = TimeSlotLengthInMinutes,
@@ -1676,7 +1676,7 @@ namespace VykazyPrace.UserControls.CalendarV2
 
             // zamčeno nebo svačina
             if (timeEntry.IsLocked == 1 ||
-                (timeEntry.ProjectId == 132 && timeEntry.EntryTypeId == 24))
+                (timeEntry.ProjectId == WorkLogIds.Projects.Snack && timeEntry.EntryTypeId == WorkLogIds.EntryTypes.Snack))
                 return;
 
             if (!ShowDeleteConfirmation(timeEntry)) return;
@@ -1746,7 +1746,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             var entry = _currentEntries.FirstOrDefault(e => e.Id == _selectedTimeEntryId);
 
             // svačina
-            if (entry.ProjectId == 132 && entry.EntryTypeId == 24) return;
+            if (entry.ProjectId == WorkLogIds.Projects.Snack && entry.EntryTypeId == WorkLogIds.EntryTypes.Snack) return;
 
             if (entry != null)
             {
@@ -1781,7 +1781,7 @@ namespace VykazyPrace.UserControls.CalendarV2
             panel.OwnerId = _selectedUser.Id;
             panel.Tag = null;
 
-            if (entry.ProjectId == 132 && entry.EntryTypeId == 24)
+            if (entry.ProjectId == WorkLogIds.Projects.Snack && entry.EntryTypeId == WorkLogIds.EntryTypes.Snack)
                 panel.Tag = "snack";
             else if (entry.IsLocked == 1)
                 panel.Tag = "locked";
@@ -1982,9 +1982,9 @@ namespace VykazyPrace.UserControls.CalendarV2
                         entry.Timestamp.HasValue &&
                         entry.Timestamp.Value.Date == day.Date &&
                         entry.IsValid == 1 &&                   // jen validní záznamy
-                        !(entry.ProjectId == 132 && entry.EntryTypeId == 24) && // vynechává svačiny
-                        !(entry.ProjectId == 23) &&            // vynechává nepřítomnosti
-                        !(entry.EntryTypeId == 25))            // vynechává outlook události
+                        !(entry.ProjectId == WorkLogIds.Projects.Snack && entry.EntryTypeId == WorkLogIds.EntryTypes.Snack) && // vynechává svačiny
+                        entry.ProjectId != WorkLogIds.Projects.Absence &&            // vynechává nepřítomnosti
+                        entry.EntryTypeId != WorkLogIds.EntryTypes.OutlookEvent)            // vynechává outlook události
                     .Sum(entry => entry.EntryMinutes);
 
                 double reportedHours = totalMinutes / 60.0;

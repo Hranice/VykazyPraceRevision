@@ -1025,13 +1025,28 @@ namespace VykazyPrace.Dialogs
             var rows = new List<EvaluationRow>
     {
         new("Projekty", "EXTERNÍ PROJEKTY",
-            e => e.Project?.ProjectDescription?.Contains("E", StringComparison.OrdinalIgnoreCase) == true),
+            e => !IsExternalEntry(e)
+                && e.Project?.ProjectDescription?.Contains("E", StringComparison.OrdinalIgnoreCase) == true),
+
+        new("Projekty", "EXTERNISTÉ",
+            e => IsExternalEntry(e)
+                && e.Project?.ProjectDescription?.Contains("E", StringComparison.OrdinalIgnoreCase) == true),
 
         new("Projekty", "INTERNÍ PROJEKTY",
-            e => e.Project?.ProjectDescription?.Contains("I", StringComparison.OrdinalIgnoreCase) == true),
+            e => !IsExternalEntry(e)
+                && e.Project?.ProjectDescription?.Contains("I", StringComparison.OrdinalIgnoreCase) == true),
+
+        new("Projekty", "EXTERNISTÉ",
+            e => IsExternalEntry(e)
+                && e.Project?.ProjectDescription?.Contains("I", StringComparison.OrdinalIgnoreCase) == true),
 
         new("Automatizace", "Provoz Automatizace",
-            e => e.ProjectId == ExportConstants.AutomationProjectId),
+            e => !IsExternalEntry(e)
+                && e.ProjectId == ExportConstants.AutomationProjectId),
+
+        new("Automatizace", "EXTERNISTÉ",
+            e => IsExternalEntry(e)
+                && e.ProjectId == ExportConstants.AutomationProjectId),
 
         new("Provoz výroba", "Provoz SD",
             e => e.ProjectId == ExportConstants.ProductionSdProjectId),
@@ -1066,6 +1081,10 @@ namespace VykazyPrace.Dialogs
             }
 
             double totalHours = rows.Sum(r => r.SumHours);
+            int firstDataRow = 3;
+            int lastDataRow = firstDataRow + rows.Count - 1;
+            int totalRow = lastDataRow + 2;
+            int powerKeyRow = totalRow + 2;
 
             foreach (var row in rows)
             {
@@ -1089,7 +1108,7 @@ namespace VykazyPrace.Dialogs
             ws.Row(2).Clear();
             ws.Row(2).Height = 4.5;
 
-            int currentRow = 3;
+            int currentRow = firstDataRow;
 
             // Budeme si pamatovat startovní řádky kategorií,
             // aby pomocná data pro graf mohla odkazovat na sloupec E.
@@ -1168,28 +1187,28 @@ namespace VykazyPrace.Dialogs
             ws.Column(4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             ws.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-            ws.Range("E3:E13").Style.Font.Bold = true;
-            ws.Range("E3:E13").Style.Font.FontSize = 14;
+            ws.Range(firstDataRow, 5, lastDataRow, 5).Style.Font.Bold = true;
+            ws.Range(firstDataRow, 5, lastDataRow, 5).Style.Font.FontSize = 14;
 
             // Součet hodin pod tabulkou
-            ws.Cell(15, 2).Value = "∑";
-            ws.Cell(15, 3).FormulaA1 = "=SUM(C3:C13)";
+            ws.Cell(totalRow, 2).Value = "∑";
+            ws.Cell(totalRow, 3).FormulaA1 = $"=SUM(C{firstDataRow}:C{lastDataRow})";
 
-            ws.Cell(15, 2).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
-            ws.Cell(15, 2).Style.Font.Bold = true;
+            ws.Cell(totalRow, 2).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+            ws.Cell(totalRow, 2).Style.Font.Bold = true;
 
-            ws.Cell(15, 3).Style.NumberFormat.Format = "# ##0.0";
-            ws.Cell(15, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-            ws.Cell(15, 3).Style.Font.Bold = true;
+            ws.Cell(totalRow, 3).Style.NumberFormat.Format = "# ##0.0";
+            ws.Cell(totalRow, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            ws.Cell(totalRow, 3).Style.Font.Bold = true;
 
             // Celkově odpracované hodiny z PowerKey za všechny vybrané uživatele v daném období
-            ws.Cell(17, 2).Value = "PowerKey";
-            ws.Cell(17, 3).Value = totalPowerKeyWorkedHours;
+            ws.Cell(powerKeyRow, 2).Value = "PowerKey";
+            ws.Cell(powerKeyRow, 3).Value = totalPowerKeyWorkedHours;
 
-            ws.Cell(17, 2).Style.Font.Bold = true;
-            ws.Cell(17, 3).Style.NumberFormat.Format = "# ##0.0";
-            ws.Cell(17, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-            ws.Cell(17, 3).Style.Font.Bold = true;
+            ws.Cell(powerKeyRow, 2).Style.Font.Bold = true;
+            ws.Cell(powerKeyRow, 3).Style.NumberFormat.Format = "# ##0.0";
+            ws.Cell(powerKeyRow, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            ws.Cell(powerKeyRow, 3).Style.Font.Bold = true;
 
             // Nejdřív dopočítat podle obsahu.
             ws.Columns().AdjustToContents();
@@ -1203,6 +1222,11 @@ namespace VykazyPrace.Dialogs
             ws.Column(5).Width = 9;     // cca 68 px - podle šablony od MV
 
             ws.SetTabActive();
+        }
+
+        private static bool IsExternalEntry(TimeEntry entry)
+        {
+            return entry.User?.UserGroupId == 6;
         }
 
         private static XLColor GetEvaluationGroupColor(string groupName)
@@ -1360,8 +1384,8 @@ namespace VykazyPrace.Dialogs
 
             try
             {
-                topLeft = (Excel.Range)ws.Range["A18"];
-                chartArea = (Excel.Range)ws.Range["A18:M35"];
+                topLeft = (Excel.Range)ws.Range["A21"];
+                chartArea = (Excel.Range)ws.Range["A21:M38"];
 
                 chartObject = chartObjects.Add(
                     (double)topLeft.Left,
@@ -1379,8 +1403,8 @@ namespace VykazyPrace.Dialogs
                 series = seriesCollection.NewSeries();
 
                 series.Name = "Odpracované hodiny";
-                series.XValues = "='VYHODNOCENÍ'!$B$3:$B$13";
-                series.Values = "='VYHODNOCENÍ'!$C$3:$C$13";
+                series.XValues = "='VYHODNOCENÍ'!$B$3:$B$16";
+                series.Values = "='VYHODNOCENÍ'!$C$3:$C$16";
 
                 chart.HasTitle = true;
                 chart.ChartTitle.Text = "Odpracované hodiny";

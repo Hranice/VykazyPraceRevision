@@ -1,9 +1,3 @@
-﻿using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Printing;
-using System.Linq;
-using System.Windows.Forms;
 using VykazyPrace.Core.Database.Models;
 
 public class CustomTableLayoutPanel : TableLayoutPanel

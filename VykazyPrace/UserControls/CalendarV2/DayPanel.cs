@@ -1,8 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-
 namespace VykazyPrace.UserControls.CalendarV2
 {
     public partial class DayPanel : UserControl
@@ -26,7 +21,6 @@ namespace VykazyPrace.UserControls.CalendarV2
         private List<string> _subtitleLines = new();
         private Color _assignedColor;
 
-        // nově ukládáme title/subtitle, abychom je mohli přepočítat při resize
         private string? _lastTitle;
         private string? _lastSubtitle;
 
@@ -55,7 +49,6 @@ namespace VykazyPrace.UserControls.CalendarV2
             _titleLines = WrapTextIntoLines(title ?? "", this.Font, this.Width - 6, maxLines: 2);
             _subtitleLines = WrapTextIntoLines(subtitle ?? "", this.Font, this.Width - 6, maxLines: 2);
 
-            // přerender
             this.Invalidate();
         }
 

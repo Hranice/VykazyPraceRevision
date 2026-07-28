@@ -3,24 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazypracerevision\\vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazypracerevision\\vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazypracerevision\\vykazyprace\\dialogs\\exportdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\dialogs\\exportdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazypracerevision\\vykazyprace\\dialogs\\exportdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\vykazyprace\\dialogs\\exportdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\dialogs\\exportdialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
       "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazypracerevision\\vykazyprace\\usercontrols\\calendarv2\\calendarv2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\usercontrols\\calendarv2\\calendarv2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazypracerevision\\vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|solutionrelative:vykazyprace\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
       "AbsoluteMoniker": "D:0:0:{683A1EC1-16BF-4749-9A31-7EB2F7B71614}|VykazyPrace\\VykazyPrace.csproj|c:\\users\\jprochazka\\source\\repos\\vykazypracerevision\\vykazyprace\\dialogs\\outlookevents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -74,7 +74,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -90,15 +90,27 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ExportDialog.cs [N\u00E1vrh]",
+              "DocumentIndex": 0,
+              "Title": "MainForm.cs",
+              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace\\MainForm.cs",
+              "RelativeDocumentMoniker": "VykazyPrace\\MainForm.cs",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace\\MainForm.cs",
+              "RelativeToolTip": "VykazyPrace\\MainForm.cs",
+              "ViewState": "AgIAAE0CAAAAAAAAAAAUwFwCAABQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T07:48:47.638Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ExportDialog.cs [Design]",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace\\Dialogs\\ExportDialog.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\Dialogs\\ExportDialog.cs",
-              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace\\Dialogs\\ExportDialog.cs [N\u00E1vrh]",
-              "RelativeToolTip": "VykazyPrace\\Dialogs\\ExportDialog.cs [N\u00E1vrh]",
+              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace\\Dialogs\\ExportDialog.cs [Design]",
+              "RelativeToolTip": "VykazyPrace\\Dialogs\\ExportDialog.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-08T11:12:57.048Z",
-              "EditorCaption": " [N\u00E1vrh]"
+              "WhenOpened": "2026-07-08T11:12:57.048Z"
             },
             {
               "$type": "Document",
@@ -126,27 +138,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "MainForm.cs",
-              "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace\\MainForm.cs",
-              "RelativeDocumentMoniker": "VykazyPrace\\MainForm.cs",
-              "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace\\MainForm.cs",
-              "RelativeToolTip": "VykazyPrace\\MainForm.cs",
-              "ViewState": "AgIAAEwCAAAAAAAAAAA2wFwCAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-08T07:48:47.638Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "MainForm.cs [N\u00E1vrh]",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace\\MainForm.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\MainForm.cs",
               "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace\\MainForm.cs [N\u00E1vrh]",
               "RelativeToolTip": "VykazyPrace\\MainForm.cs [N\u00E1vrh]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-07T07:45:10.094Z"
+              "WhenOpened": "2026-07-07T07:45:10.094Z",
+              "EditorCaption": " [N\u00E1vrh]"
             },
             {
               "$type": "Document",
@@ -161,16 +161,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "ExportDialog.cs",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace\\Dialogs\\ExportDialog.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\Dialogs\\ExportDialog.cs",
               "ToolTip": "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace\\Dialogs\\ExportDialog.cs",
               "RelativeToolTip": "VykazyPrace\\Dialogs\\ExportDialog.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAEAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-07T05:52:10.845Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-07T05:52:10.845Z"
             },
             {
               "$type": "Document",
@@ -186,7 +185,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "CalendarV2.cs",
               "DocumentMoniker": "C:\\Users\\jprochazka\\source\\repos\\VykazyPraceRevision\\VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs",
               "RelativeDocumentMoniker": "VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs",
@@ -194,8 +193,7 @@
               "RelativeToolTip": "VykazyPrace\\UserControls\\CalendarV2\\CalendarV2.cs",
               "ViewState": "AgIAAGQAAAAAAAAAAAAAAIcAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-07T05:52:20.52Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-07T05:52:20.52Z"
             },
             {
               "$type": "Document",
@@ -266,8 +264,7 @@
               "RelativeToolTip": "VykazyPrace\\Dialogs\\ExportDialog.Designer.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-07T05:52:10.067Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-07T05:52:10.067Z"
             },
             {
               "$type": "Document",

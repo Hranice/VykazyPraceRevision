@@ -55,6 +55,27 @@
     <Compile Update="UserControls\CalendarV2\CalendarV2.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="UserControls\CalendarV2\CalendarV2.Data.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UserControls\CalendarV2\CalendarV2.DragDrop.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UserControls\CalendarV2\CalendarV2.Grid.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UserControls\CalendarV2\CalendarV2.Keyboard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UserControls\CalendarV2\CalendarV2.Rendering.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UserControls\CalendarV2\CalendarV2.Selection.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UserControls\CalendarV2\CalendarV2.Sidebar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="UserControls\CalendarV2\CustomTableLayoutPanel.cs">
       <SubType>Component</SubType>
     </Compile>

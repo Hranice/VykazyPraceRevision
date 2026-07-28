@@ -1,11 +1,6 @@
-using VykazyPrace.Core.Configuration;
 using VykazyPrace.Core.Database.Models;
-using VykazyPrace.Core.Database.Repositories;
 using VykazyPrace.Core.Helpers;
 using VykazyPrace.Core.Logging;
-using VykazyPrace.Core.Services.TimeEntry;
-using VykazyPrace.Dialogs;
-using Timer = System.Windows.Forms.Timer;
 
 namespace VykazyPrace.UserControls.CalendarV2
 {

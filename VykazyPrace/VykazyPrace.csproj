@@ -65,6 +65,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <!-- Partial CalendarV2 files otherwise collide with CalendarV2.resx. -->
+    <EmbeddedResource Remove="UserControls\CalendarV2\CalendarV2.Data.resx" />
+    <EmbeddedResource Remove="UserControls\CalendarV2\CalendarV2.DragDrop.resx" />
+    <EmbeddedResource Remove="UserControls\CalendarV2\CalendarV2.Grid.resx" />
+    <EmbeddedResource Remove="UserControls\CalendarV2\CalendarV2.Keyboard.resx" />
+    <EmbeddedResource Remove="UserControls\CalendarV2\CalendarV2.Rendering.resx" />
+    <EmbeddedResource Remove="UserControls\CalendarV2\CalendarV2.Selection.resx" />
+    <EmbeddedResource Remove="UserControls\CalendarV2\CalendarV2.Sidebar.resx" />
   </ItemGroup>
  
 

@@ -1022,62 +1022,74 @@ namespace VykazyPrace.Dialogs
                 totalPowerKeyWorkedHours = 0;
             }
 
-            var rows = new List<EvaluationRow>
-    {
-        new("Projekty", "EXTERNÍ PROJEKTY",
-            e => !IsExternalEntry(e)
-                && e.Project?.ProjectDescription?.Contains("E", StringComparison.OrdinalIgnoreCase) == true,
-            "INTERNÍ"),
+            bool includeExternalBreakdown = selectedUsers.Any(user => user.UserGroupId == 6);
+            var rows = new List<EvaluationRow>();
 
-        new("Projekty", "EXTERNÍ PROJEKTY",
-            e => IsExternalEntry(e)
-                && e.Project?.ProjectDescription?.Contains("E", StringComparison.OrdinalIgnoreCase) == true,
-            "EXTERNISTÉ"),
+            if (includeExternalBreakdown)
+            {
+                rows.Add(new EvaluationRow(
+                    "Projekty", "EXTERNÍ PROJEKTY",
+                    entry => !IsExternalEntry(entry)
+                        && entry.Project?.ProjectDescription?.Contains("E", StringComparison.OrdinalIgnoreCase) == true,
+                    "INTERNÍ"));
+                rows.Add(new EvaluationRow(
+                    "Projekty", "EXTERNÍ PROJEKTY",
+                    entry => IsExternalEntry(entry)
+                        && entry.Project?.ProjectDescription?.Contains("E", StringComparison.OrdinalIgnoreCase) == true,
+                    "EXTERNISTÉ"));
+                rows.Add(new EvaluationRow(
+                    "Projekty", "INTERNÍ PROJEKTY",
+                    entry => !IsExternalEntry(entry)
+                        && entry.Project?.ProjectDescription?.Contains("I", StringComparison.OrdinalIgnoreCase) == true,
+                    "INTERNÍ"));
+                rows.Add(new EvaluationRow(
+                    "Projekty", "INTERNÍ PROJEKTY",
+                    entry => IsExternalEntry(entry)
+                        && entry.Project?.ProjectDescription?.Contains("I", StringComparison.OrdinalIgnoreCase) == true,
+                    "EXTERNISTÉ"));
+                rows.Add(new EvaluationRow(
+                    "Automatizace", "Provoz Automatizace",
+                    entry => !IsExternalEntry(entry)
+                        && entry.ProjectId == ExportConstants.AutomationProjectId,
+                    "INTERNÍ"));
+                rows.Add(new EvaluationRow(
+                    "Automatizace", "Provoz Automatizace",
+                    entry => IsExternalEntry(entry)
+                        && entry.ProjectId == ExportConstants.AutomationProjectId,
+                    "EXTERNISTÉ"));
+            }
+            else
+            {
+                rows.Add(new EvaluationRow(
+                    "Projekty", "EXTERNÍ PROJEKTY",
+                    entry => entry.Project?.ProjectDescription?.Contains("E", StringComparison.OrdinalIgnoreCase) == true));
+                rows.Add(new EvaluationRow(
+                    "Projekty", "INTERNÍ PROJEKTY",
+                    entry => entry.Project?.ProjectDescription?.Contains("I", StringComparison.OrdinalIgnoreCase) == true));
+                rows.Add(new EvaluationRow(
+                    "Automatizace", "Provoz Automatizace",
+                    entry => entry.ProjectId == ExportConstants.AutomationProjectId));
+            }
 
-        new("Projekty", "INTERNÍ PROJEKTY",
-            e => !IsExternalEntry(e)
-                && e.Project?.ProjectDescription?.Contains("I", StringComparison.OrdinalIgnoreCase) == true,
-            "INTERNÍ"),
-
-        new("Projekty", "INTERNÍ PROJEKTY",
-            e => IsExternalEntry(e)
-                && e.Project?.ProjectDescription?.Contains("I", StringComparison.OrdinalIgnoreCase) == true,
-            "EXTERNISTÉ"),
-
-        new("Automatizace", "Provoz Automatizace",
-            e => !IsExternalEntry(e)
-                && e.ProjectId == ExportConstants.AutomationProjectId,
-            "INTERNÍ"),
-
-        new("Automatizace", "Provoz Automatizace",
-            e => IsExternalEntry(e)
-                && e.ProjectId == ExportConstants.AutomationProjectId,
-            "EXTERNISTÉ"),
-
-        new("Provoz výroba", "Provoz SD",
-            e => e.ProjectId == ExportConstants.ProductionSdProjectId),
-
-        new("Provoz výroba", "Provoz HP",
-            e => e.ProjectId == ExportConstants.ProductionHpProjectId),
-
-        new("Provoz výroba", "Provoz MET",
-            e => e.ProjectId == ExportConstants.ProductionMetProjectId),
-
-        new("Provoz výroba", "Provoz KOM",
-            e => e.ProjectId == ExportConstants.ProductionKomProjectId),
-
-        new("Provoz výroba", "Provoz SOR",
-            e => e.ProjectId == ExportConstants.ProductionSorProjectId),
-
-        new("Ostatní", "Ostatní",
-            e => e.ProjectId == ExportConstants.ProductionOtherProjectId),
-
-        new("Ostatní", "Nepřítomnost",
-            e => e.ProjectId == ExportConstants.AbsenceProjectId),
-
-        new("Ostatní", "Kroužek MT",
-            e => e.EntryTypeId == ExportConstants.ClubYoungTechnicianEntryTypeId)
-    };
+            rows.AddRange(new[]
+            {
+                new EvaluationRow("Provoz výroba", "Provoz SD",
+                    entry => entry.ProjectId == ExportConstants.ProductionSdProjectId),
+                new EvaluationRow("Provoz výroba", "Provoz HP",
+                    entry => entry.ProjectId == ExportConstants.ProductionHpProjectId),
+                new EvaluationRow("Provoz výroba", "Provoz MET",
+                    entry => entry.ProjectId == ExportConstants.ProductionMetProjectId),
+                new EvaluationRow("Provoz výroba", "Provoz KOM",
+                    entry => entry.ProjectId == ExportConstants.ProductionKomProjectId),
+                new EvaluationRow("Provoz výroba", "Provoz SOR",
+                    entry => entry.ProjectId == ExportConstants.ProductionSorProjectId),
+                new EvaluationRow("Ostatní", "Ostatní",
+                    entry => entry.ProjectId == ExportConstants.ProductionOtherProjectId),
+                new EvaluationRow("Ostatní", "Nepřítomnost",
+                    entry => entry.ProjectId == ExportConstants.AbsenceProjectId),
+                new EvaluationRow("Ostatní", "Kroužek MT",
+                    entry => entry.EntryTypeId == ExportConstants.ClubYoungTechnicianEntryTypeId)
+            });
 
             foreach (var row in rows)
             {
@@ -1091,6 +1103,12 @@ namespace VykazyPrace.Dialogs
             int lastDataRow = firstDataRow + rows.Count - 1;
             int totalRow = lastDataRow + 2;
             int powerKeyRow = totalRow + 2;
+            int hoursColumn = includeExternalBreakdown ? 4 : 3;
+            int itemPercentColumn = includeExternalBreakdown ? 5 : 4;
+            int groupPercentColumn = includeExternalBreakdown ? 6 : 5;
+            string hoursColumnLetter = includeExternalBreakdown ? "D" : "C";
+            string itemPercentColumnLetter = includeExternalBreakdown ? "E" : "D";
+            string groupPercentColumnLetter = includeExternalBreakdown ? "F" : "E";
 
             foreach (var row in rows)
             {
@@ -1117,7 +1135,7 @@ namespace VykazyPrace.Dialogs
             int currentRow = firstDataRow;
 
             // Budeme si pamatovat startovní řádky kategorií,
-            // aby pomocná data pro graf mohla odkazovat na sloupec F.
+            // aby pomocná data pro graf mohla odkazovat na sloupec s podílem skupiny.
             var groupStartRows = new Dictionary<string, int>();
 
             foreach (var group in rows.GroupBy(r => r.Group))
@@ -1128,9 +1146,12 @@ namespace VykazyPrace.Dialogs
                 foreach (var item in group)
                 {
                     ws.Cell(currentRow, 2).Value = item.Name;
-                    ws.Cell(currentRow, 3).Value = item.WorkerType;
-                    ws.Cell(currentRow, 4).Value = item.SumHours;
-                    ws.Cell(currentRow, 5).Value = item.Percent;
+
+                    if (includeExternalBreakdown)
+                        ws.Cell(currentRow, 3).Value = item.WorkerType;
+
+                    ws.Cell(currentRow, hoursColumn).Value = item.SumHours;
+                    ws.Cell(currentRow, itemPercentColumn).Value = item.Percent;
                     ws.Cell(currentRow, 9).Value = string.IsNullOrEmpty(item.WorkerType)
                         ? item.Name
                         : $"{item.Name} / {item.WorkerType}";
@@ -1139,34 +1160,37 @@ namespace VykazyPrace.Dialogs
                 }
 
                 int groupEndRow = currentRow - 1;
-                int categoryStartRow = groupStartRow;
-
-                foreach (var category in group.GroupBy(item => item.Name))
+                if (includeExternalBreakdown)
                 {
-                    int categoryEndRow = categoryStartRow + category.Count() - 1;
+                    int categoryStartRow = groupStartRow;
 
-                    if (categoryEndRow > categoryStartRow)
+                    foreach (var category in group.GroupBy(item => item.Name))
                     {
-                        ws.Range(categoryStartRow, 2, categoryEndRow, 2).Merge();
-                        ws.Range(categoryStartRow, 2, categoryEndRow, 2)
-                            .Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    }
+                        int categoryEndRow = categoryStartRow + category.Count() - 1;
 
-                    categoryStartRow = categoryEndRow + 1;
+                        if (categoryEndRow > categoryStartRow)
+                        {
+                            ws.Range(categoryStartRow, 2, categoryEndRow, 2).Merge();
+                            ws.Range(categoryStartRow, 2, categoryEndRow, 2)
+                                .Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                        }
+
+                        categoryStartRow = categoryEndRow + 1;
+                    }
                 }
 
                 ws.Cell(groupStartRow, 1).Value = group.Key;
-                ws.Cell(groupStartRow, 6).Value = groupPercents[group.Key];
+                ws.Cell(groupStartRow, groupPercentColumn).Value = groupPercents[group.Key];
 
                 if (groupEndRow > groupStartRow)
                 {
                     ws.Range(groupStartRow, 1, groupEndRow, 1).Merge();
-                    ws.Range(groupStartRow, 6, groupEndRow, 6).Merge();
+                    ws.Range(groupStartRow, groupPercentColumn, groupEndRow, groupPercentColumn).Merge();
                 }
 
-                var groupRange = ws.Range(groupStartRow, 1, groupEndRow, 6);
+                var groupRange = ws.Range(groupStartRow, 1, groupEndRow, groupPercentColumn);
                 var firstColumnGroupRange = ws.Range(groupStartRow, 1, groupEndRow, 1);
-                var lastColumnGroupRange = ws.Range(groupStartRow, 6, groupEndRow, 6);
+                var lastColumnGroupRange = ws.Range(groupStartRow, groupPercentColumn, groupEndRow, groupPercentColumn);
 
                 groupRange.Style.Fill.BackgroundColor = GetEvaluationGroupColor(group.Key);
 
@@ -1194,59 +1218,72 @@ namespace VykazyPrace.Dialogs
                     continue;
 
                 ws.Cell(chartDataRow, 7).Value = groupName;            // G
-                ws.Cell(chartDataRow, 8).FormulaA1 = $"=F{sourceRow}"; // H
+                ws.Cell(chartDataRow, 8).FormulaA1 = $"={groupPercentColumnLetter}{sourceRow}"; // H
                 chartDataRow++;
             }
 
-            // Data pro tři samostatné koláče: interní pracovníci vs. externisté.
-            AddCategoryChartData(ws, 3, 14, firstDataRow + 4, firstDataRow + 5);  // N3:O4 Automatizace
-            AddCategoryChartData(ws, 18, 7, firstDataRow, firstDataRow + 1);     // G18:H19 Externí projekty
-            AddCategoryChartData(ws, 18, 14, firstDataRow + 2, firstDataRow + 3); // N18:O19 Interní projekty
+            if (includeExternalBreakdown)
+            {
+                // Data pro tři samostatné koláče: interní pracovníci vs. externisté.
+                AddCategoryChartData(ws, 3, 14, firstDataRow + 4, firstDataRow + 5, itemPercentColumnLetter);
+                AddCategoryChartData(ws, 18, 7, firstDataRow, firstDataRow + 1, itemPercentColumnLetter);
+                AddCategoryChartData(ws, 18, 14, firstDataRow + 2, firstDataRow + 3, itemPercentColumnLetter);
+            }
             ws.Column(7).Style.NumberFormat.Format = "@";
             ws.Column(8).Style.NumberFormat.Format = "0.00%";
 
-            ws.Column(4).Style.NumberFormat.Format = "# ##0.0";
-            ws.Column(5).Style.NumberFormat.Format = "0.00%";
-            ws.Column(6).Style.NumberFormat.Format = "0.00%";
+            ws.Column(hoursColumn).Style.NumberFormat.Format = "# ##0.0";
+            ws.Column(itemPercentColumn).Style.NumberFormat.Format = "0.00%";
+            ws.Column(groupPercentColumn).Style.NumberFormat.Format = "0.00%";
 
-            ws.Column(4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-            ws.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-            ws.Column(6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            ws.Column(hoursColumn).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            ws.Column(itemPercentColumn).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            ws.Column(groupPercentColumn).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-            ws.Range(firstDataRow, 6, lastDataRow, 6).Style.Font.Bold = true;
-            ws.Range(firstDataRow, 6, lastDataRow, 6).Style.Font.FontSize = 14;
+            ws.Range(firstDataRow, groupPercentColumn, lastDataRow, groupPercentColumn).Style.Font.Bold = true;
+            ws.Range(firstDataRow, groupPercentColumn, lastDataRow, groupPercentColumn).Style.Font.FontSize = 14;
 
             // Součet hodin pod tabulkou
-            ws.Cell(totalRow, 3).Value = "∑";
-            ws.Cell(totalRow, 4).FormulaA1 = $"=SUM(D{firstDataRow}:D{lastDataRow})";
+            ws.Cell(totalRow, hoursColumn - 1).Value = "∑";
+            ws.Cell(totalRow, hoursColumn).FormulaA1 = $"=SUM({hoursColumnLetter}{firstDataRow}:{hoursColumnLetter}{lastDataRow})";
 
-            ws.Cell(totalRow, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
-            ws.Cell(totalRow, 3).Style.Font.Bold = true;
+            ws.Cell(totalRow, hoursColumn - 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+            ws.Cell(totalRow, hoursColumn - 1).Style.Font.Bold = true;
 
-            ws.Cell(totalRow, 4).Style.NumberFormat.Format = "# ##0.0";
-            ws.Cell(totalRow, 4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-            ws.Cell(totalRow, 4).Style.Font.Bold = true;
+            ws.Cell(totalRow, hoursColumn).Style.NumberFormat.Format = "# ##0.0";
+            ws.Cell(totalRow, hoursColumn).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            ws.Cell(totalRow, hoursColumn).Style.Font.Bold = true;
 
             // Celkově odpracované hodiny z PowerKey za všechny vybrané uživatele v daném období
-            ws.Cell(powerKeyRow, 3).Value = "PowerKey";
-            ws.Cell(powerKeyRow, 4).Value = totalPowerKeyWorkedHours;
+            ws.Cell(powerKeyRow, hoursColumn - 1).Value = "PowerKey";
+            ws.Cell(powerKeyRow, hoursColumn).Value = totalPowerKeyWorkedHours;
 
-            ws.Cell(powerKeyRow, 3).Style.Font.Bold = true;
-            ws.Cell(powerKeyRow, 4).Style.NumberFormat.Format = "# ##0.0";
-            ws.Cell(powerKeyRow, 4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-            ws.Cell(powerKeyRow, 4).Style.Font.Bold = true;
+            ws.Cell(powerKeyRow, hoursColumn - 1).Style.Font.Bold = true;
+            ws.Cell(powerKeyRow, hoursColumn).Style.NumberFormat.Format = "# ##0.0";
+            ws.Cell(powerKeyRow, hoursColumn).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            ws.Cell(powerKeyRow, hoursColumn).Style.Font.Bold = true;
 
             // Nejdřív dopočítat podle obsahu.
             ws.Columns().AdjustToContents();
 
             // Přibližný převod pixelů na Excel šířku:
             // ExcelWidth = (pixels - 5) / 7
-            ws.Column(1).Width = 17.57; // skupina
-            ws.Column(2).Width = 20.14; // oblast
-            ws.Column(3).Width = 13;    // typ pracovníka
-            ws.Column(4).Width = 8.43;  // hodiny
-            ws.Column(5).Width = 8.43;  // podíl položky
-            ws.Column(6).Width = 9;     // podíl skupiny
+            ws.Column(1).Width = 17.57;
+            ws.Column(2).Width = 20.14;
+
+            if (includeExternalBreakdown)
+            {
+                ws.Column(3).Width = 13;    // typ pracovníka
+                ws.Column(4).Width = 8.43;  // hodiny
+                ws.Column(5).Width = 8.43;  // podíl položky
+                ws.Column(6).Width = 9;     // podíl skupiny
+            }
+            else
+            {
+                ws.Column(3).Width = 8.43;  // hodiny
+                ws.Column(4).Width = 8.43;  // podíl položky
+                ws.Column(5).Width = 9;     // podíl skupiny
+            }
 
             ws.SetTabActive();
         }
@@ -1261,12 +1298,13 @@ namespace VykazyPrace.Dialogs
             int startRow,
             int startColumn,
             int internalSourceRow,
-            int externalSourceRow)
+            int externalSourceRow,
+            string percentColumnLetter)
         {
             worksheet.Cell(startRow, startColumn).Value = "Interní";
-            worksheet.Cell(startRow, startColumn + 1).FormulaA1 = $"=E{internalSourceRow}";
+            worksheet.Cell(startRow, startColumn + 1).FormulaA1 = $"={percentColumnLetter}{internalSourceRow}";
             worksheet.Cell(startRow + 1, startColumn).Value = "Externisté";
-            worksheet.Cell(startRow + 1, startColumn + 1).FormulaA1 = $"=E{externalSourceRow}";
+            worksheet.Cell(startRow + 1, startColumn + 1).FormulaA1 = $"={percentColumnLetter}{externalSourceRow}";
         }
         private static XLColor GetEvaluationGroupColor(string groupName)
         {
@@ -1280,7 +1318,7 @@ namespace VykazyPrace.Dialogs
             };
         }
 
-        public void AddEvaluationChartsWithExcelInterop(string filePath)
+        public void AddEvaluationChartsWithExcelInterop(string filePath, bool includeExternalBreakdown)
         {
             Excel.Application? excel = null;
             Excel.Workbook? workbook = null;
@@ -1300,8 +1338,10 @@ namespace VykazyPrace.Dialogs
                 chartObjects = (Excel.ChartObjects)ws.ChartObjects(Type.Missing);
 
                 AddEvaluationPieChart(chartObjects, ws);
-                AddEvaluationCategoryPieCharts(chartObjects, ws);
-                AddEvaluationColumnChart(chartObjects, ws);
+                if (includeExternalBreakdown)
+                    AddEvaluationCategoryPieCharts(chartObjects, ws);
+
+                AddEvaluationColumnChart(chartObjects, ws, includeExternalBreakdown);
 
                 workbook.Save();
             }
@@ -1504,7 +1544,10 @@ namespace VykazyPrace.Dialogs
             }
         }
 
-        private static void AddEvaluationColumnChart(Excel.ChartObjects chartObjects, Excel.Worksheet ws)
+        private static void AddEvaluationColumnChart(
+            Excel.ChartObjects chartObjects,
+            Excel.Worksheet ws,
+            bool includeExternalBreakdown)
         {
             Excel.ChartObject? chartObject = null;
             Excel.Chart? chart = null;
@@ -1518,8 +1561,10 @@ namespace VykazyPrace.Dialogs
 
             try
             {
-                topLeft = (Excel.Range)ws.Range["A34"];
-                chartArea = (Excel.Range)ws.Range["A34:T51"];
+                string topLeftAddress = includeExternalBreakdown ? "A34" : "A18";
+                string chartAreaAddress = includeExternalBreakdown ? "A34:T51" : "A18:M35";
+                topLeft = (Excel.Range)ws.Range[topLeftAddress];
+                chartArea = (Excel.Range)ws.Range[chartAreaAddress];
 
                 chartObject = chartObjects.Add(
                     (double)topLeft.Left,
@@ -1537,8 +1582,12 @@ namespace VykazyPrace.Dialogs
                 series = seriesCollection.NewSeries();
 
                 series.Name = "Odpracované hodiny";
-                series.XValues = "='VYHODNOCENÍ'!$I$3:$I$16";
-                series.Values = "='VYHODNOCENÍ'!$D$3:$D$16";
+                series.XValues = includeExternalBreakdown
+                    ? "='VYHODNOCENÍ'!$I$3:$I$16"
+                    : "='VYHODNOCENÍ'!$B$3:$B$13";
+                series.Values = includeExternalBreakdown
+                    ? "='VYHODNOCENÍ'!$D$3:$D$16"
+                    : "='VYHODNOCENÍ'!$C$3:$C$13";
 
                 chart.HasTitle = true;
                 chart.ChartTitle.Text = "Odpracované hodiny";
@@ -1579,20 +1628,37 @@ namespace VykazyPrace.Dialogs
                 dataTable = chart.DataTable;
                 dataTable.ShowLegendKey = true;
 
-                SetSeriesPointColor(series, 1, "#ED7D31");
-                SetSeriesPointColor(series, 2, "#F4B183");
-                SetSeriesPointColor(series, 3, "#C55A11");
-                SetSeriesPointColor(series, 4, "#F8CBAD");
-                SetSeriesPointColor(series, 5, "#5B9BD5");
-                SetSeriesPointColor(series, 6, "#BDD7EE");
-                SetSeriesPointColor(series, 7, "#D9EAD3");
-                SetSeriesPointColor(series, 8, "#E7E6E6");
-                SetSeriesPointColor(series, 9, "#F4CCCC");
-                SetSeriesPointColor(series, 10, "#D9D9D9");
-                SetSeriesPointColor(series, 11, "#8EAADB");
-                SetSeriesPointColor(series, 12, "#C6E0B4");
-                SetSeriesPointColor(series, 13, "#E2F0D9");
-                SetSeriesPointColor(series, 14, "#D9D2E9");
+                if (includeExternalBreakdown)
+                {
+                    SetSeriesPointColor(series, 1, "#ED7D31");
+                    SetSeriesPointColor(series, 2, "#F4B183");
+                    SetSeriesPointColor(series, 3, "#C55A11");
+                    SetSeriesPointColor(series, 4, "#F8CBAD");
+                    SetSeriesPointColor(series, 5, "#5B9BD5");
+                    SetSeriesPointColor(series, 6, "#BDD7EE");
+                    SetSeriesPointColor(series, 7, "#D9EAD3");
+                    SetSeriesPointColor(series, 8, "#E7E6E6");
+                    SetSeriesPointColor(series, 9, "#F4CCCC");
+                    SetSeriesPointColor(series, 10, "#D9D9D9");
+                    SetSeriesPointColor(series, 11, "#8EAADB");
+                    SetSeriesPointColor(series, 12, "#C6E0B4");
+                    SetSeriesPointColor(series, 13, "#E2F0D9");
+                    SetSeriesPointColor(series, 14, "#D9D2E9");
+                }
+                else
+                {
+                    SetSeriesPointColor(series, 1, "#F8CBAD");
+                    SetSeriesPointColor(series, 2, "#F4B183");
+                    SetSeriesPointColor(series, 3, "#BDD7EE");
+                    SetSeriesPointColor(series, 4, "#D9EAD3");
+                    SetSeriesPointColor(series, 5, "#E7E6E6");
+                    SetSeriesPointColor(series, 6, "#F4CCCC");
+                    SetSeriesPointColor(series, 7, "#D9D9D9");
+                    SetSeriesPointColor(series, 8, "#8EAADB");
+                    SetSeriesPointColor(series, 9, "#C6E0B4");
+                    SetSeriesPointColor(series, 10, "#E2F0D9");
+                    SetSeriesPointColor(series, 11, "#D9D2E9");
+                }
             }
             finally
             {
@@ -2014,7 +2080,9 @@ namespace VykazyPrace.Dialogs
 
                 if (buildEvaluationSheet)
                 {
-                    _tableFactory.AddEvaluationChartsWithExcelInterop(filePath);
+                    _tableFactory.AddEvaluationChartsWithExcelInterop(
+                        filePath,
+                        usersForSummary.Any(user => user.UserGroupId == 6));
                 }
 
                 Process.Start(new ProcessStartInfo

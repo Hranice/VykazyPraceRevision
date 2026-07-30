@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using VykazyPrace.Core.Database.Models;
+using VykazyPrace.Core.Helpers;
 
 namespace VykazyPrace.Core.Database.Repositories
 {
@@ -78,7 +79,9 @@ namespace VykazyPrace.Core.Database.Repositories
                         te.UserId == u.Id &&
                         te.Timestamp.HasValue &&
                         te.Timestamp.Value >= fromInclusive &&
-                        te.Timestamp.Value < toExclusive))
+                        te.Timestamp.Value < toExclusive &&
+                        !(te.ProjectId == WorkLogIds.Projects.Snack &&
+                          te.EntryTypeId == WorkLogIds.EntryTypes.Snack)))
                 .OrderBy(u => u.UserGroupId)
                 .ThenBy(u => u.Surname)
                 .ThenBy(u => u.FirstName)

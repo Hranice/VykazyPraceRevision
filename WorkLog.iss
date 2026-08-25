@@ -26,7 +26,7 @@ ArchitecturesInstallIn64BitMode=x64
 Source: "VykazyPrace\bin\Release\net8.0-windows\win-x64\publish\WorkLog.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{commondesktop}\WorkLog"; Filename: "{app}\WorkLog.exe"
+Name: "{commondesktop}\WorkLog"; Filename: "{app}\WorkLog.exe"; WorkingDir: "{app}"; IconFilename: "{app}\WorkLog.exe"; IconIndex: 0
 
 [Run]
 Filename: "{app}\WorkLog.exe"; Flags: nowait

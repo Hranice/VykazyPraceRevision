@@ -1116,9 +1116,7 @@ C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\obj\Release\net
 C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\obj\Release\net8.0-windows\win-x64\VykazyPrace.Dialogs.ReplaceOrMoveDialog.resources
 C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\obj\Release\net8.0-windows\win-x64\VykazyPrace.Dialogs.SettingsDialog.resources
 C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\obj\Release\net8.0-windows\win-x64\VykazyPrace.Dialogs.TestDialog.resources
-C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\obj\Release\net8.0-windows\win-x64\VykazyPrace.Dialogs.TimeEntryDialog.resources
 C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\obj\Release\net8.0-windows\win-x64\VykazyPrace.Dialogs.TimeEntrySubTypeManagement.resources
-C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\obj\Release\net8.0-windows\win-x64\VykazyPrace.Dialogs.TimeEntryV2Dialog.resources
 C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\obj\Release\net8.0-windows\win-x64\VykazyPrace.Dialogs.UpdateDialog.resources
 C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\obj\Release\net8.0-windows\win-x64\VykazyPrace.Dialogs.UserManagementDialog.resources
 C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\obj\Release\net8.0-windows\win-x64\VykazyPrace.Dialogs.UserSelectionDialog.resources

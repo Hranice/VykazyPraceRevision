@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v8.0": {
-      "WorkLog/1.6.0.0": {
+      "WorkLog/1.6.1.0": {
         "dependencies": {
           "ClosedXML": "0.105.0",
           "Microsoft.EntityFrameworkCore.Sqlite": "9.0.2",
@@ -923,7 +923,7 @@
         "runtime": {
           "Microsoft.Office.Interop.Excel.dll": {
             "assemblyVersion": "16.0.0.0",
-            "fileVersion": "16.0.19822.20012"
+            "fileVersion": "16.0.20131.20012"
           }
         }
       },
@@ -954,7 +954,7 @@
     }
   },
   "libraries": {
-    "WorkLog/1.6.0.0": {
+    "WorkLog/1.6.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

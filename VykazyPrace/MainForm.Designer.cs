@@ -1,4 +1,4 @@
-﻿namespace VykazyPrace
+namespace VykazyPrace
 {
     partial class MainForm
     {
@@ -238,6 +238,7 @@
             // 
             // tableLayoutPanel1
             // 
+            tableLayoutPanel1.AutoSize = true;
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.Controls.Add(buttonUpdate, 0, 5);
@@ -261,13 +262,15 @@
             // 
             // buttonUpdate
             // 
-            buttonUpdate.Dock = DockStyle.Fill;
+            buttonUpdate.AutoSize = true;
+            buttonUpdate.Dock = DockStyle.Bottom;
             buttonUpdate.Location = new Point(3, 608);
             buttonUpdate.Name = "buttonUpdate";
             buttonUpdate.Size = new Size(121, 39);
             buttonUpdate.TabIndex = 14;
             buttonUpdate.Text = "Aktualizace";
             buttonUpdate.UseVisualStyleBackColor = true;
+            buttonUpdate.Visible = false;
             buttonUpdate.Click += buttonUpdate_Click;
             // 
             // tableLayoutPanel3
@@ -488,7 +491,9 @@
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel3.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);

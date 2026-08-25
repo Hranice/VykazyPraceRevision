@@ -34,7 +34,8 @@
             Name="WorkLog"
             WorkingDirectory="INSTALLFOLDER"
             Icon="WorkLogIcon"
-            Advertise="yes" />
+            IconIndex="0"
+            Advertise="no" />
         </File>
       </Component>
     </ComponentGroup>

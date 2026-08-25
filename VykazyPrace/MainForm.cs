@@ -90,7 +90,7 @@ namespace VykazyPrace
 
             if (!ValidateDatabase())
             {
-                ShowSettingsDialog("Datab·ze je neplatn· nebo ji nelze naËÌst. Chcete otev¯Ìt nastavenÌ?", "Chyba datab·ze");
+                ShowSettingsDialog("Datab√°ze je neplatn√° nebo ji nelze naƒç√≠st. Chcete otev≈ô√≠t nastaven√≠?", "Chyba datab√°ze");
                 Close();
                 return;
             }
@@ -208,7 +208,7 @@ namespace VykazyPrace
             }
             catch (Exception ex)
             {
-                AppLogger.Error("Datab·ze je neplatn· nebo ji nelze naËÌst.", ex);
+                AppLogger.Error("Datab√°ze je neplatn√° nebo ji nelze naƒç√≠st.", ex);
                 return false;
             }
         }
@@ -251,29 +251,29 @@ namespace VykazyPrace
                 Invoke(() => _loadingUC.BringToFront());
 
                 _users = await _userRepo.GetAllUsersAsync();
-                AppLogger.Debug($"NaËteno {_users.Count} z·znam˘.");
+                AppLogger.Debug($"Naƒçteno {_users.Count} z√°znam≈Ø.");
                 string userName = Environment.UserName.ToLower();
                 _loggedUser = await _userRepo.GetUserByWindowsUsernameAsync(userName) ?? new User();
                 _selectedUser = _loggedUser;
-                AppLogger.Debug($"NaËtenÌ uûivatele podle windows uû. jmÈna: '{userName}'.");
+                AppLogger.Debug($"Naƒçten√≠ u≈æivatele podle windows u≈æ. jm√©na: '{userName}'.");
                 _currentUserLoA = _selectedUser.LevelOfAccess;
-                AppLogger.Debug($"NaËtenÌ uûivatelsk˝ch pr·v: '{_currentUserLoA}'.");
+                AppLogger.Debug($"Naƒçten√≠ u≈æivatelsk√Ωch pr√°v: '{_currentUserLoA}'.");
 
                 if (_selectedUser.Id == 0)
                 {
-                    AppLogger.Error("Nepoda¯ilo se naËÌst aktu·lnÌho uûivatele, p¯Ìstup bude omezen.");
+                    AppLogger.Error("Nepoda≈ôilo se naƒç√≠st aktu√°ln√≠ho u≈æivatele, p≈ô√≠stup bude omezen.");
                     return;
                 }
 
                 int totalRows = await _powerKeyHelper.DownloadForUserAsync(DateTime.Now, _selectedUser);
-                AppLogger.Information($"Staûeno {totalRows} z·znam˘ pro mÏsÌc Ë.{DateTime.Now.Month} uûivatele {FormatHelper.FormatUserToString(_selectedUser)}.", false);
+                AppLogger.Information($"Sta≈æeno {totalRows} z√°znam≈Ø pro mƒõs√≠c ƒç.{DateTime.Now.Month} u≈æivatele {FormatHelper.FormatUserToString(_selectedUser)}.", false);
 
-                // Pokud den p¯ed t¯emi dny spadal do jinÈho mÏsÌce, st·hni i ten mÏsÌc.
+                // Pokud den p≈ôed t≈ôemi dny spadal do jin√©ho mƒõs√≠ce, st√°hni i ten mƒõs√≠c.
                 var previousDay = DateTime.Now.AddDays(-3);
                 if (previousDay.Month != DateTime.Today.Month || previousDay.Year != DateTime.Today.Year)
                 {
                     await _powerKeyHelper.DownloadForUserAsync(previousDay, _selectedUser);
-                    AppLogger.Information($"Staûeno {totalRows} z·znam˘ pro mÏsÌc Ë.{previousDay.Month} uûivatele {FormatHelper.FormatUserToString(_selectedUser)}.", false);
+                    AppLogger.Information($"Sta≈æeno {totalRows} z√°znam≈Ø pro mƒõs√≠c ƒç.{previousDay.Month} u≈æivatele {FormatHelper.FormatUserToString(_selectedUser)}.", false);
                 }
 
                 Invoke(() =>
@@ -284,13 +284,13 @@ namespace VykazyPrace
             }
             catch (Microsoft.Data.Sqlite.SqliteException ex)
             {
-                AppLogger.Error("Datab·ze nenÌ dostupn· nebo se ji nepoda¯ilo otev¯Ìt.", ex);
-                ShowSettingsDialog("P¯ejete si otev¯Ìt nastavenÌ?", "Datab·ze nenÌ dostupn·.");
+                AppLogger.Error("Datab√°ze nen√≠ dostupn√° nebo se ji nepoda≈ôilo otev≈ô√≠t.", ex);
+                ShowSettingsDialog("P≈ôejete si otev≈ô√≠t nastaven√≠?", "Datab√°ze nen√≠ dostupn√°.");
             }
             catch (Exception ex)
             {
-                AppLogger.Error("Doölo k neoËek·vanÈ chybÏ p¯i naËÌt·nÌ dat.", ex);
-                ShowSettingsDialog("P¯ejete si otev¯Ìt nastavenÌ?", "Chyba p¯i naËÌt·nÌ dat.");
+                AppLogger.Error("Do≈°lo k neoƒçek√°van√© chybƒõ p≈ôi naƒç√≠t√°n√≠ dat.", ex);
+                ShowSettingsDialog("P≈ôejete si otev≈ô√≠t nastaven√≠?", "Chyba p≈ôi naƒç√≠t√°n√≠ dat.");
             }
         }
 
@@ -298,14 +298,14 @@ namespace VykazyPrace
         {
             if (levelOfAccess == 3)
             {
-                uûivatelÈToolStripMenuItem.Visible = true;
-                spr·vaProjekt˘ToolStripMenuItem.Visible = true;
+                u≈æivatel√©ToolStripMenuItem.Visible = true;
+                spr√°vaProjekt≈ØToolStripMenuItem.Visible = true;
                 bChangeUser.Visible = true;
-                spr·vceToolStripMenuItem.Visible = true;
+                spr√°vceToolStripMenuItem.Visible = true;
             }
             else if (levelOfAccess == 2)
             {
-                spr·vaProjekt˘ToolStripMenuItem.Visible = true;
+                spr√°vaProjekt≈ØToolStripMenuItem.Visible = true;
                 bChangeUser.Visible = true;
             }
         }
@@ -322,7 +322,7 @@ namespace VykazyPrace
 
                 else
                 {
-                    AppLogger.Information("Aplikace se nynÌ ukonËÌ.", true);
+                    AppLogger.Information("Aplikace se nyn√≠ ukonƒç√≠.", true);
                     Environment.Exit(0);
                 }
             });
@@ -354,7 +354,7 @@ namespace VykazyPrace
             bChangeUser.Enabled = _currentUserLoA > 1;
             bChangeUser.Text = _selectedUser != null
                 ? FormatHelper.FormatUserToString(_selectedUser)
-                : "Vybrat uûivatele";
+                : "Vybrat u≈æivatele";
 
             panelCalendarContainer.Visible = false;
             _calendar.BringToFront();
@@ -362,7 +362,7 @@ namespace VykazyPrace
             HideLoading();
         }
 
-        private void spr·vaUûivatel˘ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void spr√°vaU≈æivatel≈ØToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (_currentUserLoA > 1)
             {
@@ -374,11 +374,11 @@ namespace VykazyPrace
 
             else
             {
-                AppLogger.Error("Na spr·vu uûivatel˘ nem·ö dostateËn· opr·vnÏnÌ.");
+                AppLogger.Error("Na spr√°vu u≈æivatel≈Ø nem√°≈° dostateƒçn√° opr√°vnƒõn√≠.");
             }
         }
 
-        private void spr·vaProjekt˘ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void spr√°vaProjekt≈ØToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (_currentUserLoA > 1)
             {
@@ -391,7 +391,7 @@ namespace VykazyPrace
 
             else
             {
-                AppLogger.Error("Na spr·vu projekt˘ nem·ö dostateËn· opr·vnÏnÌ.");
+                AppLogger.Error("Na spr√°vu projekt≈Ø nem√°≈° dostateƒçn√° opr√°vnƒõn√≠.");
             }
         }
 
@@ -404,7 +404,7 @@ namespace VykazyPrace
             dialog.ShowDialog(this);
         }
 
-        private void nastavenÌToolStripMenuItem_Click(object sender, EventArgs e)
+        private void nastaven√≠ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenSettings();
         }
@@ -497,7 +497,7 @@ namespace VykazyPrace
             dialog.ShowDialog(this);
         }
 
-        private async void spr·vaIndex˘ToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void spr√°vaIndex≈ØToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (_selectedUser.Id != _loggedUser.Id && _selectedUser.MasterUserId != _loggedUser.Id)
                 return;
@@ -545,7 +545,7 @@ namespace VykazyPrace
             config.MainWindow.Maximized = WindowState == FormWindowState.Maximized;
         }
 
-        private void spr·vceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void spr√°vceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using var dialog = ActivatorUtilities.CreateInstance<ManagerDialog>(
     _serviceProvider);
@@ -553,7 +553,7 @@ namespace VykazyPrace
             dialog.ShowDialog(this);
         }
 
-        private void n·vrhProjektuToolStripMenuItem_Click(object sender, EventArgs e)
+        private void n√°vrhProjektuToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var proposalProjectDialog = ActivatorUtilities.CreateInstance<ProposeProjectDialog>(
     _serviceProvider,
@@ -593,7 +593,7 @@ namespace VykazyPrace
             HideLoading();
         }
 
-        private void p¯ehledToolStripMenuItem_Click(object sender, EventArgs e)
+        private void p≈ôehledToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using var dialog = ActivatorUtilities.CreateInstance<OverviewDialog>(
     _serviceProvider,
@@ -636,7 +636,7 @@ namespace VykazyPrace
         {
             using var dialog = new OpenFileDialog
             {
-                Title = "Vyberte Excel s externÌmi v˝kazy",
+                Title = "Vyberte Excel s extern√≠mi v√Ωkazy",
                 Filter = "Excel soubory (*.xlsx)|*.xlsx",
                 Multiselect = false
             };
@@ -645,8 +645,8 @@ namespace VykazyPrace
                 return;
 
             var confirm = MessageBox.Show(
-                "Import smaûe p˘vodnÌ z·znamy pro dotËenÈ uûivatele a dny a n·slednÏ vloûÌ novÈ z·znamy z Excelu. PokraËovat?",
-                "PotvrzenÌ importu",
+                "Import sma≈æe p≈Øvodn√≠ z√°znamy pro dotƒçen√© u≈æivatele a dny a n√°slednƒõ vlo≈æ√≠ nov√© z√°znamy z Excelu. Pokraƒçovat?",
+                "Potvrzen√≠ importu",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning);
 
@@ -661,7 +661,7 @@ namespace VykazyPrace
                 {
                     MessageBox.Show(
                         string.Join(Environment.NewLine, result.Errors),
-                        "Import se nezda¯il",
+                        "Import se nezda≈ôil",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
 
@@ -669,23 +669,23 @@ namespace VykazyPrace
                 }
 
                 var message =
-                    $"Import dokonËen.{Environment.NewLine}" +
-                    $"Smaz·no p˘vodnÌch z·znam˘: {result.DeletedCount}{Environment.NewLine}" +
-                    $"Importov·no nov˝ch z·znam˘: {result.ImportedCount}";
+                    $"Import dokonƒçen.{Environment.NewLine}" +
+                    $"Smaz√°no p≈Øvodn√≠ch z√°znam≈Ø: {result.DeletedCount}{Environment.NewLine}" +
+                    $"Importov√°no nov√Ωch z√°znam≈Ø: {result.ImportedCount}";
 
                 if (result.Warnings.Count > 0)
                 {
                     message += Environment.NewLine + Environment.NewLine +
-                               "UpozornÏnÌ:" + Environment.NewLine +
+                               "Upozornƒõn√≠:" + Environment.NewLine +
                                string.Join(Environment.NewLine, result.Warnings.Take(20));
 
                     if (result.Warnings.Count > 20)
-                        message += Environment.NewLine + $"... a dalöÌch {result.Warnings.Count - 20} upozornÏnÌ.";
+                        message += Environment.NewLine + $"... a dal≈°√≠ch {result.Warnings.Count - 20} upozornƒõn√≠.";
                 }
 
                 MessageBox.Show(
                     message,
-                    "Import dokonËen",
+                    "Import dokonƒçen",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
             }
@@ -784,7 +784,7 @@ namespace VykazyPrace
                 int totalRows = await _powerKeyHelper.DownloadForUserAsync(DateTime.Now, _selectedUser);
 
                 AppLogger.Information(
-                    $"Staûeno {totalRows} z·znam˘ pro mÏsÌc Ë.{DateTime.Now.Month} uûivatele {FormatHelper.FormatUserToString(_selectedUser)}.",
+                    $"Sta≈æeno {totalRows} z√°znam≈Ø pro mƒõs√≠c ƒç.{DateTime.Now.Month} u≈æivatele {FormatHelper.FormatUserToString(_selectedUser)}.",
                     false);
 
 #if NOTDEBUG
@@ -796,7 +796,7 @@ namespace VykazyPrace
             }
             catch (Exception ex)
             {
-                AppLogger.Error("Chyba p¯i p¯epÌn·nÌ uûivatele.", ex);
+                AppLogger.Error("Chyba p≈ôi p≈ôep√≠n√°n√≠ u≈æivatele.", ex);
             }
             finally
             {

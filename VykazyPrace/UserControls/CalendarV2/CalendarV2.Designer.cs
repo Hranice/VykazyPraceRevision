@@ -1,4 +1,4 @@
-﻿namespace VykazyPrace.UserControls.CalendarV2
+namespace VykazyPrace.UserControls.CalendarV2
 {
     partial class CalendarV2
     {
@@ -1277,7 +1277,7 @@
             panel4.Dock = DockStyle.Top;
             panel4.Location = new Point(3, 336);
             panel4.Name = "panel4";
-            panel4.Size = new Size(290, 65);
+            panel4.Size = new Size(270, 65);
             panel4.TabIndex = 152;
             // 
             // tableLayoutPanel13
@@ -1287,7 +1287,7 @@
             tableLayoutPanel13.Controls.Add(comboBoxEnd, 0, 2);
             tableLayoutPanel13.Controls.Add(label40, 0, 0);
             tableLayoutPanel13.Dock = DockStyle.Fill;
-            tableLayoutPanel13.Location = new Point(145, 0);
+            tableLayoutPanel13.Location = new Point(125, 0);
             tableLayoutPanel13.Name = "tableLayoutPanel13";
             tableLayoutPanel13.RowCount = 3;
             tableLayoutPanel13.RowStyles.Add(new RowStyle());
@@ -1330,7 +1330,7 @@
             tableLayoutPanel12.RowStyles.Add(new RowStyle());
             tableLayoutPanel12.RowStyles.Add(new RowStyle());
             tableLayoutPanel12.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel12.Size = new Size(145, 65);
+            tableLayoutPanel12.Size = new Size(125, 65);
             tableLayoutPanel12.TabIndex = 145;
             // 
             // comboBoxStart
@@ -1341,7 +1341,7 @@
             comboBoxStart.Items.AddRange(new object[] { "0:00", "0:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30" });
             comboBoxStart.Location = new Point(3, 23);
             comboBoxStart.Name = "comboBoxStart";
-            comboBoxStart.Size = new Size(139, 28);
+            comboBoxStart.Size = new Size(119, 28);
             comboBoxStart.TabIndex = 134;
             // 
             // label38
@@ -1350,7 +1350,7 @@
             label38.Dock = DockStyle.Top;
             label38.Location = new Point(3, 0);
             label38.Name = "label38";
-            label38.Size = new Size(139, 20);
+            label38.Size = new Size(119, 20);
             label38.TabIndex = 132;
             label38.Text = "Počátek*";
             // 
@@ -1392,25 +1392,24 @@
             // tableLayoutPanel4
             // 
             tableLayoutPanel4.ColumnCount = 2;
-            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 37.5F));
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 62.5F));
             tableLayoutPanel4.Controls.Add(buttonConfirm, 1, 0);
             tableLayoutPanel4.Controls.Add(buttonRemove, 0, 0);
             tableLayoutPanel4.Dock = DockStyle.Top;
             tableLayoutPanel4.Location = new Point(3, 524);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 1;
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel4.Size = new Size(290, 41);
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel4.Size = new Size(275, 41);
             tableLayoutPanel4.TabIndex = 154;
             // 
             // buttonConfirm
             // 
             buttonConfirm.Dock = DockStyle.Fill;
-            buttonConfirm.Location = new Point(148, 3);
+            buttonConfirm.Location = new Point(106, 3);
             buttonConfirm.Name = "buttonConfirm";
-            buttonConfirm.Size = new Size(139, 35);
+            buttonConfirm.Size = new Size(166, 35);
             buttonConfirm.TabIndex = 141;
             buttonConfirm.Text = "Potvrdit";
             buttonConfirm.UseVisualStyleBackColor = true;
@@ -1421,7 +1420,7 @@
             buttonRemove.Dock = DockStyle.Fill;
             buttonRemove.Location = new Point(3, 3);
             buttonRemove.Name = "buttonRemove";
-            buttonRemove.Size = new Size(139, 35);
+            buttonRemove.Size = new Size(97, 35);
             buttonRemove.TabIndex = 142;
             buttonRemove.Text = "Odstranit";
             buttonRemove.UseVisualStyleBackColor = true;

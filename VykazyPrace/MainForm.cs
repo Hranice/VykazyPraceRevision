@@ -38,6 +38,8 @@ namespace VykazyPrace
 
         private List<User> _users = new();
         private bool _isSwitchingUser = false;
+        private readonly System.Windows.Forms.Timer _windowStateSaveTimer;
+        private bool _windowStateTrackingEnabled;
 
 
         // Notifications
@@ -62,6 +64,14 @@ namespace VykazyPrace
 
             InitializeComponent();
 
+            _windowStateSaveTimer = new System.Windows.Forms.Timer(components)
+            {
+                Interval = 750
+            };
+            _windowStateSaveTimer.Tick += WindowStateSaveTimer_Tick;
+            Move += ScheduleWindowStateSave;
+            Resize += ScheduleWindowStateSave;
+
             zobrazitToolStripMenuItem.Click += zobrazitToolStripMenuItem_Click;
             ukoncitToolStripMenuItem.Click += ukoncitToolStripMenuItem_Click;
         }
@@ -81,6 +91,7 @@ namespace VykazyPrace
         private void MainForm_Load(object sender, EventArgs e)
         {
             InitFormUI();
+            _windowStateTrackingEnabled = true;
 
             if (!ValidateDatabase())
             {
@@ -148,36 +159,90 @@ namespace VykazyPrace
         {
             var window = config.MainWindow;
 
-            if (window.Width > 0 && window.Height > 0)
+            if (!config.RememberLastResolutionPosition)
             {
-                Size = new Size(window.Width, window.Height);
+                StartPosition = FormStartPosition.CenterScreen;
+                WindowState = window.Maximized
+                    ? FormWindowState.Maximized
+                    : FormWindowState.Normal;
+                return;
             }
 
-            if (window.X >= 0 && window.Y >= 0)
+            int width = window.Width > 0 ? window.Width : Width;
+            int height = window.Height > 0 ? window.Height : Height;
+            var savedBounds = new Rectangle(window.X, window.Y, width, height);
+
+            var savedScreen = Screen.AllScreens.FirstOrDefault(screen =>
+                string.Equals(screen.DeviceName, window.ScreenDeviceName, StringComparison.OrdinalIgnoreCase));
+
+            Rectangle? requestedBounds = null;
+
+            if (savedScreen != null && window.ScreenOffsetX.HasValue && window.ScreenOffsetY.HasValue)
             {
-                var bounds = new Rectangle(window.X, window.Y, window.Width, window.Height);
+                requestedBounds = new Rectangle(
+                    savedScreen.WorkingArea.X + window.ScreenOffsetX.Value,
+                    savedScreen.WorkingArea.Y + window.ScreenOffsetY.Value,
+                    width,
+                    height);
+            }
+            else if ((window.HasPosition || (window.X >= 0 && window.Y >= 0)) &&
+                     Screen.AllScreens.Any(screen => screen.WorkingArea.IntersectsWith(savedBounds)))
+            {
+                requestedBounds = savedBounds;
+                savedScreen = Screen.FromRectangle(savedBounds);
+            }
 
-                bool isVisibleOnAnyScreen = Screen.AllScreens
-                    .Any(screen => screen.WorkingArea.IntersectsWith(bounds));
-
-                if (isVisibleOnAnyScreen)
-                {
-                    StartPosition = FormStartPosition.Manual;
-                    Location = new Point(window.X, window.Y);
-                }
-                else
-                {
-                    StartPosition = FormStartPosition.CenterScreen;
-                }
+            if (requestedBounds.HasValue)
+            {
+                StartPosition = FormStartPosition.Manual;
+                Bounds = KeepWindowAccessible(
+                    requestedBounds.Value,
+                    (savedScreen ?? Screen.FromRectangle(requestedBounds.Value)).WorkingArea);
             }
             else
             {
-                StartPosition = FormStartPosition.CenterScreen;
+                var workingArea = Screen.PrimaryScreen?.WorkingArea ?? Screen.AllScreens[0].WorkingArea;
+                var centeredBounds = new Rectangle(
+                    workingArea.X + (workingArea.Width - width) / 2,
+                    workingArea.Y + (workingArea.Height - height) / 2,
+                    width,
+                    height);
+
+                StartPosition = FormStartPosition.Manual;
+                Bounds = FitWindowToWorkingArea(centeredBounds, workingArea);
             }
 
             WindowState = window.Maximized
                 ? FormWindowState.Maximized
                 : FormWindowState.Normal;
+        }
+
+        private static Rectangle FitWindowToWorkingArea(Rectangle bounds, Rectangle workingArea)
+        {
+            int width = Math.Min(bounds.Width, workingArea.Width);
+            int height = Math.Min(bounds.Height, workingArea.Height);
+            int x = Math.Clamp(bounds.X, workingArea.Left, workingArea.Right - width);
+            int y = Math.Clamp(bounds.Y, workingArea.Top, workingArea.Bottom - height);
+
+            return new Rectangle(x, y, width, height);
+        }
+
+        private static Rectangle KeepWindowAccessible(Rectangle bounds, Rectangle fallbackWorkingArea)
+        {
+            int titleBarHeight = Math.Min(48, bounds.Height);
+            int requiredVisibleWidth = Math.Min(120, bounds.Width);
+            var titleBar = new Rectangle(bounds.X, bounds.Y, bounds.Width, titleBarHeight);
+
+            bool controlsAreVisible = Screen.AllScreens.Any(screen =>
+            {
+                var visiblePart = Rectangle.Intersect(titleBar, screen.WorkingArea);
+                return visiblePart.Width >= requiredVisibleWidth && visiblePart.Height >= titleBarHeight / 2;
+            });
+
+            // Preserve the exact rectangle, including a window intentionally spanning monitors.
+            return controlsAreVisible
+                ? bounds
+                : FitWindowToWorkingArea(bounds, fallbackWorkingArea);
         }
 
         private bool ValidateDatabase()
@@ -505,8 +570,12 @@ namespace VykazyPrace
         {
             var config = _configService.Current;
 
+            _windowStateSaveTimer.Stop();
+
             if (config.MinimizeToTray && e.CloseReason == CloseReason.UserClosing)
             {
+                SaveWindowState(config);
+                _configService.Save();
                 e.Cancel = true;
                 Hide();
                 return;
@@ -516,8 +585,35 @@ namespace VykazyPrace
             _configService.Save();
         }
 
+        private void ScheduleWindowStateSave(object? sender, EventArgs e)
+        {
+            if (!_windowStateTrackingEnabled || WindowState == FormWindowState.Minimized)
+                return;
+
+            _windowStateSaveTimer.Stop();
+            _windowStateSaveTimer.Start();
+        }
+
+        private void WindowStateSaveTimer_Tick(object? sender, EventArgs e)
+        {
+            _windowStateSaveTimer.Stop();
+
+            if (WindowState == FormWindowState.Minimized)
+                return;
+
+            var config = _configService.Current;
+            SaveWindowState(config);
+            _configService.Save();
+        }
+
         private void SaveWindowState(AppConfig config)
         {
+            if (WindowState != FormWindowState.Minimized)
+                config.MainWindow.Maximized = WindowState == FormWindowState.Maximized;
+
+            if (!config.RememberLastResolutionPosition)
+                return;
+
             var bounds = WindowState == FormWindowState.Normal
                 ? Bounds
                 : RestoreBounds;
@@ -526,7 +622,12 @@ namespace VykazyPrace
             config.MainWindow.Height = bounds.Height;
             config.MainWindow.X = bounds.X;
             config.MainWindow.Y = bounds.Y;
-            config.MainWindow.Maximized = WindowState == FormWindowState.Maximized;
+            config.MainWindow.HasPosition = true;
+
+            var screen = Screen.FromRectangle(bounds);
+            config.MainWindow.ScreenDeviceName = screen.DeviceName;
+            config.MainWindow.ScreenOffsetX = bounds.X - screen.WorkingArea.X;
+            config.MainWindow.ScreenOffsetY = bounds.Y - screen.WorkingArea.Y;
         }
 
         private void správceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -554,13 +655,7 @@ namespace VykazyPrace
         {
             Invoke(async () =>
             {
-                var config = _configService.Current;
-
                 Show();
-
-                WindowState = config.MainWindow.Maximized
-                    ? FormWindowState.Maximized
-                    : FormWindowState.Normal;
 
                 BringToFront();
                 Activate();

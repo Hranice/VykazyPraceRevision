@@ -11,6 +11,7 @@ namespace VykazyPrace.Core.Configuration
         public string DatabasePath { get; set; } = @"Z:\TS\jprochazka-sw\WorkLog\Db\WorkLog.db";
         public PanelDayView PanelDayView { get; set; } = PanelDayView.Default;
         public WindowConfig MainWindow { get; set; } = new();
+        public bool RememberLastResolutionPosition { get; set; }
         public bool MinimizeToTray { get; set; } = true;
         public bool NotificationOn { get; set; } = true;
         public DateTime NotificationTime { get; set; } = new DateTime(2000, 1, 1, 13, 30, 0);
@@ -49,6 +50,10 @@ namespace VykazyPrace.Core.Configuration
         public int Height { get; set; } = 800;
         public int X { get; set; } = -1;
         public int Y { get; set; } = -1;
+        public bool HasPosition { get; set; }
+        public string? ScreenDeviceName { get; set; }
+        public int? ScreenOffsetX { get; set; }
+        public int? ScreenOffsetY { get; set; }
         public bool Maximized { get; set; } = false;
     }
 

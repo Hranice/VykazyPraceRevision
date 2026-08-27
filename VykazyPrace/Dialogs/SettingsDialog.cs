@@ -1,4 +1,4 @@
-﻿using VykazyPrace.Core.Configuration;
+using VykazyPrace.Core.Configuration;
 using VykazyPrace.Core.Database.Models;
 
 namespace VykazyPrace.Dialogs
@@ -27,6 +27,7 @@ namespace VykazyPrace.Dialogs
             dateTimePicker1.Value = config.NotificationTime;
             checkBoxEnableNotification.Checked = config.NotificationOn;
             checkBoxMinimizeToTray.Checked = config.MinimizeToTray;
+            checkBoxRememberLastResolutionPosition.Checked = config.RememberLastResolutionPosition;
             textBoxNotificationTitle.Text = config.NotificationTitle;
             textBoxNotificationText.Text = config.NotificationText;
         }
@@ -60,6 +61,7 @@ namespace VykazyPrace.Dialogs
             config.NotificationTime = dateTimePicker1.Value;
             config.NotificationOn = checkBoxEnableNotification.Checked;
             config.MinimizeToTray = checkBoxMinimizeToTray.Checked;
+            config.RememberLastResolutionPosition = checkBoxRememberLastResolutionPosition.Checked;
             config.NotificationTitle = textBoxNotificationTitle.Text;
             config.NotificationText = textBoxNotificationText.Text;
 

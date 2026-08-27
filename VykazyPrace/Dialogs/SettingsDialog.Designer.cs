@@ -1,4 +1,4 @@
-﻿namespace VykazyPrace.Dialogs
+namespace VykazyPrace.Dialogs
 {
     partial class SettingsDialog
     {
@@ -42,6 +42,7 @@
             checkBoxEnableNotification = new CheckBox();
             groupBox2 = new GroupBox();
             groupBox3 = new GroupBox();
+            checkBoxRememberLastResolutionPosition = new CheckBox();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -80,7 +81,7 @@
             // 
             buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             buttonCancel.DialogResult = DialogResult.Cancel;
-            buttonCancel.Location = new Point(770, 407);
+            buttonCancel.Location = new Point(770, 429);
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new Size(101, 37);
             buttonCancel.TabIndex = 4;
@@ -90,7 +91,7 @@
             // buttonSave
             // 
             buttonSave.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonSave.Location = new Point(604, 407);
+            buttonSave.Location = new Point(604, 429);
             buttonSave.Name = "buttonSave";
             buttonSave.Size = new Size(160, 37);
             buttonSave.TabIndex = 5;
@@ -180,19 +181,30 @@
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(checkBoxRememberLastResolutionPosition);
             groupBox3.Controls.Add(checkBoxMinimizeToTray);
             groupBox3.Location = new Point(12, 297);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(859, 88);
+            groupBox3.Size = new Size(859, 124);
             groupBox3.TabIndex = 8;
             groupBox3.TabStop = false;
             groupBox3.Text = "Různé";
+            // 
+            // checkBoxRememberLastResolutionPosition
+            // 
+            checkBoxRememberLastResolutionPosition.AutoSize = true;
+            checkBoxRememberLastResolutionPosition.Location = new Point(18, 71);
+            checkBoxRememberLastResolutionPosition.Name = "checkBoxRememberLastResolutionPosition";
+            checkBoxRememberLastResolutionPosition.Size = new Size(326, 29);
+            checkBoxRememberLastResolutionPosition.TabIndex = 1;
+            checkBoxRememberLastResolutionPosition.Text = "Pamatovat si poslední rozměry a umístění";
+            checkBoxRememberLastResolutionPosition.UseVisualStyleBackColor = true;
             // 
             // SettingsDialog
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(883, 456);
+            ClientSize = new Size(883, 478);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
@@ -228,5 +240,6 @@
         private Label label2;
         private TextBox textBoxNotificationTitle;
         private Label label1;
+        private CheckBox checkBoxRememberLastResolutionPosition;
     }
 }

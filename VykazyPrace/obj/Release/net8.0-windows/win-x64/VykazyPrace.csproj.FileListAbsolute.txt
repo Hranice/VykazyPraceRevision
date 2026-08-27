@@ -1141,3 +1141,4 @@ C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\obj\Release\net
 C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\obj\Release\net8.0-windows\win-x64\WorkLog.pdb
 C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\obj\Release\net8.0-windows\win-x64\VykazyPrace.genruntimeconfig.cache
 C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\obj\Release\net8.0-windows\win-x64\ref\WorkLog.dll
+C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\bin\Release\net8.0-windows\win-x64\Changelog.docx

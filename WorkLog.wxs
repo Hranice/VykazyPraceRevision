@@ -6,7 +6,9 @@
     UpgradeCode="{62687F32-9B0F-4466-B923-78CFB71E337C}"
     Scope="perMachine">
 
-    <MajorUpgrade DowngradeErrorMessage="Novejsi verze aplikace WorkLog je jiz nainstalovana." />
+    <MajorUpgrade
+      AllowSameVersionUpgrades="yes"
+      DowngradeErrorMessage="Novejsi verze aplikace WorkLog je jiz nainstalovana." />
     <MediaTemplate EmbedCab="yes" />
 
     <Icon Id="WorkLogIcon" SourceFile="WorkLog.ico" />

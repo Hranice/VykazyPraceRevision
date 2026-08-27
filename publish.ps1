@@ -1,5 +1,9 @@
+$scriptRoot = $PSScriptRoot
+Set-Location $scriptRoot
+
 $projectName = "VykazyPrace"
 $publishDir = ".\$projectName\bin\Release\net8.0-windows\win-x64\publish"
+$changelogPath = Join-Path $scriptRoot "Changelog.docx"
 $wixPath = "wix"
 $wixSourcePath = ".\WorkLog.wxs"
 $installerArchitecture = "x64"
@@ -22,6 +26,19 @@ if (Test-Path $publishDir) {
 Write-Host "Building application..."
 dotnet publish $projectName -c Release -r win-x64 --self-contained `
     /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "ERROR: Application publish failed."
+    exit $LASTEXITCODE
+}
+
+if (-not (Test-Path $changelogPath)) {
+    Write-Host "ERROR: Changelog.docx was not found next to publish.ps1: $changelogPath"
+    exit 1
+}
+
+$publishedChangelogPath = Join-Path $publishDir "Changelog.docx"
+Copy-Item $changelogPath $publishedChangelogPath -Force
+Write-Host "Changelog copied to publish directory: $publishedChangelogPath"
 
 # Build installer
 if (-not (Get-Command $wixPath -ErrorAction SilentlyContinue)) {

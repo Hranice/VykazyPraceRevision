@@ -33,6 +33,7 @@
             label1 = new Label();
             labelVersion = new Label();
             label4 = new Label();
+            buttonShowChangelog = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -86,11 +87,22 @@
             label4.TabIndex = 5;
             label4.Text = "2025  Jan Procházka, Heinz-Glas Decor, s.r.o";
             // 
+            // buttonShowChangelog
+            // 
+            buttonShowChangelog.Location = new Point(118, 112);
+            buttonShowChangelog.Name = "buttonShowChangelog";
+            buttonShowChangelog.Size = new Size(197, 36);
+            buttonShowChangelog.TabIndex = 6;
+            buttonShowChangelog.Text = "Zobrazit seznam změn";
+            buttonShowChangelog.UseVisualStyleBackColor = true;
+            buttonShowChangelog.Click += buttonShowChangelog_Click;
+            // 
             // AboutDialog
             // 
             AutoScaleDimensions = new SizeF(9F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(466, 117);
+            ClientSize = new Size(466, 163);
+            Controls.Add(buttonShowChangelog);
             Controls.Add(label4);
             Controls.Add(labelVersion);
             Controls.Add(label1);
@@ -114,5 +126,6 @@
         private Label label1;
         private Label labelVersion;
         private Label label4;
+        private Button buttonShowChangelog;
     }
 }

@@ -18,6 +18,10 @@
 
   <ItemGroup>
     <Content Include="WorkLog.ico" />
+    <Content Include="..\Changelog.docx" Link="Changelog.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
   
   <ItemGroup>

@@ -300,3 +300,4 @@ C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\obj\Debug\net8.
 C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\obj\Debug\net8.0-windows\WorkLog.pdb
 C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\obj\Debug\net8.0-windows\VykazyPrace.genruntimeconfig.cache
 C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\obj\Debug\net8.0-windows\ref\WorkLog.dll
+C:\Users\jprochazka\source\repos\VykazyPraceRevision\VykazyPrace\bin\Debug\net8.0-windows\Changelog.docx

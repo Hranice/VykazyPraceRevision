@@ -37,9 +37,6 @@
     <Compile Update="Dialogs\TimeEntrySubTypeManagement.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Dialogs\UpdateDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="Dialogs\UserManagementDialog.cs">
       <SubType>Form</SubType>
     </Compile>

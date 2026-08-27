@@ -38,6 +38,12 @@
             Advertise="no" />
         </File>
       </Component>
+      <Component Id="ChangelogComponent" Guid="{20BE87AD-C731-4AD5-A82D-26EF201CA8F0}">
+        <File
+          Id="ChangelogFile"
+          Source="VykazyPrace\bin\Release\net8.0-windows\win-x64\publish\Changelog.docx"
+          KeyPath="yes" />
+      </Component>
     </ComponentGroup>
   </Package>
 </Wix>

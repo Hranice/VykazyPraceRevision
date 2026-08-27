@@ -9,7 +9,6 @@ using VykazyPrace.Core.Logging;
 using VykazyPrace.Core.PowerKey;
 using VykazyPrace.Dialogs;
 using VykazyPrace.Enums;
-using VykazyPrace.Updater;
 using VykazyPrace.UserControls;
 using VykazyPrace.UserControls.Calendar;
 using VykazyPrace.UserControls.CalendarV2;
@@ -44,9 +43,6 @@ namespace VykazyPrace
         // Notifications
         private System.Windows.Forms.Timer _notificationTimer;
         private DateTime? _lastNotificationDate = null;
-
-        // Update
-        private UpdateInfo? _cachedUpdateInfo;
 
         public MainForm(
      IServiceProvider serviceProvider,
@@ -85,8 +81,6 @@ namespace VykazyPrace
         private void MainForm_Load(object sender, EventArgs e)
         {
             InitFormUI();
-
-            _ = Task.Run(HandleUpdatesAsync);
 
             if (!ValidateDatabase())
             {
@@ -184,16 +178,6 @@ namespace VykazyPrace
             WindowState = window.Maximized
                 ? FormWindowState.Maximized
                 : FormWindowState.Normal;
-        }
-
-        private async Task HandleUpdatesAsync()
-        {
-            _cachedUpdateInfo = await UpdateService.GetUpdateInfoAsync();
-
-            if (_cachedUpdateInfo.UpdateAvailable)
-            {
-                buttonUpdate.BackColor = Color.FromKnownColor(KnownColor.LightGoldenrodYellow);
-            }
         }
 
         private bool ValidateDatabase()
@@ -625,11 +609,6 @@ namespace VykazyPrace
         {
             UseWaitCursor = false;
             _loadingUC.Visible = false;
-        }
-
-        private void buttonUpdate_Click(object sender, EventArgs e)
-        {
-            new UpdateDialog().ShowDialog();
         }
 
         private async void importToolStripMenuItem_Click(object sender, EventArgs e)

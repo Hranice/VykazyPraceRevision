@@ -1,14 +1,8 @@
-param(
-    [switch]$SkipUpload
-)
-
 $projectName = "VykazyPrace"
 $publishDir = ".\$projectName\bin\Release\net8.0-windows\win-x64\publish"
-$networkUpdatePath = "Z:\TS\jprochazka-sw\WorkLog\Updates"
 $wixPath = "wix"
 $wixSourcePath = ".\WorkLog.wxs"
 $installerArchitecture = "x64"
-$changelogPath = ".\Changelog.docx"
 
 # Read version from csproj
 $csprojPath = ".\$projectName\$projectName.csproj"
@@ -29,11 +23,6 @@ Write-Host "Building application..."
 dotnet publish $projectName -c Release -r win-x64 --self-contained `
     /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true
 
-# Generate latest.txt
-$latestTxtPath = Join-Path $publishDir "latest.txt"
-$version | Out-File -FilePath $latestTxtPath -Encoding ASCII
-Write-Host "Generated latest.txt with version: $version"
-
 # Build installer
 if (-not (Get-Command $wixPath -ErrorAction SilentlyContinue)) {
     Write-Host "ERROR: WiX Toolset command not found: wix"
@@ -50,8 +39,6 @@ if (-not (Test-Path $wixSourcePath)) {
 
 $installerBaseName = "WorkLog_Installer"
 $installerBuiltPath = ".\Output\$installerBaseName.msi"
-$installerDest = Join-Path $networkUpdatePath "$installerBaseName.msi"
-$networkChangelogPath = Join-Path $networkUpdatePath "Changelog.docx"
 
 if (-not (Test-Path ".\Output")) {
     New-Item -ItemType Directory -Path ".\Output" | Out-Null
@@ -66,24 +53,5 @@ if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
 
-if ($SkipUpload) {
-    Write-Host ""
-    Write-Host "SkipUpload enabled. Installer built locally as: $installerBuiltPath"
-    exit 0
-}
-
 Write-Host ""
-Write-Host "Copying files to: $networkUpdatePath"
-
-Copy-Item $latestTxtPath "$networkUpdatePath\latest.txt" -Force
-Copy-Item $installerBuiltPath $installerDest -Force
-
-if (Test-Path $changelogPath) {
-    Copy-Item $changelogPath $networkChangelogPath -Force
-    Write-Host "Changelog uploaded."
-} else {
-    Write-Host "WARNING: Changelog.docx not found, skipping upload."
-}
-
-Write-Host ""
-Write-Host "Installer uploaded as: $installerBaseName.msi"
+Write-Host "Installer built locally as: $installerBuiltPath"

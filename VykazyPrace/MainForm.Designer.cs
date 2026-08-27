@@ -50,7 +50,6 @@ namespace VykazyPrace
             radioButton2 = new RadioButton();
             panel1 = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
-            buttonUpdate = new Button();
             tableLayoutPanel3 = new TableLayoutPanel();
             buttonReloadPowerKey = new Button();
             label2 = new Label();
@@ -241,7 +240,6 @@ namespace VykazyPrace
             tableLayoutPanel1.AutoSize = true;
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(buttonUpdate, 0, 5);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel3, 0, 4);
             tableLayoutPanel1.Controls.Add(radioButton1, 0, 0);
             tableLayoutPanel1.Controls.Add(radioButton2, 0, 1);
@@ -250,28 +248,14 @@ namespace VykazyPrace
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 6;
+            tableLayoutPanel1.RowCount = 5;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 38F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 38F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 45F));
             tableLayoutPanel1.Size = new Size(127, 650);
             tableLayoutPanel1.TabIndex = 8;
-            // 
-            // buttonUpdate
-            // 
-            buttonUpdate.AutoSize = true;
-            buttonUpdate.Dock = DockStyle.Bottom;
-            buttonUpdate.Location = new Point(3, 608);
-            buttonUpdate.Name = "buttonUpdate";
-            buttonUpdate.Size = new Size(121, 39);
-            buttonUpdate.TabIndex = 14;
-            buttonUpdate.Text = "Aktualizace";
-            buttonUpdate.UseVisualStyleBackColor = true;
-            buttonUpdate.Visible = false;
-            buttonUpdate.Click += buttonUpdate_Click;
             // 
             // tableLayoutPanel3
             // 
@@ -545,7 +529,6 @@ namespace VykazyPrace
         private Button buttonReloadPowerKey;
         private Label label2;
         private Button buttonOutlookEvents;
-        private Button buttonUpdate;
         private ToolStripMenuItem importToolStripMenuItem;
         private Button bChangeUser;
     }
